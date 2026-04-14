@@ -1,0 +1,19 @@
+2026-04-11T00:02:34.680Z [info] OpenTelemetry SDK started successfully.
+{
+  "metadata": {
+    "operationId": "c8d3e5af-cf16-40a1-8648-8eb78388aa5d"
+  }
+}
+2026-04-11T00:02:34.848Z [info] Feature flags service initialized with Amplitude
+{
+  "metadata": {
+    "operationId": "c8d3e5af-cf16-40a1-8648-8eb78388aa5d"
+  }
+}
+2026-04-11T00:02:35.045Z [info] Feature flags fetched successfully
+{
+  "metadata": {
+    "operationId": "c8d3e5af-cf16-40a1-8648-8eb78388aa5d",
+    "flagCount": 10
+  }
+}

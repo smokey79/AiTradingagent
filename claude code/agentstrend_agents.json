@@ -1,0 +1,7 @@
+{
+  "name": "TrendAgent",
+  "short_window": 5,
+  "long_window": 20,
+  "risk_per_trade": 0.02,
+  "success_probability": 0.85
+}
