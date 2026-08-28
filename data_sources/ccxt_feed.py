@@ -39,8 +39,8 @@ class CCXTFeed:
         primary_cls = getattr(ccxt, primary_exchange, ccxt.binance)
         fallback_cls = getattr(ccxt, fallback_exchange, ccxt.gate)
 
-        self.primary = primary_cls({"enableRateLimit": True, "timeout": 10000})
-        self.fallback = fallback_cls({"enableRateLimit": True, "timeout": 10000})
+        self.primary = primary_cls({"enableRateLimit": True, "timeout": 2500})
+        self.fallback = fallback_cls({"enableRateLimit": True, "timeout": 2500})
         log.info(f"Initialized CCXTFeed (Primary: {primary_exchange}, Fallback: {fallback_exchange})")
 
     def _fetch_from_exchanges(self, method_name: str, symbol: str, *args, **kwargs) -> Any:
