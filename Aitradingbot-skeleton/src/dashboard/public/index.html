@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>AiTradingAgent — Full Stack Autonomous Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #090d16;
+      --bg-card: #111827;
+      --bg-subtle: #1f2937;
+      --border-color: #374151;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --accent-gold: #f59e0b;
+      --accent-purple: #8b5cf6;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    header {
+      background: rgba(17, 24, 39, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .badge-live { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-paper { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); border: 1px solid rgba(59, 130, 246, 0.3); }
+    .badge-alert { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); font-weight: 600; }
+    .badge-buy { background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 600; }
+    .badge-sell { background: rgba(239, 68, 68, 0.2); color: #f87171; font-weight: 600; }
+    .badge-hold { background: rgba(156, 163, 175, 0.2); color: #d1d5db; font-weight: 600; }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 8px var(--accent-green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .btn {
+      background: var(--accent-blue);
+      color: white;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-green { background: #059669; }
+    .btn-purple { background: var(--accent-purple); }
+    .btn-gold { background: #d97706; }
+    .btn-red { background: var(--accent-red); }
+    .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
+    .btn-outline:hover { background: var(--bg-subtle); }
+    
+    .container { max-width: 1440px; margin: 0 auto; padding: 20px; }
+    
+    /* Margin Sentinel Warning Banner */
+    #margin-banner {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--accent-green);
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    #margin-banner.critical {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.6);
+      color: #fca5a5;
+      animation: alertPulse 1.5s infinite;
+    }
+    @keyframes alertPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      50% { box-shadow: 0 0 16px 2px rgba(239, 68, 68, 0.6); }
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 14px 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 4px; }
+    .stat-val { font-size: 22px; font-weight: 700; font-family: var(--font-mono); color: var(--text-main); }
+    .stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; display: flex; align-items: center; gap: 6px; }
+
+    .nav-tabs {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      padding: 9px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .tab-btn.active {
+      color: var(--accent-blue);
+      border-bottom-color: var(--accent-blue);
+      font-weight: 600;
+    }
+
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      overflow-x: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th {
+      background: #151e2e;
+      padding: 12px 14px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+    td {
+      padding: 11px 14px;
+      border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+      font-size: 13px;
+    }
+    tr:hover td { background: rgba(31, 41, 55, 0.4); }
+    
+    .mono { font-family: var(--font-mono); }
+    .green { color: var(--accent-green); }
+    .red { color: var(--accent-red); }
+    
+    .agent-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .agent-vote {
+      background: var(--bg-subtle);
+      border: 1px solid rgba(55, 65, 81, 0.6);
+      border-radius: 6px;
+      padding: 10px;
+    }
+    
+    .form-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .input-field {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      width: 100%;
+      outline: none;
+    }
+    .input-field:focus { border-color: var(--accent-blue); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+      <h1 style="font-size:18px; font-weight:700; display:flex; align-items:center; gap:8px;">
+        <span style="color:var(--accent-blue);">AiTradingAgent</span>
+        <span style="font-size:11px; font-weight:400; color:var(--text-muted);">Command Center</span>
+      </h1>
+      <span class="badge badge-paper">📄 Paper Execution</span>
+      <span class="badge badge-live"><span class="pulse-dot"></span> CMC Pro Live</span>
+      <span class="badge" style="background:#1f2937; color:#93c5fd;">🎯 72% Win Rate Gate</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+      <div style="display:flex; align-items:center; background:var(--bg-subtle); border:1px solid var(--border-color); border-radius:6px; padding:4px 8px; gap:6px;">
+        <span style="font-size:11px; color:var(--text-muted);">⏱️ Interval:</span>
+        <select id="autotrade-interval-select" style="background:transparent; border:none; color:var(--text-main); font-size:12px; outline:none; cursor:pointer;">
+          <option value="15">15s Fast</option>
+          <option value="30" selected>30s Standard</option>
+          <option value="60">60s (1 min)</option>
+          <option value="120">2 min</option>
+          <option value="300">5 min</option>
+        </select>
+      </div>
+      <button class="btn btn-green" id="btn-autotrade-toggle" style="font-weight:700; padding:8px 16px; display:flex; align-items:center; gap:6px; box-shadow:0 0 12px rgba(16,185,129,0.3);">
+        <span id="autotrade-btn-icon">▶️</span> <span id="autotrade-btn-text">START AUTO-TRADING</span>
+      </button>
+      <button class="btn btn-purple" id="btn-run-cycle">⚡ Single AI Cycle</button>
+      <button class="btn btn-outline" id="btn-refresh">🔄 Refresh</button>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- Auto-Trading Live Engine Status Banner -->
+    <div id="autotrade-banner" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <span class="badge" id="autotrade-status-badge" style="background:#374151; color:#9ca3af;">🛑 AUTO-TRADING STOPPED</span>
+        <span style="font-size:12px;" id="autotrade-status-desc">Click <strong>"START AUTO-TRADING"</strong> to begin continuous automated trades on BTC, ETH, SOL, CRO, AVAX, ARB.</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:16px; font-size:12px;">
+        <div>Cycles: <strong class="mono" id="autotrade-cycle-count">0</strong></div>
+        <div>Auto Trades Placed: <strong class="mono green" id="autotrade-trade-count">0</strong></div>
+        <div>Next Execution: <strong class="mono" id="autotrade-timer" style="color:var(--accent-blue);">--</strong></div>
+      </div>
+    </div>
+
+    <!-- Margin Sentinel & 72% Gate Status Banner -->
+    <div id="margin-banner">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-size:16px;">🛡️</span>
+        <span id="margin-banner-text"><strong>Margin Sentinel Active:</strong> Portfolio Balance $275.50 exceeds $30.00 Floor (Healthy) · Minimum 72% AI Confidence Enforced</span>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <span class="badge badge-live" id="margin-badge">🟢 Healthy (Margin &gt; $30)</span>
+      </div>
+    </div>
+
+    <!-- Top KPI Matrix -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Trading Portfolio Equity</div>
+        <div class="stat-val mono" id="kpi-portfolio">$250.00</div>
+        <div class="stat-sub"><span id="kpi-exposure" class="green">0.0% Exposure</span> · Initial $250.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">50% BTC Savings Pool</div>
+        <div class="stat-val mono green" id="kpi-btc-vault">$0.00</div>
+        <div class="stat-sub mono" id="kpi-btc-accum">0.00000000 BTC Saved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">10% Long-Term Vault</div>
+        <div class="stat-val mono" style="color:var(--accent-gold);" id="kpi-cold-vault">$0.00</div>
+        <div class="stat-sub">Protected Cold Storage Vault</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">20-Trade Win Rate</div>
+        <div class="stat-val mono green" id="kpi-winrate">100.0%</div>
+        <div class="stat-sub" id="kpi-trades-count">0 Executed Trades</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">CMC Global BTC Dominance</div>
+        <div class="stat-val mono" style="color:var(--accent-blue);" id="kpi-btc-dom">59.7%</div>
+        <div class="stat-sub" id="kpi-total-mcap">Total MCAP: $2.66T</div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('tab-cmc', this)">📊 CoinMarketCap Live</button>
+      <button class="tab-btn" onclick="switchTab('tab-bot', this)">🤖 AI Consensus (72% Gate)</button>
+      <button class="tab-btn" onclick="switchTab('tab-trades', this)">📜 Executed Trades Feed</button>
+      <button class="tab-btn" onclick="switchTab('tab-settings', this)">⚙️ Allocation & Currency Overrides</button>
+      <button class="tab-btn" onclick="switchTab('tab-memes', this)">🐸 DexScreener Meme Coins</button>
+      <button class="tab-btn" onclick="switchTab('tab-learning', this)">🎓 YouTube Learning</button>
+      <button class="tab-btn" onclick="switchTab('tab-flashloan', this)">⚡ DeFi Flash Loans</button>
+      <button class="tab-btn" onclick="switchTab('tab-onboarding', this)">💳 Fiat Onboarding</button>
+      <button class="tab-btn" onclick="switchTab('tab-telegram', this)">📱 Telegram Sentinel</button>
+      <button class="tab-btn" onclick="switchTab('tab-arb', this)">⚡ DEX Arbitrage</button>
+      <button class="tab-btn" onclick="switchTab('tab-onchain', this)">🔗 On-Chain Valuation</button>
+    </div>
+
+    <!-- TAB 1: CoinMarketCap Live Quotes -->
+    <div id="tab-cmc" class="tab-pane">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Asset</th>
+              <th>Live Price (USD)</th>
+              <th>1h %</th>
+              <th>24h %</th>
+              <th>7d %</th>
+              <th>24h Volume</th>
+              <th>Market Cap</th>
+              <th>Dominance</th>
+              <th>Provider</th>
+            </tr>
+          </thead>
+          <tbody id="cmc-quotes-body">
+            <tr><td colspan="10" style="text-align:center; padding:20px; color:var(--text-muted);">Fetching live CoinMarketCap quotes...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2: AI Bot Consensus Signals -->
+    <div id="tab-bot" class="tab-pane" style="display:none;">
+      <div id="bot-signals-container">
+        <div style="text-align:center; padding:40px; color:var(--text-muted); background:var(--bg-card); border-radius:10px;">
+          Loading AI consensus pipeline decisions...
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: Executed Trades Feed -->
+    <div id="tab-trades" class="tab-pane" style="display:none;">
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:16px;">
+        <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:12px 16px;">
+          <div class="stat-label">Total Amount Traded (Volume)</div>
+          <div class="stat-val mono" id="trade-sum-volume" style="font-size:20px;">$0.00</div>
+          <div class="stat-sub" id="trade-sum-count">0 transactions</div>
+        </div>
+        <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:12px 16px;">
+          <div class="stat-label">Total Realized Profit</div>
+          <div class="stat-val mono green" id="trade-sum-profit" style="font-size:20px;">+$0.00</div>
+          <div class="stat-sub green" id="trade-sum-wins">0 winning trades</div>
+        </div>
+        <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:12px 16px;">
+          <div class="stat-label">Total Realized Loss</div>
+          <div class="stat-val mono red" id="trade-sum-loss" style="font-size:20px;">-$0.00</div>
+          <div class="stat-sub red" id="trade-sum-losses">0 losing trades</div>
+        </div>
+        <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:12px 16px;">
+          <div class="stat-label">Net Realized PnL</div>
+          <div class="stat-val mono" id="trade-sum-net" style="font-size:20px;">$0.00</div>
+          <div class="stat-sub" id="trade-sum-winrate">100% win rate</div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Trade ID</th>
+              <th>Timestamp</th>
+              <th>Asset / Pair</th>
+              <th>Side</th>
+              <th>Execution Price</th>
+              <th>Amount Traded (Asset)</th>
+              <th>Amount Traded (USD)</th>
+              <th style="color:var(--accent-green);">Profit ($)</th>
+              <th style="color:var(--accent-red);">Loss ($)</th>
+              <th>Net PnL (% / $)</th>
+              <th>Outcome</th>
+              <th>Confidence</th>
+              <th>AI Reason</th>
+            </tr>
+          </thead>
+          <tbody id="trades-body">
+            <tr><td colspan="13" style="text-align:center; padding:20px; color:var(--text-muted);">Loading executed trades ledger...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB: Allocation & Currency Settings Override -->
+    <div id="tab-settings" class="tab-pane" style="display:none;">
+      <div class="form-box">
+        <h3 style="margin-bottom:10px; font-size:16px;">⚙️ Capital Allocation Percentage & Multi-Currency Override Controls</h3>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">
+          Configure proportionate trade position sizing calculated strictly as a percentage of your total account balance across <strong>GBPX, USDP, USDT, or USD</strong>.
+        </p>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; margin-bottom:16px;">
+          <div>
+            <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:4px;">Base Account Currency</label>
+            <select id="set-base-currency" class="input-field">
+              <option value="USDT">USDT (Tether USD — 1.00 USD)</option>
+              <option value="GBPX">GBPX (Tokenized British Pound — 1.30 USD)</option>
+              <option value="USDP">USDP (Paxos Dollar — 1.00 USD)</option>
+              <option value="USD">USD (US Dollar Fiat — 1.00 USD)</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:4px;">Default Allocation % Per Trade (<span id="lbl-default-alloc">10%</span>)</label>
+            <input type="range" id="set-default-alloc" min="1" max="30" value="10" class="input-field" style="padding:0;" oninput="document.getElementById('lbl-default-alloc').textContent = this.value + '%'" />
+          </div>
+
+          <div>
+            <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:4px;">Allocation Override % (Optional)</label>
+            <input type="number" id="set-override-alloc" class="input-field" placeholder="e.g. 15 (leave empty for automatic)" />
+          </div>
+
+          <div>
+            <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:4px;">Meme Coin Max Allocation % (<span id="lbl-meme-alloc">3%</span>)</label>
+            <input type="range" id="set-meme-alloc" min="1" max="10" step="0.5" value="3" class="input-field" style="padding:0;" oninput="document.getElementById('lbl-meme-alloc').textContent = this.value + '%'" />
+          </div>
+
+          <div>
+            <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:4px;">Max Portfolio Exposure % (<span id="lbl-max-exp">40%</span>)</label>
+            <input type="range" id="set-max-exp" min="10" max="80" value="40" class="input-field" style="padding:0;" oninput="document.getElementById('lbl-max-exp').textContent = this.value + '%'" />
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; align-items:center;">
+          <button class="btn btn-green" id="btn-save-settings">💾 Save & Apply Allocation Settings</button>
+          <button class="btn btn-outline" id="btn-preview-alloc">🔍 Calculate Position Sizing</button>
+        </div>
+      </div>
+
+      <!-- Live Calculation Box -->
+      <div id="alloc-calc-box" class="form-box" style="background:var(--bg-subtle);">
+        <h4 style="font-size:14px; margin-bottom:8px;">🧠 Skill Expert Trader — Proportionate Sizing Breakdown</h4>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
+          <div class="stat-card"><div class="stat-label">Active Base Currency</div><div class="stat-val mono" id="calc-currency" style="color:var(--accent-blue);">USDT</div></div>
+          <div class="stat-card"><div class="stat-label">Account Balance</div><div class="stat-val mono" id="calc-balance">275.50 USDT</div></div>
+          <div class="stat-card"><div class="stat-label">Effective Trade Allocation</div><div class="stat-val mono green" id="calc-pct">10.0%</div></div>
+          <div class="stat-card"><div class="stat-label">Calculated Position Size</div><div class="stat-val mono green" id="calc-pos">$27.55 USD</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: DexScreener Meme Coin Breakout Scanner -->
+    <div id="tab-memes" class="tab-pane" style="display:none;">
+      <div class="form-box">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div>
+            <h3 style="margin-bottom:4px; font-size:16px;">🐸 DexScreener Live Meme Coin Breakout Scanner</h3>
+            <p style="font-size:12px; color:var(--text-muted);">
+              Scans trending DEX meme tokens across Base, Solana, Ethereum, BSC, and Arbitrum. Filtered by <strong>$50k+ Liquidity & $100k+ 24h Volume</strong> with strict safety scores.
+            </p>
+          </div>
+          <button class="btn btn-purple" id="btn-refresh-memes">⚡ Refresh Meme Scanner</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Asset</th>
+              <th>Chain / DEX</th>
+              <th>Live Price (USD)</th>
+              <th>5m %</th>
+              <th>1h %</th>
+              <th>24h %</th>
+              <th>24h Volume</th>
+              <th>Liquidity Depth</th>
+              <th>Safety Score</th>
+              <th>Momentum Status</th>
+            </tr>
+          </thead>
+          <tbody id="memes-body">
+            <tr><td colspan="10" style="text-align:center; padding:20px; color:var(--text-muted);">Scanning DexScreener liquidity pools for meme coin breakouts...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 4: YouTube Continuous Learning Loop -->
+    <div id="tab-learning" class="tab-pane" style="display:none;">
+      <div class="form-box">
+        <h3 style="margin-bottom:10px; font-size:16px;">🎓 Ingest YouTube URL for Autonomous Agent Learning</h3>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">
+          Paste any YouTube video or analysis link. The agent extracts transcripts, detects mentioned coins, generates bullish/bearish catalysts, and updates channel reliability weights.
+        </p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <input type="text" id="input-yt-url" class="input-field" style="flex:2;" placeholder="https://www.youtube.com/watch?v=..." value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
+          <input type="text" id="input-yt-channel" class="input-field" style="flex:1;" placeholder="Channel / Analyst Name" value="Macro Alpha Insights" />
+          <button class="btn btn-green" id="btn-submit-yt">🚀 Ingest & Learn Alpha</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Channel</th>
+              <th>Video Title</th>
+              <th>Mentioned Coins</th>
+              <th>Extracted Signal</th>
+              <th>Sentiment Score</th>
+              <th>Channel Reliability</th>
+              <th>Key Catalyst Takeaway</th>
+            </tr>
+          </thead>
+          <tbody id="yt-memory-body">
+            <tr><td colspan="8" style="text-align:center; padding:20px; color:var(--text-muted);">Loading agent YouTube memory...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 5: DeFi Flash Loans Engine -->
+    <div id="tab-flashloan" class="tab-pane" style="display:none;">
+      <div class="form-box">
+        <h3 style="margin-bottom:10px; font-size:16px;">⚡ DeFi Zero-Capital Flash Loan Arbitrage Simulator</h3>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">
+          Borrow uncollateralized capital from Aave v3 (0.05% fee) or Balancer Vault (0.00% free fee) to execute atomic cross-DEX arbitrage.
+        </p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:14px;">
+          <div>
+            <label style="font-size:11px; color:var(--text-muted);">Token</label>
+            <select id="fl-token" class="input-field">
+              <option value="WETH">WETH</option>
+              <option value="WBTC">WBTC</option>
+              <option value="USDC">USDC</option>
+              <option value="LINK">LINK</option>
+              <option value="CRO">WCRO</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px; color:var(--text-muted);">Borrow Amount (USD)</label>
+            <input type="number" id="fl-amount" class="input-field" value="25000" />
+          </div>
+          <div>
+            <label style="font-size:11px; color:var(--text-muted);">Flash Loan Provider</label>
+            <select id="fl-provider" class="input-field">
+              <option value="balancer">Balancer Vault (0% Fee)</option>
+              <option value="aave_v3">Aave v3 (0.05% Fee)</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px; color:var(--text-muted);">Buy Chain ➔ Sell Chain</label>
+            <input type="text" id="fl-route" class="input-field" value="Arbitrum ➔ Base" />
+          </div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-purple" id="btn-sim-fl">⚡ Simulate Flash Loan</button>
+          <button class="btn btn-green" id="btn-exec-fl">🚀 Execute Paper Flash Loan</button>
+        </div>
+      </div>
+
+      <div id="fl-result-box" style="display:none;" class="form-box">
+        <h4 style="font-size:14px; margin-bottom:8px;" id="fl-result-title">Simulation Output</h4>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:10px;">
+          <div class="stat-card"><div class="stat-label">Gross Profit</div><div class="stat-val mono green" id="fl-gross">$0.00</div></div>
+          <div class="stat-card"><div class="stat-label">Flash Loan Fee</div><div class="stat-val mono red" id="fl-fee">$0.00</div></div>
+          <div class="stat-card"><div class="stat-label">Estimated Gas</div><div class="stat-val mono red" id="fl-gas">$0.00</div></div>
+          <div class="stat-card"><div class="stat-label">Net Profit (USD)</div><div class="stat-val mono green" id="fl-net">$0.00</div></div>
+        </div>
+        <p style="margin-top:12px; font-size:12px;" id="fl-recommendation"></p>
+      </div>
+    </div>
+
+    <!-- TAB 6: Fiat & DeFi Onboarding -->
+    <div id="tab-onboarding" class="tab-pane" style="display:none;">
+      <div class="form-box">
+        <h3 style="margin-bottom:10px; font-size:16px;">💳 Multi-Provider Fiat On-Ramp & Wallet Funding Aggregator</h3>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">
+          Fund your automated trading balances with debit card, Apple Pay, Google Pay, ACH, or SEPA bank wire across Base, Cronos, Arbitrum, and Solana.
+        </p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:14px;">
+          <div>
+            <label style="font-size:11px; color:var(--text-muted);">Fiat Currency</label>
+            <select id="ob-fiat" class="input-field">
+              <option value="USD">USD ($)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="GBP">GBP (£)</option>
+              <option value="AUD">AUD ($)</option>
+              <option value="CAD">CAD ($)</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px; color:var(--text-muted);">Deposit Amount</label>
+            <input type="number" id="ob-amount" class="input-field" value="250" />
+          </div>
+          <div>
+            <label style="font-size:11px; color:var(--text-muted);">Crypto to Receive</label>
+            <select id="ob-crypto" class="input-field">
+              <option value="USDC">USDC</option>
+              <option value="BTC">BTC / cbBTC</option>
+              <option value="ETH">ETH</option>
+              <option value="SOL">SOL</option>
+              <option value="CRO">CRO</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px; color:var(--text-muted);">Target Network</label>
+            <select id="ob-network" class="input-field">
+              <option value="base">Base</option>
+              <option value="cronos">Cronos</option>
+              <option value="arbitrum">Arbitrum One</option>
+              <option value="solana">Solana</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-green" id="btn-fetch-quotes">🔄 Fetch Live On-Ramp Quotes</button>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Gateway</th>
+              <th>Deposit Amount</th>
+              <th>Fee % / $</th>
+              <th>Net Credited (USD)</th>
+              <th>Est. Crypto Received</th>
+              <th>Payment Methods</th>
+              <th>Transfer Speed</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="onramp-quotes-body">
+            <tr><td colspan="8" style="text-align:center; padding:20px; color:var(--text-muted);">Click "Fetch Live On-Ramp Quotes" to compare rates.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 7: Telegram Sentinel & Live Alpha Feeds -->
+    <div id="tab-telegram" class="tab-pane" style="display:none;">
+      <div class="form-box">
+        <h3 style="margin-bottom:10px; font-size:16px;">📱 Telegram Sentinel Alerts & Channel Alpha Ingestion</h3>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">
+          Directly test emergency $30 margin alerts, broadcast trade notifications, and ingest market alpha from Telegram channels into AI memory.
+        </p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
+          <button class="btn btn-gold" id="btn-tg-test-trade">🔔 Send Test Trade Alert</button>
+          <button class="btn btn-red" id="btn-tg-test-margin">🚨 Test $30 Margin Trigger</button>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <input type="text" id="tg-alpha-input" class="input-field" style="flex:3;" placeholder="Paste Telegram channel message/alpha snippet..." />
+          <input type="text" id="tg-alpha-sender" class="input-field" style="flex:1;" placeholder="Channel / Source" value="Whale Alert Alpha" />
+          <button class="btn btn-green" id="btn-tg-ingest">📥 Ingest Alpha</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Source / Channel</th>
+              <th>Ingested Alpha Message</th>
+              <th>Characters</th>
+            </tr>
+          </thead>
+          <tbody id="tg-messages-body">
+            <tr><td colspan="4" style="text-align:center; padding:20px; color:var(--text-muted);">Loading ingested Telegram messages...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 8: Multi-Chain DEX Arbitrage Scanner -->
+    <div id="tab-arb" class="tab-pane" style="display:none;">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Route (Buy ➔ Sell)</th>
+              <th>Buy Price</th>
+              <th>Sell Price</th>
+              <th>Gross %</th>
+              <th>Est. Gas Cost</th>
+              <th>Net Profit %</th>
+              <th>Net USD (on $1,000)</th>
+              <th>Liquidity Depth</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="arb-body">
+            <tr><td colspan="10" style="text-align:center; padding:20px; color:var(--text-muted);">Scanning multi-chain DEX orderbooks...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 9: On-Chain & Valuation Metrics -->
+    <div id="tab-onchain" class="tab-pane" style="display:none;">
+      <div class="stats-grid" id="onchain-metrics-grid">
+        <div class="stat-card"><div class="stat-label">Loading On-Chain Intelligence...</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let fullStackData = null;
+
+    function switchTab(tabId, btnElem) {
+      try {
+        document.querySelectorAll('.tab-pane').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        const target = document.getElementById(tabId);
+        if (target) target.style.display = 'block';
+        if (btnElem && btnElem.classList) {
+          btnElem.classList.add('active');
+        } else if (typeof window !== 'undefined' && window.event && window.event.target) {
+          const btn = window.event.target.closest('.tab-btn') || window.event.target;
+          if (btn && btn.classList) btn.classList.add('active');
+        }
+      } catch (e) {
+        console.warn('Tab switch note:', e);
+      }
+    }
+
+    async function loadFullStackData() {
+      try {
+        const res = await fetch('/api/full-stack');
+        const data = await res.json();
+        if (data.success) {
+          fullStackData = data;
+          renderKPIs(data);
+          renderCMCQuotes(data.cmcQuotes);
+          renderTrades(data.trades);
+          renderArbitrage(data.arbitrage);
+        }
+      } catch (err) {
+        console.error('Error loading full stack data:', err);
+      }
+    }
+
+    async function loadMarginStatus() {
+      try {
+        const res = await fetch('/api/margin/status');
+        const data = await res.json();
+        if (data.success) {
+          const banner = document.getElementById('margin-banner');
+          const text = document.getElementById('margin-banner-text');
+          const badge = document.getElementById('margin-badge');
+
+          if (!data.marginHealthy) {
+            banner.className = 'critical';
+            text.innerHTML = `<strong>🚨 CRITICAL MARGIN ALERT:</strong> Balance $${data.currentBalance.toFixed(2)} is BELOW $${data.minMarginThreshold.toFixed(2)} Minimum Floor! Automated executions HALTED.`;
+            badge.className = 'badge badge-alert';
+            badge.textContent = `🛑 HALTED (Balance < $${data.minMarginThreshold.toFixed(2)})`;
+          } else {
+            banner.className = '';
+            text.innerHTML = `<strong>Margin Sentinel Active:</strong> Portfolio Balance $${data.currentBalance.toFixed(2)} exceeds $${data.minMarginThreshold.toFixed(2)} Floor (Healthy) · Minimum 72% AI Confidence Enforced`;
+            badge.className = 'badge badge-live';
+            badge.textContent = `🟢 Healthy (Margin > $${data.minMarginThreshold.toFixed(2)})`;
+          }
+        }
+      } catch (e) {}
+    }
+
+    async function loadBotOutputs() {
+      try {
+        const res = await fetch('/api/bot-outputs');
+        const data = await res.json();
+        if (data.success && data.botOutputs) {
+          renderBotOutputs(data.botOutputs);
+        }
+      } catch (err) {
+        console.error('Error loading bot outputs:', err);
+      }
+    }
+
+    async function loadOnChainData() {
+      try {
+        const res = await fetch('/api/on-chain');
+        const data = await res.json();
+        if (data.success && data.metrics) {
+          renderOnChainMetrics(data.metrics);
+        }
+      } catch (err) {}
+    }
+
+    async function loadYouTubeMemory() {
+      try {
+        const res = await fetch('/api/learning/memory');
+        const data = await res.json();
+        if (data.success && data.memory) {
+          renderYouTubeMemory(data.memory);
+        }
+      } catch (e) {}
+    }
+
+    async function loadTelegramMessages() {
+      try {
+        const res = await fetch('/api/telegram/messages');
+        const data = await res.json();
+        if (data.success && data.messages) {
+          renderTelegramMessages(data.messages);
+        }
+      } catch (e) {}
+    }
+
+    function renderKPIs(data) {
+      const p = data.portfolio || {};
+      const v = data.vault || {};
+      const perf = data.performance || {};
+      const g = data.cmcGlobal || {};
+
+      document.getElementById('kpi-portfolio').textContent = `$${(p.currentBalance || 250).toFixed(2)}`;
+      document.getElementById('kpi-exposure').textContent = `${(p.activeExposurePct || 0).toFixed(1)}% Exposure`;
+      
+      document.getElementById('kpi-btc-vault').textContent = `$${(v.btcSavingsPoolUsd || 0).toFixed(2)}`;
+      document.getElementById('kpi-btc-accum').textContent = `${(v.btcAccumulated || 0).toFixed(6)} BTC Saved`;
+      
+      document.getElementById('kpi-cold-vault').textContent = `$${(v.longtermVaultUsd || 0).toFixed(2)}`;
+      
+      document.getElementById('kpi-winrate').textContent = `${(perf.winRate || 100).toFixed(1)}%`;
+      document.getElementById('kpi-trades-count').textContent = `${perf.totalTrades || 0} Executed Trades (+$${(perf.totalProfitUsd || 0).toFixed(2)})`;
+      
+      document.getElementById('kpi-btc-dom').textContent = `${(g.btcDominance || 59.7).toFixed(1)}%`;
+      document.getElementById('kpi-total-mcap').textContent = `Total MCAP: $${((g.totalMarketCap || 2.66e12) / 1e12).toFixed(2)}T`;
+    }
+
+    function renderCMCQuotes(quotes) {
+      const tbody = document.getElementById('cmc-quotes-body');
+      if (!quotes || Object.keys(quotes).length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:20px;">No CoinMarketCap quotes returned.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = Object.entries(quotes).map(([sym, q]) => {
+        const c1h = q.percentChange1h || 0;
+        const c24h = q.percentChange24h || 0;
+        const c7d = q.percentChange7d || 0;
+        return `
+          <tr>
+            <td><span class="badge" style="background:#1f2937;">#${q.cmcRank || '-'}</span></td>
+            <td><strong>${q.name || sym}</strong> <span class="mono" style="color:var(--text-muted);">(${sym})</span></td>
+            <td class="mono"><strong>$${Number(q.price).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 4})}</strong></td>
+            <td class="mono ${c1h >= 0 ? 'green' : 'red'}">${c1h >= 0 ? '+' : ''}${c1h.toFixed(2)}%</td>
+            <td class="mono ${c24h >= 0 ? 'green' : 'red'}">${c24h >= 0 ? '+' : ''}${c24h.toFixed(2)}%</td>
+            <td class="mono ${c7d >= 0 ? 'green' : 'red'}">${c7d >= 0 ? '+' : ''}${c7d.toFixed(2)}%</td>
+            <td class="mono">$${Number(q.volume24h || 0).toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+            <td class="mono">$${Number(q.marketCap || 0).toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+            <td class="mono">${(q.marketCapDominance || 0).toFixed(2)}%</td>
+            <td><span class="badge badge-live">CMC Pro Live</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderBotOutputs(outputs) {
+      const container = document.getElementById('bot-signals-container');
+      if (!outputs || Object.keys(outputs).length === 0) {
+        container.innerHTML = '<div style="padding:20px; text-align:center;">No AI signals available.</div>';
+        return;
+      }
+
+      container.innerHTML = Object.entries(outputs).map(([pair, item]) => {
+        const c = item.consensus || {};
+        const signalClass = c.masterSignal === 'BUY' ? 'badge-buy' : c.masterSignal === 'SELL' ? 'badge-sell' : 'badge-hold';
+        const breakdown = c.breakdown || [];
+
+        return `
+          <div class="agent-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+              <div>
+                <span style="font-size:16px; font-weight:700;">${pair}</span>
+                <span class="mono" style="margin-left:8px; color:var(--text-muted);">$${(item.price || 0).toFixed(2)}</span>
+                <span class="mono ${item.change24h >= 0 ? 'green' : 'red'}" style="font-size:12px; margin-left:6px;">(${item.change24h >= 0 ? '+' : ''}${(item.change24h || 0).toFixed(2)}%)</span>
+              </div>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <span class="badge ${signalClass}">${c.masterSignal || 'HOLD'}</span>
+                <span class="badge" style="background:#1f2937;">${((c.confidence || 0) * 100).toFixed(0)}% Confidence</span>
+                <span class="badge" style="background:#1f2937;">${c.agentsAgreeing || 0}/${c.totalAgents || 7} Agreeing</span>
+                <span class="badge ${c.approved_for_execution ? 'badge-live' : 'badge-sell'}">${c.approved_for_execution ? '✅ 72% Gate Approved' : '⚠️ Preserved (<72%)'}</span>
+              </div>
+            </div>
+            <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">${c.reasoning || ''}</p>
+            <div class="agent-grid">
+              ${breakdown.map(a => `
+                <div class="agent-vote">
+                  <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                    <strong style="font-size:11px; text-transform:uppercase;">${a.agent}</strong>
+                    <span class="badge ${a.signal === 'BUY' ? 'badge-buy' : a.signal === 'SELL' ? 'badge-sell' : 'badge-hold'}" style="padding:1px 6px; font-size:10px;">${a.signal}</span>
+                  </div>
+                  <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">${((a.confidence || 0) * 100).toFixed(0)}% Conf</div>
+                  <div style="font-size:11px; color:#d1d5db; margin-top:4px; line-height:1.3; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">${a.reason || ''}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderTrades(trades) {
+      const tbody = document.getElementById('trades-body');
+      if (!trades || trades.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; padding:20px; color:var(--text-muted);">No trades executed yet. Click "Run AI Cycle" to execute.</td></tr>';
+        return;
+      }
+
+      let totalVolume = 0;
+      let totalProfit = 0;
+      let totalLoss = 0;
+      let wins = 0;
+      let losses = 0;
+
+      trades.forEach(t => {
+        const pnl = Number(t.pnlUsd) || 0;
+        const size = Number(t.positionSizeUsd) || 0;
+        totalVolume += size;
+        if (pnl > 0 || t.outcome === 'WIN') {
+          totalProfit += pnl;
+          wins++;
+        } else if (pnl < 0 || t.outcome === 'LOSS') {
+          totalLoss += Math.abs(pnl);
+          losses++;
+        }
+      });
+
+      const netPnl = totalProfit - totalLoss;
+      const winRate = trades.length > 0 ? (wins / trades.length * 100).toFixed(1) : '100.0';
+
+      document.getElementById('trade-sum-volume').textContent = `$${totalVolume.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+      document.getElementById('trade-sum-count').textContent = `${trades.length} total executed transactions`;
+
+      document.getElementById('trade-sum-profit').textContent = `+$${totalProfit.toFixed(2)}`;
+      document.getElementById('trade-sum-wins').textContent = `${wins} winning trades`;
+
+      document.getElementById('trade-sum-loss').textContent = `-$${totalLoss.toFixed(2)}`;
+      document.getElementById('trade-sum-losses').textContent = `${losses} losing trades`;
+
+      const netEl = document.getElementById('trade-sum-net');
+      netEl.textContent = `${netPnl >= 0 ? '+' : '-'}$${Math.abs(netPnl).toFixed(2)}`;
+      netEl.className = `stat-val mono ${netPnl >= 0 ? 'green' : 'red'}`;
+      document.getElementById('trade-sum-winrate').textContent = `${winRate}% win rate across history`;
+
+      tbody.innerHTML = trades.map(t => {
+        const pnl = Number(t.pnlUsd) || 0;
+        const isWin = t.outcome === 'WIN' || pnl > 0;
+        const isLoss = t.outcome === 'LOSS' || pnl < 0;
+        const profit = isWin ? pnl : 0;
+        const loss = isLoss ? Math.abs(pnl) : 0;
+
+        const sym = (t.pair || t.symbol || 'BTC/USDT').split('/')[0];
+        const sideClass = t.side === 'BUY' ? 'badge-buy' : 'badge-sell';
+        const outcomeClass = isWin ? 'badge-live' : isLoss ? 'badge-sell' : 'badge-hold';
+
+        return `
+          <tr>
+            <td class="mono" style="color:var(--text-muted); font-size:11px;">${t.id}</td>
+            <td style="font-size:12px; color:var(--text-muted);">${new Date(t.timestamp).toLocaleTimeString()}</td>
+            <td><strong>${t.pair || t.symbol}</strong></td>
+            <td><span class="badge ${sideClass}">${t.side}</span></td>
+            <td class="mono">$${Number(t.price || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 4})}</td>
+            <td class="mono"><strong>${t.amount ? Number(t.amount).toFixed(6) : '-'}</strong> <span style="font-size:11px; color:var(--text-muted);">${sym}</span></td>
+            <td class="mono"><strong>$${Number(t.positionSizeUsd || 0).toFixed(2)}</strong></td>
+            <td class="mono ${profit > 0 ? 'green' : ''}" style="font-weight:600;">${profit > 0 ? '+$' + profit.toFixed(2) : '<span style="color:#6b7280;">$0.00</span>'}</td>
+            <td class="mono ${loss > 0 ? 'red' : ''}" style="font-weight:600;">${loss > 0 ? '-$' + loss.toFixed(2) : '<span style="color:#6b7280;">$0.00</span>'}</td>
+            <td class="mono ${isWin ? 'green' : isLoss ? 'red' : ''}" style="font-weight:600;">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} (${Number(t.pnlPct || 0).toFixed(2)}%)</td>
+            <td><span class="badge ${outcomeClass}">${t.outcome || (isWin ? 'WIN' : isLoss ? 'LOSS' : 'BREAKEVEN')}</span></td>
+            <td class="mono">${((t.confidence || 0.85) * 100).toFixed(0)}%</td>
+            <td style="font-size:12px; color:var(--text-muted); max-width:260px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${t.reason || 'Paper execution validated'}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderYouTubeMemory(memory) {
+      const tbody = document.getElementById('yt-memory-body');
+      if (!memory || memory.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px; color:var(--text-muted);">No YouTube alpha ingested yet. Paste a link above to begin learning.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = memory.map(m => `
+        <tr>
+          <td style="font-size:12px; color:var(--text-muted);">${new Date(m.timestamp).toLocaleTimeString()}</td>
+          <td><strong>${m.channel}</strong></td>
+          <td><a href="${m.url}" target="_blank" style="color:var(--accent-blue); text-decoration:none;">${m.title}</a></td>
+          <td class="mono">${(m.mentionedCoins || []).join(', ')}</td>
+          <td><span class="badge ${m.signal === 'BUY' ? 'badge-buy' : 'badge-sell'}">${m.signal}</span></td>
+          <td class="mono ${m.sentimentScore >= 0 ? 'green' : 'red'}">${m.sentimentScore >= 0 ? '+' : ''}${(m.sentimentScore || 0).toFixed(2)}</td>
+          <td class="mono">${(m.channelReliability || 0.5).toFixed(2)} / 1.0</td>
+          <td style="font-size:12px; color:#d1d5db;">${m.keyTakeaway || ''}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderTelegramMessages(messages) {
+      const tbody = document.getElementById('tg-messages-body');
+      if (!messages || messages.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--text-muted);">No Telegram alpha messages ingested yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = messages.map(msg => `
+        <tr>
+          <td style="font-size:12px; color:var(--text-muted);">${new Date(msg.timestamp).toLocaleTimeString()}</td>
+          <td><strong>${msg.sender}</strong></td>
+          <td style="font-size:13px; color:#f3f4f6;">${msg.text}</td>
+          <td class="mono" style="color:var(--text-muted); font-size:11px;">${msg.length} chars</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderArbitrage(opps) {
+      const tbody = document.getElementById('arb-body');
+      if (!opps || opps.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:20px; color:var(--text-muted);">No arbitrage opportunities detected above gas threshold.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = opps.map(o => `
+        <tr>
+          <td><strong>${o.token}</strong></td>
+          <td><span class="badge" style="background:#1f2937;">${o.buy_chain_name || o.buy_chain}</span> ➔ <span class="badge" style="background:#1f2937;">${o.sell_chain_name || o.sell_chain}</span></td>
+          <td class="mono">$${(o.buy_price || 0).toFixed(4)}</td>
+          <td class="mono">$${(o.sell_price || 0).toFixed(4)}</td>
+          <td class="mono green">+${(o.gross_pct || 0).toFixed(2)}%</td>
+          <td class="mono red">-${(o.gas_cost_pct || 0).toFixed(3)}%</td>
+          <td class="mono green"><strong>+${(o.net_pct || 0).toFixed(2)}%</strong></td>
+          <td class="mono green">+$${(o.net_usd_1k || 0).toFixed(2)}</td>
+          <td class="mono" style="font-size:11px; color:var(--text-muted);">$${Number(o.buy_liquidity || 0).toLocaleString(undefined, {maximumFractionDigits:0})}</td>
+          <td><span class="badge badge-live">Actionable</span></td>
+        </tr>
+      `).join('');
+    }
+
+    function renderOnChainMetrics(metrics) {
+      const grid = document.getElementById('onchain-metrics-grid');
+      grid.innerHTML = metrics.map(m => `
+        <div class="stat-card">
+          <div class="stat-label">${m.label}</div>
+          <div class="stat-val mono">${m.value}</div>
+          <div class="stat-sub">${m.description}</div>
+        </div>
+      `).join('');
+    }
+
+    // Button event handlers
+    document.getElementById('btn-run-cycle').addEventListener('click', async function() {
+      const btn = this;
+      btn.disabled = true;
+      btn.textContent = '⏳ Executing AI Consensus...';
+      try {
+        await fetch('/api/cycle', { method: 'POST' });
+        setTimeout(async () => {
+          await loadFullStackData();
+          await loadBotOutputs();
+          await loadMarginStatus();
+          btn.disabled = false;
+          btn.textContent = '🚀 Run AI Cycle';
+        }, 4000);
+      } catch(e) {
+        btn.disabled = false;
+        btn.textContent = '🚀 Run AI Cycle';
+      }
+    });
+
+    document.getElementById('btn-scan-dex').addEventListener('click', async function() {
+      const btn = this;
+      btn.disabled = true;
+      btn.textContent = '⏳ Scanning DEXs...';
+      try {
+        await fetch('/api/export/live', { method: 'POST' });
+        setTimeout(async () => {
+          await loadFullStackData();
+          btn.disabled = false;
+          btn.textContent = '⚡ Scan DEX Arb';
+        }, 3000);
+      } catch(e) {
+        btn.disabled = false;
+        btn.textContent = '⚡ Scan DEX Arb';
+      }
+    });
+
+    document.getElementById('btn-refresh').addEventListener('click', async function() {
+      await loadFullStackData();
+      await loadBotOutputs();
+      await loadOnChainData();
+      await loadMarginStatus();
+      await loadYouTubeMemory();
+      await loadTelegramMessages();
+    });
+
+    // YouTube Submission
+    document.getElementById('btn-submit-yt').addEventListener('click', async function() {
+      const btn = this;
+      const url = document.getElementById('input-yt-url').value.trim();
+      const channel = document.getElementById('input-yt-channel').value.trim();
+      if (!url) return alert('Please enter a YouTube video URL');
+      btn.disabled = true;
+      btn.textContent = '⏳ Extracting & Learning...';
+      try {
+        const res = await fetch('/api/learning/youtube', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, channel }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(`✅ Learned from YouTube: ${data.insight.title}\nSignal: ${data.insight.signal} on ${data.insight.mentionedCoins.join(', ')}`);
+          await loadYouTubeMemory();
+        }
+      } catch (e) {
+        alert('YouTube learning error: ' + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🚀 Ingest & Learn Alpha';
+      }
+    });
+
+    // Flash Loan Simulation
+    document.getElementById('btn-sim-fl').addEventListener('click', async function() {
+      const token = document.getElementById('fl-token').value;
+      const borrowAmountUsd = parseFloat(document.getElementById('fl-amount').value) || 10000;
+      const provider = document.getElementById('fl-provider').value;
+      try {
+        const res = await fetch('/api/flashloan/simulate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, borrowAmountUsd, provider, buyPrice: 3490, sellPrice: 3522, gasCostUsd: 2.5 }),
+        });
+        const data = await res.json();
+        if (data.success && data.simulation) {
+          const sim = data.simulation;
+          document.getElementById('fl-result-box').style.display = 'block';
+          document.getElementById('fl-gross').textContent = `+$${sim.grossProfitUsd.toFixed(2)}`;
+          document.getElementById('fl-fee').textContent = `-$${sim.flashLoanFeeUsd.toFixed(2)} (${sim.protocolFeeRate})`;
+          document.getElementById('fl-gas').textContent = `-$${(sim.gasCostUsd + sim.slippageUsd).toFixed(2)}`;
+          document.getElementById('fl-net').textContent = `+$${sim.netProfitUsd.toFixed(2)} (${sim.netProfitPct.toFixed(2)}%)`;
+          document.getElementById('fl-recommendation').textContent = sim.recommendation;
+        }
+      } catch (e) {
+        alert('Simulation error: ' + e.message);
+      }
+    });
+
+    document.getElementById('btn-exec-fl').addEventListener('click', async function() {
+      const token = document.getElementById('fl-token').value;
+      const borrowAmountUsd = parseFloat(document.getElementById('fl-amount').value) || 10000;
+      const provider = document.getElementById('fl-provider').value;
+      try {
+        const res = await fetch('/api/flashloan/execute', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, borrowAmountUsd, provider, buyPrice: 3490, sellPrice: 3522, gasCostUsd: 2.5 }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(`⚡ Flash Loan Executed Successfully!\nTx ID: ${data.result.txId}\nNet Profit: +$${data.result.simulation.netProfitUsd.toFixed(2)}`);
+        }
+      } catch (e) {
+        alert('Execution error: ' + e.message);
+      }
+    });
+
+    // Fiat On-Ramp Quotes Fetcher
+    document.getElementById('btn-fetch-quotes').addEventListener('click', async function() {
+      const fiatCurrency = document.getElementById('ob-fiat').value;
+      const fiatAmount = document.getElementById('ob-amount').value;
+      const cryptoAsset = document.getElementById('ob-crypto').value;
+      const network = document.getElementById('ob-network').value;
+
+      try {
+        const res = await fetch(`/api/onboarding/quotes?fiatCurrency=${fiatCurrency}&fiatAmount=${fiatAmount}&cryptoAsset=${cryptoAsset}&network=${network}`);
+        const data = await res.json();
+        const tbody = document.getElementById('onramp-quotes-body');
+        if (data.success && data.quotes) {
+          tbody.innerHTML = data.quotes.map(q => `
+            <tr>
+              <td><strong>${q.providerName}</strong></td>
+              <td class="mono">${q.fiatCurrency} $${q.fiatAmount}</td>
+              <td class="mono red">${q.feePct} ($${q.feeUsd})</td>
+              <td class="mono green"><strong>$${q.netDepositUsd}</strong></td>
+              <td class="mono green"><strong>${q.estCryptoReceived} ${q.cryptoAsset}</strong></td>
+              <td style="font-size:12px; color:var(--text-muted);">${q.paymentMethods.join(', ')}</td>
+              <td style="font-size:12px;">${q.speed}</td>
+              <td><a href="${q.checkoutUrl}" target="_blank" class="btn btn-green" style="padding:4px 8px; font-size:11px; text-decoration:none;">💳 Fund Wallet</a></td>
+            </tr>
+          `).join('');
+        }
+      } catch (e) {
+        alert('Failed to fetch onramp quotes: ' + e.message);
+      }
+    });
+
+    // Telegram Alert & Ingest Handlers
+    document.getElementById('btn-tg-test-trade').addEventListener('click', async function() {
+      try {
+        const res = await fetch('/api/telegram/test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: '🟢 [TEST] BTC/USDT BUY simulated @ $79,125.88 — Confidence 85.6% passed 72% win rate gate.' }),
+        });
+        const data = await res.json();
+        alert('Telegram notification dispatched!\nStatus: ' + (data.result?.simulated ? 'Simulated in logger' : 'Sent to chat'));
+      } catch (e) {
+        alert('Telegram test error: ' + e.message);
+      }
+    });
+
+    document.getElementById('btn-tg-test-margin').addEventListener('click', async function() {
+      try {
+        const res = await fetch('/api/telegram/test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'margin', balance: 24.50 }),
+        });
+        const data = await res.json();
+        alert('🚨 Margin Alert Broadcasted!\nStatus: ' + (data.result?.simulated ? 'Simulated in logger' : 'Sent to chat'));
+      } catch (e) {
+        alert('Telegram test error: ' + e.message);
+      }
+    });
+
+    document.getElementById('btn-tg-ingest').addEventListener('click', async function() {
+      const text = document.getElementById('tg-alpha-input').value.trim();
+      const sender = document.getElementById('tg-alpha-sender').value.trim();
+      if (!text) return alert('Please enter an alpha message to ingest');
+      try {
+        const res = await fetch('/api/telegram/ingest', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, sender }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('tg-alpha-input').value = '';
+          alert('✅ Alpha message ingested into sentiment memory!');
+          await loadTelegramMessages();
+        }
+      } catch (e) {
+        alert('Ingest error: ' + e.message);
+      }
+    });
+
+    // ==============================================================================
+    // Allocation Settings & Multi-Currency Override Handlers
+    // ==============================================================================
+    async function loadAllocationSettings() {
+      try {
+        const res = await fetch('/api/settings/allocation');
+        const data = await res.json();
+        if (data.success && data.settings) {
+          const s = data.settings;
+          document.getElementById('set-base-currency').value = s.baseCurrency || 'USDT';
+          document.getElementById('set-default-alloc').value = s.defaultAllocationPct || 10;
+          document.getElementById('lbl-default-alloc').textContent = `${s.defaultAllocationPct || 10}%`;
+          document.getElementById('set-override-alloc').value = s.overrideAllocationPct !== null && s.overrideAllocationPct !== undefined ? s.overrideAllocationPct : '';
+          document.getElementById('set-meme-alloc').value = s.memeAllocationPct || 3;
+          document.getElementById('lbl-meme-alloc').textContent = `${s.memeAllocationPct || 3}%`;
+          document.getElementById('set-max-exp').value = s.maxExposurePct || 40;
+          document.getElementById('lbl-max-exp').textContent = `${s.maxExposurePct || 40}%`;
+
+          updateAllocPreview();
+        }
+      } catch (e) {}
+    }
+
+    async function saveAllocationSettings() {
+      const baseCurrency = document.getElementById('set-base-currency').value;
+      const defaultAllocationPct = parseFloat(document.getElementById('set-default-alloc').value);
+      const overrideVal = document.getElementById('set-override-alloc').value.trim();
+      const overrideAllocationPct = overrideVal === '' ? null : parseFloat(overrideVal);
+      const memeAllocationPct = parseFloat(document.getElementById('set-meme-alloc').value);
+      const maxExposurePct = parseFloat(document.getElementById('set-max-exp').value);
+
+      try {
+        const res = await fetch('/api/settings/allocation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            baseCurrency,
+            defaultAllocationPct,
+            overrideAllocationPct,
+            memeAllocationPct,
+            maxExposurePct,
+          }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(`✅ Allocation Settings Activated!\nBase Currency: ${data.settings.baseCurrency}\nDefault: ${data.settings.defaultAllocationPct}%\nOverride: ${data.settings.overrideAllocationPct ? data.settings.overrideAllocationPct + '%' : 'Disabled (Automatic)'}\nMeme Coin Cap: ${data.settings.memeAllocationPct}%`);
+          updateAllocPreview();
+        }
+      } catch (e) {
+        alert('Failed to save allocation settings: ' + e.message);
+      }
+    }
+
+    async function updateAllocPreview() {
+      const baseCurrency = document.getElementById('set-base-currency').value;
+      const overrideVal = document.getElementById('set-override-alloc').value.trim();
+      const overridePct = overrideVal === '' ? null : parseFloat(overrideVal);
+
+      try {
+        const res = await fetch(`/api/expert-allocator/BTC?baseCurrency=${baseCurrency}${overridePct ? '&overridePct=' + overridePct : ''}`);
+        const data = await res.json();
+        if (data.success && data.assessment) {
+          const a = data.assessment;
+          document.getElementById('calc-currency').textContent = a.baseCurrency;
+          document.getElementById('calc-balance').textContent = `${a.accountTotalBalance} ${a.baseCurrency}`;
+          document.getElementById('calc-pct').textContent = `${a.allocationPct}% ${a.isOverrideApplied ? '(Override)' : '(Dynamic)'}`;
+          document.getElementById('calc-pos').textContent = `${a.allocatedPositionSize} ${a.baseCurrency} ($${a.allocatedPositionSizeUsd} USD)`;
+        }
+      } catch (e) {}
+    }
+
+    document.getElementById('btn-save-settings').addEventListener('click', saveAllocationSettings);
+    document.getElementById('btn-preview-alloc').addEventListener('click', updateAllocPreview);
+    document.getElementById('set-base-currency').addEventListener('change', updateAllocPreview);
+
+    // ==============================================================================
+    // DexScreener Meme Coin Scanner Handlers
+    // ==============================================================================
+    async function loadMemeCoins() {
+      const tbody = document.getElementById('memes-body');
+      try {
+        const res = await fetch('/api/dex/memecoins');
+        const data = await res.json();
+        if (data.success && data.memeCoins && data.memeCoins.length > 0) {
+          tbody.innerHTML = data.memeCoins.map(m => {
+            const c5m = m.change5m || 0;
+            const c1h = m.change1h || 0;
+            const c24h = m.change24h || 0;
+            return `
+              <tr>
+                <td><strong>${m.name}</strong> <span class="mono" style="color:var(--text-muted);">(${m.symbol})</span></td>
+                <td><span class="badge" style="background:#1f2937; text-transform:uppercase;">${m.chain || 'DEX'}</span></td>
+                <td class="mono"><strong>$${m.priceUsd < 0.01 ? m.priceUsd.toFixed(8) : m.priceUsd.toFixed(4)}</strong></td>
+                <td class="mono ${c5m >= 0 ? 'green' : 'red'}">${c5m >= 0 ? '+' : ''}${c5m.toFixed(2)}%</td>
+                <td class="mono ${c1h >= 0 ? 'green' : 'red'}">${c1h >= 0 ? '+' : ''}${c1h.toFixed(2)}%</td>
+                <td class="mono ${c24h >= 0 ? 'green' : 'red'}">${c24h >= 0 ? '+' : ''}${c24h.toFixed(2)}%</td>
+                <td class="mono">$${Number(m.volume24hUsd || 0).toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                <td class="mono green">$${Number(m.liquidityUsd || 0).toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                <td><span class="badge ${m.safetyScore >= 90 ? 'badge-buy' : 'badge-live'}">🛡️ ${m.safetyScore}/100</span></td>
+                <td><span class="badge ${m.isBreakout ? 'badge-buy' : 'badge-paper'}">${m.isBreakout ? '🚀 Breakout Volume' : 'Consolidating'}</span></td>
+              </tr>
+            `;
+          }).join('');
+        }
+      } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:20px;">Failed to scan DexScreener tokens.</td></tr>';
+      }
+    }
+
+    // ==============================================================================
+    // Autonomous Auto-Trading Engine Controls & Live Countdown
+    // ==============================================================================
+    let autoTradeCountdown = 0;
+    let autoTradeActive = false;
+
+    async function loadAutoTradingStatus() {
+      try {
+        const res = await fetch('/api/autotrading/status');
+        const data = await res.json();
+        if (data.success && data.autotrading) {
+          const at = data.autotrading;
+          autoTradeActive = at.isActive;
+          autoTradeCountdown = at.remainingSeconds || 0;
+
+          const btn = document.getElementById('btn-autotrade-toggle');
+          const icon = document.getElementById('autotrade-btn-icon');
+          const text = document.getElementById('autotrade-btn-text');
+          const badge = document.getElementById('autotrade-status-badge');
+          const desc = document.getElementById('autotrade-status-desc');
+
+          document.getElementById('autotrade-cycle-count').textContent = at.totalAutoCycles || 0;
+          document.getElementById('autotrade-trade-count').textContent = at.totalAutoTrades || 0;
+          document.getElementById('autotrade-interval-select').value = at.intervalSeconds || 30;
+
+          if (at.isActive) {
+            btn.className = 'btn btn-red';
+            btn.style.boxShadow = '0 0 16px rgba(239, 68, 68, 0.4)';
+            icon.textContent = '⏹️';
+            text.textContent = 'STOP AUTO-TRADING';
+
+            badge.className = 'badge badge-live';
+            badge.textContent = `🟢 LIVE (${at.intervalSeconds}s Interval)`;
+            desc.innerHTML = `Automated trading engine is <strong>ACTIVE</strong> across ${at.pairs.length} pairs. Trades place automatically upon 72% AI consensus.`;
+          } else {
+            btn.className = 'btn btn-green';
+            btn.style.boxShadow = '0 0 12px rgba(16, 185, 129, 0.3)';
+            icon.textContent = '▶️';
+            text.textContent = 'START AUTO-TRADING';
+
+            badge.className = 'badge';
+            badge.style.background = '#374151';
+            badge.style.color = '#9ca3af';
+            badge.textContent = '🛑 AUTO-TRADING STOPPED';
+            desc.innerHTML = `Click <strong>"START AUTO-TRADING"</strong> to begin continuous automated trades on BTC, ETH, SOL, CRO, AVAX, ARB.`;
+            document.getElementById('autotrade-timer').textContent = '--';
+          }
+        }
+      } catch (e) {}
+    }
+
+    document.getElementById('btn-autotrade-toggle').addEventListener('click', async function() {
+      const btn = this;
+      btn.disabled = true;
+      const interval = document.getElementById('autotrade-interval-select').value;
+      try {
+        const res = await fetch('/api/autotrading/toggle', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ interval }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          await loadAutoTradingStatus();
+          await loadFullStackData();
+        }
+      } catch (e) {
+        alert('Auto-trading toggle error: ' + e.message);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById('autotrade-interval-select').addEventListener('change', async function() {
+      if (autoTradeActive) {
+        const interval = this.value;
+        await fetch('/api/autotrading/start', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ interval }),
+        });
+        await loadAutoTradingStatus();
+      }
+    });
+
+    // Second-by-second countdown ticker
+    setInterval(() => {
+      if (autoTradeActive) {
+        if (autoTradeCountdown > 0) {
+          autoTradeCountdown--;
+          document.getElementById('autotrade-timer').textContent = `${autoTradeCountdown}s`;
+        } else {
+          document.getElementById('autotrade-timer').textContent = 'Executing...';
+          loadAutoTradingStatus();
+          loadFullStackData();
+          loadBotOutputs();
+        }
+      }
+    }, 1000);
+
+    // Auto-polling lifecycle
+    loadFullStackData();
+    loadBotOutputs();
+    loadOnChainData();
+    loadMarginStatus();
+    loadYouTubeMemory();
+    loadTelegramMessages();
+    loadAllocationSettings();
+    loadMemeCoins();
+    loadAutoTradingStatus();
+    setInterval(loadFullStackData, 6000);
+    setInterval(loadMarginStatus, 10000);
+    setInterval(loadAutoTradingStatus, 5000);
+  </script>
+</body>
+</html>

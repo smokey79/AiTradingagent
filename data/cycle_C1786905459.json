@@ -1,0 +1,49 @@
+{
+  "cycle_id": "C1786905459",
+  "symbol": "BTC/USDT",
+  "completed_at": "2026-08-16T19:37:39.898420",
+  "agent_signals": [
+    {
+      "agent": "technical_analyst",
+      "error": "Client error '401 Unauthorized' for url 'https://openrouter.ai/api/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401",
+      "signal": "HOLD",
+      "confidence": 0
+    },
+    {
+      "agent": "sentiment_macro",
+      "error": "Client error '401 Unauthorized' for url 'https://openrouter.ai/api/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401",
+      "signal": "HOLD",
+      "confidence": 0
+    },
+    {
+      "agent": "realtime_news",
+      "error": "Client error '401 Unauthorized' for url 'https://openrouter.ai/api/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401",
+      "signal": "HOLD",
+      "confidence": 0
+    },
+    {
+      "agent": "deep_research",
+      "error": "Client error '401 Unauthorized' for url 'https://openrouter.ai/api/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401",
+      "signal": "HOLD",
+      "confidence": 0
+    },
+    {
+      "agent": "cross_validator",
+      "error": "Client error '401 Unauthorized' for url 'https://openrouter.ai/api/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401",
+      "signal": "HOLD",
+      "confidence": 0
+    }
+  ],
+  "final_decision": {
+    "orchestrator": "copilot",
+    "timestamp": "2026-08-16T19:37:39.898420",
+    "symbol": "BTC/USDT",
+    "final_signal": "HOLD",
+    "consensus_confidence": 0,
+    "consensus_reached": false,
+    "approved_for_execution": false,
+    "veto_triggered": true,
+    "veto_reason": "Orchestrator error: Client error '401 Unauthorized' for url 'https://openrouter.ai/api/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401",
+    "reasoning": "System error \u2014 defaulting to HOLD for safety"
+  }
+}

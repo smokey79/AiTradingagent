@@ -1,0 +1,48 @@
+name: Multi-Chain Arbitrage Scanner
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  scan:
+    name: Scan All Chains
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create .env from GitHub Secrets
+        run: |
+          echo "INFURA_URL=${{ secrets.INFURA_URL }}"           >> .env
+          echo "PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}"         >> .env
+          echo "POLYGON_RPC=${{ secrets.POLYGON_RPC }}"         >> .env
+          echo "CRONOS_RPC=${{ secrets.CRONOS_RPC }}"           >> .env
+          echo "ARBITRUM_RPC=${{ secrets.ARBITRUM_RPC }}"       >> .env
+          echo "BASE_RPC=${{ secrets.BASE_RPC }}"               >> .env
+          echo "BSC_RPC=${{ secrets.BSC_RPC }}"                 >> .env
+          echo "AVALANCHE_RPC=${{ secrets.AVALANCHE_RPC }}"     >> .env
+          echo "FLASHBOTS_RELAY=${{ secrets.FLASHBOTS_RELAY }}" >> .env
+
+      - name: Run multi-chain arbitrage scanner
+        run: python src/flashloan/arbitrage_scanner.py
+
+      - name: Upload scan log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scan-log-${{ github.run_number }}
+          path: data/scan_log.jsonl
+          retention-days: 14

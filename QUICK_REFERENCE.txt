@@ -1,0 +1,149 @@
+# AiTradingAgent Desktop Launcher — Quick Reference
+
+## 🚀 LAUNCH THE STACK
+
+**Double-click this shortcut on your desktop:**
+```
+AiTradingAgent.lnk
+```
+
+**Location:** `C:\Users\barcl\OneDrive\Desktop\AiTradingAgent.lnk`
+
+---
+
+## 📊 ACCESS SERVICES (Once Running)
+
+| Service | URL | Purpose |
+|---------|-----|---------|
+| **Dashboard** | http://localhost:3000 | Real-time P&L, trades, metrics |
+| **Backtester** | http://localhost:3001 | Test strategies & optimize |
+| **Monitor** | http://localhost:3002 | View logs & system health |
+
+---
+
+## 📁 LAUNCHER FILES
+
+```
+F:\aitradingagent\
+├── launch-full-stack.bat              Main launcher
+├── CREATE_DESKTOP_SHORTCUT.ps1        Re-create shortcut
+├── CREATE_CUSTOM_ICON.py              Custom icon generator
+├── LAUNCHER_README.md                 Full documentation
+└── logs/                              All service logs
+```
+
+---
+
+## ⚡ STARTUP CHECKLIST
+
+- [ ] Double-click `AiTradingAgent` shortcut
+- [ ] Terminal opens with startup logs
+- [ ] Wait 10-15 seconds
+- [ ] See "Full Stack is now RUNNING" message
+- [ ] Open http://localhost:3000
+- [ ] Check dashboard for live data
+
+---
+
+## 🛑 STOP THE STACK
+
+Simply **close the terminal window**.
+
+All background processes terminate cleanly.
+
+---
+
+## 📝 LOGS LOCATION
+
+```
+F:\aitradingagent\logs\
+```
+
+**View latest logs:**
+- `launcher_*.log` — Startup logs
+- `mcp-*.log` — Individual services
+- `orchestrator.log` — Main coordinator
+
+---
+
+## 🎨 OPTIONAL: CUSTOM ICON
+
+```bash
+cd F:\aitradingagent
+python CREATE_CUSTOM_ICON.py
+```
+
+Then update shortcut:
+1. Right-click shortcut → Properties
+2. Change Icon → Select `icon.ico`
+
+---
+
+## ⚙️ WHAT'S RUNNING
+
+- Python virtual environment (auto-activated)
+- 4 MCP servers (market data, signals, risk, portfolio)
+- Orchestrator (coordinator)
+- Web dashboard
+- Backtester
+- Trade visualizer
+- Telegram bot (background)
+- 11 total services
+
+---
+
+## 🔧 TROUBLESHOOTING
+
+| Problem | Fix |
+|---------|-----|
+| Services won't start | Check `logs/launcher_*.log` |
+| Port 3000 in use | Close dashboard or restart |
+| Python/Node not found | Install from python.org / nodejs.org |
+| Shortcut missing | Run `CREATE_DESKTOP_SHORTCUT.ps1` |
+
+---
+
+## 📚 FULL DOCUMENTATION
+
+See: `LAUNCHER_README.md` in `F:\aitradingagent\`
+
+---
+
+## 🔑 QUICK COMMANDS
+
+### Manual Launch (if shortcut fails)
+```cmd
+F:\aitradingagent\launch-full-stack.bat
+```
+
+### Create Shortcut Again
+```powershell
+cd F:\aitradingagent
+powershell -ExecutionPolicy Bypass -File CREATE_DESKTOP_SHORTCUT.ps1
+```
+
+### View Recent Logs
+```cmd
+cd F:\aitradingagent\logs
+dir /o-d
+```
+
+### Kill All Processes
+```cmd
+taskkill /F /IM node.exe /IM python.exe
+```
+
+---
+
+## 💡 TIPS
+
+✅ Shortcut has CTRL+ALT+T hotkey (try it!)  
+✅ Logs auto-clean after 7 days  
+✅ First run: 15-30s / Subsequent: 5-10s  
+✅ RAM usage: 300-500 MB typical  
+✅ All API keys loaded from `.env` automatically  
+
+---
+
+**That's it! One click to launch everything.** 🎯
+

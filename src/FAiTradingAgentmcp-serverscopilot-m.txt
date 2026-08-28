@@ -1,0 +1,11 @@
+
+
+{
+  "name": "copilot-mcp",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.mjs",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.1.0"
+  }
+}

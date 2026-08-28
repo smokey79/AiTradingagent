@@ -1,0 +1,80 @@
+# Environment & Secret variables
+.env
+.env*
+*.env
+*.env.*
+*.env.txt
+*.env-txt
+keys.env.txt
+master.env
+config/.env
+config/*.env
+Cerebras_API.env
+ClaudeAPI.env
+Gemini_API.env
+OPENROUTER_API.env
+Utubeapi.env-txt
+deepseek.env.txt
+curl httpsgenerativelanguage*
+*cloud service acc*
+*.odt
+Untitled.txt
+CUsersbarcl.*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+venv/
+.venv/
+ENV/
+
+# Node
+node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Vendor / Cloned external libraries
+ccxt/
+**/ccxt/
+Aitradingbot-skeleton/ccxt/
+
+# Databases & data
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+data/cache/
+*.db
+*.sqlite
+
+# Logs
+logs/
+*.log
+
+# IDE & OS
+.DS_Store
+Thumbs.db
+.idea/
+.snapshots/
+_OLD_BACKUPS/

@@ -1,0 +1,25 @@
+{
+  "name": "mcp-trading-data-server",
+  "version": "1.0.0",
+  "description": "MCP server providing live market data tools to AiTradingAgent",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "axios": "^1.18.1",
+    "ccxt": "^4.3.0",
+    "dotenv": "^16.4.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "allowScripts": {
+    "ccxt@4.5.68": true,
+    "bufferutil@4.1.0": true,
+    "@modelcontextprotocol/sdk@1.24.3": true
+  }
+}

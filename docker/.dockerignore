@@ -1,0 +1,59 @@
+# Docker build artifacts
+.git
+.gitignore
+.vscode
+.env
+.env.local
+*.md
+README.md
+SETUP_*.md
+*.odt
+*.ps1
+*.ps
+*.txt
+.snapshots
+_OLD_BACKUPS
+__pycache__
+*.pyc
+*.pyo
+*.egg-info
+.pytest_cache
+node_modules
+npm-debug.log
+yarn-error.log
+.DS_Store
+
+# Development & test
+tests/
+test_*.py
+*_test.py
+.coverage
+htmlcov/
+.pytest_cache/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Data & Logs (keep during runtime via volumes)
+logs/
+data/backups/
+*.log
+
+# Documentation
+docs/
+.snapshots/
+
+# Unnecessary OS files
+Thumbs.db
+.DS_Store
+
+# Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Node package manager files
+package-lock.json

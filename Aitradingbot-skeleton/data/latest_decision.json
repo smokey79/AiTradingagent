@@ -1,0 +1,57 @@
+{
+  "orchestrator": "copilot",
+  "timestamp": "2026-08-25T04:17:01.748128+00:00",
+  "symbol": "BTC/USDT",
+  "final_signal": "BUY",
+  "consensus_confidence": 0.84,
+  "consensus_reached": true,
+  "approved_for_execution": true,
+  "agents_agreeing": 5,
+  "agents_total": 5,
+  "veto_triggered": false,
+  "veto_reason": null,
+  "reasoning": "Institutional consensus confirmed by 5/5 specialized AI models.",
+  "agent_signals": [
+    {
+      "agent": "claude",
+      "symbol": "BTC/USDT",
+      "signal": "BUY",
+      "confidence": 0.85,
+      "reason": "Bullish market structure confirmed above EMA 50/200 on 1H chart with positive MACD",
+      "risk_score": 3.0
+    },
+    {
+      "agent": "gpt4o",
+      "symbol": "BTC/USDT",
+      "signal": "BUY",
+      "confidence": 0.81,
+      "reason": "Fear & Greed Index and on-chain funding rates indicate healthy spot accumulation",
+      "sentiment_score": 0.65
+    },
+    {
+      "agent": "grok",
+      "symbol": "BTC/USDT",
+      "signal": "BUY",
+      "confidence": 0.79,
+      "reason": "Positive real-time orderbook bid imbalance (64%) and zero liquidation cascades",
+      "breaking_event": false
+    },
+    {
+      "agent": "perplexity",
+      "symbol": "BTC/USDT",
+      "signal": "BUY",
+      "confidence": 0.83,
+      "reason": "Protocol TVL expansion and steady developer activity with no major unlock cliffs",
+      "fundamental_score": 8.5
+    },
+    {
+      "agent": "gemini",
+      "symbol": "BTC/USDT",
+      "signal": "BUY",
+      "confidence": 0.86,
+      "validation_result": "PASS",
+      "agent_conflicts_detected": [],
+      "reason": "Cross-validation confirmed: 4 peer agents bullish with strong statistical confluence"
+    }
+  ]
+}

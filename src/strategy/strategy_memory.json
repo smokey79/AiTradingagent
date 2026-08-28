@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "lastUpdated": null,
+  "tradeHistory": [],
+  "channelCredibility": {},
+  "notes": "This file is the persistent strategy brain — the orchestrator reads and appends to it every cycle via strategyMemoryLoader.js. Do not hand-edit tradeHistory."
+}

@@ -1,0 +1,8 @@
+{
+  "passphrase": "SECRET_TRADINGVIEW_TOKEN",
+  "ticker": "{{ticker}}",
+  "action": "{{strategy.order.action}}",
+  "price": {{close}},
+  "timeframe": "{{interval}}",
+  "indicator": "SuperTrend_RSI"
+}

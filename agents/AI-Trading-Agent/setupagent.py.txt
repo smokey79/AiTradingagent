@@ -1,0 +1,23 @@
+import os
+import subprocess
+import time
+import google.generativeai as genai
+
+# --- CONFIGURATION ---
+# >>> IMPUTE: Replace with your newly rotated API key or load from environment variable <<<
+API_KEY = os.getenv("GEMINI_API_KEY", "YOUR_NEW_API_KEY_HERE")
+genai.configure(api_key=API_KEY)
+
+PROJECT_DIR = r"F:\AI-Trading-Agent"
+
+# Ensure directory exists
+if not os.path.exists(PROJECT_DIR):
+    os.makedirs(PROJECT_DIR)
+
+def write_file(filename: str, content: str):
+    """Writes code to the project folder."""
+    path = os.path.join(PROJECT_DIR, filename)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(content)
+
+# >>> IMPUTE: Add your trading agent file generation logic or script calls here <<<

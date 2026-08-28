@@ -1,0 +1,49 @@
+{
+  "cycle_id": "C1785722245",
+  "symbol": "BTC/USDT",
+  "completed_at": "2026-08-03T02:57:25.051925",
+  "agent_signals": [
+    {
+      "agent": "claude",
+      "error": "Client error '401 Unauthorized' for url 'https://api.anthropic.com/v1/messages'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401",
+      "signal": "HOLD",
+      "confidence": 0
+    },
+    {
+      "agent": "gpt4o",
+      "error": "Client error '401 Unauthorized' for url 'https://api.openai.com/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401",
+      "signal": "HOLD",
+      "confidence": 0
+    },
+    {
+      "agent": "grok",
+      "error": "Client error '401 Unauthorized' for url 'https://openrouter.ai/api/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401",
+      "signal": "HOLD",
+      "confidence": 0
+    },
+    {
+      "agent": "perplexity",
+      "error": "Client error '401 Unauthorized' for url 'https://api.perplexity.ai/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401",
+      "signal": "HOLD",
+      "confidence": 0
+    },
+    {
+      "agent": "gemini",
+      "error": "Client error '400 Bad Request' for url 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyADsOSTVCPf8704aMazLT34kjdMKJtNs'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
+      "signal": "HOLD",
+      "confidence": 0
+    }
+  ],
+  "final_decision": {
+    "orchestrator": "copilot",
+    "timestamp": "2026-08-03T02:57:25.051925",
+    "symbol": "BTC/USDT",
+    "final_signal": "HOLD",
+    "consensus_confidence": 0,
+    "consensus_reached": false,
+    "approved_for_execution": false,
+    "veto_triggered": true,
+    "veto_reason": "Orchestrator error: Client error '401 Unauthorized' for url 'https://api.anthropic.com/v1/messages'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401",
+    "reasoning": "System error \u2014 defaulting to HOLD for safety"
+  }
+}

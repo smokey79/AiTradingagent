@@ -1,0 +1,96 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "⚡ Preview Build 1 (Live Dashboard — Port 3002)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/wsgi.py",
+      "python": "${workspaceFolder}/venv/Scripts/python.exe",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}",
+        "DASHBOARD_PORT": "3002",
+        "PORT": "3002"
+      }
+    },
+    {
+      "name": "🤖 Multi-Agent Consensus Engine",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/orchestrator/consensus_engine.py",
+      "python": "${workspaceFolder}/venv/Scripts/python.exe",
+      "args": ["--symbol", "BTC/USDT", "--paper"],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "📊 CCXT & Macro Data Pipeline",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/data_pipeline.py",
+      "python": "${workspaceFolder}/venv/Scripts/python.exe",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "📈 Backtester Engine",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/backtester/engine.py",
+      "python": "${workspaceFolder}/venv/Scripts/python.exe",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "📦 Trading Data MCP",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/mcp-servers/trading-data-mcp/index.js",
+      "restart": true,
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/mcp-servers/trading-data-mcp"
+    },
+    {
+      "name": "🛡️ Risk Gate MCP",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/mcp-servers/risk-gate-mcp/index.js",
+      "restart": true,
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/mcp-servers/risk-gate-mcp"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "🚀 Preview Build 1: Full Stack (Dashboard + Consensus)",
+      "configurations": [
+        "⚡ Preview Build 1 (Live Dashboard — Port 3002)",
+        "🤖 Multi-Agent Consensus Engine"
+      ]
+    },
+    {
+      "name": "⚡ All MCP Servers + Full Stack",
+      "configurations": [
+        "📦 Trading Data MCP",
+        "🛡️ Risk Gate MCP",
+        "⚡ Preview Build 1 (Live Dashboard — Port 3002)",
+        "🤖 Multi-Agent Consensus Engine"
+      ]
+    }
+  ]
+}

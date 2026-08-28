@@ -1,0 +1,163 @@
+╔════════════════════════════════════════════════════════════════╗
+║                 DESKTOP LAUNCHER SETUP COMPLETE ✅              ║
+║                    AiTradingAgent Full Stack                    ║
+╚════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────┐
+│                   🚀 LAUNCH FROM DESKTOP                        │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Location:  C:\Users\barcl\OneDrive\Desktop                     │
+│  Shortcut:  AiTradingAgent.lnk                                  │
+│                                                                  │
+│  Action:    Double-click to launch full stack                  │
+│  Hotkey:    CTRL+ALT+T (if enabled)                            │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                     📊 ACCESS RUNNING SERVICES                  │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Web Dashboard     http://localhost:3000                        │
+│  Backtester        http://localhost:3001                        │
+│  Monitor/Logs      http://localhost:3002                        │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                     ⚙️  WHAT LAUNCHES                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ✅ Python Virtual Environment (auto-activated)                │
+│  ✅ 4 MCP Servers (data, signals, risk, portfolio)             │
+│  ✅ Orchestrator (core coordinator)                            │
+│  ✅ Web Dashboard (real-time metrics)                          │
+│  ✅ Backtester (strategy optimization)                         │
+│  ✅ Trade Visualizer (charts & visualizations)                 │
+│  ✅ Risk Tuning Panel (parameter adjustment)                   │
+│  ✅ Telegram Bot (background notifications)                    │
+│  ✅ Dependency Management (auto-install)                       │
+│  ✅ Preflight Checks (health verification)                     │
+│  ✅ Comprehensive Logging (all service logs)                   │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                      📁 IMPORTANT LOCATIONS                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Launcher:        F:\aitradingagent\launch-full-stack.bat       │
+│  Project Root:    F:\aitradingagent\                            │
+│  Logs:            F:\aitradingagent\logs\                       │
+│  Docs:            F:\aitradingagent\LAUNCHER_README.md          │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                      ⏱️  STARTUP TIMELINE                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  0s      Double-click shortcut → Terminal opens                │
+│  2-3s    Python environment activated                          │
+│  3-5s    Dependencies checked & installed                      │
+│  5-8s    Preflight checks run                                  │
+│  8-12s   MCP servers start (background)                        │
+│  12-15s  Dashboard & visualizers start (visible)               │
+│  15s+    "Full Stack is now RUNNING" ✅                        │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                     📚 DOCUMENTATION FILES                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  LAUNCHER_README.md            Full documentation              │
+│  QUICK_REFERENCE.txt           One-page cheat sheet            │
+│  DESKTOP_SHORTCUT_SETUP.md     Setup instructions             │
+│  GOOGLE_DRIVE_SD_CARD_SETUP.md External data integration     │
+│  SETUP_COMPLETE.txt            This guide                     │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                      🔧 HELPER SCRIPTS                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  CREATE_DESKTOP_SHORTCUT.ps1   Re-create shortcut (PowerShell) │
+│  CREATE_DESKTOP_SHORTCUT.vbs   Re-create shortcut (VBScript)  │
+│  CREATE_CUSTOM_ICON.py         Generate trading icon          │
+│                                                                  │
+│  Usage:                                                         │
+│    powershell -ExecutionPolicy Bypass                          │
+│      -File CREATE_DESKTOP_SHORTCUT.ps1                         │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                      🎯 QUICK START STEPS                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1️⃣  Double-click AiTradingAgent shortcut on desktop          │
+│  2️⃣  Wait for terminal to show "Full Stack is now RUNNING"   │
+│  3️⃣  Open http://localhost:3000 in your browser              │
+│  4️⃣  View real-time trading dashboard                        │
+│  5️⃣  Run backtests or check logs as needed                   │
+│  6️⃣  Close terminal when done (all services stop)            │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                   ⚠️  TROUBLESHOOTING                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Issue:            Services won't start                        │
+│  Solution:         Check logs in F:\aitradingagent\logs\       │
+│                                                                  │
+│  Issue:            Python/Node not installed                  │
+│  Solution:         Install from python.org / nodejs.org        │
+│                                                                  │
+│  Issue:            Port 3000 already in use                    │
+│  Solution:         Wait 30s after last run or kill node.exe   │
+│                                                                  │
+│  Issue:            Shortcut missing/broken                    │
+│  Solution:         Run CREATE_DESKTOP_SHORTCUT.ps1             │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    ✨ SPECIAL FEATURES                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ✅ One-click launch (all services auto-start)                 │
+│  ✅ Auto-dependency installation (npm + pip)                   │
+│  ✅ Preflight health checks                                    │
+│  ✅ Comprehensive logging per service                          │
+│  ✅ CTRL+ALT+T hotkey launch (if enabled)                      │
+│  ✅ Clean shutdown (no orphaned processes)                     │
+│  ✅ Environment auto-loaded from .env                          │
+│  ✅ Google Drive & SD card data integration                    │
+│  ✅ Custom icon support                                        │
+│  ✅ All in one command!                                        │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                        🎉 YOU'RE READY!                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Everything is configured and ready to launch.                 │
+│                                                                  │
+│  Simply double-click:                                          │
+│                                                                  │
+│     AiTradingAgent.lnk                                         │
+│                                                                  │
+│  (on your desktop)                                             │
+│                                                                  │
+│  All 11+ services will spin up automatically with one click.   │
+│                                                                  │
+│  Enjoy your AI Trading Agent! 🚀                               │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+For detailed information, see: F:\aitradingagent\LAUNCHER_README.md

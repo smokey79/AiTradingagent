@@ -1,0 +1,66 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "⚡ Launch Preview Build 1 (Dashboard)",
+      "type": "shell",
+      "command": "${workspaceFolder}/venv/Scripts/python.exe",
+      "args": ["${workspaceFolder}/wsgi.py"],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}",
+          "DASHBOARD_PORT": "3002",
+          "PORT": "3002"
+        }
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "python",
+        "pattern": { "regexp": ".*" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Serving at: http://",
+          "endsPattern": "Serving at: http://"
+        }
+      },
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      "label": "🤖 Run AI Multi-Agent Consensus",
+      "type": "shell",
+      "command": "${workspaceFolder}/venv/Scripts/python.exe",
+      "args": ["${workspaceFolder}/orchestrator/consensus_engine.py", "--symbol", "BTC/USDT", "--paper"],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}"
+        }
+      },
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "📊 Run Live Data Pipeline",
+      "type": "shell",
+      "command": "${workspaceFolder}/venv/Scripts/python.exe",
+      "args": ["${workspaceFolder}/data_pipeline.py"],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}"
+        }
+      },
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "🧪 Run System Tests",
+      "type": "shell",
+      "command": "${workspaceFolder}/venv/Scripts/python.exe",
+      "args": ["-m", "unittest", "tests.test_full_system"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": { "kind": "test", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "shared" }
+    }
+  ]
+}

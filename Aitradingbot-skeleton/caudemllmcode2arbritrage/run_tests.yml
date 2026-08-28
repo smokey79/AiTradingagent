@@ -1,0 +1,50 @@
+# .github/workflows/run_tests.yml
+# Runs all tests automatically every time you push code to GitHub
+# If any test fails, GitHub shows a red X on your commit — catches bugs early
+
+name: Run Tests
+
+on:
+  push:
+    branches: ["main", "develop"]    # Trigger on pushes to these branches
+  pull_request:
+    branches: ["main"]               # Trigger on pull requests targeting main
+
+jobs:
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # Create a dummy .env so modules don't crash on import during testing
+      - name: Create test .env
+        run: |
+          echo "INFURA_URL=https://mainnet.infura.io/v3/test" >> .env
+          echo "PRIVATE_KEY=0x0000000000000000000000000000000000000000000000000000000000000001" >> .env
+          echo "POLYGON_RPC=https://polygon-rpc.com" >> .env
+
+      - name: Run tests with coverage
+        run: |
+          pip install pytest pytest-cov
+          python -m pytest tests/ -v --tb=short \
+            --cov=src \
+            --cov-report=term-missing \
+            --cov-report=xml
+
+      # Optional: upload coverage report to Codecov
+      # - name: Upload coverage
+      #   uses: codecov/codecov-action@v4
+      #   with:
+      #     file: ./coverage.xml

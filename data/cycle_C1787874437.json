@@ -1,0 +1,705 @@
+{
+  "cycle_id": "C1787874437",
+  "symbol": "BTC/USDT",
+  "paper_mode": true,
+  "completed_at": "2026-08-27T23:47:22.972993+00:00",
+  "market_snapshot": {
+    "tickers": [
+      {
+        "symbol": "BTC/USDT",
+        "price": 80242.6,
+        "change_24h": 1.411,
+        "volume_24h": 1313310850.949709,
+        "high_24h": 80848.74,
+        "low_24h": 78546.13,
+        "bid": 80242.59,
+        "ask": 80242.6,
+        "timestamp": "2026-08-27T23:47:20.053890+00:00"
+      }
+    ],
+    "ohlcv": {
+      "BTC/USDT": [
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-25T22:00:00+00:00",
+          "open": 78569.99,
+          "high": 79000.0,
+          "low": 78569.99,
+          "close": 78889.51,
+          "volume": 577.33833
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-25T23:00:00+00:00",
+          "open": 78889.51,
+          "high": 78977.49,
+          "low": 78396.88,
+          "close": 78539.14,
+          "volume": 690.39348
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T00:00:00+00:00",
+          "open": 78539.13,
+          "high": 78721.48,
+          "low": 78312.0,
+          "close": 78631.79,
+          "volume": 680.65038
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T01:00:00+00:00",
+          "open": 78631.7,
+          "high": 78960.0,
+          "low": 78607.29,
+          "close": 78815.13,
+          "volume": 572.39774
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T02:00:00+00:00",
+          "open": 78815.13,
+          "high": 79251.6,
+          "low": 78748.56,
+          "close": 79108.0,
+          "volume": 505.52805
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T03:00:00+00:00",
+          "open": 79108.01,
+          "high": 79184.0,
+          "low": 78900.0,
+          "close": 79088.62,
+          "volume": 453.50631
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T04:00:00+00:00",
+          "open": 79088.61,
+          "high": 79200.0,
+          "low": 78790.68,
+          "close": 78826.0,
+          "volume": 482.93427
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T05:00:00+00:00",
+          "open": 78826.0,
+          "high": 79143.62,
+          "low": 78638.0,
+          "close": 79085.98,
+          "volume": 515.23689
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T06:00:00+00:00",
+          "open": 79085.98,
+          "high": 79206.0,
+          "low": 78816.0,
+          "close": 78947.92,
+          "volume": 459.3577
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T07:00:00+00:00",
+          "open": 78947.92,
+          "high": 79096.0,
+          "low": 78867.0,
+          "close": 78925.56,
+          "volume": 516.24118
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T08:00:00+00:00",
+          "open": 78925.57,
+          "high": 79119.37,
+          "low": 78600.0,
+          "close": 78707.59,
+          "volume": 995.42693
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T09:00:00+00:00",
+          "open": 78707.59,
+          "high": 78877.02,
+          "low": 78244.83,
+          "close": 78444.49,
+          "volume": 553.36821
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T10:00:00+00:00",
+          "open": 78444.5,
+          "high": 78879.75,
+          "low": 78291.09,
+          "close": 78727.45,
+          "volume": 367.28381
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T11:00:00+00:00",
+          "open": 78727.46,
+          "high": 78782.0,
+          "low": 78317.0,
+          "close": 78487.26,
+          "volume": 413.44093
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T12:00:00+00:00",
+          "open": 78487.26,
+          "high": 78713.79,
+          "low": 77918.25,
+          "close": 78319.59,
+          "volume": 1022.94925
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T13:00:00+00:00",
+          "open": 78319.58,
+          "high": 78554.0,
+          "low": 77913.19,
+          "close": 78448.66,
+          "volume": 943.22287
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T14:00:00+00:00",
+          "open": 78448.66,
+          "high": 78603.41,
+          "low": 77774.0,
+          "close": 77790.48,
+          "volume": 1051.14695
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T15:00:00+00:00",
+          "open": 77790.48,
+          "high": 78167.26,
+          "low": 77632.58,
+          "close": 78011.65,
+          "volume": 712.24119
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T16:00:00+00:00",
+          "open": 78011.64,
+          "high": 78161.73,
+          "low": 77858.0,
+          "close": 77991.3,
+          "volume": 600.54786
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T17:00:00+00:00",
+          "open": 77991.29,
+          "high": 78603.0,
+          "low": 77991.29,
+          "close": 78442.83,
+          "volume": 585.12324
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T18:00:00+00:00",
+          "open": 78442.84,
+          "high": 78650.26,
+          "low": 78280.01,
+          "close": 78472.41,
+          "volume": 337.24489
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T19:00:00+00:00",
+          "open": 78472.41,
+          "high": 78572.0,
+          "low": 78292.0,
+          "close": 78475.49,
+          "volume": 466.85134
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T20:00:00+00:00",
+          "open": 78475.49,
+          "high": 78521.7,
+          "low": 78200.0,
+          "close": 78452.04,
+          "volume": 322.22426
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T21:00:00+00:00",
+          "open": 78452.04,
+          "high": 78845.06,
+          "low": 78392.19,
+          "close": 78724.01,
+          "volume": 428.48439
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T22:00:00+00:00",
+          "open": 78724.0,
+          "high": 78975.85,
+          "low": 78554.0,
+          "close": 78700.0,
+          "volume": 931.26213
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-26T23:00:00+00:00",
+          "open": 78700.0,
+          "high": 79174.12,
+          "low": 78654.0,
+          "close": 79023.75,
+          "volume": 697.0881
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T00:00:00+00:00",
+          "open": 79023.75,
+          "high": 79028.49,
+          "low": 78690.01,
+          "close": 78690.01,
+          "volume": 527.82725
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T01:00:00+00:00",
+          "open": 78690.02,
+          "high": 79017.99,
+          "low": 78546.13,
+          "close": 78898.67,
+          "volume": 520.71745
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T02:00:00+00:00",
+          "open": 78898.68,
+          "high": 78978.0,
+          "low": 78704.62,
+          "close": 78717.76,
+          "volume": 429.02181
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T03:00:00+00:00",
+          "open": 78717.76,
+          "high": 78990.0,
+          "low": 78643.23,
+          "close": 78830.68,
+          "volume": 357.29079
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T04:00:00+00:00",
+          "open": 78830.68,
+          "high": 78900.0,
+          "low": 78684.18,
+          "close": 78783.99,
+          "volume": 181.61392
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T05:00:00+00:00",
+          "open": 78783.99,
+          "high": 78928.0,
+          "low": 78600.0,
+          "close": 78912.55,
+          "volume": 297.32854
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T06:00:00+00:00",
+          "open": 78912.54,
+          "high": 78912.55,
+          "low": 78604.78,
+          "close": 78817.49,
+          "volume": 399.15003
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T07:00:00+00:00",
+          "open": 78817.5,
+          "high": 79095.99,
+          "low": 78754.0,
+          "close": 79082.17,
+          "volume": 345.94116
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T08:00:00+00:00",
+          "open": 79082.18,
+          "high": 80022.0,
+          "low": 79048.0,
+          "close": 79755.99,
+          "volume": 1705.62217
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T09:00:00+00:00",
+          "open": 79756.0,
+          "high": 80520.0,
+          "low": 79683.09,
+          "close": 79986.0,
+          "volume": 1131.87984
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T10:00:00+00:00",
+          "open": 79986.0,
+          "high": 80158.15,
+          "low": 79342.0,
+          "close": 79626.0,
+          "volume": 684.67175
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T11:00:00+00:00",
+          "open": 79625.99,
+          "high": 79766.3,
+          "low": 79172.65,
+          "close": 79477.67,
+          "volume": 621.11446
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T12:00:00+00:00",
+          "open": 79477.66,
+          "high": 79596.0,
+          "low": 79266.0,
+          "close": 79282.31,
+          "volume": 505.96518
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T13:00:00+00:00",
+          "open": 79282.31,
+          "high": 79568.0,
+          "low": 78920.0,
+          "close": 79533.15,
+          "volume": 1143.32188
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T14:00:00+00:00",
+          "open": 79533.16,
+          "high": 80388.0,
+          "low": 79354.47,
+          "close": 80204.05,
+          "volume": 1464.1918
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T15:00:00+00:00",
+          "open": 80204.06,
+          "high": 80799.91,
+          "low": 80094.0,
+          "close": 80302.32,
+          "volume": 1415.34964
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T16:00:00+00:00",
+          "open": 80302.32,
+          "high": 80624.0,
+          "low": 80189.39,
+          "close": 80374.0,
+          "volume": 957.98058
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T17:00:00+00:00",
+          "open": 80374.0,
+          "high": 80848.74,
+          "low": 80230.0,
+          "close": 80442.46,
+          "volume": 973.76075
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T18:00:00+00:00",
+          "open": 80442.47,
+          "high": 80442.47,
+          "low": 79749.7,
+          "close": 80150.69,
+          "volume": 662.82544
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T19:00:00+00:00",
+          "open": 80150.69,
+          "high": 80294.11,
+          "low": 79886.0,
+          "close": 79910.19,
+          "volume": 514.60852
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T20:00:00+00:00",
+          "open": 79910.19,
+          "high": 80120.0,
+          "low": 79882.86,
+          "close": 80096.0,
+          "volume": 282.87253
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T21:00:00+00:00",
+          "open": 80096.0,
+          "high": 80184.0,
+          "low": 79975.74,
+          "close": 80184.0,
+          "volume": 278.41542
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T22:00:00+00:00",
+          "open": 80184.0,
+          "high": 80432.36,
+          "low": 80150.0,
+          "close": 80303.21,
+          "volume": 534.24073
+        },
+        {
+          "symbol": "BTC/USDT",
+          "timestamp": "2026-08-27T23:00:00+00:00",
+          "open": 80303.21,
+          "high": 80393.6,
+          "low": 80134.0,
+          "close": 80242.59,
+          "volume": 259.28685
+        }
+      ]
+    },
+    "order_book": {
+      "symbol": "BTC/USDT",
+      "best_bid": 80242.59,
+      "best_ask": 80242.6,
+      "spread_pct": 0.0,
+      "bids": [
+        [
+          80242.59,
+          3.44145
+        ],
+        [
+          80242.58,
+          0.40115
+        ],
+        [
+          80242.57,
+          0.00013
+        ],
+        [
+          80242.56,
+          7e-05
+        ],
+        [
+          80242.55,
+          0.05028
+        ],
+        [
+          80242.51,
+          7e-05
+        ],
+        [
+          80242.5,
+          0.05014
+        ],
+        [
+          80241.3,
+          0.01461
+        ],
+        [
+          80241.25,
+          0.00652
+        ],
+        [
+          80241.24,
+          0.31171
+        ]
+      ],
+      "asks": [
+        [
+          80242.6,
+          0.8817
+        ],
+        [
+          80242.61,
+          0.0009
+        ],
+        [
+          80242.62,
+          0.00013
+        ],
+        [
+          80242.73,
+          7e-05
+        ],
+        [
+          80242.75,
+          7e-05
+        ],
+        [
+          80242.76,
+          0.01175
+        ],
+        [
+          80243.21,
+          7e-05
+        ],
+        [
+          80243.56,
+          7e-05
+        ],
+        [
+          80243.57,
+          0.08018
+        ],
+        [
+          80243.64,
+          7e-05
+        ]
+      ],
+      "timestamp": "2026-08-27T23:47:20.531412+00:00"
+    },
+    "fetched_at": "2026-08-27T23:47:20.531424+00:00"
+  },
+  "macro_snapshot": {
+    "btc_etf": {
+      "asset": "BTC",
+      "total_net_flow_usd_m": 0.0,
+      "total_aum_usd_b": 0.0,
+      "flow_direction": "neutral",
+      "timestamp": "2026-08-27T23:47:21.024549+00:00"
+    },
+    "eth_etf": {
+      "asset": "ETH",
+      "total_net_flow_usd_m": 0.0,
+      "total_aum_usd_b": 0.0,
+      "flow_direction": "neutral",
+      "timestamp": "2026-08-27T23:47:21.348637+00:00"
+    },
+    "sector_indices": [],
+    "market": {
+      "total_market_cap_usd": null,
+      "btc_dominance_pct": 54.2,
+      "eth_dominance_pct": 16.5,
+      "total_volume_24h_usd": null,
+      "fear_greed_index": 71,
+      "timestamp": "2026-08-27T23:47:22.358245+00:00"
+    },
+    "fetched_at": "2026-08-27T23:47:22.358256+00:00",
+    "source": "SoSoValue / Alternative.me Macro",
+    "macro_signal": {
+      "signal": "bullish",
+      "confidence": 0.6,
+      "reason": "Institutional inflows ($+0.0M) & Fear/Greed=71"
+    }
+  },
+  "risk_evaluation": {
+    "approved": false,
+    "proposed_position_pct": 5.0,
+    "recommended_position_pct": 16.86,
+    "safe_position_pct": 5.0,
+    "position_usd": 50.0,
+    "account_balance": 1000.0,
+    "full_kelly_pct": 67.45,
+    "edge": {
+      "win_rate": 0.783,
+      "avg_win": 0.04,
+      "avg_loss": 0.02,
+      "expectancy": 0.027
+    },
+    "simulation": {
+      "n_simulations": 1000,
+      "n_trades": 200,
+      "position_pct": 5.0,
+      "ruin_probability": 0.08,
+      "avg_max_drawdown": 0.1523,
+      "worst_drawdown": 0.2374,
+      "median_return": 299982.6033,
+      "p10_return": 59804.0198,
+      "p90_return": 969281.0191,
+      "expected_return": 432976.3219
+    },
+    "rejection_reasons": [
+      "Expected drawdown (15.2%) exceeds limit (15.0%)"
+    ]
+  },
+  "agent_signals": [
+    {
+      "agent": "technical_analyst",
+      "signal": "HOLD",
+      "confidence": 0.65,
+      "timeframe": "1h",
+      "action": "HOLD",
+      "reasoning": "technical_analyst verified market indicators and risk gates. Operating in capital preservation mode.",
+      "risk_level": "LOW",
+      "approved": false
+    },
+    {
+      "agent": "sentiment_macro",
+      "signal": "HOLD",
+      "confidence": 0.65,
+      "timeframe": "1h",
+      "action": "HOLD",
+      "reasoning": "sentiment_macro verified market indicators and risk gates. Operating in capital preservation mode.",
+      "risk_level": "LOW",
+      "approved": false
+    },
+    {
+      "agent": "realtime_news",
+      "signal": "HOLD",
+      "confidence": 0.65,
+      "timeframe": "1h",
+      "action": "HOLD",
+      "reasoning": "realtime_news verified market indicators and risk gates. Operating in capital preservation mode.",
+      "risk_level": "LOW",
+      "approved": false
+    },
+    {
+      "agent": "deep_research",
+      "signal": "HOLD",
+      "confidence": 0.65,
+      "timeframe": "1h",
+      "action": "HOLD",
+      "reasoning": "deep_research verified market indicators and risk gates. Operating in capital preservation mode.",
+      "risk_level": "LOW",
+      "approved": false
+    },
+    {
+      "agent": "data_sourcer",
+      "signal": "BUY",
+      "confidence": 0.86,
+      "hit_rate_pct": "78.3%",
+      "gate_72_met": true,
+      "sourcer_score": 85.7,
+      "verdict": "PROCEED",
+      "notes": "Composite Feed Quality: 85.7/100. Hit-Rate: 78.3%"
+    },
+    {
+      "agent": "cross_validator",
+      "signal": "HOLD",
+      "confidence": 0.65,
+      "timeframe": "1h",
+      "action": "HOLD",
+      "reasoning": "cross_validator verified market indicators and risk gates. Operating in capital preservation mode.",
+      "risk_level": "LOW",
+      "approved": false
+    }
+  ],
+  "final_decision": {
+    "agent": "copilot_orchestrator",
+    "signal": "HOLD",
+    "confidence": 0.65,
+    "timeframe": "1h",
+    "action": "HOLD",
+    "reasoning": "copilot_orchestrator verified market indicators and risk gates. Operating in capital preservation mode.",
+    "risk_level": "LOW",
+    "approved": false,
+    "approved_for_execution": false,
+    "veto_triggered": true,
+    "veto_reason": "Monte Carlo Risk Gate rejection (drawdown/ruin probability threshold exceeded)",
+    "final_signal": "HOLD"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "sd_card": {
+    "enabled": true,
+    "root_path": "E:/",
+    "auto_index": true,
+    "patterns": [
+      "*.json",
+      "*.csv",
+      "*.db",
+      "*.parquet",
+      "*.pkl"
+    ],
+    "cache_dir": "./cache/sd_card",
+    "index_refresh_hours": 24
+  },
+  "google_drive": {
+    "enabled": true,
+    "credentials_file": "google_service_account.json",
+    "folder_name": "AiTradingAgent",
+    "auto_sync": true,
+    "cache_dir": "./cache/google_drive",
+    "sync_on_startup": true,
+    "sync_interval_hours": 6,
+    "file_patterns": {
+      "market_data": [
+        "*market*.json",
+        "*ohlcv*.csv"
+      ],
+      "backtests": [
+        "*backtest*.json",
+        "*backtest*.csv"
+      ],
+      "models": [
+        "*.pkl",
+        "*.pth",
+        "*.h5",
+        "*.onnx"
+      ],
+      "configs": [
+        "*.yaml",
+        "*.json"
+      ]
+    }
+  },
+  "cache": {
+    "root_dir": "./cache/unified_data",
+    "max_age_days": 7,
+    "max_size_gb": 10,
+    "auto_cleanup": true
+  },
+  "data_loader": {
+    "enabled": true,
+    "priority_order": [
+      "local_cache",
+      "sd_card",
+      "google_drive"
+    ],
+    "default_timeframe": "1h",
+    "default_lookback": 50,
+    "batch_load": true,
+    "batch_size": 10
+  },
+  "pipeline": {
+    "include_historical_data": true,
+    "backtest_weighting": 0.3,
+    "model_ensemble": true,
+    "data_augmentation": true
+  },
+  "logging": {
+    "level": "INFO",
+    "save_sync_log": true,
+    "log_file": "./cache/data_load_log.json"
+  }
+}

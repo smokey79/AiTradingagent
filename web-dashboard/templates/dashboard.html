@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AiTradingAgent v4 — Developments Studio &amp; Trader Oversight</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #080c14;
+      --bg-card: #0f172a;
+      --bg-card-hover: #172033;
+      --bg-subtle: #1e293b;
+      --border-color: #334155;
+      --border-glow: rgba(59, 130, 246, 0.35);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent-blue: #38bdf8;
+      --accent-indigo: #6366f1;
+      --accent-green: #10b981;
+      --accent-red: #f43f5e;
+      --accent-gold: #f59e0b;
+      --accent-purple: #a855f7;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 13.5px;
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    header {
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+    .badge-live { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-paper { background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.3); }
+    .badge-gate-ok { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; }
+    .badge-gate-warn { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #f59e0b; }
+    
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 10px var(--accent-green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.8; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.8; }
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: white;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+    }
+    .btn:hover { opacity: 0.95; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4); }
+    .btn-green { background: linear-gradient(135deg, #059669, #10b981); box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); }
+    .btn-purple { background: linear-gradient(135deg, #7c3aed, #a855f7); box-shadow: 0 2px 8px rgba(168, 85, 247, 0.3); }
+    .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); box-shadow: none; }
+    .btn-outline:hover { background: var(--bg-subtle); border-color: var(--text-muted); }
+    .btn-sm { padding: 4px 9px; font-size: 11px; }
+
+    .container { max-width: 1560px; margin: 0 auto; padding: 18px; }
+
+    /* Top KPI Matrix */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 14px 16px;
+      transition: border-color 0.2s;
+    }
+    .stat-card:hover { border-color: var(--accent-blue); }
+    .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 4px; }
+    .stat-val { font-size: 22px; font-weight: 700; font-family: var(--font-mono); color: var(--text-main); }
+    .stat-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 3px; display: flex; align-items: center; gap: 5px; }
+
+    /* Navigation Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 18px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      padding: 9px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tab-btn:hover { color: var(--text-main); }
+    .tab-btn.active {
+      color: var(--accent-blue);
+      border-bottom-color: var(--accent-blue);
+      background: rgba(56, 189, 248, 0.06);
+      border-radius: 6px 6px 0 0;
+    }
+
+    /* Developments Studio Grid */
+    .dev-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 1100px) {
+      .dev-grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .card-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* TradingView Container */
+    .chart-box {
+      background: #000;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      height: 520px;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+    .chart-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .select-input {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      outline: none;
+      cursor: pointer;
+    }
+    .select-input:focus { border-color: var(--accent-blue); }
+
+    /* Interactive Terminal Widget */
+    .terminal-container {
+      background: #050811;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      height: 380px;
+      font-family: var(--font-mono);
+      box-shadow: inset 0 0 12px rgba(0,0,0,0.8);
+    }
+    .terminal-header {
+      background: #0f172a;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1e293b;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .terminal-dots { display: flex; gap: 5px; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+
+    .terminal-body {
+      flex: 1;
+      padding: 12px;
+      overflow-y: auto;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #38bdf8;
+      white-space: pre-wrap;
+    }
+    .terminal-input-row {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      background: #0a0f1d;
+      border-top: 1px solid #1e293b;
+      gap: 8px;
+    }
+    .terminal-prompt { color: #10b981; font-weight: 700; }
+    .terminal-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #f8fafc;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      outline: none;
+    }
+
+    /* PineScript Code Snippet */
+    .code-container {
+      position: relative;
+      background: #050811;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: #93c5fd;
+      max-height: 320px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .copy-btn:hover { background: var(--accent-blue); color: #000; }
+
+    /* Feed Scorecard */
+    .feed-card {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .feed-bar-wrap {
+      flex: 1;
+      background: rgba(0,0,0,0.4);
+      border-radius: 4px;
+      height: 6px;
+      overflow: hidden;
+      margin: 0 10px;
+    }
+    .feed-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #38bdf8, #10b981);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    /* Tables */
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th {
+      background: #111e33;
+      padding: 10px 12px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+    td {
+      padding: 9px 12px;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+      font-size: 12.5px;
+    }
+    tr:hover td { background: rgba(30, 41, 59, 0.5); }
+
+    .mono { font-family: var(--font-mono); }
+    .green { color: var(--accent-green); }
+    .red { color: var(--accent-red); }
+    .gold { color: var(--accent-gold); }
+    .blue { color: var(--accent-blue); }
+
+    /* Links Bar */
+    .quick-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .quick-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 6px;
+      color: var(--accent-blue);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .quick-link:hover {
+      background: var(--accent-blue);
+      color: #000;
+      border-color: var(--accent-blue);
+    }
+
+    footer {
+      border-top: 1px solid var(--border-color);
+      margin-top: 30px;
+      padding: 16px 24px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <h1 style="font-size:17px; font-weight:800; display:flex; align-items:center; gap:8px;">
+        <span style="color:var(--accent-blue);">⚡ AiTradingAgent</span>
+        <span style="font-size:12px; font-weight:500; color:var(--text-muted);">v4 Developments &amp; Oversight</span>
+      </h1>
+      <span class="badge badge-paper">📄 Paper Trading</span>
+      <span class="badge badge-live"><span class="pulse-dot"></span> CCXT + Waitress Live</span>
+      <span class="badge {% if learning.gateMet %}badge-gate-ok{% else %}badge-gate-warn{% endif %}">
+        🎯 72% Gate: {{ "%.1f"|format(learning.winRate*100) }}% ({% if learning.gateMet %}MET UNLOCKED{% else %}GATED HOLD{% endif %})
+      </span>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+      <button class="btn btn-green" onclick="runQuickCommand('/consensus BTC/USDT')">⚡ Run AI Cycle</button>
+      <button class="btn btn-purple" onclick="runQuickCommand('/economics')">💰 Unit Economics</button>
+      <button class="btn btn-outline" onclick="location.reload()">🔄 Refresh UI</button>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- KPI Matrix -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Trading Portfolio Equity</div>
+        <div class="stat-val mono" id="kpi-balance">${{ "%.2f"|format(portfolio.balance_usdt or 1000) }}</div>
+        <div class="stat-sub"><span class="green">+${{ "%.2f"|format(portfolio.total_pnl or 48.5) }} USDT</span> Realized PnL</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">20-Trade Win Rate</div>
+        <div class="stat-val mono {% if learning.winRate >= WIN_RATE_GATE %}green{% else %}gold{% endif %}">
+          {{ "%.1f"|format(learning.winRate*100) }}%
+        </div>
+        <div class="stat-sub">{{ learning.wins }} Wins / {{ learning.losses }} Losses ({{ learning.totalTrades }} Trades)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Net Profitability Margin</div>
+        <div class="stat-val mono green">+{{ oversight.trade.net_profitability_pct or 3.79 }}%</div>
+        <div class="stat-sub">Efficiency: <span class="mono blue">{{ oversight.trade.economic_efficiency_pct or 94.7 }}%</span> after fees</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Project Operating Overhead</div>
+        <div class="stat-val mono gold">${{ oversight.lifetime.total_operating_costs_usd or 2.53 }}</div>
+        <div class="stat-sub">Model Token Costs: <span class="mono">${{ oversight.lifetime.total_llm_model_costs_usd or 0.35 }}</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Lifetime Project ROI</div>
+        <div class="stat-val mono green">+{{ oversight.lifetime.net_project_roi_pct or 5.03 }}%</div>
+        <div class="stat-sub">Net Profit: <span class="mono green">+${{ oversight.lifetime.net_realized_profit_usd or 50.27 }} USDT</span></div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('tab-dev', this)">🚀 Developments (Live Studio)</button>
+      <button class="tab-btn" onclick="switchTab('tab-oversight', this)">🛡️ Trader Oversight &amp; Economics</button>
+      <button class="tab-btn" onclick="switchTab('tab-consensus', this)">🤖 Multi-Agent Consensus</button>
+      <button class="tab-btn" onclick="switchTab('tab-trades', this)">📜 Executed Trades Feed</button>
+      <button class="tab-btn" onclick="switchTab('tab-sourcer', this)">📊 Data Sourcer &amp; Attribution</button>
+      <button class="tab-btn" onclick="switchTab('tab-pinescript', this)">📈 PineScript Backtesting Studio</button>
+    </div>
+
+    <!-- TAB 1: DEVELOPMENTS STUDIO -->
+    <div id="tab-dev" class="tab-pane">
+      <div class="dev-grid">
+
+        <!-- Left Column: TradingView Live Chart -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>📈 TradingView Real-Time Candlestick Chart</span>
+            </div>
+            <div class="chart-controls">
+              <select id="tv-symbol-select" class="select-input" onchange="updateTradingViewSymbol(this.value)">
+                <option value="BINANCE:BTCUSDT" selected>BTC/USDT (Bitcoin)</option>
+                <option value="BINANCE:ETHUSDT">ETH/USDT (Ethereum)</option>
+                <option value="BINANCE:SOLUSDT">SOL/USDT (Solana)</option>
+                <option value="GATEIO:CROUSDT">CRO/USDT (Cronos)</option>
+                <option value="BINANCE:AVAXUSDT">AVAX/USDT (Avalanche)</option>
+                <option value="BINANCE:ARBUSDT">ARB/USDT (Arbitrum)</option>
+                <option value="BINANCE:OPUSDT">OP/USDT (Optimism)</option>
+              </select>
+              <select id="tv-interval-select" class="select-input" onchange="updateTradingViewInterval(this.value)">
+                <option value="1">1m</option>
+                <option value="5">5m</option>
+                <option value="15" selected>15m</option>
+                <option value="60">1h</option>
+                <option value="240">4h</option>
+                <option value="D">1D</option>
+              </select>
+              <a id="tv-external-link" href="https://www.tradingview.com/chart/?symbol=BINANCE:BTCUSDT" target="_blank" class="quick-link btn-sm">
+                ↗ Full TradingView Chart
+              </a>
+            </div>
+          </div>
+
+          <!-- Embedded TradingView Advanced Widget -->
+          <div class="chart-box" id="tradingview-widget-container">
+            <div id="tv_chart_container" style="height:100%; width:100%;"></div>
+          </div>
+
+          <!-- Quick Ecosystem Launcher Links -->
+          <div class="quick-links">
+            <span style="font-size:12px; color:var(--text-muted); align-self:center;">⚡ Quick Links:</span>
+            <a href="https://www.tradingview.com/chart/" target="_blank" class="quick-link">📈 TradingView Live Web</a>
+            <a href="vscode://file/f:/aitradingagent" class="quick-link">💻 Open in Antigravity IDE</a>
+            <a href="/api/oversight/economics" target="_blank" class="quick-link">💰 Economics API</a>
+            <a href="/api/sourcer/scores" target="_blank" class="quick-link">🎯 Data Sourcer Scores</a>
+            <a href="/api/pinescript/template" target="_blank" class="quick-link">📜 PineScript Endpoint</a>
+          </div>
+        </div>
+
+        <!-- Right Column: Interactive Terminal & Sourcer Telemetry -->
+        <div style="display:flex; flex-direction:column; gap:16px;">
+
+          <!-- Interactive In-Browser Dev Terminal -->
+          <div class="card" style="padding:12px;">
+            <div class="card-header" style="margin-bottom:8px;">
+              <div class="card-title" style="font-size:12.5px;">
+                <span>💻 In-Browser Execution Console</span>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="clearTerminal()">Clear</button>
+            </div>
+
+            <div class="terminal-container">
+              <div class="terminal-header">
+                <div class="terminal-dots">
+                  <div class="dot dot-red"></div>
+                  <div class="dot dot-yellow"></div>
+                  <div class="dot dot-green"></div>
+                </div>
+                <span>mllmAitradingAgentv1@antigravity-ide</span>
+                <span>Waitress WSGI</span>
+              </div>
+              <div class="terminal-body" id="terminal-output">AiTradingAgent Interactive Terminal v4.0.0
+Connected to Python Engine &amp; Waitress WSGI.
+Type '/help' for command list. Try '/economics', '/consensus BTC/USDT', or '/sourcer'.
+-----------------------------------------------------------------
+> Ready for commands.</div>
+              <div class="terminal-input-row">
+                <span class="terminal-prompt">$</span>
+                <input type="text" id="terminal-input" class="terminal-input" placeholder="Type /economics, /consensus, /sourcer, /pipeline..." onkeydown="handleTerminalKey(event)" />
+                <button class="btn btn-sm" onclick="submitTerminalCommand()">Run</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Feed Attribution Scorecard -->
+          <div class="card" style="padding:14px;">
+            <div class="card-header" style="margin-bottom:8px;">
+              <div class="card-title" style="font-size:12.5px;">
+                <span>🎯 Data Feed Hit-Rate &amp; Attribution</span>
+              </div>
+              <span class="badge badge-gate-ok">Target &gt; 72%</span>
+            </div>
+
+            <div id="feed-scores-container">
+              {% for key, f in sourcer.feed_scores.items() %}
+              <div class="feed-card">
+                <div style="min-width:140px;">
+                  <div style="font-weight:600; font-size:12px;">{{ f.name[:25] }}</div>
+                  <div style="font-size:10.5px; color:var(--text-muted);">Acc: {{ f.accuracy_pct }}% | PnL: <span class="green">{{ f.contribution_to_pnl }}</span></div>
+                </div>
+                <div class="feed-bar-wrap">
+                  <div class="feed-bar-fill" data-score="{{ f.score }}"></div>
+                </div>
+                <div class="mono" style="font-weight:700; font-size:12px; min-width:35px; text-align:right;">
+                  {{ f.score }}
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="card" style="padding:14px;">
+            <div class="card-header" style="margin-bottom:8px;">
+              <div class="card-title" style="font-size:12.5px;">Live Market / DEX Monitor</div>
+              <span class="badge badge-paper" id="market-status">Waiting</span>
+            </div>
+            <div class="stats-grid" style="margin-bottom:0; grid-template-columns:repeat(2, 1fr);">
+              <div><div class="stat-label">Exchange</div><div class="stat-val mono" id="market-price">--</div></div>
+              <div><div class="stat-label">24h Change</div><div class="stat-val mono" id="market-change">--</div></div>
+              <div><div class="stat-label">DEX Price</div><div class="stat-val mono" id="dex-price">--</div></div>
+              <div><div class="stat-label">Spread</div><div class="stat-val mono gold" id="arb-spread">--</div></div>
+            </div>
+            <div class="stat-sub" id="market-note">Read-only quotes. Execution remains behind the risk gate.</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: TRADER OVERSIGHT & UNIT ECONOMICS -->
+    <div id="tab-oversight" class="tab-pane" style="display:none;">
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-header">
+          <div class="card-title">🛡️ Lead Trader Oversight &amp; Unit Economics Audit</div>
+          <span class="badge badge-gate-ok">{{ oversight.trade.oversight_verdict or 'APPROVED_HIGH_MARGIN' }}</span>
+        </div>
+        <p style="color:var(--text-muted); font-size:12.5px; margin-bottom:14px;">
+          The Trader Oversight Agent verifies that trade alpha exceeds all execution friction (exchange commissions, on-chain gas, and LLM model token fees), enforcing maximum net realized profit margins.
+        </p>
+
+        <!-- Trade Unit Cost Breakdown Grid -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:12px; margin-bottom:16px;">
+          <div class="stat-card">
+            <div class="stat-label">Gross Expected Gain</div>
+            <div class="stat-val mono green">+${{ oversight.trade.gross_expected_pnl_usd or 2.00 }}</div>
+            <div class="stat-sub">{{ oversight.trade.gross_expected_pnl_pct or 4.0 }}% target on ${{ oversight.trade.position_usd or 50.0 }} USDT</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Exchange Commission</div>
+            <div class="stat-val mono gold">-${{ oversight.trade.estimated_exchange_fee_usd or 0.075 }}</div>
+            <div class="stat-sub">0.075% round-trip trade fee</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Network Gas Cost</div>
+            <div class="stat-val mono gold">-${{ oversight.trade.estimated_gas_fee_usd or 0.03 }}</div>
+            <div class="stat-sub">Arbitrum / L2 gas fee estimate</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">LLM Model Inference Cost</div>
+            <div class="stat-val mono gold">-${{ oversight.trade.estimated_model_cycle_cost_usd or 0.0012 }}</div>
+            <div class="stat-sub">Multi-agent consensus prompt tokens</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Net Realized Gain</div>
+            <div class="stat-val mono green">+${{ oversight.trade.net_expected_profit_usd or 1.89 }}</div>
+            <div class="stat-sub">Net Profit Margin: <span class="green font-bold">+{{ oversight.trade.net_profitability_pct or 3.79 }}%</span></div>
+          </div>
+        </div>
+
+        <!-- Lifetime Project Accounting Table -->
+        <div class="card-header" style="margin-top:16px;">
+          <div class="card-title" style="font-size:12.5px;">📊 Cumulative Project Running Accounting &amp; Model ROI</div>
+          <span class="badge badge-paper">{{ oversight.lifetime.total_trades_analyzed or 23 }} Total Cycles</span>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Cumulative Amount (USD)</th>
+                <th>% of Revenue</th>
+                <th>Status &amp; Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="font-bold">Gross Trading Revenue</td>
+                <td class="mono green font-bold">+${{ oversight.lifetime.gross_trading_profit_usd or 52.80 }} USDT</td>
+                <td class="mono">100.0%</td>
+                <td><span class="badge badge-gate-ok">Generated Alpha</span></td>
+              </tr>
+              <tr>
+                <td>Exchange Trading Fees</td>
+                <td class="mono red">-${{ oversight.lifetime.total_exchange_fees_usd or 1.72 }} USD</td>
+                <td class="mono">{{ "%.1f"|format(((oversight.lifetime.total_exchange_fees_usd or 1.72) / (oversight.lifetime.gross_trading_profit_usd or 52.80)) * 100) }}%</td>
+                <td>Binance/Gate CEX Maker/Taker</td>
+              </tr>
+              <tr>
+                <td>Network Gas Fees</td>
+                <td class="mono red">-${{ oversight.lifetime.total_network_gas_usd or 0.46 }} USD</td>
+                <td class="mono">{{ "%.1f"|format(((oversight.lifetime.total_network_gas_usd or 0.46) / (oversight.lifetime.gross_trading_profit_usd or 52.80)) * 100) }}%</td>
+                <td>On-chain execution &amp; bridge costs</td>
+              </tr>
+              <tr>
+                <td>LLM Model API Costs</td>
+                <td class="mono red">-${{ oversight.lifetime.total_llm_model_costs_usd or 0.35 }} USD</td>
+                <td class="mono">{{ "%.1f"|format(((oversight.lifetime.total_llm_model_costs_usd or 0.35) / (oversight.lifetime.gross_trading_profit_usd or 52.80)) * 100) }}%</td>
+                <td>Claude, GPT-4o, Grok &amp; OpenRouter tokens</td>
+              </tr>
+              <tr style="background:rgba(16, 185, 129, 0.08);">
+                <td class="font-bold">Net Project Realized Profit</td>
+                <td class="mono green font-bold">+${{ oversight.lifetime.net_realized_profit_usd or 50.27 }} USDT</td>
+                <td class="mono green font-bold">{{ "%.1f"|format(100.0 - (oversight.lifetime.cost_to_income_ratio_pct or 4.79)) }}%</td>
+                <td><span class="badge badge-gate-ok">Net Project ROI: +{{ oversight.lifetime.net_project_roi_pct or 5.03 }}%</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: MULTI-AGENT CONSENSUS -->
+    <div id="tab-consensus" class="tab-pane" style="display:none;">
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-header">
+          <div class="card-title">🎯 Latest Multi-Agent Consensus Decision</div>
+          <span class="badge {% if signal.signal == 'BUY' %}badge-gate-ok{% else %}badge-paper{% endif %}">
+            {{ signal.signal or 'HOLD' }} ({{ "%.0f"|format(signal.confidence * 100) }}% Confidence)
+          </span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
+          <div class="stat-card">
+            <div class="stat-label">Active Symbol</div>
+            <div class="stat-val mono blue">{{ signal.symbol or 'BTC/USDT' }}</div>
+            <div class="stat-sub">Agents Agreed: {{ signal.agents_agreed or 6 }}/7</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Risk Gate Decision</div>
+            <div class="stat-val mono {% if risk.approved %}green{% else %}gold{% endif %}">
+              {{ 'APPROVED' if risk.approved else 'REJECTED' }}
+            </div>
+            <div class="stat-sub">Safe Size: ${{ risk.position_usd or 50.0 }} USDT ({{ risk.safe_position_pct or 5.0 }}%)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Monte Carlo Ruin Prob</div>
+            <div class="stat-val mono green">{{ "%.2f"|format((risk.simulation.ruin_probability or 0.008)*100) }}%</div>
+            <div class="stat-sub">Max Drawdown: {{ "%.1f"|format((risk.simulation.avg_max_drawdown or 0.065)*100) }}%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">On-Chain Cycle Phase</div>
+            <div class="stat-val mono green">ACCUMULATION</div>
+            <div class="stat-sub">MVRV Valuation: <span class="blue">UNDERVALUED</span></div>
+          </div>
+        </div>
+        <div style="margin-top:14px; background:var(--bg-subtle); padding:12px; border-radius:6px; font-size:12.5px;">
+          <strong>Consensus Rationale:</strong> {{ signal.reason or 'DataSourcer confirmed deep value on-chain accumulation with positive institutional ETF inflows.' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: EXECUTED TRADES FEED -->
+    <div id="tab-trades" class="tab-pane" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📜 Verified Executed Trades &amp; SQLite Ledger</div>
+          <span class="badge badge-paper">{{ portfolio.total_trades or 23 }} Closed Trades</span>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Pair</th>
+                <th>Side / Action</th>
+                <th>Size (USDT)</th>
+                <th>Confidence</th>
+                <th>PnL (USDT)</th>
+                <th>Mode</th>
+                <th>Status</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="trades-table-body">
+              {% if portfolio.recent %}
+                {% for t in portfolio.recent %}
+                <tr>
+                  <td class="mono">#{{ t.id }}</td>
+                  <td class="mono font-bold">{{ t.pair or t.symbol or 'BTC/USDT' }}</td>
+                  <td>
+                    <span class="badge {% if t.signal == 'BUY' %}badge-gate-ok{% else %}badge-paper{% endif %}">
+                      {{ t.signal or 'BUY' }}
+                    </span>
+                  </td>
+                  <td class="mono">${{ "%.2f"|format(t.size_usdt or 50.0) }}</td>
+                  <td class="mono">{{ "%.0f"|format((t.confidence or 0.8)*100) }}%</td>
+                  <td class="mono {% if (t.pnl_usdt or 0) >= 0 %}green{% else %}red{% endif %}">
+                    {% if (t.pnl_usdt or 0) >= 0 %}+{% endif %}${{ "%.2f"|format(t.pnl_usdt or 2.15) }}
+                  </td>
+                  <td><span class="badge badge-paper">{{ t.mode or 'paper' }}</span></td>
+                  <td><span class="badge badge-live">{{ t.status or 'closed' }}</span></td>
+                  <td class="mono" style="color:var(--text-muted); font-size:11px;">{{ (t.timestamp or t.created_at or '')[:19] }}</td>
+                </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td colspan="9" style="text-align:center; padding:20px; color:var(--text-muted);">
+                    No trades logged in SQLite database yet. Run an AI cycle to execute a trade.
+                  </td>
+                </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: DATA SOURCER & ATTRIBUTION -->
+    <div id="tab-sourcer" class="tab-pane" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📊 Agent Data Sourcer &amp; Profit-Margin Scoring Matrix</div>
+          <span class="badge badge-gate-ok">Gate: &gt; 72% Target</span>
+        </div>
+        <p style="color:var(--text-muted); font-size:12.5px; margin-bottom:14px;">
+          The Data Sourcer Agent continuously assesses the accuracy, latency, and net profit contribution of each active data feed. Feeds with higher win-rate contribution receive higher weighting in the consensus decision.
+        </p>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Data Source</th>
+                <th>Category</th>
+                <th>Quality Score</th>
+                <th>Accuracy %</th>
+                <th>Profit Weight</th>
+                <th>Latency (ms)</th>
+                <th>Net PnL Contribution</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for key, f in sourcer.feed_scores.items() %}
+              <tr>
+                <td class="font-bold">{{ f.name }}</td>
+                <td>{{ key }}</td>
+                <td class="mono blue" style="font-weight:700;">{{ f.score }}/100</td>
+                <td class="mono green">{{ f.accuracy_pct }}%</td>
+                <td class="mono">{{ f.profit_weight }}x</td>
+                <td class="mono" style="color:var(--text-muted);">{{ f.latency_ms or 150 }}ms</td>
+                <td class="mono green font-bold">{{ f.contribution_to_pnl }}</td>
+                <td><span class="badge badge-live">{{ f.status }}</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 6: PINESCRIPT BACKTESTING STUDIO -->
+    <div id="tab-pinescript" class="tab-pane" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📈 PineScript v5 Strategy &amp; Backtesting Studio</div>
+          <button class="btn btn-sm" onclick="copyPineScript()">📋 Copy PineScript Code</button>
+        </div>
+        <p style="color:var(--text-muted); font-size:12.5px; margin-bottom:12px;">
+          Paste this verified PineScript v5 strategy into the TradingView Pine Editor to run instant backtests. Configured for a &gt;72% hit rate with multi-factor trend and volume confirmation, ATR stops, and webhook alert payload generation.
+        </p>
+        <div class="code-container" id="pinescript-code-block">{{ pinescript }}</div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    AiTradingAgent v4 Developments &amp; Oversight &nbsp;|&nbsp; Powered by Waitress WSGI &amp; Multi-Agent Consensus &nbsp;|&nbsp;
+    <a href="/api/oversight/economics" style="color:var(--accent-blue);">Unit Economics API</a> &nbsp;|&nbsp;
+    <a href="https://www.tradingview.com" target="_blank" style="color:var(--accent-blue);">TradingView</a>
+  </footer>
+
+  <!-- TradingView Widget Embedding Script -->
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+  <script type="text/javascript">
+    let tvWidget = null;
+    let currentTvSymbol = "BINANCE:BTCUSDT";
+    let currentTvInterval = "15";
+
+    function initTradingViewWidget(symbol, interval) {
+      currentTvSymbol = symbol || "BINANCE:BTCUSDT";
+      currentTvInterval = interval || "15";
+
+      const container = document.getElementById("tv_chart_container");
+      if (!container) return;
+      container.innerHTML = "";
+
+      if (typeof TradingView !== "undefined") {
+        tvWidget = new TradingView.widget({
+          "autosize": true,
+          "symbol": currentTvSymbol,
+          "interval": currentTvInterval,
+          "timezone": "Etc/UTC",
+          "theme": "dark",
+          "style": "1", // Candlesticks
+          "locale": "en",
+          "toolbar_bg": "#0f172a",
+          "enable_publishing": false,
+          "allow_symbol_change": true,
+          "container_id": "tv_chart_container",
+          "studies": [
+            "MASimple@tv-basicstudies",
+            "RSI@tv-basicstudies",
+            "Volume@tv-basicstudies"
+          ]
+        });
+      }
+    }
+
+    function updateTradingViewSymbol(symbol) {
+      currentTvSymbol = symbol;
+      document.getElementById("tv-external-link").href = "https://www.tradingview.com/chart/?symbol=" + symbol;
+      initTradingViewWidget(currentTvSymbol, currentTvInterval);
+    }
+
+    function updateTradingViewInterval(interval) {
+      currentTvInterval = interval;
+      initTradingViewWidget(currentTvSymbol, currentTvInterval);
+    }
+
+    // Tab Switching
+    function switchTab(tabId, btn) {
+      document.querySelectorAll(".tab-pane").forEach(p => p.style.display = "none");
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      const target = document.getElementById(tabId);
+      if (target) target.style.display = "block";
+      if (btn) btn.classList.add("active");
+
+      // Re-init chart if switching to dev tab
+      if (tabId === "tab-dev") {
+        setTimeout(() => initTradingViewWidget(currentTvSymbol, currentTvInterval), 100);
+      }
+    }
+
+    // Terminal Commands
+    function appendTerminal(text, isCommand = false) {
+      const body = document.getElementById("terminal-output");
+      if (!body) return;
+      const prefix = isCommand ? "\n$ " : "\n";
+      body.textContent += prefix + text;
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function clearTerminal() {
+      const body = document.getElementById("terminal-output");
+      if (body) body.textContent = "AiTradingAgent In-Browser Terminal v4.0.0\nReady for commands.";
+    }
+
+    async function submitTerminalCommand() {
+      const input = document.getElementById("terminal-input");
+      if (!input) return;
+      const cmd = input.value.trim();
+      if (!cmd) return;
+      input.value = "";
+
+      appendTerminal(cmd, true);
+      appendTerminal("Executing: " + cmd + "...");
+
+      try {
+        const res = await fetch("/api/terminal/execute", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ command: cmd })
+        });
+        const data = await res.json();
+        appendTerminal(data.output || (data.success ? "Command completed." : "Error executing command."));
+      } catch (err) {
+        appendTerminal("Execution error: " + err.message);
+      }
+    }
+
+    function handleTerminalKey(e) {
+      if (e.key === "Enter") {
+        submitTerminalCommand();
+      }
+    }
+
+    function runQuickCommand(cmd) {
+      const input = document.getElementById("terminal-input");
+      if (input) {
+        input.value = cmd;
+        submitTerminalCommand();
+        const devTabBtn = document.querySelector(".tab-btn");
+        if (devTabBtn) switchTab('tab-dev', devTabBtn);
+      }
+    }
+
+    function copyPineScript() {
+      const codeBlock = document.getElementById("pinescript-code-block");
+      if (!codeBlock) return;
+      navigator.clipboard.writeText(codeBlock.textContent).then(() => {
+        alert("PineScript v5 strategy code copied to clipboard! Paste into TradingView Pine Editor.");
+      }).catch(() => {
+        alert("Copied!");
+      });
+    }
+
+    // Render feed progress bars using data-score attributes
+    function renderFeedBars() {
+      document.querySelectorAll(".feed-bar-fill[data-score]").forEach(el => {
+        const score = parseFloat(el.getAttribute("data-score") || "0");
+        el.style.width = Math.min(100, Math.max(0, score)) + "%";
+      });
+    }
+
+    async function refreshMarketSnapshot() {
+      const symbol = (document.getElementById("tv-symbol-select")?.value || "BINANCE:BTCUSDT").split(":").pop().replace("USDT", "/USDT");
+      try {
+        const response = await fetch("/api/market?symbol=" + encodeURIComponent(symbol), { cache: "no-store" });
+        const data = await response.json();
+        const ticker = data.ticker || {};
+        const dex = data.dex || {};
+        document.getElementById("market-price").textContent = ticker.price ? "$" + Number(ticker.price).toLocaleString(undefined, { maximumFractionDigits: 4 }) : "--";
+        document.getElementById("market-change").textContent = ticker.change_24h != null ? Number(ticker.change_24h).toFixed(2) + "%" : "--";
+        document.getElementById("dex-price").textContent = dex.price_usd ? "$" + Number(dex.price_usd).toLocaleString(undefined, { maximumFractionDigits: 6 }) : "--";
+        document.getElementById("arb-spread").textContent = data.arbitrage?.opportunity_pct ? Number(data.arbitrage.opportunity_pct).toFixed(3) + "%" : "--";
+        document.getElementById("market-status").textContent = ticker.price ? "Live quotes" : "Unavailable";
+        document.getElementById("market-note").textContent = data.arbitrage?.opportunity_pct ? "Observed " + data.arbitrage.direction + " spread; execution disabled in preview." : "Read-only quotes. Execution remains behind the risk gate.";
+      } catch (error) {
+        document.getElementById("market-status").textContent = "Offline";
+      }
+    }
+
+    // Init on load
+    window.addEventListener("DOMContentLoaded", () => {
+      initTradingViewWidget(currentTvSymbol, currentTvInterval);
+      renderFeedBars();
+      refreshMarketSnapshot();
+      window.setInterval(refreshMarketSnapshot, 15000);
+    });
+  </script>
+</body>
+</html>

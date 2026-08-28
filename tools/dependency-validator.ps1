@@ -1,0 +1,1 @@
+F:\aitradingagent\tools\dependency-validator.ps1

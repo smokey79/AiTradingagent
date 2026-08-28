@@ -1,0 +1,217 @@
+version: "3.8"
+
+services:
+  # Web Dashboard & Main API
+  dashboard:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: aitrade-dashboard
+    environment:
+      - NODE_ENV=production
+      - PYTHONUNBUFFERED=1
+      - PORT=3002
+      - DASHBOARD_PORT=3002
+      - WAITRESS_THREADS=8
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - PERPLEXITY_API_KEY=${PERPLEXITY_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - CMC_API_KEY=${CMC_API_KEY}
+      - COINECKO_API_KEY=${COINECKO_API_KEY}
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - aitrade
+    restart: unless-stopped
+
+  # Trading Mode Controller (AUTO vs MANUAL toggle)
+  trading-mode-api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: aitrade-mode-api
+    command: ["python", "trading_mode_api.py"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - STATE_FILE=/app/data/.trading_state
+      - MIN_CONSENSUS_AGENTS=${MIN_CONSENSUS_AGENTS:-4}
+      - MIN_CONFIDENCE=${MIN_CONFIDENCE:-0.70}
+      - MAX_POSITION_SIZE=${MAX_POSITION_SIZE:-10000}
+      - MAX_PORTFOLIO_RISK=${MAX_PORTFOLIO_RISK:-0.02}
+      - MAX_LEVERAGE=${MAX_LEVERAGE:-5}
+      - MAX_OPEN_TRADES=${MAX_OPEN_TRADES:-5}
+      - STOP_LOSS_PERCENT=${STOP_LOSS_PERCENT:-5}
+      - TAKE_PROFIT_PERCENT=${TAKE_PROFIT_PERCENT:-15}
+      - WIN_RATE_GATE=${WIN_RATE_GATE:-0.70}
+    ports:
+      - "3005:5000"
+    volumes:
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3005/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - aitrade
+    restart: unless-stopped
+    depends_on:
+      - dashboard
+
+  # Risk Gate MCP Server
+  risk-gate:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: aitrade-risk-gate
+    command: ["node", "mcp-servers/risk-gate-mcp/index.js"]
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - MAX_POSITION_SIZE=${MAX_POSITION_SIZE:-10000}
+      - MAX_PORTFOLIO_RISK=${MAX_PORTFOLIO_RISK:-0.02}
+      - STOP_LOSS_PERCENT=${STOP_LOSS_PERCENT:-5}
+    ports:
+      - "3001:3001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - aitrade
+    restart: unless-stopped
+    depends_on:
+      - dashboard
+
+  # Signal Engine MCP Server
+  signal-engine:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: aitrade-signal-engine
+    command: ["node", "mcp-servers/signal-engine-mcp/index.js"]
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+    ports:
+      - "3003:3002"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - aitrade
+    restart: unless-stopped
+    depends_on:
+      - dashboard
+
+  # Portfolio MCP Server
+  portfolio:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: aitrade-portfolio
+    command: ["node", "mcp-servers/portfolio-mcp/index.js"]
+    environment:
+      - NODE_ENV=production
+      - PORT=3003
+    ports:
+      - "3004:3003"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3003/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - aitrade
+    restart: unless-stopped
+    depends_on:
+      - dashboard
+
+  # Consensus Engine (Python - Multi-LLM orchestrator)
+  consensus-engine:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: aitrade-consensus
+    command: ["python", "orchestrator/consensus_engine.py"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - PERPLEXITY_API_KEY=${PERPLEXITY_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    networks:
+      - aitrade
+    restart: unless-stopped
+    depends_on:
+      - dashboard
+
+  # Data Sourcer Agent (Python)
+  data-sourcer:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: aitrade-data-sourcer
+    command: ["python", "orchestrator/data_sourcer_agent.py"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - CMC_API_KEY=${CMC_API_KEY}
+      - COINECKO_API_KEY=${COINECKO_API_KEY}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    networks:
+      - aitrade
+    restart: unless-stopped
+    depends_on:
+      - dashboard
+
+  # Trader Oversight (Python - Risk & Execution Monitor)
+  trader-oversight:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: aitrade-oversight
+    command: ["python", "orchestrator/trader_oversight.py"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - MAX_POSITION_SIZE=${MAX_POSITION_SIZE:-10000}
+      - MAX_PORTFOLIO_RISK=${MAX_PORTFOLIO_RISK:-0.02}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    networks:
+      - aitrade
+    restart: unless-stopped
+    depends_on:
+      - risk-gate
+
+networks:
+  aitrade:
+    driver: bridge
+
+volumes:
+  data:
+  logs:
