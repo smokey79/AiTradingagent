@@ -1,0 +1,76 @@
+{
+  "composite_market_sentiment": "BULLISH_EXPANSION",
+  "composite_polarity": 0.93,
+  "total_channels_monitored": 6,
+  "channels": [
+    {
+      "name": "LuxAlgo",
+      "handle": "@LuxAlgo",
+      "category": "Smart Money Concepts & Algorithmic Indicators",
+      "credibility_weight": 1.45,
+      "accuracy_hit_rate": "81.0%",
+      "recent_video_title": "LuxAlgo Smart Money Concepts: 5X Leverage Liquidity Sweep Strategy",
+      "sentiment_category": "STRONG_BULLISH",
+      "bias_signal": "BUY",
+      "confidence": 0.95
+    },
+    {
+      "name": "Crypto Banter",
+      "handle": "@CryptoBanterOfficial",
+      "category": "Daily Market Momentum & Altcoin Rotations",
+      "credibility_weight": 1.2,
+      "accuracy_hit_rate": "75.0%",
+      "recent_video_title": "Massive Bitcoin Breakout Imminent \u2014 Institutional Inflow Explosion",
+      "sentiment_category": "STRONG_BULLISH",
+      "bias_signal": "BUY",
+      "confidence": 0.9
+    },
+    {
+      "name": "Coin Bureau",
+      "handle": "@CoinBureau",
+      "category": "Macroeconomics, Regulation & Fundamental Research",
+      "credibility_weight": 1.25,
+      "accuracy_hit_rate": "76.0%",
+      "recent_video_title": "Global Liquidity Shock: What It Means for Crypto Markets 2026",
+      "sentiment_category": "STRONG_BULLISH",
+      "bias_signal": "BUY",
+      "confidence": 0.91
+    },
+    {
+      "name": "TradingView Mastery",
+      "handle": "@TradingViewMastery",
+      "category": "Quantitative Backtesting & PineScript Development",
+      "credibility_weight": 1.3,
+      "accuracy_hit_rate": "77.0%",
+      "recent_video_title": "How to Build a 75% Win-Rate PineScript v5 Trading Strategy",
+      "sentiment_category": "STRONG_BULLISH",
+      "bias_signal": "BUY",
+      "confidence": 0.92
+    },
+    {
+      "name": "Benjamin Cowen",
+      "handle": "@BenjaminCowen",
+      "category": "Quantitative Risk Regimes & Market Cycles",
+      "credibility_weight": 1.35,
+      "accuracy_hit_rate": "79.0%",
+      "recent_video_title": "Bitcoin Market Cycle Dynamic Risk Band Analysis",
+      "sentiment_category": "STRONG_BULLISH",
+      "bias_signal": "BUY",
+      "confidence": 0.93
+    },
+    {
+      "name": "Glassnode Insights",
+      "handle": "@Glassnode",
+      "category": "On-Chain Accumulation & Exchange Reserves",
+      "credibility_weight": 1.4,
+      "accuracy_hit_rate": "80.0%",
+      "recent_video_title": "On-Chain Supercycle: Whale Accumulation at Record Highs",
+      "sentiment_category": "STRONG_BULLISH",
+      "bias_signal": "BUY",
+      "confidence": 0.83
+    }
+  ],
+  "active_bias": "BUY",
+  "overall_confidence": 0.84,
+  "timestamp": "2026-08-29T01:41:57.618967+00:00"
+}

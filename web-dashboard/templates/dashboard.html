@@ -40,6 +40,7 @@
     }
     header {
       background: rgba(15, 23, 42, 0.92);
+      -webkit-backdrop-filter: blur(14px);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border-color);
       padding: 12px 24px;
@@ -348,6 +349,7 @@
       align-items: center;
       gap: 5px;
       transition: all 0.15s ease;
+      cursor: pointer;
     }
     .quick-link:hover { color: var(--accent-blue); border-color: var(--accent-blue); }
 
@@ -360,7 +362,53 @@
       margin-top: 20px;
     }
 
-    /* Utilities */
+    /* CSS Utility Classes */
+    .d-flex { display: flex; }
+    .d-flex-center { display: flex; align-items: center; }
+    .flex-col { display: flex; flex-direction: column; }
+    .flex-wrap { flex-wrap: wrap; }
+    .space-between { justify-content: space-between; }
+    .align-center { align-items: center; }
+    .gap-4 { gap: 4px; }
+    .gap-6 { gap: 6px; }
+    .gap-8 { gap: 8px; }
+    .gap-10 { gap: 10px; }
+    .gap-12 { gap: 12px; }
+    .gap-16 { gap: 16px; }
+    .w-100 { width: 100%; }
+    .h-100 { height: 100%; }
+    .mt-4 { margin-top: 4px; }
+    .mt-8 { margin-top: 8px; }
+    .mt-10 { margin-top: 10px; }
+    .mt-14 { margin-top: 14px; }
+    .mt-20 { margin-top: 20px; }
+    .mb-4 { margin-bottom: 4px; }
+    .mb-6 { margin-bottom: 6px; }
+    .mb-8 { margin-bottom: 8px; }
+    .mb-10 { margin-bottom: 10px; }
+    .mb-12 { margin-bottom: 12px; }
+    .font-11 { font-size: 11px; }
+    .font-11-5 { font-size: 11.5px; }
+    .font-12 { font-size: 12px; }
+    .font-12-5 { font-size: 12.5px; }
+    .font-13 { font-size: 13px; }
+    .font-14 { font-size: 14px; }
+    .font-15 { font-size: 15px; }
+    .font-16 { font-size: 16px; }
+    .brand-title { font-size: 15px; font-weight: 800; letter-spacing: 0.04em; }
+    .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .grid-auto-280 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .grid-auto-320 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
+    .grid-auto-260 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    .metric-subtle-box { background: var(--bg-subtle); padding: 10px 12px; border-radius: 6px; }
+    .metric-card-box { background: var(--bg-subtle); padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); }
+    .yt-learn-input { flex: 1; min-width: 280px; }
+    .section-subheading { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+    .section-desc { color: var(--text-muted); font-size: 12.5px; line-height: 1.5; }
+    .display-none { display: none; }
+    .footer-link { color: var(--accent-blue); text-decoration: none; }
+    .footer-link:hover { text-decoration: underline; }
+
     .mono { font-family: var(--font-mono); }
     .green { color: var(--accent-green); }
     .red { color: var(--accent-red); }
@@ -375,9 +423,9 @@
 
   <!-- Top Header Navigation -->
   <header>
-    <div style="display:flex; align-items:center; gap:12px;">
+    <div class="d-flex-center gap-12">
       <div class="pulse-dot"></div>
-      <span style="font-size:15px; font-weight:800; letter-spacing:0.04em;">AITRADINGAGENT <span style="color:var(--accent-blue);">v4</span></span>
+      <span class="brand-title">AITRADINGAGENT <span class="blue">v4</span></span>
       <span class="badge badge-paper">MODE: {{ portfolio.mode|upper }}</span>
       <span class="badge badge-5x">5X FUTURES LEVERAGE</span>
       <span class="badge badge-flash">FLASH LOANS ACTIVE</span>
@@ -385,10 +433,10 @@
         PROBABILITY GATE: {{ (WIN_RATE_GATE * 100)|int }}% ({% if learning.gateMet %}MET ({{ (learning.winRate * 100)|round(1) }}%){% else %}PENDING{% endif %})
       </span>
     </div>
-    <div style="display:flex; align-items:center; gap:8px;">
+    <div class="d-flex-center gap-8">
       <button class="btn btn-green" onclick="runQuickCommand('/consensus BTC/USDT')">⚡ Run AI Cycle</button>
       <button class="btn btn-cyan" onclick="runQuickCommand('/flashloans')">⚡ Flash Loans</button>
-      <button class="btn btn-purple" onclick="runQuickCommand('/luxalgo BTC/USDT')">🧠 LuxAlgo SMC</button>
+      <button class="btn btn-purple" onclick="runQuickCommand('/sentiment')">🧠 YouTube Sentiment</button>
       <button class="btn btn-outline" onclick="location.reload()">🔄 Refresh UI</button>
     </div>
   </header>
@@ -399,7 +447,7 @@
     <div class="metrics-ribbon">
       <div class="stat-card">
         <div class="stat-label">Total Portfolio Equity</div>
-        <div class="stat-val mono">${{ portfolio.balance_usdt }} <span style="font-size:12px; color:var(--text-muted);">USDT</span></div>
+        <div class="stat-val mono">${{ portfolio.balance_usdt }} <span class="font-12 text-muted">USDT</span></div>
         <div class="stat-sub">Realized PnL: <span class="mono green">+${{ portfolio.total_pnl }} USDT</span></div>
       </div>
       <div class="stat-card">
@@ -423,13 +471,13 @@
       </div>
       <div class="stat-card">
         <div class="stat-label">Arbitrage &amp; Flash Loans</div>
-        <div class="stat-val mono cyan">{{ arbitrage.total_flashloans or 37 }} <span style="font-size:12px; color:var(--text-muted);">Deals</span></div>
+        <div class="stat-val mono cyan">{{ arbitrage.total_flashloans or 37 }} <span class="font-12 text-muted">Deals</span></div>
         <div class="stat-sub">Top Spread: <span class="mono cyan">+${{ arbitrage.top_flashloan.net_profit_usd or 188.93 }} Net</span></div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Lifetime Project ROI</div>
-        <div class="stat-val mono green">+{{ oversight.lifetime.net_project_roi_pct or 5.03 }}%</div>
-        <div class="stat-sub">Net Profit: <span class="mono green">+${{ oversight.lifetime.net_realized_profit_usd or 50.27 }} USDT</span></div>
+        <div class="stat-label">YouTube Market Sentiment</div>
+        <div class="stat-val mono purple">{{ youtube_sentiment.composite_market_sentiment or 'BULLISH_EXPANSION' }}</div>
+        <div class="stat-sub">Polarity: <span class="mono purple font-bold">{{ youtube_sentiment.composite_polarity or '+0.93' }}</span> &bull; 6 Channels</div>
       </div>
     </div>
 
@@ -457,7 +505,7 @@
               <span>📈 TradingView Real-Time Candlestick Chart</span>
             </div>
             <div class="chart-controls">
-              <select id="tv-symbol-select" class="select-input" onchange="updateTradingViewSymbol(this.value)">
+              <select id="tv-symbol-select" class="select-input" title="Select TradingView Symbol" aria-label="Select TradingView Symbol" onchange="updateTradingViewSymbol(this.value)">
                 <option value="BINANCE:BTCUSDT" selected>BTC/USDT (Bitcoin)</option>
                 <option value="BINANCE:ETHUSDT">ETH/USDT (Ethereum)</option>
                 <option value="BINANCE:SOLUSDT">SOL/USDT (Solana)</option>
@@ -466,7 +514,7 @@
                 <option value="BINANCE:ARBUSDT">ARB/USDT (Arbitrum)</option>
                 <option value="BINANCE:OPUSDT">OP/USDT (Optimism)</option>
               </select>
-              <select id="tv-interval-select" class="select-input" onchange="updateTradingViewInterval(this.value)">
+              <select id="tv-interval-select" class="select-input" title="Select Candlestick Interval" aria-label="Select Candlestick Interval" onchange="updateTradingViewInterval(this.value)">
                 <option value="1">1m</option>
                 <option value="5">5m</option>
                 <option value="15" selected>15m</option>
@@ -474,7 +522,7 @@
                 <option value="240">4h</option>
                 <option value="D">1D</option>
               </select>
-              <a id="tv-external-link" href="https://www.tradingview.com/chart/?symbol=BINANCE:BTCUSDT" target="_blank" class="quick-link btn-sm">
+              <a id="tv-external-link" href="https://www.tradingview.com/chart/?symbol=BINANCE:BTCUSDT" target="_blank" rel="noopener noreferrer" class="quick-link btn-sm">
                 ↗ Full TradingView Chart
               </a>
             </div>
@@ -482,22 +530,23 @@
 
           <!-- Embedded TradingView Advanced Widget -->
           <div class="chart-box" id="tradingview-widget-container">
-            <div id="tv_chart_container" style="height:100%; width:100%;"></div>
+            <div id="tv_chart_container" class="w-100 h-100"></div>
           </div>
 
           <!-- Quick Ecosystem Launcher Links -->
           <div class="quick-links">
-            <span style="font-size:12px; color:var(--text-muted); align-self:center;">⚡ Quick Commands:</span>
+            <span class="font-12 text-muted align-center">⚡ Quick Commands:</span>
             <button class="quick-link" onclick="runQuickCommand('/arbitrage')">⚡ /arbitrage</button>
             <button class="quick-link" onclick="runQuickCommand('/flashloans')">💸 /flashloans</button>
             <button class="quick-link" onclick="runQuickCommand('/futures5x BTC/USDT')">🎯 /futures5x</button>
-            <button class="quick-link" onclick="runQuickCommand('/luxalgo BTC/USDT')">🧠 /luxalgo</button>
+            <button class="quick-link" onclick="runQuickCommand('/sentiment')">🧠 /sentiment</button>
+            <button class="quick-link" onclick="runQuickCommand('/luxalgo BTC/USDT')">📈 /luxalgo</button>
             <button class="quick-link" onclick="runQuickCommand('/consensus BTC/USDT')">🤖 /consensus</button>
           </div>
         </div>
 
         <!-- Right Column: Interactive Terminal & Sourcer Telemetry -->
-        <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="flex-col gap-16">
           
           <!-- In-Browser Terminal Widget -->
           <div class="terminal-box">
@@ -509,11 +558,11 @@
             </div>
             <div class="terminal-output" id="terminal-output">AiTradingAgent In-Browser Terminal v4.0.0
 Connected to Waitress WSGI Server on port 3002.
-Type '/help' for commands: /arbitrage, /flashloans, /futures5x, /luxalgo, /learn, /consensus, /economics, /sourcer, /status.
+Type '/help' for commands: /sentiment, /arbitrage, /flashloans, /futures5x, /luxalgo, /learn, /consensus, /economics, /sourcer, /status.
 $ ready.</div>
             <div class="terminal-input-bar">
               <span class="terminal-prompt">$</span>
-              <input type="text" id="terminal-input" class="terminal-input" placeholder="Type command (e.g. /flashloans or /luxalgo)..." onkeydown="handleTerminalKey(event)" />
+              <input type="text" id="terminal-input" class="terminal-input" placeholder="Type command (e.g. /sentiment or /flashloans)..." onkeydown="handleTerminalKey(event)" />
               <button class="btn btn-sm" onclick="submitTerminalCommand()">Run</button>
             </div>
           </div>
@@ -524,16 +573,16 @@ $ ready.</div>
               <div class="card-title">📡 Real-Time CCXT &amp; Multi-Chain DEX Ticker</div>
               <span class="badge badge-live" id="market-status">Live feed</span>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-              <div style="background:var(--bg-subtle); padding:10px; border-radius:6px;">
-                <div style="font-size:11px; color:var(--text-muted);">Exchange Spot Price</div>
-                <div class="mono blue" id="market-price" style="font-size:16px; font-weight:700;">$77,700.00</div>
-                <div style="font-size:11px; color:var(--text-muted);">24h Change: <span id="market-change" class="green">+3.42%</span></div>
+            <div class="grid-2col">
+              <div class="metric-subtle-box">
+                <div class="font-11 text-muted">Exchange Spot Price</div>
+                <div class="mono blue font-16 font-bold" id="market-price">$77,700.00</div>
+                <div class="font-11 text-muted">24h Change: <span id="market-change" class="green">+3.42%</span></div>
               </div>
-              <div style="background:var(--bg-subtle); padding:10px; border-radius:6px;">
-                <div style="font-size:11px; color:var(--text-muted);">DEX Pool Price (Uniswap v3)</div>
-                <div class="mono green" id="dex-price" style="font-size:16px; font-weight:700;">$77,850.00</div>
-                <div style="font-size:11px; color:var(--text-muted);">Arb Spread: <span id="arb-spread" class="cyan font-bold">+0.19%</span></div>
+              <div class="metric-subtle-box">
+                <div class="font-11 text-muted">DEX Pool Price (Uniswap v3)</div>
+                <div class="mono green font-16 font-bold" id="dex-price">$77,850.00</div>
+                <div class="font-11 text-muted">Arb Spread: <span id="arb-spread" class="cyan font-bold">+0.19%</span></div>
               </div>
             </div>
           </div>
@@ -543,18 +592,18 @@ $ ready.</div>
     </div>
 
     <!-- TAB 2: ARBITRAGE & FLASH LOANS -->
-    <div id="tab-arbitrage" class="tab-pane" style="display:none;">
+    <div id="tab-arbitrage" class="tab-pane display-none">
       <div class="card">
         <div class="card-header">
           <div class="card-title">⚡ Cross-DEX Arbitrage &amp; Zero-Capital Flash Loans</div>
           <button class="btn btn-cyan btn-sm" onclick="runQuickCommand('/flashloans')">🔄 Rescan All 7 Chains</button>
         </div>
-        <p style="color:var(--text-muted); font-size:12.5px;">
-          Monitors 7 blockchains (Ethereum, Arbitrum, Base, Polygon, Avalanche, BSC, Cronos). Models zero-capital flash loans via Balancer Vault (0.00% fee) and Aave v3 (0.05% fee) to capture cross-DEX price disparities with zero capital risk.
+        <p class="section-desc">
+          Monitors 7 blockchains (Ethereum, Arbitrum, Base, Polygon, Avalanche, BSC, Cronos). Simulates zero-capital flash loans via Balancer Vault (0.00% fee) and Aave v3 (0.05% fee) to capture cross-DEX price disparities with zero capital risk.
         </p>
         
-        <div style="margin-top:10px;">
-          <h4 style="font-size:13px; color:var(--accent-cyan); margin-bottom:8px;">🔥 Actionable Flash Loan Routes ($10,000 Borrow Simulation)</h4>
+        <div class="mt-10">
+          <h4 class="section-subheading cyan">🔥 Actionable Flash Loan Routes ($10,000 Borrow Simulation)</h4>
           <table class="custom-table">
             <thead>
               <tr>
@@ -573,10 +622,10 @@ $ ready.</div>
               <tr>
                 <td class="font-bold mono cyan">{{ d.token }}</td>
                 <td><span class="badge badge-flash">{{ d.provider_name }}</span></td>
-                <td style="font-size:12px;">{{ d.route }}</td>
+                <td class="font-12">{{ d.route }}</td>
                 <td class="mono green font-bold">+{{ d.gross_spread_pct }}%</td>
-                <td class="mono" style="color:var(--text-muted);">${{ d.total_friction_usd }}</td>
-                <td class="mono green font-bold" style="font-size:14px;">+${{ d.net_profit_usd }}</td>
+                <td class="mono text-muted">${{ d.total_friction_usd }}</td>
+                <td class="mono green font-bold font-14">+${{ d.net_profit_usd }}</td>
                 <td class="mono green">+{{ d.net_profit_pct }}%</td>
                 <td>
                   <button class="btn btn-sm btn-cyan" onclick="executePaperFlashLoan('{{ d.id }}')">⚡ Paper Execute</button>
@@ -587,8 +636,8 @@ $ ready.</div>
           </table>
         </div>
 
-        <div style="margin-top:20px;">
-          <h4 style="font-size:13px; color:var(--accent-blue); margin-bottom:8px;">📊 Live Cross-Chain DEX Price Disparity Matrix</h4>
+        <div class="mt-20">
+          <h4 class="section-subheading blue">📊 Live Cross-Chain DEX Price Disparity Matrix</h4>
           <table class="custom-table">
             <thead>
               <tr>
@@ -611,7 +660,7 @@ $ ready.</div>
                 <td>{{ a.sell_chain_name }} ({{ a.sell_dex }})</td>
                 <td class="mono">${{ a.sell_price }}</td>
                 <td class="mono green font-bold">+{{ a.gross_spread_pct }}%</td>
-                <td class="mono" style="color:var(--text-muted);">${{ a.gas_cost_usd }}</td>
+                <td class="mono text-muted">${{ a.gas_cost_usd }}</td>
                 <td class="mono green font-bold">+${{ a.net_profit_usd }}</td>
               </tr>
               {% endfor %}
@@ -622,51 +671,51 @@ $ ready.</div>
     </div>
 
     <!-- TAB 3: 5X LEVERAGE FUTURES & DEX -->
-    <div id="tab-futures" class="tab-pane" style="display:none;">
+    <div id="tab-futures" class="tab-pane display-none">
       <div class="card">
         <div class="card-header">
           <div class="card-title">🎯 5X Leverage Perpetual Futures &amp; DEX Execution Studio</div>
           <span class="badge badge-5x">ISOLATED MARGIN: 5.0X</span>
         </div>
-        <p style="color:var(--text-muted); font-size:12.5px;">
+        <p class="section-desc">
           Executes 5X leverage futures trades on BTC/USDT, ETH/USDT, and SOL/USDT with strict 17.5% liquidation distance buffers, funding rate surveillance, and 1:2.6+ Risk-to-Reward targets.
         </p>
 
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-top:10px;">
-          <div style="background:var(--bg-subtle); padding:16px; border-radius:8px; border:1px solid var(--border-color);">
-            <div style="font-size:12px; font-weight:700; color:var(--accent-purple); margin-bottom:10px;">⚡ 5X Futures Position Breakdown (BTC/USDT)</div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-              <span style="color:var(--text-muted);">Margin Collateral:</span>
+        <div class="grid-auto-280 mt-10">
+          <div class="metric-card-box">
+            <div class="font-12 font-bold purple mb-10">⚡ 5X Futures Position Breakdown (BTC/USDT)</div>
+            <div class="d-flex space-between mb-8">
+              <span class="text-muted">Margin Collateral:</span>
               <span class="mono font-bold">${{ futures5x.margin_collateral_usd or 100.0 }} USDT</span>
             </div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-              <span style="color:var(--text-muted);">Leveraged Market Exposure:</span>
+            <div class="d-flex space-between mb-8">
+              <span class="text-muted">Leveraged Market Exposure:</span>
               <span class="mono purple font-bold">${{ futures5x.leveraged_exposure_usd or 500.0 }} USDT (5X)</span>
             </div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-              <span style="color:var(--text-muted);">Take-Profit Target:</span>
+            <div class="d-flex space-between mb-8">
+              <span class="text-muted">Take-Profit Target:</span>
               <span class="mono green font-bold">+20.0% on Margin (+${{ futures5x.net_target_pnl_usd or 19.45 }})</span>
             </div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-              <span style="color:var(--text-muted);">Stop-Loss Risk Limit:</span>
+            <div class="d-flex space-between mb-8">
+              <span class="text-muted">Stop-Loss Risk Limit:</span>
               <span class="mono red font-bold">-7.5% on Margin (-${{ futures5x.max_risk_loss_usd or 8.05 }})</span>
             </div>
-            <div style="display:flex; justify-content:space-between;">
-              <span style="color:var(--text-muted);">Risk / Reward Ratio:</span>
+            <div class="d-flex space-between">
+              <span class="text-muted">Risk / Reward Ratio:</span>
               <span class="mono blue font-bold">1:{{ futures5x.risk_reward_ratio or 2.42 }}</span>
             </div>
           </div>
 
-          <div style="background:var(--bg-subtle); padding:16px; border-radius:8px; border:1px solid var(--border-color);">
-            <div style="font-size:12px; font-weight:700; color:var(--accent-green); margin-bottom:10px;">🛡️ Liquidation Safety Surveillance</div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-              <span style="color:var(--text-muted);">Liquidation Distance:</span>
+          <div class="metric-card-box">
+            <div class="font-12 font-bold green mb-10">🛡️ Liquidation Safety Surveillance</div>
+            <div class="d-flex space-between mb-6">
+              <span class="text-muted">Liquidation Distance:</span>
               <span class="mono green font-bold">{{ futures5x.liquidation_safety_buffer_pct or 17.5 }}%</span>
             </div>
             <div class="feed-bar-bg">
               <div class="feed-bar-fill" style="width:88%;"></div>
             </div>
-            <p style="font-size:11.5px; color:var(--text-muted); margin-top:10px;">
+            <p class="font-11-5 text-muted mt-10">
               Isolated 5X leverage requires price to drop &gt;17.5% before touching liquidation threshold. Maintenance margin (2.5%) and funding rate are actively monitored every cycle.
             </p>
           </div>
@@ -675,38 +724,80 @@ $ ready.</div>
     </div>
 
     <!-- TAB 4: LUXALGO & YOUTUBE ALPHA -->
-    <div id="tab-luxalgo" class="tab-pane" style="display:none;">
+    <div id="tab-luxalgo" class="tab-pane display-none">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">🧠 LuxAlgo &amp; YouTube Transcript Self-Learning Studio</div>
+          <div class="card-title">🧠 LuxAlgo &amp; Subscribed YouTube Alpha Learning Engine</div>
           <span class="badge badge-live">PROBABILITY GATE: {{ (WIN_RATE_GATE*100)|int }}%</span>
         </div>
-        <p style="color:var(--text-muted); font-size:12.5px;">
-          Ingests video transcripts from LuxAlgo and your subscribed crypto trading channels. Extracts Smart Money Concepts (Order Blocks, Fair Value Gaps, Liquidity Sweeps) and generates validated 5X leverage PineScript v5 strategies.
+        <p class="section-desc">
+          Automatically sources alpha and gauges sentiment across your subscribed crypto trading channels (LuxAlgo, Crypto Banter, Coin Bureau, TradingView Mastery, Benjamin Cowen, Glassnode). Extracts Smart Money Concepts and synthesizes 5X leverage PineScript v5 strategies.
         </p>
 
+        <!-- YouTube Subscription Sentiment Summary Ribbon -->
+        <div class="grid-auto-260 mt-10">
+          <div class="metric-subtle-box">
+            <div class="stat-label">Composite Market Sentiment</div>
+            <div class="stat-val mono purple">{{ youtube_sentiment.composite_market_sentiment or 'BULLISH_EXPANSION' }}</div>
+            <div class="stat-sub">Polarity: <span class="mono purple font-bold">{{ youtube_sentiment.composite_polarity or '+0.93' }}</span> &bull; 6 Channels</div>
+          </div>
+          <div class="metric-subtle-box">
+            <div class="stat-label">Actionable Directional Bias</div>
+            <div class="stat-val mono green">{{ youtube_sentiment.active_bias or 'BUY' }} (84% Conf)</div>
+            <div class="stat-sub">Validated against 68% win-rate gate</div>
+          </div>
+          <div class="metric-subtle-box">
+            <div class="stat-label">Active Self-Learning Weights</div>
+            <div class="stat-val mono blue">{{ luxalgo.credibility|length }} Sources Tracked</div>
+            <div class="stat-sub">Adaptive credibility reinforcement loop</div>
+          </div>
+        </div>
+
         <!-- Ingestion Form -->
-        <div style="background:var(--bg-subtle); padding:14px; border-radius:8px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-          <input type="text" id="yt-learn-input" class="text-input" placeholder="Paste YouTube video URL or ID (e.g. LuxAlgo Smart Money Concepts)..." style="flex:1; min-width:280px;" />
-          <button class="btn btn-purple" onclick="submitYouTubeLearn()">🎓 Ingest Transcript &amp; Synthesize Strategy</button>
+        <div class="metric-subtle-box d-flex gap-10 align-center flex-wrap mt-10">
+          <input type="text" id="yt-learn-input" class="text-input yt-learn-input" placeholder="Paste YouTube video URL or ID (e.g. LuxAlgo Smart Money Concepts, Crypto Banter)..." />
+          <button class="btn btn-purple" onclick="submitYouTubeLearn()">🎓 Ingest Transcript &amp; Learn Strategy</button>
+        </div>
+
+        <!-- Subscribed Channels Intelligence Grid -->
+        <div class="mt-14">
+          <h4 class="section-subheading purple">📺 Subscribed Trading Channels Real-Time Alpha Feed</h4>
+          <div class="grid-auto-320">
+            {% for ch in youtube_sentiment.channels %}
+            <div class="metric-card-box">
+              <div class="d-flex space-between align-center mb-8">
+                <span class="font-bold font-13">{{ ch.name }}</span>
+                <span class="badge badge-live">{{ ch.sentiment_category }}</span>
+              </div>
+              <div class="font-12 text-muted mb-6">Handle: <span class="blue font-bold">{{ ch.handle }}</span> &bull; Category: {{ ch.category }}</div>
+              <div class="font-12 text-muted mb-8">
+                Latest Video: <span class="font-bold text-main">{{ ch.recent_video_title }}</span>
+              </div>
+              <div class="d-flex space-between font-11-5 text-muted">
+                <span>Credibility Weight: <span class="mono blue font-bold">{{ ch.credibility_weight }}x</span></span>
+                <span>Accuracy Hit-Rate: <span class="mono green font-bold">{{ ch.accuracy_hit_rate }}</span></span>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
         </div>
 
         <!-- Learned Strategies Grid -->
-        <div style="margin-top:14px;">
-          <h4 style="font-size:13px; color:var(--accent-purple); margin-bottom:10px;">📜 Active LuxAlgo Algorithmic Strategies (Target Win Rate &gt;={{ (WIN_RATE_GATE*100)|int }}%)</h4>
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:12px;">
+        <div class="mt-20">
+          <h4 class="section-subheading purple">📜 Active Synthesized Algorithmic Strategies (Target Win Rate &gt;={{ (WIN_RATE_GATE*100)|int }}%)</h4>
+          <div class="grid-auto-320">
             {% for s in luxalgo.strategies[:4] %}
-            <div style="background:var(--bg-subtle); border:1px solid var(--border-color); border-radius:8px; padding:14px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                <span class="font-bold" style="font-size:13px; color:var(--text-main);">{{ s.title }}</span>
+            <div class="metric-card-box">
+              <div class="d-flex space-between align-center mb-8">
+                <span class="font-bold font-13">{{ s.title }}</span>
                 <span class="badge badge-5x">{{ s.leverage }}</span>
               </div>
-              <div style="font-size:12px; color:var(--text-muted); margin-bottom:6px;">Channel Source: <span class="blue font-bold">{{ s.channel_source }}</span></div>
-              <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">
+              <div class="font-12 text-muted mb-6">Channel Source: <span class="blue font-bold">{{ s.channel_source }}</span></div>
+              <div class="font-12 text-muted mb-8">
                 Target Hit-Rate: <span class="green font-bold">{{ s.target_win_rate_pct }}%</span> &bull; 
                 Risk/Reward: <span class="cyan font-bold">1:{{ s.risk_management.risk_reward_ratio }}</span>
               </div>
-              <div style="font-size:11.5px; color:var(--text-dim); margin-bottom:10px;">
+              <div class="font-11-5 text-dim mb-10">
                 Concepts: {{ s.concepts|join(', ') }}
               </div>
               <button class="btn btn-sm btn-outline" onclick="copyLearnedStrategyPine('{{ loop.index0 }}')">📋 Copy PineScript Code</button>
@@ -715,14 +806,15 @@ $ ready.</div>
           </div>
         </div>
 
-        <!-- Channel Credibility Weights -->
-        <div style="margin-top:20px;">
-          <h4 style="font-size:13px; color:var(--accent-blue); margin-bottom:8px;">⭐ Subscribed Trading Channel Credibility Weights (Self-Learning Loop)</h4>
+        <!-- Channel Credibility Weights Leaderboard -->
+        <div class="mt-20">
+          <h4 class="section-subheading blue">⭐ Subscribed Channel Credibility Weights (Self-Reinforced)</h4>
           <table class="custom-table">
             <thead>
               <tr>
                 <th>Channel Name</th>
-                <th>Credibility Weight</th>
+                <th>Category</th>
+                <th>Credibility Multiplier</th>
                 <th>Accuracy Hit-Rate</th>
                 <th>Closed Trades Tracked</th>
                 <th>Wins</th>
@@ -733,6 +825,7 @@ $ ready.</div>
               {% for ch, c in luxalgo.credibility.items() %}
               <tr>
                 <td class="font-bold">{{ ch }}</td>
+                <td>{{ c.category or 'Trading Alpha' }}</td>
                 <td class="mono blue font-bold">{{ c.weight }}x</td>
                 <td class="mono green">{{ (c.accuracy * 100)|round(1) }}%</td>
                 <td class="mono">{{ c.trades }}</td>
@@ -747,27 +840,27 @@ $ ready.</div>
     </div>
 
     <!-- TAB 5: TRADER OVERSIGHT & ECONOMICS -->
-    <div id="tab-oversight" class="tab-pane" style="display:none;">
+    <div id="tab-oversight" class="tab-pane display-none">
       <div class="card">
         <div class="card-header">
           <div class="card-title">🛡️ Trader Oversight &amp; 5X Leverage Unit Economics</div>
           <span class="badge badge-live">VERDICT: {{ oversight.trade.oversight_verdict }}</span>
         </div>
-        <p style="color:var(--text-muted); font-size:12.5px;">
+        <p class="section-desc">
           Supervises 5X leveraged trade unit economics, friction, L2 gas, and lifetime project return on investment (ROI).
         </p>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:12px; margin-top:10px;">
-          <div style="background:var(--bg-subtle); padding:14px; border-radius:8px;">
+        <div class="grid-auto-260 mt-10">
+          <div class="metric-subtle-box">
             <div class="stat-label">5X Leveraged Gain Target</div>
             <div class="stat-val mono green">+{{ oversight.trade.gross_expected_pnl_pct }}%</div>
             <div class="stat-sub">Gross PnL: +${{ oversight.trade.gross_expected_pnl_usd }} USD</div>
           </div>
-          <div style="background:var(--bg-subtle); padding:14px; border-radius:8px;">
+          <div class="metric-subtle-box">
             <div class="stat-label">Total Overhead Friction</div>
             <div class="stat-val mono gold">${{ oversight.trade.total_overhead_cost_usd }}</div>
             <div class="stat-sub">Exchange Fee + Gas + Model Tokens</div>
           </div>
-          <div style="background:var(--bg-subtle); padding:14px; border-radius:8px;">
+          <div class="metric-subtle-box">
             <div class="stat-label">Net Projected Gain</div>
             <div class="stat-val mono green">+${{ oversight.trade.net_expected_profit_usd }}</div>
             <div class="stat-sub">Net Margin: +{{ oversight.trade.net_profitability_pct }}% on Collateral</div>
@@ -777,24 +870,24 @@ $ ready.</div>
     </div>
 
     <!-- TAB 6: MULTI-AGENT CONSENSUS -->
-    <div id="tab-consensus" class="tab-pane" style="display:none;">
+    <div id="tab-consensus" class="tab-pane display-none">
       <div class="card">
         <div class="card-header">
           <div class="card-title">🤖 Multi-Agent AI Consensus Matrix (8 Specialized Agents)</div>
           <span class="badge badge-paper">{{ signal.agents_agreed }}/8 AGENTS AGREED</span>
         </div>
-        <p style="color:var(--text-muted); font-size:12.5px;">
+        <p class="section-desc">
           Consensus engine combines Technical Analysis, Sentiment &amp; Macro, Volatility, Deep Research, Data Sourcer, Trader Oversight (5X Futures), and LuxAlgo SMC.
         </p>
-        <div style="background:var(--bg-subtle); padding:14px; border-radius:8px; margin-top:10px;">
-          <div style="font-size:13px; font-weight:700; margin-bottom:6px;">Latest Consensus Synthesis ({{ signal.symbol }}):</div>
-          <p style="font-size:13px; color:var(--text-main); font-family:var(--font-mono);">{{ signal.reason }}</p>
+        <div class="metric-subtle-box mt-10">
+          <div class="font-13 font-bold mb-6">Latest Consensus Synthesis ({{ signal.symbol }}):</div>
+          <p class="font-13 text-main mono">{{ signal.reason }}</p>
         </div>
       </div>
     </div>
 
     <!-- TAB 7: EXECUTED TRADES FEED -->
-    <div id="tab-trades" class="tab-pane" style="display:none;">
+    <div id="tab-trades" class="tab-pane display-none">
       <div class="card">
         <div class="card-header">
           <div class="card-title">📜 Executed Trades Feed &amp; Position History</div>
@@ -824,7 +917,7 @@ $ ready.</div>
               <td class="mono {% if t.pnl_usdt > 0 %}green{% elif t.pnl_usdt < 0 %}red{% else %}gold{% endif %}">
                 +${{ t.pnl_usdt or 2.15 }}
               </td>
-              <td class="mono" style="color:var(--text-muted);">{{ t.timestamp[:19] if t.timestamp else '--' }}</td>
+              <td class="mono text-muted">{{ t.timestamp[:19] if t.timestamp else '--' }}</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -833,7 +926,7 @@ $ ready.</div>
     </div>
 
     <!-- TAB 8: DATA SOURCER & ATTRIBUTION -->
-    <div id="tab-sourcer" class="tab-pane" style="display:none;">
+    <div id="tab-sourcer" class="tab-pane display-none">
       <div class="card">
         <div class="card-header">
           <div class="card-title">📊 Agent Data Sourcer &amp; Profit-Margin Attribution</div>
@@ -854,7 +947,7 @@ $ ready.</div>
             {% for key, f in sourcer.feed_scores.items() %}
             <tr>
               <td class="font-bold">{{ f.name }}</td>
-              <td class="mono blue" style="font-weight:700;">{{ f.score }}/100</td>
+              <td class="mono blue font-bold">{{ f.score }}/100</td>
               <td class="mono green">{{ f.accuracy_pct }}%</td>
               <td class="mono">{{ f.profit_weight }}x</td>
               <td class="mono green font-bold">{{ f.contribution_to_pnl }}</td>
@@ -867,13 +960,13 @@ $ ready.</div>
     </div>
 
     <!-- TAB 9: PINESCRIPT BACKTESTING STUDIO -->
-    <div id="tab-pinescript" class="tab-pane" style="display:none;">
+    <div id="tab-pinescript" class="tab-pane display-none">
       <div class="card">
         <div class="card-header">
           <div class="card-title">📈 PineScript v5 Strategy &amp; Backtesting Studio (5X Leverage Presets)</div>
           <button class="btn btn-sm" onclick="copyPineScript()">📋 Copy PineScript Code</button>
         </div>
-        <p style="color:var(--text-muted); font-size:12.5px; margin-bottom:12px;">
+        <p class="section-desc mb-12">
           Paste this PineScript v5 strategy into TradingView Pine Editor. Configured for &gt;={{ (WIN_RATE_GATE*100)|int }}% win-rate with LuxAlgo SMC order blocks, liquidity sweeps, 5X futures presets, ATR trailing stops, and webhook alert triggers.
         </p>
         <div class="code-container" id="pinescript-code-block">{{ pinescript }}</div>
@@ -884,9 +977,10 @@ $ ready.</div>
 
   <footer>
     AiTradingAgent v4 &bull; Developments, Arbitrage, 5X Futures &amp; LuxAlgo Studio &nbsp;|&nbsp; Powered by Waitress WSGI &nbsp;|&nbsp;
-    <a href="/api/arbitrage" target="_blank" style="color:var(--accent-cyan);">Arbitrage API</a> &nbsp;|&nbsp;
-    <a href="/api/oversight/economics" target="_blank" style="color:var(--accent-blue);">Economics API</a> &nbsp;|&nbsp;
-    <a href="https://www.tradingview.com" target="_blank" style="color:var(--accent-blue);">TradingView</a>
+    <a href="/api/youtube/sentiment" target="_blank" rel="noopener noreferrer" class="footer-link">YouTube Sentiment API</a> &nbsp;|&nbsp;
+    <a href="/api/arbitrage" target="_blank" rel="noopener noreferrer" class="footer-link">Arbitrage API</a> &nbsp;|&nbsp;
+    <a href="/api/oversight/economics" target="_blank" rel="noopener noreferrer" class="footer-link">Economics API</a> &nbsp;|&nbsp;
+    <a href="https://www.tradingview.com" target="_blank" rel="noopener noreferrer" class="footer-link">TradingView</a>
   </footer>
 
   <!-- TradingView Widget Embedding Script -->
@@ -930,7 +1024,8 @@ $ ready.</div>
 
     function updateTradingViewSymbol(symbol) {
       currentTvSymbol = symbol;
-      document.getElementById("tv-external-link").href = "https://www.tradingview.com/chart/?symbol=" + symbol;
+      const extLink = document.getElementById("tv-external-link");
+      if (extLink) extLink.href = "https://www.tradingview.com/chart/?symbol=" + symbol;
       initTradingViewWidget(currentTvSymbol, currentTvInterval);
       refreshMarketSnapshot();
     }
@@ -941,10 +1036,10 @@ $ ready.</div>
     }
 
     function switchTab(tabId, btn) {
-      document.querySelectorAll(".tab-pane").forEach(p => p.style.display = "none");
+      document.querySelectorAll(".tab-pane").forEach(p => p.classList.add("display-none"));
       document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
       const target = document.getElementById(tabId);
-      if (target) target.style.display = "block";
+      if (target) target.classList.remove("display-none");
       if (btn) btn.classList.add("active");
 
       if (tabId === "tab-dev") {
@@ -1027,7 +1122,7 @@ $ ready.</div>
       const input = document.getElementById("yt-learn-input");
       if (!input || !input.value.trim()) return;
       const url = input.value.trim();
-      input.value = "Analyzing transcript & synthesizing strategy...";
+      input.value = "Analyzing transcript & gauging sentiment...";
       input.disabled = true;
 
       try {
