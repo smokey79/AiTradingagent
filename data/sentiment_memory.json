@@ -16,5 +16,41 @@
     "mentions": 6,
     "timestamp": 1788011307260,
     "evaluated": false
+  },
+  {
+    "symbol": "BTC",
+    "signal": "BUY",
+    "score": 0.65,
+    "confidence": 0.82,
+    "mentions": 6,
+    "timestamp": 1788014256577,
+    "evaluated": false
+  },
+  {
+    "symbol": "BTC",
+    "signal": "BUY",
+    "score": 0.65,
+    "confidence": 0.82,
+    "mentions": 6,
+    "timestamp": 1788014256590,
+    "evaluated": false
+  },
+  {
+    "symbol": "BTC",
+    "signal": "BUY",
+    "score": 0.65,
+    "confidence": 0.82,
+    "mentions": 6,
+    "timestamp": 1788014350661,
+    "evaluated": false
+  },
+  {
+    "symbol": "BTC",
+    "signal": "BUY",
+    "score": 0.65,
+    "confidence": 0.82,
+    "mentions": 6,
+    "timestamp": 1788014350686,
+    "evaluated": false
   }
 ]

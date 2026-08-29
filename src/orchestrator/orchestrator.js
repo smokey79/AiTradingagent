@@ -128,3 +128,6 @@ async function main() {
 }
 
 main();
+
+export { evaluateConsensus, runCycleForAsset, buildMarketContext };
+

@@ -34,3 +34,37 @@ export function synthesize(agentSignals, hermesRuling) {
   logger.info("Synthesis complete", { finalSignal, avgConfidence });
   return result;
 }
+
+/**
+ * Evaluates multi-agent consensus weighting across Claude (40%), Gemini (40%), and Hermes (20%).
+ * Enforces a strict 70% confidence minimum gate and automated 40% reinvestment allocation.
+ *
+ * @param {object} agentResponses - Dictionary containing agent responses e.g. { claude, gemini, hermes }
+ * @returns {Promise<{approved: boolean, action?: string, allocation?: string, aggregateScore?: number, reason?: string}>}
+ */
+export async function evaluateConsensus(agentResponses) {
+  const { claude, gemini, hermes } = agentResponses || {};
+
+  const claudeConf = claude?.confidence ?? 0;
+  const geminiConf = gemini?.confidence ?? 0;
+  const hermesConf = hermes?.confidence ?? 0;
+
+  // Impute dynamic weighting logic here based on agent historical accuracy
+  const aggregateScore = (claudeConf * 0.4) + (geminiConf * 0.4) + (hermesConf * 0.2);
+
+  if (aggregateScore >= 0.70) { // Enforces the 70% confidence minimum
+    return {
+      approved: true,
+      action: claude?.recommendedAction || claude?.action || claude?.signal || "BUY_BTC",
+      allocation: "40%", // Automate the 40% reinvestment split here
+      aggregateScore: parseFloat(aggregateScore.toFixed(3)),
+    };
+  }
+
+  return {
+    approved: false,
+    reason: "Consensus below 70% threshold",
+    aggregateScore: parseFloat(aggregateScore.toFixed(3)),
+  };
+}
+

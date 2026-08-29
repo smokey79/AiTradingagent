@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "adsum": {
+      "command": "node",
+      "args": [
+        "c:\\Users\\barcl\\.antigravity-ide\\extensions\\adsumnetwork.nrf-ai-debugger-0.3.1-universal\\mcp\\adsum-mcp.mjs"
+      ]
+    }
+  }
+}

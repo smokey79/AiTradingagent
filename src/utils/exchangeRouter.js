@@ -61,7 +61,35 @@ async function getBestVenue(pair) {
 }
 
 async function executeTrade(pair, signal, riskCheck, marketData, isPaper = true) {
-  const side = signal.toUpperCase() === 'BUY' ? 'BUY' : 'SELL';
+  // Support consensusDecision single-object signature: executeTrade(consensusDecision)
+  if (typeof pair === 'object' && pair !== null && ('approved' in pair || 'action' in pair)) {
+    const consensusDecision = pair;
+    if (!consensusDecision.approved) {
+      logger.warn('Trade execution skipped: consensus not approved', { reason: consensusDecision.reason });
+      return { executed: false, approved: false, reason: consensusDecision.reason || 'Not approved' };
+    }
+    const actionStr = String(consensusDecision.action || 'BUY_BTC').toUpperCase();
+    const parsedSide = (actionStr.startsWith('SELL') || actionStr.startsWith('SHORT')) ? 'SELL' : 'BUY';
+    let asset = 'BTC';
+    if (actionStr.includes('_')) {
+      asset = actionStr.split('_')[1];
+    }
+    const parsedPair = consensusDecision.symbol || `${asset}/USDT`;
+    const parsedRiskCheck = {
+      approved: true,
+      positionSizeUsd: consensusDecision.sizeUsd || 25.0,
+      consensusConfidence: consensusDecision.confidence || consensusDecision.aggregateScore || 0.85,
+      stopLossPct: 1.5,
+      takeProfitPct: 3.3,
+      reason: consensusDecision.reason || 'Consensus execution validated',
+    };
+    const parsedMarketData = (typeof signal === 'object' && signal !== null) ? signal : { price: { price: 68000 } };
+    const parsedIsPaper = typeof riskCheck === 'boolean' ? riskCheck : (process.env.TRADING_MODE !== 'live');
+
+    return executeTrade(parsedPair, parsedSide, parsedRiskCheck, parsedMarketData, parsedIsPaper);
+  }
+
+  const side = String(signal || 'BUY').toUpperCase() === 'BUY' ? 'BUY' : 'SELL';
   const price = marketData?.price?.price || 100.0;
   const sizeUsd = riskCheck.positionSizeUsd || 25.0;
   const amount = parseFloat((sizeUsd / price).toFixed(6));

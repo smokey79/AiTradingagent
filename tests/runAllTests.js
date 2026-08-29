@@ -10,7 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const { calculateAllIndicators } = require('../src/data/indicators');
 const { fetchFearAndGreed, SEED_PRICES, fetchMarketData } = require('../src/data/marketData');
-const { runConsensus, AGENT_WEIGHTS } = require('../src/orchestrator/consensus');
+const { runConsensus, AGENT_WEIGHTS, evaluateConsensus } = require('../src/orchestrator/consensus');
 const { checkRiskGate, getPortfolioState, updateBalance, savePersistedState, loadPersistedState } = require('../src/risk/riskGate');
 const { recordTrade, getPerformanceStats, loadLedger } = require('../src/risk/tradeLedger');
 const { allocateProfits, getVaultSummary, savePersistedVault, loadPersistedVault } = require('../src/utils/profitAllocator');
@@ -194,6 +194,30 @@ async function runSuite() {
     assert(typeof consensus.approved_for_execution === 'boolean', 'approved_for_execution must be boolean');
   });
 
+  await asyncIt('evaluateConsensus approves trade with 40% allocation when aggregate score >= 70%', async () => {
+    const agentResponses = {
+      claude: { confidence: 0.85, recommendedAction: 'BUY_BTC' },
+      gemini: { confidence: 0.80 },
+      hermes: { confidence: 0.75 },
+    };
+    const result = await evaluateConsensus(agentResponses);
+    assert.strictEqual(result.approved, true, 'Must approve trade when score >= 0.70');
+    assert.strictEqual(result.action, 'BUY_BTC', 'Action must be BUY_BTC');
+    assert.strictEqual(result.allocation, '40%', 'Allocation must be 40%');
+    assert(result.aggregateScore >= 0.70, 'Aggregate score must be >= 0.70');
+  });
+
+  await asyncIt('evaluateConsensus rejects trade when aggregate score < 70%', async () => {
+    const agentResponses = {
+      claude: { confidence: 0.60, recommendedAction: 'BUY_BTC' },
+      gemini: { confidence: 0.50 },
+      hermes: { confidence: 0.50 },
+    };
+    const result = await evaluateConsensus(agentResponses);
+    assert.strictEqual(result.approved, false, 'Must reject trade when score < 0.70');
+    assert.strictEqual(result.reason, 'Consensus below 70% threshold');
+  });
+
   // ─── 5. Risk Gate & Kelly Sizing ───────────────────────────────────────────
   console.log('\n─── Module 5: Risk Gate & Kelly Sizing Engine ───');
   await asyncIt('Approves trade meeting minimum confidence & sizing bounds', async () => {
@@ -320,6 +344,30 @@ async function runSuite() {
     assert.strictEqual(exec.side, 'BUY', 'Side should match signal');
     assert(exec.amount > 0, 'Amount must be > 0');
     assert(typeof exec.pnlUsd === 'number', 'pnlUsd must be calculated');
+  });
+
+  await asyncIt('executeTrade executes when consensusDecision is approved', async () => {
+    const consensusDecision = {
+      approved: true,
+      action: 'BUY_BTC',
+      allocation: '40%',
+      exchange: 'BITGET',
+      sizeUsd: 25.0,
+    };
+    const exec = await executeTrade(consensusDecision);
+    assert.strictEqual(exec.success, true, 'Approved consensus decision must execute');
+    assert.strictEqual(exec.side, 'BUY', 'Side must be BUY');
+    assert.strictEqual(exec.amount > 0, true, 'Amount must be > 0');
+  });
+
+  await asyncIt('executeTrade skips execution when consensusDecision is not approved', async () => {
+    const unapprovedDecision = {
+      approved: false,
+      reason: 'Consensus below 70% threshold',
+    };
+    const exec = await executeTrade(unapprovedDecision);
+    assert.strictEqual(exec.executed, false, 'Unapproved consensus decision must not execute');
+    assert.strictEqual(exec.approved, false);
   });
 
   // ─── 9. Cross-Chain Arbitrage Scanner ──────────────────────────────────────
