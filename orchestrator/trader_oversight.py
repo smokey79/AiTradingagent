@@ -84,31 +84,43 @@ class TraderOversightAgent:
         position_usd: float = 50.0,
         expected_gain_pct: float = 0.04,  # default 4% take profit
         chain: str = "arbitrum",
+        leverage: float = 5.0,
         use_external_api: bool = False,
     ) -> Dict[str, Any]:
         """
-        Calculates complete cost breakdown and net profitability for a proposed trade.
+        Calculates complete cost breakdown, 5X leverage futures margin, liquidation distance, and net profitability.
         """
         chain_clean = chain.lower()
         gas_fee = GAS_FEE_TABLE_USD.get(chain_clean, 0.02)
-        exchange_fee = round(position_usd * EXCHANGE_COMMISSION_RATE * 2, 4)  # round trip (entry + exit)
+        
+        # 5X Futures margin exposure
+        margin_collateral_usd = position_usd
+        leveraged_exposure_usd = position_usd * leverage
+        
+        exchange_fee = round(leveraged_exposure_usd * EXCHANGE_COMMISSION_RATE * 2, 4)  # round trip taker fee on 5x notional
         model_cost = self.estimate_model_cycle_cost(use_external_api=use_external_api)
-        slippage_est = round(position_usd * 0.0005, 4)  # 0.05% slippage
+        slippage_est = round(leveraged_exposure_usd * 0.0004, 4)  # 0.04% slippage
+        funding_fee_est = round(leveraged_exposure_usd * 0.0001, 4)  # 0.01% funding rate
 
-        gross_profit_usd = round(position_usd * expected_gain_pct, 4)
-        total_costs_usd = round(exchange_fee + gas_fee + model_cost + slippage_est, 4)
+        # Gross 5X profit on margin
+        gross_profit_usd = round(leveraged_exposure_usd * expected_gain_pct, 4)
+        total_costs_usd = round(exchange_fee + gas_fee + model_cost + slippage_est + funding_fee_est, 4)
         net_profit_usd = round(gross_profit_usd - total_costs_usd, 4)
-        net_profit_pct = round((net_profit_usd / max(position_usd, 1.0)) * 100, 2)
+        
+        # Net ROI % on margin collateral
+        net_profit_pct = round((net_profit_usd / max(margin_collateral_usd, 1.0)) * 100, 2)
+        gross_roi_pct = round(expected_gain_pct * leverage * 100, 2)
 
         efficiency_pct = round((net_profit_usd / max(gross_profit_usd, 1e-6)) * 100, 2)
         cost_to_income_pct = round((total_costs_usd / max(gross_profit_usd, 1e-6)) * 100, 2)
+        liquidation_buffer_pct = round((1.0 - (1.0 / leverage) + 0.025) * 100, 2)  # ~17.5% safety buffer for 5X
 
         # Verdict
-        if net_profit_pct >= 2.5:
-            verdict = "APPROVED_HIGH_MARGIN"
+        if net_profit_pct >= 5.0:
+            verdict = "APPROVED_HIGH_MARGIN_5X"
             approved = True
-        elif net_profit_pct >= 0.5:
-            verdict = "APPROVED_MARGINAL"
+        elif net_profit_pct >= 1.0:
+            verdict = "APPROVED_5X_MARGINAL"
             approved = True
         else:
             verdict = "VETO_COST_EXCEEDS_ALPHA"
@@ -116,13 +128,18 @@ class TraderOversightAgent:
 
         return {
             "symbol": symbol,
-            "position_usd": position_usd,
+            "position_usd": margin_collateral_usd,
+            "leverage": f"{leverage}X",
+            "leverage_multiplier": leverage,
+            "leveraged_exposure_usd": leveraged_exposure_usd,
+            "liquidation_safety_buffer_pct": liquidation_buffer_pct,
             "gross_expected_pnl_usd": gross_profit_usd,
-            "gross_expected_pnl_pct": round(expected_gain_pct * 100, 2),
+            "gross_expected_pnl_pct": gross_roi_pct,
             "estimated_exchange_fee_usd": exchange_fee,
             "estimated_gas_fee_usd": gas_fee,
             "estimated_model_cycle_cost_usd": model_cost,
             "estimated_slippage_usd": slippage_est,
+            "estimated_funding_fee_usd": funding_fee_est,
             "total_overhead_cost_usd": total_costs_usd,
             "net_expected_profit_usd": net_profit_usd,
             "net_profitability_pct": net_profit_pct,

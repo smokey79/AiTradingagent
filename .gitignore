@@ -65,6 +65,8 @@ data/*.db
 data/*.sqlite
 data/*.sqlite3
 data/cache/
+data/cycle_*.json
+cache/
 *.db
 *.sqlite
 
@@ -78,3 +80,4 @@ Thumbs.db
 .idea/
 .snapshots/
 _OLD_BACKUPS/
+
