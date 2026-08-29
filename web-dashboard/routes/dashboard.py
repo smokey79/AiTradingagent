@@ -454,6 +454,46 @@ def api_channel_credibility():
     return jsonify(lux.get("credibility", {}))
 
 
+# ── AI Copilot & Chat Data Knowledge Endpoints ──────────────────────────────
+
+@dashboard.route("/api/copilot/chat", methods=["POST"])
+def api_copilot_chat():
+    data = request.get_json(silent=True) or {}
+    message = data.get("message", "").strip()
+    if not message:
+        return jsonify({"success": False, "reply": "Please provide a question or command for Copilot."})
+    try:
+        from orchestrator.copilot_chat_engine import CopilotChatEngine
+        copilot = CopilotChatEngine()
+        res = copilot.generate_response(message)
+        return jsonify(res)
+    except Exception as e:
+        return jsonify({"success": False, "reply": f"Copilot error: {e}", "error": str(e)})
+
+
+@dashboard.route("/api/copilot/memories")
+def api_copilot_memories():
+    try:
+        from orchestrator.copilot_chat_engine import CopilotChatEngine
+        copilot = CopilotChatEngine()
+        return jsonify({"success": True, "memories": copilot.get_user_profile_and_memories()})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
+@dashboard.route("/api/copilot/search")
+def api_copilot_search():
+    query = request.args.get("q", "")
+    limit = int(request.args.get("limit", 10))
+    try:
+        from orchestrator.copilot_chat_engine import CopilotChatEngine
+        copilot = CopilotChatEngine()
+        results = copilot.search_chat_history(query, limit=limit)
+        return jsonify({"success": True, "query": query, "results": results, "total": len(results)})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
 @dashboard.route("/api/pinescript/template")
 def api_pinescript():
     return jsonify({
@@ -581,6 +621,7 @@ def api_terminal_execute():
     if base_cmd in ("/help", "help"):
         output = (
             "AiTradingAgent In-Browser Terminal Commands:\n"
+            "  /copilot [query]      -> Ask Copilot AI with access to all 79 chat memories & live data\n"
             "  /arbitrage            -> Scan real-time cross-DEX price disparities across 7 chains\n"
             "  /flashloans           -> Simulate zero-capital flash loans (Balancer 0% & Aave v3 0.05%)\n"
             "  /futures5x [symbol]   -> Model 5X Leverage Futures contract margin & 17.5% liquidation buffer\n"
@@ -594,6 +635,16 @@ def api_terminal_execute():
             "  /status               -> Display live server health, equity, 5X margin & 68% gate status\n"
         )
         return jsonify({"success": True, "output": output})
+
+    elif base_cmd in ("/copilot", "copilot", "/chat", "chat", "/ask", "ask"):
+        query = " ".join(parts[1:]) if len(parts) > 1 else "What is the current system status and active strategy?"
+        try:
+            from orchestrator.copilot_chat_engine import CopilotChatEngine
+            copilot = CopilotChatEngine()
+            res = copilot.generate_response(query)
+            return jsonify({"success": True, "output": res.get("reply", "No response generated.")})
+        except Exception as e:
+            return jsonify({"success": False, "output": f"Copilot error: {e}"})
 
     elif base_cmd in ("/sentiment", "sentiment", "/youtube", "youtube"):
         try:

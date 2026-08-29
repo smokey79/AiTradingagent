@@ -278,6 +278,71 @@
       outline: none;
     }
 
+    /* Copilot Chat UI */
+    .copilot-container {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 1024px) {
+      .copilot-container { grid-template-columns: 1fr; }
+    }
+    .copilot-chat-box {
+      background: #030712;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      height: 540px;
+    }
+    .copilot-messages {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .chat-bubble {
+      padding: 10px 14px;
+      border-radius: 8px;
+      max-width: 88%;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .chat-bubble-user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #ffffff;
+      border-bottom-right-radius: 2px;
+    }
+    .chat-bubble-ai {
+      align-self: flex-start;
+      background: #1e293b;
+      border: 1px solid var(--border-color);
+      color: #f8fafc;
+      border-bottom-left-radius: 2px;
+    }
+    .quick-chips {
+      display: flex;
+      gap: 6px;
+      padding: 8px 12px;
+      background: #0f172a;
+      border-top: 1px solid var(--border-color);
+      flex-wrap: wrap;
+    }
+    .chip-btn {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      border-radius: 9999px;
+      padding: 3px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .chip-btn:hover { color: var(--accent-blue); border-color: var(--accent-blue); }
+
     /* Tables */
     .custom-table {
       width: 100%;
@@ -435,9 +500,9 @@
       </span>
     </div>
     <div class="d-flex-center gap-8">
+      <button class="btn btn-purple" onclick="switchTab('tab-copilot', document.querySelector('[data-tab=tab-copilot]'))">💬 Open Copilot</button>
       <button class="btn btn-green" onclick="runQuickCommand('/consensus BTC/USDT')">⚡ Run AI Cycle</button>
       <button class="btn btn-cyan" onclick="runQuickCommand('/flashloans')">⚡ Flash Loans</button>
-      <button class="btn btn-purple" onclick="runQuickCommand('/sentiment')">🧠 YouTube Sentiment</button>
       <button class="btn btn-outline" onclick="location.reload()">🔄 Refresh UI</button>
     </div>
   </header>
@@ -485,6 +550,7 @@
     <!-- Navigation Tabs -->
     <div class="nav-tabs">
       <button class="tab-btn active" onclick="switchTab('tab-dev', this)">🚀 Developments (Live Studio)</button>
+      <button class="tab-btn" data-tab="tab-copilot" onclick="switchTab('tab-copilot', this)">💬 AI Copilot &amp; Chat Data</button>
       <button class="tab-btn" onclick="switchTab('tab-arbitrage', this)">⚡ Arbitrage &amp; Flash Loans</button>
       <button class="tab-btn" onclick="switchTab('tab-futures', this)">🎯 5X Leverage Futures &amp; DEX</button>
       <button class="tab-btn" onclick="switchTab('tab-luxalgo', this)">🧠 LuxAlgo &amp; YouTube Alpha</button>
@@ -537,11 +603,11 @@
           <!-- Quick Ecosystem Launcher Links -->
           <div class="quick-links">
             <span class="font-12 text-muted align-center">⚡ Quick Commands:</span>
+            <button class="quick-link" onclick="runQuickCommand('/copilot What is our active trading strategy and risk gate?')">💬 /copilot</button>
             <button class="quick-link" onclick="runQuickCommand('/arbitrage')">⚡ /arbitrage</button>
             <button class="quick-link" onclick="runQuickCommand('/flashloans')">💸 /flashloans</button>
             <button class="quick-link" onclick="runQuickCommand('/futures5x BTC/USDT')">🎯 /futures5x</button>
             <button class="quick-link" onclick="runQuickCommand('/sentiment')">🧠 /sentiment</button>
-            <button class="quick-link" onclick="runQuickCommand('/luxalgo BTC/USDT')">📈 /luxalgo</button>
             <button class="quick-link" onclick="runQuickCommand('/consensus BTC/USDT')">🤖 /consensus</button>
           </div>
         </div>
@@ -559,11 +625,11 @@
             </div>
             <div class="terminal-output" id="terminal-output">AiTradingAgent In-Browser Terminal v4.0.0
 Connected to Waitress WSGI Server on port 3002.
-Type '/help' for commands: /sentiment, /arbitrage, /flashloans, /futures5x, /luxalgo, /learn, /consensus, /economics, /sourcer, /status.
+Type '/help' for commands: /copilot, /sentiment, /arbitrage, /flashloans, /futures5x, /luxalgo, /learn, /consensus, /economics, /sourcer, /status.
 $ ready.</div>
             <div class="terminal-input-bar">
               <span class="terminal-prompt">$</span>
-              <input type="text" id="terminal-input" class="terminal-input" placeholder="Type command (e.g. /sentiment or /flashloans)..." onkeydown="handleTerminalKey(event)" />
+              <input type="text" id="terminal-input" class="terminal-input" placeholder="Type command (e.g. /copilot What is our £250 rule? or /flashloans)..." onkeydown="handleTerminalKey(event)" />
               <button class="btn btn-sm" onclick="submitTerminalCommand()">Run</button>
             </div>
           </div>
@@ -589,6 +655,83 @@ $ ready.</div>
           </div>
 
         </div>
+      </div>
+    </div>
+
+    <!-- TAB: AI COPILOT & CHAT DATA KNOWLEDGE -->
+    <div id="tab-copilot" class="tab-pane display-none">
+      <div class="copilot-container">
+        
+        <!-- Left: Interactive Copilot Chat Window -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">💬 AI Copilot Meta-Assistant</div>
+            <span class="badge badge-paper">79 CHAT SESSIONS INDEXED</span>
+          </div>
+          
+          <div class="copilot-chat-box">
+            <div class="copilot-messages" id="copilot-messages">
+              <div class="chat-bubble chat-bubble-ai">
+                👋 Hello Alan! I am your <strong>AiTradingAgent Copilot</strong>. I have indexed all <strong>79 past chat conversations</strong> from <code>conversations.json</code>, your project memories, Casper SMC rules, 5X futures leverage presets, and zero-capital flash loans. How can I assist you with your trading strategy today?
+              </div>
+            </div>
+            
+            <div class="quick-chips">
+              <button class="chip-btn" onclick="sendCopilotChip('What did we decide about £250 capital and Arbitrum in past chats?')">£250 Strategy Rule</button>
+              <button class="chip-btn" onclick="sendCopilotChip('Summarize my YouTube transcript alpha and sentiment scores.')">YouTube Alpha Summary</button>
+              <button class="chip-btn" onclick="sendCopilotChip('Scan active Balancer and Aave flash loan opportunities.')">Scan Flash Loans</button>
+              <button class="chip-btn" onclick="sendCopilotChip('Model a 5X leverage futures long on BTC/USDT with 17.5% safety buffer.')">5X BTC Futures</button>
+              <button class="chip-btn" onclick="sendCopilotChip('Explain our 68% probability gate and Monte Carlo risk gate.')">68% Win Gate</button>
+            </div>
+
+            <div class="terminal-input-bar">
+              <input type="text" id="copilot-user-input" class="terminal-input" placeholder="Ask Copilot about past chats, code, flash loans, or 5X futures..." onkeydown="handleCopilotKey(event)" />
+              <button class="btn btn-purple btn-sm" onclick="submitCopilotChat()">Send</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Chat Data Knowledge & Session Explorer -->
+        <div class="flex-col gap-16">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📂 Historical Chat Data Explorer</div>
+            </div>
+            <p class="font-12 text-muted mb-8">Search across 79 historical conversation transcripts from <code>Prodjects.json/conversations.json</code>:</p>
+            <div class="d-flex gap-8 mb-10">
+              <input type="text" id="copilot-search-input" class="text-input w-100" placeholder="Search past chat sessions (e.g. Casper SMC, £250, Arbitrum)..." onkeydown="handleSearchKey(event)" />
+              <button class="btn btn-sm btn-outline" onclick="searchCopilotHistory()">Search</button>
+            </div>
+            <div id="copilot-search-results" class="flex-col gap-8 font-12 text-muted" style="max-height:240px; overflow-y:auto;">
+              <div class="metric-subtle-box">
+                <div class="font-bold text-main">Cross-chain arbitrage system design</div>
+                <div class="font-11 text-muted">£250 initial capital, bridged inventory across 7 chains, Casper SMC 5-min ORB Retest.</div>
+              </div>
+              <div class="metric-subtle-box">
+                <div class="font-bold text-main">Flash loan arbitrage bot with MEV protection</div>
+                <div class="font-11 text-muted">Balancer Vault 0% & Aave v3 0.05% zero-capital borrowing models with gas limits.</div>
+              </div>
+              <div class="metric-subtle-box">
+                <div class="font-bold text-main">Multi AI TradingBot GitHub</div>
+                <div class="font-11 text-muted">smokey79 repository architecture with 8 specialized consensus agents and safety gates.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🧠 Project Memories &amp; User Profile</div>
+            </div>
+            <div class="flex-col gap-6 font-12 text-muted">
+              <div><strong class="text-main">Developer:</strong> Alan J. (<code>smokey79</code> &bull; Trading since ~2012)</div>
+              <div><strong class="text-main">Futures Setup:</strong> 5.0X Isolated Margin &bull; 17.5% Liquidation Distance</div>
+              <div><strong class="text-main">Gate:</strong> 68% Win-Rate Threshold &bull; Monte Carlo Ruin Gate</div>
+              <div><strong class="text-main">Profit Strategy:</strong> Automatic conversion of realized profits to Bitcoin reserve</div>
+              <div><strong class="text-main">YouTube Feeds:</strong> LuxAlgo, Crypto Banter, Coin Bureau, TradingView Mastery</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -979,6 +1122,7 @@ $ ready.</div>
   <footer>
     AiTradingAgent v4 &bull; Developments, Arbitrage, 5X Futures &amp; LuxAlgo Studio &nbsp;|&nbsp; Powered by Waitress WSGI &nbsp;|&nbsp;
     <a href="/api/youtube/sentiment" target="_blank" rel="noopener noreferrer" class="footer-link">YouTube Sentiment API</a> &nbsp;|&nbsp;
+    <a href="/api/copilot/memories" target="_blank" rel="noopener noreferrer" class="footer-link">Copilot Memory API</a> &nbsp;|&nbsp;
     <a href="/api/arbitrage" target="_blank" rel="noopener noreferrer" class="footer-link">Arbitrage API</a> &nbsp;|&nbsp;
     <a href="/api/oversight/economics" target="_blank" rel="noopener noreferrer" class="footer-link">Economics API</a> &nbsp;|&nbsp;
     <a href="https://www.tradingview.com" target="_blank" rel="noopener noreferrer" class="footer-link">TradingView</a>
@@ -1108,6 +1252,96 @@ $ ready.</div>
         submitTerminalCommand();
         const devTabBtn = document.querySelector(".tab-btn");
         if (devTabBtn) switchTab('tab-dev', devTabBtn);
+      }
+    }
+
+    // Copilot Interactive Chat
+    function appendCopilotMessage(text, isUser = false) {
+      const container = document.getElementById("copilot-messages");
+      if (!container) return;
+      const bubble = document.createElement("div");
+      bubble.className = "chat-bubble " + (isUser ? "chat-bubble-user" : "chat-bubble-ai");
+      bubble.innerHTML = text.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+      container.appendChild(bubble);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    async function submitCopilotChat() {
+      const input = document.getElementById("copilot-user-input");
+      if (!input || !input.value.trim()) return;
+      const msg = input.value.trim();
+      input.value = "";
+
+      appendCopilotMessage(msg, true);
+      appendCopilotMessage("<em>Thinking & searching 79 chat memories...</em>", false);
+
+      try {
+        const res = await fetch("/api/copilot/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: msg })
+        });
+        const data = await res.json();
+        
+        // Remove thinking message
+        const container = document.getElementById("copilot-messages");
+        if (container && container.lastChild) {
+          container.removeChild(container.lastChild);
+        }
+        
+        appendCopilotMessage(data.reply || "No response received.", false);
+      } catch (err) {
+        appendCopilotMessage("Error connecting to Copilot: " + err.message, false);
+      }
+    }
+
+    function handleCopilotKey(e) {
+      if (e.key === "Enter") {
+        submitCopilotChat();
+      }
+    }
+
+    function sendCopilotChip(query) {
+      const input = document.getElementById("copilot-user-input");
+      if (input) {
+        input.value = query;
+        submitCopilotChat();
+      }
+    }
+
+    async function searchCopilotHistory() {
+      const input = document.getElementById("copilot-search-input");
+      const resultsBox = document.getElementById("copilot-search-results");
+      if (!input || !resultsBox) return;
+      const q = input.value.trim();
+
+      resultsBox.innerHTML = "<div class='text-muted'>Searching past conversations...</div>";
+
+      try {
+        const res = await fetch("/api/copilot/search?q=" + encodeURIComponent(q) + "&limit=6");
+        const data = await res.json();
+        resultsBox.innerHTML = "";
+        
+        const list = data.results || [];
+        if (list.length === 0) {
+          resultsBox.innerHTML = "<div class='text-muted'>No matching past sessions found.</div>";
+          return;
+        }
+
+        list.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "metric-subtle-box";
+          div.innerHTML = `<div class="font-bold text-main">${item.name}</div><div class="font-11 text-muted">${item.summary || item.sample_match || ''}</div>`;
+          resultsBox.appendChild(div);
+        });
+      } catch (err) {
+        resultsBox.innerHTML = `<div class="red">Search error: ${err.message}</div>`;
+      }
+    }
+
+    function handleSearchKey(e) {
+      if (e.key === "Enter") {
+        searchCopilotHistory();
       }
     }
 
