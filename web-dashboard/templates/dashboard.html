@@ -376,6 +376,7 @@
     .gap-12 { gap: 12px; }
     .gap-16 { gap: 16px; }
     .w-100 { width: 100%; }
+    .w-88pct { width: 88%; }
     .h-100 { height: 100%; }
     .mt-4 { margin-top: 4px; }
     .mt-8 { margin-top: 8px; }
@@ -713,7 +714,7 @@ $ ready.</div>
               <span class="mono green font-bold">{{ futures5x.liquidation_safety_buffer_pct or 17.5 }}%</span>
             </div>
             <div class="feed-bar-bg">
-              <div class="feed-bar-fill" style="width:88%;"></div>
+              <div class="feed-bar-fill w-88pct"></div>
             </div>
             <p class="font-11-5 text-muted mt-10">
               Isolated 5X leverage requires price to drop &gt;17.5% before touching liquidation threshold. Maintenance margin (2.5%) and funding rate are actively monitored every cycle.
@@ -983,6 +984,9 @@ $ ready.</div>
     <a href="https://www.tradingview.com" target="_blank" rel="noopener noreferrer" class="footer-link">TradingView</a>
   </footer>
 
+  <!-- Learned Strategies Data for Client -->
+  <script type="application/json" id="learned-strategies-data">{{ luxalgo.strategies|tojson|safe }}</script>
+
   <!-- TradingView Widget Embedding Script -->
   <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
   <script type="text/javascript">
@@ -990,7 +994,15 @@ $ ready.</div>
     let currentTvSymbol = "BINANCE:BTCUSDT";
     let currentTvInterval = "15";
 
-    const learnedStrategiesData = {{ luxalgo.strategies|tojson|safe }};
+    let learnedStrategiesData = [];
+    try {
+      const dataEl = document.getElementById("learned-strategies-data");
+      if (dataEl && dataEl.textContent) {
+        learnedStrategiesData = JSON.parse(dataEl.textContent);
+      }
+    } catch (e) {
+      console.warn("Could not parse learned strategies JSON:", e);
+    }
 
     function initTradingViewWidget(symbol, interval) {
       currentTvSymbol = symbol || "BINANCE:BTCUSDT";
