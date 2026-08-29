@@ -484,6 +484,14 @@
     .purple { color: var(--accent-purple); }
     .cyan { color: var(--accent-cyan); }
     .font-bold { font-weight: 700; }
+    .h-10px { height: 10px; }
+    .w-50pct { width: 50%; }
+    .bg-split-50 { background: linear-gradient(90deg, #f59e0b, #10b981); }
+    .w-130px { width: 130px; }
+    .w-140px { width: 140px; }
+    .w-110px { width: 110px; }
+    .pt-18 { padding-top: 18px; }
+    .justify-end { justify-content: flex-end; }
   </style>
 </head>
 <body>
@@ -501,6 +509,8 @@
       </span>
     </div>
     <div class="d-flex-center gap-8">
+      <button class="btn btn-gold" onclick="switchTab('tab-portfolio-account', document.querySelector('[data-tab=tab-portfolio-account]'))">🏦 50/50 Take Profit</button>
+      <button class="btn btn-blue" onclick="switchTab('tab-portfolio-account', document.querySelector('[data-tab=tab-portfolio-account]'))">💼 Agent Account</button>
       <button class="btn btn-purple" onclick="switchTab('tab-copilot', document.querySelector('[data-tab=tab-copilot]'))">💬 Open Copilot</button>
       <button class="btn btn-green" onclick="runQuickCommand('/consensus BTC/USDT')">⚡ Run AI Cycle</button>
       <button class="btn btn-cyan" onclick="runQuickCommand('/flashloans')">⚡ Flash Loans</button>
@@ -516,6 +526,16 @@
         <div class="stat-label">Total Portfolio Equity</div>
         <div class="stat-val mono">${{ portfolio.balance_usdt }} <span class="font-12 text-muted">USDT</span></div>
         <div class="stat-sub">Realized PnL: <span class="mono green">+${{ portfolio.total_pnl }} USDT</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">💼 Agent Trade Sub-Account</div>
+        <div class="stat-val mono green">${{ portfolio.agent_account.current_balance_usdt or 250.0 }} <span class="font-12 text-muted">USDT</span></div>
+        <div class="stat-sub">$250.00 Starting &bull; <span class="mono cyan">+${{ portfolio.agent_account.reinvested_profit_usdt or 0.0 }} Compounded</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">🏦 Nexo Bitcoin Reserve (50%)</div>
+        <div class="stat-val mono gold">${{ portfolio.agent_account.total_nexo_btc_banked_usd or 24.25 }} <span class="font-12 text-muted">USD</span></div>
+        <div class="stat-sub">{{ portfolio.agent_account.total_nexo_btc_accumulated or '0.0003121' }} BTC &bull; <span class="mono text-dim">bc1q...auto</span></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">AI Consensus Signal</div>
@@ -536,21 +556,12 @@
         <div class="stat-val mono green">+{{ oversight.trade.net_profitability_pct or 18.99 }}%</div>
         <div class="stat-sub">Liquidation Buffer: <span class="mono blue">17.5% Distance</span></div>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">Arbitrage &amp; Flash Loans</div>
-        <div class="stat-val mono cyan">{{ arbitrage.total_flashloans or 37 }} <span class="font-12 text-muted">Deals</span></div>
-        <div class="stat-sub">Top Spread: <span class="mono cyan">+${{ arbitrage.top_flashloan.net_profit_usd or 188.93 }} Net</span></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">YouTube Market Sentiment</div>
-        <div class="stat-val mono purple">{{ youtube_sentiment.composite_market_sentiment or 'BULLISH_EXPANSION' }}</div>
-        <div class="stat-sub">Polarity: <span class="mono purple font-bold">{{ youtube_sentiment.composite_polarity or '+0.93' }}</span> &bull; 6 Channels</div>
-      </div>
     </div>
 
     <!-- Navigation Tabs -->
     <div class="nav-tabs">
       <button class="tab-btn active" onclick="switchTab('tab-dev', this)">🚀 Developments (Live Studio)</button>
+      <button class="tab-btn" data-tab="tab-portfolio-account" onclick="switchTab('tab-portfolio-account', this)">💼 Agent Account &amp; 50/50 Take-Profit</button>
       <button class="tab-btn" data-tab="tab-copilot" onclick="switchTab('tab-copilot', this)">💬 AI Copilot &amp; Chat Data</button>
       <button class="tab-btn" onclick="switchTab('tab-arbitrage', this)">⚡ Arbitrage &amp; Flash Loans</button>
       <button class="tab-btn" onclick="switchTab('tab-futures', this)">🎯 5X Leverage Futures &amp; DEX</button>
@@ -1118,10 +1129,136 @@ $ ready.</div>
       </div>
     </div>
 
+    <!-- TAB 10: AGENT TRADE SUB-ACCOUNT & 50/50 TAKE-PROFIT HUB -->
+    <div id="tab-portfolio-account" class="tab-pane display-none">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">💼 Master Portfolio &amp; Agent Trade Sub-Account Hub</div>
+          <span class="badge badge-5x">RULE: 50% NEXO BTC / 50% AGENT REINVEST</span>
+        </div>
+        <p class="section-desc">
+          Your <strong>Agent Trade Account</strong> is a dedicated sub-account of your master portfolio (starting allocation: <strong>$250.00 USDT</strong>). Daily realized trading profits are automatically split 50/50: <strong>50% banked to Nexo Bitcoin cold storage</strong> to build BTC reserves, and <strong>50% compounded directly into your Agent Trade Account</strong>.
+        </p>
+
+        <!-- Sub-Account Metrics Summary Grid -->
+        <div class="grid-auto-260 mt-14">
+          <div class="metric-card-box">
+            <div class="stat-label">Master Portfolio Equity</div>
+            <div class="stat-val mono blue">${{ portfolio.balance_usdt }} <span class="font-12 text-muted">USDT</span></div>
+            <div class="stat-sub">Lifetime Realized Profit: <span class="mono green font-bold">+${{ portfolio.total_pnl }} USDT</span></div>
+          </div>
+          <div class="metric-card-box">
+            <div class="stat-label">💼 Agent Trade Sub-Account Total</div>
+            <div class="stat-val mono green">${{ portfolio.agent_account.current_balance_usdt or 274.25 }} <span class="font-12 text-muted">USDT</span></div>
+            <div class="stat-sub">Manual Allocation: <span class="mono text-main font-bold">${{ portfolio.agent_account.manual_allocated_usdt or 250.0 }} USDT</span></div>
+          </div>
+          <div class="metric-card-box">
+            <div class="stat-label">📈 Compounded Trading Profits (50%)</div>
+            <div class="stat-val mono cyan">+${{ portfolio.agent_account.reinvested_profit_usdt or 24.25 }} <span class="font-12 text-muted">USDT</span></div>
+            <div class="stat-sub">Available Trading Margin: <span class="mono green font-bold">${{ portfolio.agent_account.available_margin_usdt or 274.25 }} USDT</span></div>
+          </div>
+          <div class="metric-card-box">
+            <div class="stat-label">🏦 Nexo Bitcoin Banked Reserve (50%)</div>
+            <div class="stat-val mono gold">${{ portfolio.agent_account.total_nexo_btc_banked_usd or 24.25 }} <span class="font-12 text-muted">USD</span></div>
+            <div class="stat-sub">Accumulated: <span class="mono gold font-bold">{{ portfolio.agent_account.total_nexo_btc_accumulated or '0.0003121' }} BTC</span></div>
+          </div>
+        </div>
+
+        <!-- 50/50 Take-Profit Action Center -->
+        <div class="metric-card-box mt-14">
+          <div class="d-flex space-between align-center mb-8 flex-wrap gap-10">
+            <h4 class="section-subheading gold">⚡ 50/50 Daily Take-Profit Execution Center</h4>
+            <span class="badge badge-gate-ok">NEXO WALLET: {{ portfolio.agent_account.nexo_btc_wallet }}</span>
+          </div>
+          <p class="section-desc mb-10">
+            Simulate or execute a daily session take-profit sweep. This calculates the exact 50% Bitcoin satoshi allocation to your Nexo cold storage wallet and deposits the remaining 50% directly into your Agent Trade Account USDT balance.
+          </p>
+
+          <!-- Visual 50/50 Split Bar -->
+          <div class="mb-12">
+            <div class="d-flex space-between font-11-5 mb-4 text-muted">
+              <span class="gold font-bold">🏦 50% Banked to Nexo BTC Wallet</span>
+              <span class="green font-bold">💼 50% Compounded to Agent Trade Account</span>
+            </div>
+            <div class="feed-bar-bg h-10px">
+              <div class="feed-bar-fill w-50pct bg-split-50"></div>
+            </div>
+          </div>
+
+          <!-- Execution Controls -->
+          <div class="d-flex gap-10 align-center flex-wrap">
+            <div class="d-flex flex-col gap-4">
+              <label class="font-11-5 text-muted">Session Profit (USD):</label>
+              <input type="number" id="tp-profit-input" class="text-input w-130px" value="25.00" step="1.0" />
+            </div>
+            <div class="d-flex flex-col gap-4">
+              <label class="font-11-5 text-muted">BTC Benchmark Price ($):</label>
+              <input type="number" id="tp-btc-price-input" class="text-input w-140px" value="77700.00" step="100.0" />
+            </div>
+            <div class="d-flex flex-col gap-4 yt-learn-input">
+              <label class="font-11-5 text-muted">Session / Strategy Source:</label>
+              <input type="text" id="tp-source-input" class="text-input" value="Daily Multi-Agent 5X Futures &amp; Arbitrage Session" />
+            </div>
+            <div class="d-flex flex-col gap-4 justify-end pt-18">
+              <button class="btn btn-green" onclick="executeDailyTakeProfitFromUI()">⚡ Execute 50/50 Take-Profit</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Manual Allocation Adjustment Widget -->
+        <div class="metric-subtle-box mt-14 d-flex space-between align-center flex-wrap gap-10">
+          <div>
+            <div class="font-13 font-bold text-main">⚙️ Manual Sub-Account Capital Sizing:</div>
+            <div class="font-12 text-muted">Adjust manual USDT capital allocated from your master portfolio to the Agent Trade Account.</div>
+          </div>
+          <div class="d-flex gap-8 align-center">
+            <input type="number" id="manual-alloc-input" class="text-input w-110px" value="{{ portfolio.agent_account.manual_allocated_usdt or 250.0 }}" step="10.0" />
+            <button class="btn btn-blue" onclick="updateAllocationFromUI()">💾 Update Allocation</button>
+          </div>
+        </div>
+
+        <!-- Take-Profit & Compounding History Table -->
+        <div class="mt-20">
+          <h4 class="section-subheading green">📜 Take-Profit &amp; Compounding History Ledger</h4>
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Event ID</th>
+                <th>Timestamp</th>
+                <th>Strategy Source</th>
+                <th>Gross Profit</th>
+                <th>50% Nexo BTC Banked</th>
+                <th>BTC Satoshis</th>
+                <th>50% Agent Compounded</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for h in portfolio.agent_account.history %}
+              <tr>
+                <td class="mono font-bold">{{ h.id }}</td>
+                <td class="mono text-muted">{{ h.timestamp[:19] if h.timestamp else '--' }}</td>
+                <td class="font-bold text-main">{{ h.source }}</td>
+                <td class="mono green">+${{ h.gross_profit_usd }} USD</td>
+                <td class="mono gold font-bold">+${{ h.nexo_btc_banked_usd }} USD</td>
+                <td class="mono gold">{{ h.btc_credited }} BTC</td>
+                <td class="mono cyan font-bold">+${{ h.agent_reinvested_usd }} USDT</td>
+                <td><span class="badge badge-live">{{ h.status }}</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 
   <footer>
     AiTradingAgent v4 &bull; Developments, Arbitrage, 5X Futures &amp; LuxAlgo Studio &nbsp;|&nbsp; Powered by Waitress WSGI &nbsp;|&nbsp;
+    <a href="/api/portfolio/account" target="_blank" rel="noopener noreferrer" class="footer-link">Agent Account API</a> &nbsp;|&nbsp;
+    <a href="/api/profit/sweeper" target="_blank" rel="noopener noreferrer" class="footer-link">Nexo Sweeper API</a> &nbsp;|&nbsp;
     <a href="/api/youtube/sentiment" target="_blank" rel="noopener noreferrer" class="footer-link">YouTube Sentiment API</a> &nbsp;|&nbsp;
     <a href="/api/copilot/memories" target="_blank" rel="noopener noreferrer" class="footer-link">Copilot Memory API</a> &nbsp;|&nbsp;
     <a href="/api/arbitrage" target="_blank" rel="noopener noreferrer" class="footer-link">Arbitrage API</a> &nbsp;|&nbsp;
@@ -1408,6 +1545,76 @@ $ ready.</div>
         }
       } catch (e) {
         alert("Execution error: " + e.message);
+      }
+    }
+
+    async function executeDailyTakeProfitFromUI() {
+      const profitEl = document.getElementById("tp-profit-input");
+      const btcPriceEl = document.getElementById("tp-btc-price-input");
+      const sourceEl = document.getElementById("tp-source-input");
+
+      const profit = parseFloat(profitEl?.value || "25.0");
+      const btcPrice = parseFloat(btcPriceEl?.value || "77700.0");
+      const source = sourceEl?.value || "Daily Multi-Agent Session";
+
+      if (isNaN(profit) || profit <= 0) {
+        alert("Please enter a valid positive profit amount.");
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/portfolio/daily-take-profit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            profit_usd: profit,
+            btc_price: btcPrice,
+            source: source
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          const rec = data.record;
+          alert(`⚡ 50/50 DAILY TAKE-PROFIT EXECUTED!\n` +
+                `--------------------------------------------------\n` +
+                `Total Session Profit : +$${rec.gross_profit_usd.toFixed(2)} USD\n` +
+                `50% Banked to Nexo   : +$${rec.nexo_btc_banked_usd.toFixed(2)} USD (${rec.btc_credited} BTC)\n` +
+                `  * Target Wallet    : ${rec.nexo_wallet}\n` +
+                `50% Compounded Agent : +$${rec.agent_reinvested_usd.toFixed(2)} USDT\n` +
+                `  * New Agent Total  : $${data.agent_account.current_balance_usdt.toFixed(2)} USDT\n` +
+                `Cumulative Nexo BTC  : ${data.nexo_btc_bank.total_btc_accumulated} BTC ($${data.nexo_btc_bank.total_usd_swept.toFixed(2)} USD)`);
+          location.reload();
+        } else {
+          alert("Take-profit execution error: " + (data.reason || data.error || "Unknown error"));
+        }
+      } catch (e) {
+        alert("Network error executing take-profit: " + e.message);
+      }
+    }
+
+    async function updateAllocationFromUI() {
+      const allocEl = document.getElementById("manual-alloc-input");
+      const amount = parseFloat(allocEl?.value || "250.0");
+      if (isNaN(amount) || amount <= 0) {
+        alert("Please enter a valid positive allocation amount.");
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/portfolio/allocate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount_usdt: amount })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(`✅ SUB-ACCOUNT ALLOCATION UPDATED!\nManual Allocation: $${data.manual_allocated_usdt.toFixed(2)} USDT\nNew Total Balance: $${data.current_balance_usdt.toFixed(2)} USDT`);
+          location.reload();
+        } else {
+          alert("Error updating allocation: " + (data.error || "Unknown error"));
+        }
+      } catch (e) {
+        alert("Network error: " + e.message);
       }
     }
 

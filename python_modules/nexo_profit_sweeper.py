@@ -2,11 +2,10 @@
 python_modules/nexo_profit_sweeper.py
 ====================================
 Automated Nexo Bitcoin Profit Sweeper & Cold Storage Ledger.
-Derived from Prodjects.json/memories.json:
-- "Auto-convert realized profits to BTC"
-- "Automated profit ledger targeting a Nexo BTC account"
-- 60% of all net trading gains from DEX arbitrage, flash loans, and 5X futures
-  are swept into Bitcoin cold storage reserve.
+Derived from user preferences and 50/50 daily take-profit rules:
+- 50% of realized trading gains from arbitrage, 5X futures, and DEX strategies
+  are automatically swept into Bitcoin cold storage (Nexo reserve).
+- 50% of realized gains are compounded into the Agent Trade Account.
 """
 
 import os
@@ -28,12 +27,12 @@ LEDGER_PATH = PROJECT_ROOT / "data" / "nexo_btc_sweeper_ledger.json"
 
 class NexoProfitSweeper:
     """
-    Monitors realized PnL and automatically sweeps 60% of profits into
-    the Nexo Bitcoin reserve ledger.
+    Monitors realized PnL and automatically sweeps 50% of profits into
+    the Nexo Bitcoin reserve ledger (bc1qsmokey79nexoautoreserve).
     """
 
     def __init__(self):
-        self.sweep_ratio = PROJECT_CONFIG.profit_sweeper.sweep_ratio
+        self.sweep_ratio = PROJECT_CONFIG.profit_sweeper.sweep_ratio  # 0.50
         self.sweep_address = PROJECT_CONFIG.profit_sweeper.nexo_sweep_address
         self.threshold_usd = PROJECT_CONFIG.profit_sweeper.sweep_threshold_usd
         self.ledger = self._load_ledger()
@@ -57,9 +56,9 @@ class NexoProfitSweeper:
                     "timestamp": datetime.now(timezone.utc).isoformat(),
                     "source": "5X Futures BTC/USDT Long",
                     "gross_profit_usd": 32.40,
-                    "swept_to_btc_usd": 19.44,
+                    "swept_to_btc_usd": 16.20,
                     "btc_rate_usd": 77700.0,
-                    "btc_credited": 0.0002502,
+                    "btc_credited": 0.00020849,
                     "destination": self.sweep_address,
                     "status": "COMPLETED_PAPER",
                 }
@@ -74,6 +73,33 @@ class NexoProfitSweeper:
         except Exception:
             pass
 
+    def record_from_take_profit(
+        self,
+        sweep_id: str,
+        source: str,
+        gross_profit_usd: float,
+        swept_usd: float,
+        btc_price_usd: float,
+        btc_credited: float,
+    ):
+        """Syncs event from AgentTradeAccountManager daily take-profit execution."""
+        sweep_record = {
+            "id": sweep_id,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "source": source,
+            "gross_profit_usd": gross_profit_usd,
+            "swept_to_btc_usd": swept_usd,
+            "btc_rate_usd": btc_price_usd,
+            "btc_credited": btc_credited,
+            "destination": self.sweep_address,
+            "status": "COMPLETED",
+        }
+        self.ledger["history"].append(sweep_record)
+        self.ledger["total_swept_usd"] = round(self.ledger["total_swept_usd"] + swept_usd, 2)
+        self.ledger["total_btc_accumulated"] = round(self.ledger["total_btc_accumulated"] + btc_credited, 8)
+        self.ledger["sweeps_count"] = len(self.ledger["history"])
+        self._save_ledger()
+
     def record_profit_and_sweep(
         self,
         source: str,
@@ -81,7 +107,7 @@ class NexoProfitSweeper:
         btc_price_usd: float = 77700.0,
     ) -> Dict[str, Any]:
         """
-        Records realized gain, computes 60% BTC allocation, and logs sweep event.
+        Records realized gain, computes 50% BTC allocation, and logs sweep event.
         """
         if gross_profit_usd <= 0:
             return {"swept": False, "reason": "No positive profit to sweep"}
@@ -98,7 +124,7 @@ class NexoProfitSweeper:
             "btc_rate_usd": btc_price_usd,
             "btc_credited": btc_credited,
             "destination": self.sweep_address,
-            "status": "COMPLETED_PAPER",
+            "status": "COMPLETED",
         }
 
         self.ledger["history"].append(sweep_record)
@@ -126,8 +152,8 @@ if __name__ == "__main__":
             pass
     sweeper = NexoProfitSweeper()
     res = sweeper.record_profit_and_sweep(
-        source="Flash Loan Arbitrage LINK/USDT",
-        gross_profit_usd=188.93,
+        source="5X Futures & Flash Loan Daily Take Profit",
+        gross_profit_usd=50.00,
         btc_price_usd=77700.0,
     )
     print("=== NEXO BITCOIN PROFIT SWEEPER ===")

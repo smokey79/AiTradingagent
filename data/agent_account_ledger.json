@@ -1,0 +1,66 @@
+{
+  "sub_account_name": "Agent Trade Account",
+  "is_sub_account": true,
+  "starting_balance_usdt": 250.0,
+  "manual_allocated_usdt": 250.0,
+  "reinvested_profit_usdt": 34.25,
+  "current_balance_usdt": 284.25,
+  "available_margin_usdt": 284.25,
+  "active_positions_margin_usdt": 0.0,
+  "daily_profit_split_ratio": {
+    "nexo_btc_bank_pct": 50.0,
+    "agent_account_reinvest_pct": 50.0
+  },
+  "nexo_btc_wallet": "bc1qsmokey79nexoautoreserve",
+  "total_nexo_btc_banked_usd": 34.25,
+  "total_nexo_btc_accumulated": 0.0004408,
+  "total_realized_profit_usd": 68.5,
+  "daily_take_profit_cycles_count": 4,
+  "history": [
+    {
+      "id": "TP-001",
+      "timestamp": "2026-08-27T18:00:00.000000+00:00",
+      "source": "5X Futures BTC/USDT Breakout",
+      "gross_profit_usd": 18.5,
+      "nexo_btc_banked_usd": 9.25,
+      "agent_reinvested_usd": 9.25,
+      "btc_rate_usd": 77600.0,
+      "btc_credited": 0.0001192,
+      "status": "COMPLETED"
+    },
+    {
+      "id": "TP-002",
+      "timestamp": "2026-08-28T18:00:00.000000+00:00",
+      "source": "DEX Arbitrage Arbitrum/Polygon",
+      "gross_profit_usd": 14.0,
+      "nexo_btc_banked_usd": 7.0,
+      "agent_reinvested_usd": 7.0,
+      "btc_rate_usd": 77700.0,
+      "btc_credited": 9.01e-05,
+      "status": "COMPLETED"
+    },
+    {
+      "id": "TP-003",
+      "timestamp": "2026-08-29T12:00:00.000000+00:00",
+      "source": "LuxAlgo SMC 5-Min Retest ETH/USDT",
+      "gross_profit_usd": 16.0,
+      "nexo_btc_banked_usd": 8.0,
+      "agent_reinvested_usd": 8.0,
+      "btc_rate_usd": 77800.0,
+      "btc_credited": 0.0001028,
+      "status": "COMPLETED"
+    },
+    {
+      "id": "TP-004",
+      "timestamp": "2026-08-29T13:36:31.657504+00:00",
+      "source": "Daily Multi-Agent Session Take Profit",
+      "gross_profit_usd": 20.0,
+      "nexo_btc_banked_usd": 10.0,
+      "agent_reinvested_usd": 10.0,
+      "btc_rate_usd": 77700.0,
+      "btc_credited": 0.0001287,
+      "nexo_wallet": "bc1qsmokey79nexoautoreserve",
+      "status": "COMPLETED"
+    }
+  ]
+}

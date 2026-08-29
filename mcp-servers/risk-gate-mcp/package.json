@@ -1,5 +1,5 @@
 {
-  "name": "mcp-risk-gate-server",
+  "name": "risk-gate-mcp",
   "version": "1.0.0",
   "description": "MCP Risk Gate server — hard veto layer for AiTradingAgent",
   "type": "module",
@@ -8,10 +8,8 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.30.0",
-    "dotenv": "^16.4.0"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+    "@modelcontextprotocol/sdk": "^1.6.1",
+    "dotenv": "^16.4.7",
+    "zod": "^3.24.2"
+  }
 }

@@ -1,3 +1,4 @@
+from pathlib import Path
 import os
 import sys
 import json
@@ -15,21 +16,30 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 from openai import OpenAI
 
-load_dotenv(r"F:\AI-Trading-Agent\.env")
+# Dynamic .env loading
+env_candidates = [
+    Path(__file__).resolve().parents[2] / ".env",
+    Path(__file__).resolve().parent / ".env",
+    Path(r"F:\aitradingagent\.env")
+]
+for env_p in env_candidates:
+    if env_p.exists():
+        load_dotenv(env_p)
+        break
 
 app = FastAPI(title="Verified Autonomous Multi-LLM Trading Matrix")
 
 # --- 1. VERIFIED EXCHANGE CLIENTS ---
 bitget = ccxt.bitget({
-    'apiKey': os.getenv("BITGET_API_KEY"),
-    'secret': os.getenv("BITGET_SECRET_KEY"),
-    'password': os.getenv("BITGET_PASSPHRASE", "Allyb0611"),
+    'apiKey': os.getenv("BITGET_API_KEY", ""),
+    'secret': os.getenv("BITGET_SECRET", "") or os.getenv("BITGET_SECRET_KEY", ""),
+    'password': os.getenv("BITGET_API_PASSPHRASE", "") or os.getenv("BITGET_PASSPHRASE", "Allyb0611"),
     'enableRateLimit': True,
 })
 
 cryptocom = ccxt.cryptocom({
     'apiKey': os.getenv("CRYPTOCOM_API_KEY"),
-    'secret': os.getenv("CRYPTOCOM_SECRET_KEY"),
+    'secret': os.getenv("CRYPTOCOM_SECRET_KEY") or os.getenv("CRYPTOCOM_SECRET"),
     'enableRateLimit': True,
 })
 
@@ -183,7 +193,7 @@ def autonomous_market_scanner(loop):
             time.sleep(10)
 
 # --- 6. DASHBOARD HTML ---
-HTML_UI = """<!DOCTYPE html>
+HTML_UI = r"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -218,7 +228,7 @@ HTML_UI = """<!DOCTYPE html>
           <header className="flex justify-between items-center border-b border-gray-800 pb-4">
             <div>
               <h1 className="text-2xl font-bold text-emerald-400">⚡ Autonomous Multi-LLM Trading Matrix</h1>
-              <p className="text-xs text-gray-400">Bitget Authenticated (Allyb0611) | Crypto.com Active | $\ge 70\%$ AI Consensus</p>
+              <p className="text-xs text-gray-400">Bitget Authenticated (Allyb0611) | Crypto.com Active | >= 70% AI Consensus</p>
             </div>
             <span className="px-3 py-1 rounded text-xs bg-emerald-950 text-emerald-300 border border-emerald-700">● ENGINE ACTIVE</span>
           </header>
@@ -234,7 +244,7 @@ HTML_UI = """<!DOCTYPE html>
             </div>
             <div className="bg-gray-900 border border-gray-800 rounded p-4">
               <span className="text-xs text-gray-400">Execution Strategy</span>
-              <p className="text-sm font-bold text-emerald-400 mt-1">Multi-Agent Win Prob $\ge 70\%$</p>
+              <p className="text-sm font-bold text-emerald-400 mt-1">Multi-Agent Win Prob >= 70%</p>
             </div>
           </div>
 

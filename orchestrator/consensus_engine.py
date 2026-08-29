@@ -52,7 +52,13 @@ from orchestrator.data_sourcer_agent import DataSourcerAgent, TARGET_WIN_RATE_GA
 from orchestrator.trader_oversight import TraderOversightAgent
 
 # ── Load .env ──────────────────────────────────────────────────────────────────
-load_dotenv(PROJECT_ROOT / ".env")
+# Load environment variables – prefer external Data1.env if present
+custom_env_path = os.getenv("CUSTOM_ENV_PATH", "D:/Data1.env")
+if os.path.isfile(custom_env_path):
+    load_dotenv(custom_env_path)
+else:
+    # Fallback to project .env
+    load_dotenv(PROJECT_ROOT / ".env")
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
 

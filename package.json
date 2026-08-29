@@ -1,23 +1,65 @@
-﻿{
+{
   "name": "aitradingagent",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
+  "version": "2.0.0",
+  "description": "Enterprise Multi-LLM Consensus Crypto Trading Bot & Cross-Chain Arbitrage Engine",
+  "main": "src/orchestrator/index.js",
+  "type": "commonjs",
   "scripts": {
+    "start": "node src/dashboard/server.js",
+    "dev": "node src/dashboard/server.js",
+    "dashboard": "node src/dashboard/server.js",
+    "build": "node src/utils/envValidator.js",
+    "check:env": "node src/utils/envValidator.js",
+    "bot": "node src/orchestrator/index.js",
+    "bot:paper": "node src/orchestrator/index.js",
+    "paper": "node src/orchestrator/index.js",
+    "consensus:node": "node -e \"require('./src/orchestrator/consensus').runConsensus('BTC/USDT', {}).then(c => console.log(JSON.stringify(c, null, 2)))\"",
+    "consensus:py": "python src/orchestrator/consensus_engine.py",
+    "arb:scan": "node -e \"console.log(JSON.stringify(require('./src/arbitrage/arbScanner').detectArbitrageOpportunities(), null, 2))\"",
+    "arb:demo": "python data_export.py --demo",
+    "test": "node tests/runAllTests.js",
+    "test:verbose": "node tests/runAllTests.js --verbose",
+    "mcp:trading": "node mcp-servers/trading-data-mcp/index.js",
+    "mcp:risk": "node mcp-servers/risk-gate-mcp/index.js",
     "start:risk-gate": "node ./mcp-servers/risk-gate-mcp/index.js",
     "start:signal-engine": "node ./mcp-servers/signal-engine-mcp/index.js",
     "start:portfolio": "node ./mcp-servers/portfolio-mcp/index.js",
+    "export:demo": "python data_export.py --demo",
+    "export:live": "python data_export.py",
+    "start:py": "python wsgi.py",
+    "waitress": "python wsgi.py",
+    "serve:waitress": "waitress-serve --port=5000 wsgi:app",
     "pm2:start": "pm2 start ecosystem.config.cjs",
     "pm2:stop": "pm2 stop ecosystem.config.cjs"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
-    "config": "^3.3.9"
+    "@modelcontextprotocol/sdk": "^1.6.1",
+    "axios": "^1.7.9",
+    "ccxt": "^4.4.52",
+    "config": "^3.3.9",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "node-cron": "^3.0.3",
+    "technicalindicators": "^3.1.0",
+    "winston": "^3.17.0",
+    "ws": "^8.18.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
-    "pm2": "^5.2.0",
     "concurrently": "^8.0.0",
     "eslint": "^8.0.0",
+    "pm2": "^5.2.0",
     "prettier": "^2.0.0"
-  }
+  },
+  "keywords": [
+    "trading",
+    "crypto",
+    "ai",
+    "llm-consensus",
+    "arbitrage",
+    "risk-management",
+    "mcp"
+  ],
+  "author": "AiTradingAgent Team",
+  "license": "MIT"
 }

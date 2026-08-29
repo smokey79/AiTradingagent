@@ -24,6 +24,7 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 from data_sources.ccxt_feed import CCXTFeed
 from data_sources.coingecko_feed import CoinGeckoFeed
+from data_sources.coinmarketcap_feed import CoinMarketCapFeed
 from data_sources.bitget_exchange import BitgetExchange
 from data_sources.telegram_notifier import TelegramNotifier
 from data_sources.sosovalue_feed import SoSoValueFeed
@@ -41,7 +42,7 @@ log = logging.getLogger("IntegratedPipeline")
 
 class IntegratedDataPipeline:
     """
-    Unified data pipeline v6 with Telegram, CoinGecko, Bitget, and external data sources.
+    Unified data pipeline v6 with CoinMarketCap, Telegram, CoinGecko, Bitget, and external data sources.
     """
 
     def __init__(
@@ -53,6 +54,7 @@ class IntegratedDataPipeline:
         use_external_data: bool = True,
         use_telegram: bool = True,
         use_coingecko: bool = True,
+        use_coinmarketcap: bool = True,
         use_bitget: bool = True,
     ):
         """
@@ -66,9 +68,10 @@ class IntegratedDataPipeline:
             use_external_data: Enable SD card + Google Drive loader
             use_telegram: Enable Telegram notifications
             use_coingecko: Enable CoinGecko data feed
+            use_coinmarketcap: Enable CoinMarketCap data feed
             use_bitget: Enable Bitget exchange integration
         """
-        log.info("Initializing Integrated Data Pipeline v6 with All Sources...")
+        log.info("Initializing Integrated Data Pipeline v6 with All Sources (including CoinMarketCap)...")
 
         # Core data sources
         self.ccxt = CCXTFeed(symbols=symbols)
@@ -96,6 +99,18 @@ class IntegratedDataPipeline:
                 log.info("✅ CoinGecko data feed enabled")
             except Exception as e:
                 log.warning(f"CoinGecko initialization error: {e}")
+
+        # CoinMarketCap feed
+        self.coinmarketcap = None
+        if use_coinmarketcap:
+            try:
+                self.coinmarketcap = CoinMarketCapFeed()
+                if self.coinmarketcap.is_configured:
+                    log.info("✅ CoinMarketCap data feed enabled (API key configured)")
+                else:
+                    log.info("ℹ️  CoinMarketCap feed initialized (set CMC_API_KEY for live data)")
+            except Exception as e:
+                log.warning(f"CoinMarketCap initialization error: {e}")
 
         # Bitget exchange
         self.bitget = None
@@ -133,6 +148,7 @@ class IntegratedDataPipeline:
         ohlcv_limit: int = 50,
         symbol: Optional[str] = None,
         include_coingecko: bool = True,
+        include_coinmarketcap: bool = True,
         include_bitget: bool = True,
         include_historical: bool = True,
         send_notifications: bool = True,
@@ -171,7 +187,7 @@ class IntegratedDataPipeline:
 
         # ========== 2. CoinGecko Market Data ==========
         if include_coingecko and self.coingecko:
-            log.info("Step 2/7: Fetching CoinGecko data...")
+            log.info("Step 2/8: Fetching CoinGecko data...")
             try:
                 coingecko_data = {
                     "trending": self.coingecko.get_trending(5),
@@ -189,9 +205,33 @@ class IntegratedDataPipeline:
             except Exception as e:
                 log.warning(f"CoinGecko data fetch error: {e}")
 
-        # ========== 3. Bitget Exchange Data ==========
+        # ========== 3. CoinMarketCap Market Data ==========
+        if include_coinmarketcap and self.coinmarketcap and self.coinmarketcap.is_configured:
+            log.info("Step 3/8: Fetching CoinMarketCap data...")
+            try:
+                universe_symbols = ["BTC", "ETH", "CRO", "SOL", "AVAX", "ARB", "OP"]
+                if symbol:
+                    active_coin = symbol.split("/")[0].upper()
+                    if active_coin not in universe_symbols:
+                        universe_symbols.append(active_coin)
+
+                cmc_data = {
+                    "quotes": self.coinmarketcap.get_quotes(symbols=universe_symbols),
+                    "global": self.coinmarketcap.get_global_metrics(),
+                    "gainers_losers": self.coinmarketcap.get_trending_gainers_losers(5),
+                }
+
+                if symbol:
+                    cmc_data["active_quote"] = self.coinmarketcap.get_price(symbol)
+
+                package["sources"]["coinmarketcap"] = cmc_data
+                log.info("✅ CoinMarketCap data retrieved")
+            except Exception as e:
+                log.warning(f"CoinMarketCap data fetch error: {e}")
+
+        # ========== 4. Bitget Exchange Data ==========
         if include_bitget and self.bitget and self.bitget.is_connected():
-            log.info("Step 3/7: Fetching Bitget exchange data...")
+            log.info("Step 4/8: Fetching Bitget exchange data...")
             try:
                 bitget_data = {
                     "balance": self.bitget.get_balance(),
@@ -219,13 +259,13 @@ class IntegratedDataPipeline:
             except Exception as e:
                 log.warning(f"Bitget data fetch error: {e}")
 
-        # ========== 4. Macro Data (SoSoValue) ==========
-        log.info("Step 4/7: Fetching macro data...")
+        # ========== 5. Macro Data (SoSoValue) ==========
+        log.info("Step 5/8: Fetching macro data...")
         macro_data = self.sosovalue.get_macro_snapshot()
         package["sources"]["macro"] = macro_data
 
-        # ========== 5. On-Chain & Technical Analysis ==========
-        log.info("Step 5/7: Computing on-chain metrics...")
+        # ========== 6. On-Chain & Technical Analysis ==========
+        log.info("Step 6/8: Computing on-chain metrics...")
         active_sym = symbol or "BTC/USDT"
         candles = market_data.get("ohlcv", {}).get(active_sym, [])
 
@@ -242,14 +282,15 @@ class IntegratedDataPipeline:
         }
         package["sources"]["quant"] = quant_metrics
 
-        # ========== 6. Data Sourcer & Risk ==========
-        log.info("Step 6/7: Running Data Sourcer audit...")
+        # ========== 7. Data Sourcer & Risk ==========
+        log.info("Step 7/8: Running Data Sourcer audit...")
         sourcer_eval = self.sourcer.evaluate_feeds(
             market_data=market_data,
             macro_data=macro_data,
             onchain_data=onchain_data,
             rs_data=rs_rankings[0] if rs_rankings else {},
             vol_data=vol_data,
+            coinmarketcap_data=package["sources"].get("coinmarketcap"),
         )
 
         mc = MonteCarloRisk(
@@ -262,9 +303,9 @@ class IntegratedDataPipeline:
         package["sources"]["risk"] = risk
         package["sources"]["sourcer"] = sourcer_eval
 
-        # ========== 7. Historical Data ==========
+        # ========== 8. Historical Data ==========
         if include_historical and self.data_loader:
-            log.info("Step 7/7: Loading historical data...")
+            log.info("Step 8/8: Loading historical data...")
             try:
                 historical_data = {
                     "backtests": self.data_loader.load_backtest_results(),
@@ -317,6 +358,7 @@ async def main():
     pipeline = IntegratedDataPipeline(
         use_telegram=True,
         use_coingecko=True,
+        use_coinmarketcap=True,
         use_bitget=True,
     )
 
@@ -338,3 +380,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+

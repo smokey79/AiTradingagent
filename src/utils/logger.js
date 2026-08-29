@@ -1,19 +1,39 @@
-import winston from "winston";
+/**
+ * AiTradingAgent — Central Winston Logger
+ */
+const winston = require('winston');
+const path = require('path');
+const fs = require('fs');
 
-// Central logger used by every module. Writes to console + rotating file
-// so PM2 logs and disk logs stay in sync.
-export const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL || "info",
+const dataDir = path.resolve(__dirname, '../../data');
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
+
+const logFormat = winston.format.printf(({ level, message, timestamp }) => {
+  return `${timestamp} [${level.toUpperCase()}] ${message}`;
+});
+
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
   format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.printf(({ timestamp, level, message, ...meta }) => {
-      const metaStr = Object.keys(meta).length ? ` ${JSON.stringify(meta)}` : "";
-      return `[${timestamp}] ${level.toUpperCase()}: ${message}${metaStr}`;
-    })
+    winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    logFormat
   ),
   transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: "logs/error.log", level: "error" }),
-    new winston.transports.File({ filename: "logs/combined.log" }),
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.timestamp({ format: 'HH:mm:ss' }),
+        winston.format.printf(({ level, message, timestamp }) => `${timestamp} ${level}: ${message}`)
+      ),
+    }),
+    new winston.transports.File({
+      filename: path.join(dataDir, 'aitradingagent.log'),
+      maxsize: 10 * 1024 * 1024, // 10MB
+      maxFiles: 5,
+    }),
   ],
 });
+
+module.exports = logger;

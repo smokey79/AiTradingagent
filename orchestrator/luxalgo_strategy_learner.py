@@ -19,6 +19,28 @@ from typing import Dict, List, Any, Optional
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
+    sys.path.append(str(PROJECT_ROOT))
+
+# Google Drive OAuth helper for loading config files
+from .google_drive_auth import list_files, download_file
+
+# Environment variables for Drive access
+GOOGLE_DRIVE_FOLDER_ID = os.getenv("GOOGLE_DRIVE_FOLDER_ID")  # Folder ID containing .py/.json/.env files
+GOOGLE_DRIVE_CREDS = os.getenv("GOOGLE_DRIVE_CREDS")  # Path to OAuth credentials JSON
+
+def load_drive_file(file_name: str, dest_dir: Path = Path("./drive_cache")) -> Path:
+    """Download *file_name* from the configured Drive folder into *dest_dir* and return the local Path.
+    Raises FileNotFoundError if the file does not exist in Drive.
+    """
+    if not GOOGLE_DRIVE_FOLDER_ID:
+        raise EnvironmentError("GOOGLE_DRIVE_FOLDER_ID env var not set")
+    files = list_files(GOOGLE_DRIVE_FOLDER_ID)
+    match = next((f for f in files if f["name"] == file_name), None)
+    if not match:
+        raise FileNotFoundError(f"{file_name} not found in Drive folder")
+    dest_path = dest_dir / file_name
+    download_file(match["id"], dest_path)
+    return dest_path
     sys.path.insert(0, str(PROJECT_ROOT))
 
 DATA_DIR = PROJECT_ROOT / "data"

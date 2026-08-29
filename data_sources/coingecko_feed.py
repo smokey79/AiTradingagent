@@ -30,10 +30,18 @@ class CoinGeckoFeed:
             api_key: Optional pro API key
             use_demo: Use demo/free tier (default)
         """
-        self.api_key = api_key or os.getenv("COINGECKO_API_KEY", "")
+        raw_key = api_key or os.getenv("COINGECKO_API_KEY", "")
+        # Treat placeholder strings as empty so it uses free demo tier
+        if raw_key and any(raw_key.lower().startswith(p) for p in ("your_", "placeholder", "xxx")):
+            raw_key = ""
+        self.api_key = raw_key
         self.use_demo = use_demo or not self.api_key
         self.base_url = "https://api.coingecko.com/api/v3" if self.use_demo else "https://pro-api.coingecko.com/api/v3"
         self.session = requests.Session()
+        self.session.headers.update({
+            "User-Agent": "AiTradingAgent/1.0",
+            "Accept": "application/json",
+        })
         self.cache = {}
         self.cache_ttl = 60  # seconds
 

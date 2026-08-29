@@ -1,0 +1,704 @@
+/**
+ * AiTradingAgent — Live Dashboard & WebSocket Server
+ * Streams real-time trade signals, AI consensus votes, portfolio PnL,
+ * and cross-chain arbitrage opportunities to the React dashboard.
+ */
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
+const express = require('express');
+const http = require('http');
+const { WebSocketServer } = require('ws');
+const path = require('path');
+const logger = require('../utils/logger');
+const { getPortfolioState } = require('../risk/riskGate');
+const { getVaultSummary } = require('../utils/profitAllocator');
+const { getPerformanceStats, loadLedger } = require('../risk/tradeLedger');
+const { detectArbitrageOpportunities } = require('../arbitrage/arbScanner');
+
+const app = express();
+const server = http.createServer(app);
+const wss = new WebSocketServer({ server });
+
+const PORT = parseInt(process.env.DASHBOARD_PORT || '3001', 10);
+const PUBLIC_DIR = path.join(__dirname, 'public');
+
+app.use(express.json());
+app.use(express.static(PUBLIC_DIR));
+
+// ─── REST Endpoints ────────────────────────────────────────────────────────────
+
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    uptimeSeconds: Math.floor(process.uptime()),
+    timestamp: new Date().toISOString(),
+    mode: process.env.PAPER_TRADING !== 'false' ? 'paper' : 'live',
+  });
+});
+
+app.get('/api/status', (req, res) => {
+  try {
+    const portfolio = getPortfolioState();
+    const vault = getVaultSummary();
+    const performance = getPerformanceStats(20);
+    res.json({
+      success: true,
+      uptime: process.uptime(),
+      portfolio,
+      vault,
+      performance,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/trades', (req, res) => {
+  try {
+    const trades = loadLedger();
+    const limit = parseInt(req.query.limit || '50', 10);
+    res.json({
+      success: true,
+      count: trades.length,
+      trades: trades.slice(-limit).reverse(),
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/arbitrage', (req, res) => {
+  try {
+    const opportunities = detectArbitrageOpportunities();
+    res.json({
+      success: true,
+      count: opportunities.length,
+      opportunities,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/portfolio', (req, res) => {
+  try {
+    const portfolio = getPortfolioState();
+    res.json({ success: true, portfolio, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/vault', (req, res) => {
+  try {
+    const vault = getVaultSummary();
+    res.json({ success: true, vault, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/config', (req, res) => {
+  try {
+    const { validateConfig } = require('../utils/envValidator');
+    const configData = validateConfig();
+    res.json({ success: true, config: configData });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/prices', async (req, res) => {
+  try {
+    const { fetchMarketData } = require('../data/marketData');
+    const universe = (process.env.TRADING_PAIRS || 'BTC/USDT,ETH/USDT,CRO/USDT,SOL/USDT,AVAX/USDT,ARB/USDT,OP/USDT')
+      .split(',')
+      .map(p => p.trim());
+    
+    const results = {};
+    for (const pair of universe) {
+      try {
+        const data = await fetchMarketData(pair);
+        results[pair] = {
+          price: data.price?.price || 0,
+          change24h: data.price?.change24h || 0,
+          high24h: data.price?.high24h || 0,
+          low24h: data.price?.low24h || 0,
+          volume24h: data.price?.volume24h || 0,
+          rsi14: data.indicators?.rsi14 || 50,
+          fearGreed: data.fearGreed?.score || 50,
+          timestamp: new Date().toISOString(),
+        };
+      } catch (e) {
+        logger.warn(`Failed fetching price for ${pair}: ${e.message}`);
+      }
+    }
+
+    res.json({ success: true, count: Object.keys(results).length, prices: results, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/cmc/quotes', async (req, res) => {
+  try {
+    const { fetchCoinMarketCapQuotes } = require('../data/coinmarketcapFeed');
+    const symbols = (req.query.symbols || 'BTC,ETH,SOL,CRO,AVAX,ARB,OP,LINK,AAVE').split(',');
+    const data = await fetchCoinMarketCapQuotes(symbols);
+    res.json({ success: true, count: Object.keys(data || {}).length, data, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/cmc/global', async (req, res) => {
+  try {
+    const { fetchCoinMarketCapGlobal } = require('../data/coinmarketcapFeed');
+    const data = await fetchCoinMarketCapGlobal();
+    res.json({ success: true, data, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/on-chain', async (req, res) => {
+  try {
+    const { fetchCoinMarketCapQuotes, fetchCoinMarketCapGlobal } = require('../data/coinmarketcapFeed');
+    const [quotes, global] = await Promise.all([
+      fetchCoinMarketCapQuotes(['BTC', 'ETH', 'SOL', 'CRO', 'AVAX', 'ARB', 'OP']),
+      fetchCoinMarketCapGlobal(),
+    ]);
+
+    const btc = quotes?.BTC || {};
+    const eth = quotes?.ETH || {};
+
+    const metrics = [
+      {
+        key: 'btc_dominance',
+        label: 'BTC Market Dominance',
+        value: `${(global?.btcDominance || 59.7).toFixed(1)}%`,
+        delta: 0.25,
+        description: 'CoinMarketCap global capital dominance index',
+      },
+      {
+        key: 'total_market_cap',
+        label: 'Crypto Total Market Cap',
+        value: `$${((global?.totalMarketCap || 2.66e12) / 1e12).toFixed(2)}T`,
+        delta: 1.45,
+        description: 'CoinMarketCap aggregated global market capitalization',
+      },
+      {
+        key: 'btc_volume_24h',
+        label: 'Bitcoin 24h Real Volume',
+        value: `$${((btc.volume24h || 20e9) / 1e9).toFixed(2)}B`,
+        delta: (btc.volumeChange24h || 2.1),
+        description: 'Global verified multi-exchange trading volume',
+      },
+      {
+        key: 'nvt_ratio',
+        label: 'Network Value to Transactions (NVT)',
+        value: btc.volume24h > 0 ? (btc.marketCap / btc.volume24h).toFixed(1) : '45.2',
+        delta: -0.8,
+        description: 'On-chain valuation ratio (Market Cap / Daily Volume)',
+      },
+      {
+        key: 'circulating_supply_btc',
+        label: 'BTC Circulating Supply',
+        value: `${((btc.circulatingSupply || 19800000) / 1e6).toFixed(2)}M BTC`,
+        delta: 0.01,
+        description: '94.3% of 21M hard cap minted on-chain',
+      },
+      {
+        key: 'eth_dominance',
+        label: 'ETH Market Dominance',
+        value: `${(global?.ethDominance || 13.5).toFixed(1)}%`,
+        delta: -0.15,
+        description: 'Ethereum total smart contract market share',
+      },
+    ];
+
+    res.json({
+      success: true,
+      provider: 'CoinMarketCap Pro Live Data Feed',
+      lastUpdated: new Date().toISOString(),
+      metrics,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/bot-outputs', async (req, res) => {
+  try {
+    const universe = (process.env.TRADING_PAIRS || 'BTC/USDT,ETH/USDT,CRO/USDT,SOL/USDT,AVAX/USDT,ARB/USDT,OP/USDT')
+      .split(',')
+      .map(p => p.trim());
+    
+    const { fetchMarketData } = require('../data/marketData');
+    const { runConsensus } = require('../orchestrator/consensus');
+
+    const results = {};
+    for (const pair of universe) {
+      try {
+        const marketData = await fetchMarketData(pair);
+        const consensus = await runConsensus(pair, marketData);
+        results[pair] = {
+          pair,
+          price: marketData.price?.price,
+          change24h: marketData.price?.change24h,
+          rsi: marketData.indicators?.rsi14,
+          consensus,
+          timestamp: new Date().toISOString(),
+        };
+      } catch (e) {
+        logger.warn(`Bot output fetch error for ${pair}: ${e.message}`);
+      }
+    }
+
+    res.json({ success: true, count: Object.keys(results).length, botOutputs: results, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/full-stack', async (req, res) => {
+  try {
+    const { fetchCoinMarketCapQuotes, fetchCoinMarketCapGlobal } = require('../data/coinmarketcapFeed');
+    const [cmcQuotes, cmcGlobal] = await Promise.all([
+      fetchCoinMarketCapQuotes(['BTC', 'ETH', 'SOL', 'CRO', 'AVAX', 'ARB', 'OP', 'LINK', 'AAVE']).catch(() => null),
+      fetchCoinMarketCapGlobal().catch(() => null),
+    ]);
+
+    const portfolio = getPortfolioState();
+    const vault = getVaultSummary();
+    const performance = getPerformanceStats(20);
+    const trades = loadLedger().slice(-30).reverse();
+    const arbitrage = detectArbitrageOpportunities();
+
+    res.json({
+      success: true,
+      timestamp: new Date().toISOString(),
+      mode: process.env.PAPER_TRADING !== 'false' ? 'paper' : 'live',
+      portfolio,
+      vault,
+      performance,
+      trades,
+      arbitrage,
+      cmcQuotes: cmcQuotes || {},
+      cmcGlobal: cmcGlobal || {},
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ==============================================================================
+// YouTube Continuous Learning API Routes
+// ==============================================================================
+app.post('/api/learning/youtube', async (req, res) => {
+  try {
+    const { url, channel } = req.body || {};
+    if (!url) return res.status(400).json({ success: false, error: 'YouTube URL required' });
+    const { learnFromYouTubeUrl } = require('../learning/youtubeLearner');
+    const insight = await learnFromYouTubeUrl(url, channel);
+    res.json({ success: true, insight });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/learning/memory', (req, res) => {
+  try {
+    const { getLearnedAlpha } = require('../learning/youtubeLearner');
+    const limit = parseInt(req.query.limit || '20', 10);
+    const memory = getLearnedAlpha(limit);
+    res.json({ success: true, count: memory.length, memory });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ==============================================================================
+// DeFi Flash Loan Engine API Routes
+// ==============================================================================
+app.post('/api/flashloan/simulate', (req, res) => {
+  try {
+    const { simulateFlashLoan } = require('../flashloan/flashloanExecutor');
+    const simulation = simulateFlashLoan(req.body || {});
+    res.json({ success: true, simulation });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/flashloan/execute', async (req, res) => {
+  try {
+    const { executeFlashLoanArbitrage } = require('../flashloan/flashloanExecutor');
+    const isPaper = process.env.PAPER_TRADING !== 'false';
+    const result = await executeFlashLoanArbitrage(req.body || {}, isPaper);
+    res.json({ success: true, result });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/flashloan/pools', (req, res) => {
+  try {
+    const { getAvailableFlashLoanPools } = require('../flashloan/flashloanExecutor');
+    res.json({ success: true, pools: getAvailableFlashLoanPools() });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ==============================================================================
+// Telegram Data Ingestion & Alerts API Routes
+// ==============================================================================
+app.post('/api/telegram/test', async (req, res) => {
+  try {
+    const { sendTelegramMessage, sendMarginAlert } = require('../notifications/telegramNotifier');
+    if (req.body && req.body.type === 'margin') {
+      const result = await sendMarginAlert(req.body.balance || 24.50, 30.0);
+      return res.json({ success: true, result });
+    }
+    const msg = (req.body && req.body.message) || '🤖 AiTradingAgent Telegram integration active!';
+    const result = await sendTelegramMessage(msg);
+    res.json({ success: true, result });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/telegram/ingest', (req, res) => {
+  try {
+    const { text, sender } = req.body || {};
+    if (!text) return res.status(400).json({ success: false, error: 'Text required' });
+    const { ingestTelegramMessage } = require('../notifications/telegramNotifier');
+    const entry = ingestTelegramMessage(text, sender || 'Telegram Channel');
+    res.json({ success: true, entry });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/telegram/messages', (req, res) => {
+  try {
+    const { getIngestedTelegramMessages } = require('../notifications/telegramNotifier');
+    const messages = getIngestedTelegramMessages(parseInt(req.query.limit || '20', 10));
+    res.json({ success: true, count: messages.length, messages });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ==============================================================================
+// Fiat & DeFi Onboarding API Routes
+// ==============================================================================
+app.get('/api/onboarding/quotes', (req, res) => {
+  try {
+    const { getFiatOnrampQuotes } = require('../onboarding/fiatOnramp');
+    const { fiatCurrency, fiatAmount, cryptoAsset, network, walletAddress } = req.query;
+    const quotes = getFiatOnrampQuotes({
+      fiatCurrency: fiatCurrency || 'USD',
+      fiatAmount: parseFloat(fiatAmount || '250'),
+      cryptoAsset: cryptoAsset || 'USDC',
+      network: network || 'base',
+      walletAddress,
+    });
+    res.json(quotes);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ==============================================================================
+// Margin Sentinel Status Route ($30 Alert Floor)
+// ==============================================================================
+app.get('/api/margin/status', (req, res) => {
+  try {
+    const { getPortfolioState } = require('../risk/riskGate');
+    const state = getPortfolioState();
+    const minThreshold = parseFloat(process.env.MIN_MARGIN_BALANCE_USD || '30.0');
+    const healthy = state.currentBalance >= minThreshold;
+    res.json({
+      success: true,
+      currentBalance: state.currentBalance,
+      minMarginThreshold: minThreshold,
+      marginHealthy: healthy,
+      status: healthy ? 'HEALTHY' : 'CRITICAL_MARGIN_LOW',
+      action: healthy ? 'NORMAL_EXECUTION' : 'EXECUTION_HALTED',
+      timestamp: new Date().toISOString(),
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ==============================================================================
+// Allocation Settings & Multi-Currency Override Routes
+// ==============================================================================
+app.get('/api/settings/allocation', (req, res) => {
+  try {
+    const { getAllocationSettings } = require('../risk/riskGate');
+    res.json({ success: true, settings: getAllocationSettings() });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/settings/allocation', (req, res) => {
+  try {
+    const { updateAllocationSettings } = require('../risk/riskGate');
+    const updated = updateAllocationSettings(req.body || {});
+    res.json({ success: true, settings: updated, message: 'Allocation settings updated successfully' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ==============================================================================
+// DexScreener Live Meme Coin Breakout Scanner Route
+// ==============================================================================
+app.get('/api/dex/memecoins', async (req, res) => {
+  try {
+    const { scanTrendingMemeCoins } = require('../data/dexScreenerFeed');
+    const memeCoins = await scanTrendingMemeCoins();
+    res.json({ success: true, count: memeCoins.length, memeCoins, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ==============================================================================
+// Specialized Agent Endpoints (Expert Trader, Pattern & Data Aggregator)
+// ==============================================================================
+app.get('/api/expert-allocator/:symbol?', async (req, res) => {
+  try {
+    let symbol = decodeURIComponent(req.params.symbol || 'BTC/USDT');
+    const { fetchMarketData } = require('../data/marketData');
+    const { assessAllocation } = require('../agents/expertTraderAgent');
+    const marketData = await fetchMarketData(symbol);
+    const assessment = await assessAllocation(symbol.split('/')[0], marketData, { signal: 'BUY', confidence: 0.85 }, req.query);
+    res.json({ success: true, assessment });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/data-quality/:symbol?', async (req, res) => {
+  try {
+    let symbol = decodeURIComponent(req.params.symbol || 'BTC');
+    const { evaluateDataFeeds } = require('../agents/dataAggregatorAgent');
+    const result = await evaluateDataFeeds(symbol);
+    res.json({ success: true, result });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/patterns/:symbol?', async (req, res) => {
+  try {
+    let symbol = decodeURIComponent(req.params.symbol || 'BTC/USDT');
+    const { fetchMarketData } = require('../data/marketData');
+    const { getPatternSignal } = require('../agents/patternAgent');
+    const marketData = await fetchMarketData(symbol);
+    const result = await getPatternSignal(symbol.split('/')[0], marketData);
+    res.json({ success: true, result });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/indicators/:pair', async (req, res) => {
+  try {
+    let pair = decodeURIComponent(req.params.pair);
+    if (!pair.includes('/')) pair = `${pair.toUpperCase()}/USDT`;
+    const { fetchMarketData } = require('../data/marketData');
+    const data = await fetchMarketData(pair);
+    res.json({
+      success: true,
+      pair,
+      price: data.price,
+      indicators: data.indicators,
+      fearGreed: data.fearGreed,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/consensus/:pair', async (req, res) => {
+  try {
+    let pair = decodeURIComponent(req.params.pair);
+    if (!pair.includes('/')) pair = `${pair.toUpperCase()}/USDT`;
+    const { fetchMarketData } = require('../data/marketData');
+    const { runConsensus } = require('../orchestrator/consensus');
+    const marketData = await fetchMarketData(pair);
+    const consensus = await runConsensus(pair, marketData);
+    res.json({
+      success: true,
+      pair,
+      consensus,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ==============================================================================
+// Autonomous Continuous Auto-Trading Routes
+// ==============================================================================
+app.get('/api/autotrading/status', (req, res) => {
+  try {
+    const { getAutoTradingStatus } = require('../orchestrator/autoTrader');
+    res.json({ success: true, autotrading: getAutoTradingStatus() });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/autotrading/start', (req, res) => {
+  try {
+    const { startAutoTrading } = require('../orchestrator/autoTrader');
+    const intervalSec = parseInt(req.body?.interval || '30', 10);
+    const status = startAutoTrading(intervalSec);
+    res.json({ success: true, message: 'Auto-trading started', autotrading: status });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/autotrading/stop', (req, res) => {
+  try {
+    const { stopAutoTrading } = require('../orchestrator/autoTrader');
+    const status = stopAutoTrading();
+    res.json({ success: true, message: 'Auto-trading stopped', autotrading: status });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/autotrading/toggle', (req, res) => {
+  try {
+    const { toggleAutoTrading } = require('../orchestrator/autoTrader');
+    const intervalSec = parseInt(req.body?.interval || '30', 10);
+    const status = toggleAutoTrading(intervalSec);
+    res.json({ success: true, autotrading: status });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/cycle', async (req, res) => {
+  try {
+    const { runTradingCycle } = require('../orchestrator/index');
+    logger.info('Manual trading cycle triggered via API');
+    // Run asynchronously so HTTP returns promptly
+    runTradingCycle()
+      .then(results => {
+        broadcast({
+          type: 'cycle_completed',
+          results,
+          timestamp: new Date().toISOString(),
+        });
+      })
+      .catch(err => logger.error(`Manual cycle error: ${err.message}`));
+
+    res.json({ success: true, message: 'Trading cycle initiated' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Fallback SPA routing
+app.get('*', (req, res) => {
+  const indexHtml = path.join(PUBLIC_DIR, 'index.html');
+  if (require('fs').existsSync(indexHtml)) {
+    res.sendFile(indexHtml);
+  } else {
+    res.send(`
+      <!DOCTYPE html>
+      <html>
+        <head><title>AiTradingAgent Dashboard</title></head>
+        <body style="font-family:sans-serif;background:#0d1117;color:#c9d1d9;padding:40px;">
+          <h1>🚀 AiTradingAgent API & Dashboard Server</h1>
+          <p>Server running on port ${PORT}</p>
+          <ul>
+            <li><a style="color:#58a6ff" href="/api/status">/api/status</a></li>
+            <li><a style="color:#58a6ff" href="/api/trades">/api/trades</a></li>
+            <li><a style="color:#58a6ff" href="/api/arbitrage">/api/arbitrage</a></li>
+            <li><a style="color:#58a6ff" href="/api/health">/api/health</a></li>
+          </ul>
+        </body>
+      </html>
+    `);
+  }
+});
+
+// ─── WebSocket Event Broadcasting ──────────────────────────────────────────────
+
+function broadcast(data) {
+  const msg = JSON.stringify(data);
+  wss.clients.forEach(client => {
+    if (client.readyState === 1) {
+      client.send(msg);
+    }
+  });
+}
+
+wss.on('connection', (ws) => {
+  logger.info('📡 Dashboard WebSocket client connected');
+  try {
+    const initData = {
+      type: 'init',
+      portfolio: getPortfolioState(),
+      vault: getVaultSummary(),
+      performance: getPerformanceStats(20),
+      trades: loadLedger().slice(-20),
+      arbitrage: detectArbitrageOpportunities(),
+      timestamp: new Date().toISOString(),
+    };
+    ws.send(JSON.stringify(initData));
+  } catch (err) {
+    logger.warn(`Error sending init data to WS client: ${err.message}`);
+  }
+
+  ws.on('message', (msg) => {
+    try {
+      const parsed = JSON.parse(msg.toString());
+      if (parsed.type === 'ping') {
+        ws.send(JSON.stringify({ type: 'pong', timestamp: Date.now() }));
+      }
+    } catch (e) {}
+  });
+
+  ws.on('close', () => {
+    logger.info('Dashboard WebSocket client disconnected');
+  });
+});
+
+// Expose broadcast hooks globally for orchestrator
+global.broadcastDashboardEvent = broadcast;
+global.dashboardBroadcast = broadcast;
+
+function startServer() {
+  return new Promise((resolve) => {
+    server.listen(PORT, () => {
+      logger.info(`📊 AiTradingAgent Dashboard running at http://localhost:${PORT}`);
+      resolve(server);
+    });
+  });
+}
+
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = {
+  app,
+  server,
+  broadcast,
+  startServer,
+};

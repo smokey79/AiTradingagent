@@ -1,0 +1,12 @@
+﻿Column,Type
+timestamp,TIMESTAMP
+symbol,STRING
+venue,STRING
+price,FLOAT
+spread,FLOAT
+volatility_1m,FLOAT
+volatility_5m,FLOAT
+depth_bid,FLOAT
+depth_ask,FLOAT
+pattern_score,FLOAT
+regime,STRING

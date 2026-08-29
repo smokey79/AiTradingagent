@@ -1,0 +1,4 @@
+token,buy_chain,buy_chain_name,sell_chain,sell_chain_name,buy_price,sell_price,buy_dex,sell_dex,gross_pct,gas_cost_pct,net_pct,min_liquidity,buy_volume_24h,sell_volume_24h,opportunity,net_usd_1k,gross_usd_1k,gate_gross_profit_usd,gate_gas_buy_usd,gate_gas_sell_usd,gate_total_gas_usd,gate_net_profit_usd,gate_profitable
+LINK,cronos,Cronos,ethereum,Ethereum,14.62,14.92,vvs_finance,uniswap_v3,2.052,0.2502,1.8018,80000,200000,8000000,True,18.018,20.52,20.52,0.002,2.5,2.502,18.018,True
+LINK,cronos,Cronos,arbitrum,Arbitrum One,14.62,14.88,vvs_finance,uniswap_v3,1.7784,0.0032,1.7752,80000,200000,3500000,True,17.752,17.784,17.784,0.002,0.03,0.032,17.752,True
+LINK,cronos,Cronos,bsc,BNB Chain,14.62,14.85,vvs_finance,pancakeswap,1.5732,0.0102,1.563,80000,200000,2000000,True,15.63,15.732,15.732,0.002,0.1,0.102,15.63,True

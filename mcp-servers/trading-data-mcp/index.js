@@ -11,16 +11,6 @@
  *   get_orderbook      - Top-of-book bid/ask spread
  *   get_cmc_data       - CoinMarketCap price + market cap data
  *   get_coingecko_data - CoinGecko fundamentals + community data
- *
- * HOW TO ADD THIS TO claude_desktop_config.json:
- * {
- *   "mcpServers": {
- *     "trading-data": {
- *       "command": "node",
- *       "args": ["C:/Users/barcl/projects/AiTradingagent/mcp-servers/trading-data-mcp/index.js"]
- *     }
- *   }
- * }
  */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -29,8 +19,12 @@ import { z } from "zod";
 import axios from "axios";
 import * as ccxt from "ccxt";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-dotenv.config({ path: "../../.env" });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 const CMC_API_KEY = process.env.CMC_API_KEY;
 const COINGECKO_API_KEY = process.env.COINGECKO_API_KEY || "";

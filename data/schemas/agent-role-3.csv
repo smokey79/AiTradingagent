@@ -1,0 +1,4 @@
+﻿Agent,Role,Data Source,Output
+Antigravity Orchestrator,"Manages all agents, dependencies, scaling",YAML config,Unified control plane
+Strategy Evolution Agent,Improves trading logic using LLM reasoning,BigQuery metrics,Updated strategy definitions
+Flashloan Arbitrage Agent,Executes DeFi arbitrage via Aave,BigQuery arb_opportunities,High‑ROI signals

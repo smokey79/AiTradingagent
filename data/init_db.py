@@ -1,0 +1,20 @@
+import os, sys
+sys.path.insert(0,"F:/aitradingagent")
+import sqlite3
+from pathlib import Path
+DB_PATH = Path("F:/aitradingagent/data/trading.db")
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+conn = sqlite3.connect(DB_PATH)
+c = conn.cursor()
+c.execute("CREATE TABLE IF NOT EXISTS signals (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp TEXT NOT NULL, strategy_id TEXT, symbol TEXT NOT NULL, confidence REAL, expected_gain REAL, agents_agreed INTEGER, reason TEXT)")
+c.execute("CREATE TABLE IF NOT EXISTS market_data (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp TEXT NOT NULL, symbol TEXT NOT NULL, bid REAL, ask REAL, price REAL, volume REAL, liquidity_score REAL, source TEXT)")
+c.execute("CREATE TABLE IF NOT EXISTS risk_gate (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp TEXT NOT NULL, symbol TEXT, signal_id INTEGER, risk_passed INTEGER, risk_reason TEXT, position_usd REAL, ruin_prob REAL, avg_drawdown REAL)")
+c.execute("CREATE TABLE IF NOT EXISTS cost_gate (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp TEXT NOT NULL, symbol TEXT, signal_id INTEGER, cost_passed INTEGER, cost_reason TEXT, leverage REAL, fee_usdt REAL, net_expected REAL)")
+c.execute("CREATE TABLE IF NOT EXISTS trades (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp TEXT NOT NULL, symbol TEXT NOT NULL, side TEXT NOT NULL, price REAL, size_usdt REAL, leverage REAL DEFAULT 1, exchange TEXT DEFAULT 'bitget', mode TEXT DEFAULT 'paper', signal_id INTEGER, pnl_usdt REAL, pnl_pct REAL, status TEXT DEFAULT 'open', closed_at TEXT, notes TEXT)")
+c.execute("CREATE TABLE IF NOT EXISTS agent_votes (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp TEXT NOT NULL, signal_id INTEGER, agent_name TEXT NOT NULL, vote TEXT NOT NULL, confidence REAL, reason TEXT)")
+c.execute("CREATE TABLE IF NOT EXISTS macro_data (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp TEXT NOT NULL, btc_etf_flow_m REAL, eth_etf_flow_m REAL, btc_dominance_pct REAL, fear_greed_index REAL, macro_signal TEXT, macro_confidence REAL)")
+c.execute("CREATE TABLE IF NOT EXISTS paper_balance (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp TEXT NOT NULL, balance_usdt REAL NOT NULL, total_trades INTEGER DEFAULT 0, winning_trades INTEGER DEFAULT 0, win_rate REAL, notes TEXT)")
+conn.commit()
+conn.close()
+print("SUCCESS: trading.db created at", DB_PATH)
+print("Tables: signals, market_data, risk_gate, cost_gate, trades, agent_votes, macro_data, paper_balance")

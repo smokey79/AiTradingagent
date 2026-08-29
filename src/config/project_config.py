@@ -36,7 +36,11 @@ def _load_env_file(env_path: Path):
             if "=" in line:
                 key, val = line.split("=", 1)
                 key = key.strip()
-                val = val.strip().strip("'\"")
+                val = val.strip()
+                # Strip inline comments
+                if " #" in val or "\t#" in val:
+                    val = val.split("#", 1)[0].strip()
+                val = val.strip("'\"")
                 if key and key not in os.environ:
                     os.environ[key] = val
 
@@ -111,7 +115,17 @@ class ProfitSweeperConfig:
     nexo_auto_sweep: bool = os.getenv("NEXO_AUTO_SWEEP_BTC", "true").lower() in ("true", "1")
     nexo_sweep_address: str = os.getenv("NEXO_SWEEP_ADDRESS", "bc1qsmokey79nexoautoreserve")
     sweep_threshold_usd: float = float(os.getenv("NEXO_SWEEP_THRESHOLD_USD", "25.0"))
-    sweep_ratio: float = float(os.getenv("NEXO_SWEEP_RATIO", "0.60"))
+    sweep_ratio: float = float(os.getenv("NEXO_SWEEP_RATIO", "0.50"))
+
+
+@dataclass
+class AgentTradeAccountConfig:
+    sub_account_name: str = os.getenv("AGENT_ACCOUNT_NAME", "Agent Trade Account")
+    starting_balance_usdt: float = float(os.getenv("AGENT_STARTING_BALANCE_USDT", "250.0"))
+    manual_allocated_usdt: float = float(os.getenv("AGENT_MANUAL_ALLOCATION_USDT", "250.0"))
+    profit_reinvest_ratio: float = float(os.getenv("AGENT_PROFIT_REINVEST_RATIO", "0.50"))
+    nexo_btc_bank_ratio: float = float(os.getenv("AGENT_NEXO_BANK_RATIO", "0.50"))
+    is_sub_account: bool = True
 
 
 @dataclass
@@ -121,6 +135,7 @@ class ProjectMasterConfig:
     gates: GateConfig = field(default_factory=GateConfig)
     universe: UniverseConfig = field(default_factory=UniverseConfig)
     profit_sweeper: ProfitSweeperConfig = field(default_factory=ProfitSweeperConfig)
+    agent_account: AgentTradeAccountConfig = field(default_factory=AgentTradeAccountConfig)
 
     def get_connector_status(self) -> Dict[str, Any]:
         """
@@ -197,7 +212,17 @@ class ProjectMasterConfig:
             "market_data_feeds": {
                 "dexscreener": {"status": "ACTIVE (Free Public DEX Feed)", "key_required": False},
                 "coingecko": {"status": "ACTIVE (Free GeckoTerminal Feed)", "key_required": False},
-                "coinmarketcap": {"status": "ACTIVE", "key_required": True},
+                "coinmarketcap": {
+                    "status": "ACTIVE" if (
+                        (os.getenv("CMC_API_KEY") or os.getenv("COINMARKETCAP_API_KEY"))
+                        and not (os.getenv("CMC_API_KEY") or os.getenv("COINMARKETCAP_API_KEY") or "").lower().startswith("your_")
+                    ) else "REQUIRES_KEY (Optional Pro Key)",
+                    "key_required": True,
+                    "configured": bool(
+                        (os.getenv("CMC_API_KEY") or os.getenv("COINMARKETCAP_API_KEY"))
+                        and not (os.getenv("CMC_API_KEY") or os.getenv("COINMARKETCAP_API_KEY") or "").lower().startswith("your_")
+                    ),
+                },
                 "youtube_transcripts": {"status": "ACTIVE (6 Subscribed Channels)", "key_required": False},
                 "ccxt_public": {"status": "ACTIVE (Spot Order Books)", "key_required": False},
             },
@@ -211,7 +236,8 @@ class ProjectMasterConfig:
                 "liquidation_buffer": "17.5% Safety Distance",
                 "probability_gate": f"{self.gates.win_rate_gate:.0%} Minimum Win Rate",
                 "capital_rule": "£250 Initial Sizing (Polygon/Arbitrum Preferred)",
-                "profit_sweeper": "60% Swept to Bitcoin Reserve (Nexo)",
+                "agent_trade_account": f"${self.agent_account.starting_balance_usdt:.2f} USDT Starting Sub-Account",
+                "profit_sweeper": "50% Nexo BTC Bank / 50% Agent Account Reinvest",
             }
         }
 
@@ -228,11 +254,12 @@ if __name__ == "__main__":
     print("=== AITRADINGAGENT MASTER CONFIGURATION ===")
     print(f"Trading Mode       : {PROJECT_CONFIG.system.trading_mode} (Paper: {PROJECT_CONFIG.system.is_paper})")
     print(f"Capital Constraints: £{PROJECT_CONFIG.capital.initial_capital_gbp:.2f} / ${PROJECT_CONFIG.capital.initial_capital_usd:.2f}")
+    print(f"Agent Trade Account: ${PROJECT_CONFIG.agent_account.starting_balance_usdt:.2f} USDT (Sub-Account)")
     print(f"Futures Leverage   : {PROJECT_CONFIG.capital.default_futures_leverage}X Isolated ({PROJECT_CONFIG.capital.liquidation_buffer_pct}% Buffer)")
     print(f"Probability Gate   : {PROJECT_CONFIG.gates.win_rate_gate:.0%}")
     print(f"7-Token Universe   : {', '.join(PROJECT_CONFIG.universe.pairs)}")
     print(f"7-Chain Universe   : {', '.join(PROJECT_CONFIG.universe.chains)}")
-    print(f"Profit Sweeper     : {PROJECT_CONFIG.profit_sweeper.sweep_ratio:.0%} to BTC ({PROJECT_CONFIG.profit_sweeper.nexo_sweep_address})")
+    print(f"Daily Take-Profit  : 50% Nexo BTC ({PROJECT_CONFIG.profit_sweeper.nexo_sweep_address}) / 50% Agent Compounded")
     
     status = PROJECT_CONFIG.get_connector_status()
     print("\n=== CONNECTORS STATUS ===")

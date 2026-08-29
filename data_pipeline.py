@@ -26,6 +26,7 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 from data_sources.ccxt_feed import CCXTFeed
 from data_sources.sosovalue_feed import SoSoValueFeed
+from data_sources.coinmarketcap_feed import CoinMarketCapFeed
 from data_sources.unified_data_loader import UnifiedDataLoader
 from risk.monte_carlo import MonteCarloRisk, MCConfig
 
@@ -44,11 +45,12 @@ class DataPipeline:
     Unified Data & Risk Pipeline v5.
     1. Fetches live multi-token tickers and OHLCV from CCXT.
     2. Pulls macro institutional ETF flows and sector indicators from SoSoValue.
-    3. Ingests historical data from SD card & Google Drive via UnifiedDataLoader.
-    4. Runs quantitative on-chain valuation (SOPR/MVRV), relative strength, and volatility regimes.
-    5. Audits feed quality & hit-rate weighting via DataSourcerAgent.
-    6. Executes Monte Carlo ruin probability and Kelly position sizing checks.
-    7. Formats a structured data package and concise prompt summary for AI agents.
+    3. Ingests CoinMarketCap quotes and global dominance data.
+    4. Ingests historical data from SD card & Google Drive via UnifiedDataLoader.
+    5. Runs quantitative on-chain valuation (SOPR/MVRV), relative strength, and volatility regimes.
+    6. Audits feed quality & hit-rate weighting via DataSourcerAgent.
+    7. Executes Monte Carlo ruin probability and Kelly position sizing checks.
+    8. Formats a structured data package and concise prompt summary for AI agents.
     """
 
     def __init__(
@@ -58,14 +60,27 @@ class DataPipeline:
         avg_loss: float = 0.02,
         symbols: Optional[list] = None,
         use_external_data: bool = True,
+        use_coinmarketcap: bool = True,
         sd_root: str = "E:/",
         google_drive_creds: str = "google_service_account.json",
     ):
-        log.info("Initializing DataPipeline v5 with DataSourcer, On-Chain Engine, & External Data Sources...")
+        log.info("Initializing DataPipeline v5 with DataSourcer, On-Chain Engine, CoinMarketCap & External Data Sources...")
         self.ccxt = CCXTFeed(symbols=symbols)
         self.sosovalue = SoSoValueFeed()
         self.sourcer = DataSourcerAgent()
         self.mc_params = {"win_rate": win_rate, "avg_win": avg_win, "avg_loss": avg_loss}
+
+        # Initialize CoinMarketCap feed
+        self.coinmarketcap = None
+        if use_coinmarketcap:
+            try:
+                self.coinmarketcap = CoinMarketCapFeed()
+                if self.coinmarketcap.is_configured:
+                    log.info("CoinMarketCap feed initialized (API key active)")
+                else:
+                    log.info("CoinMarketCap feed available (missing key in .env)")
+            except Exception as e:
+                log.warning(f"Could not initialize CoinMarketCap feed: {e}")
         
         # Initialize unified data loader for SD card & Google Drive
         if use_external_data:
@@ -149,6 +164,20 @@ class DataPipeline:
         log.info("Step 2/6: Ingesting institutional ETF & macro data (SoSoValue)...")
         macro_data = self.sosovalue.get_macro_snapshot()
 
+        # 2b. CoinMarketCap data
+        cmc_data = None
+        if self.coinmarketcap and self.coinmarketcap.is_configured:
+            log.info("Step 2b/6: Fetching CoinMarketCap multi-token quotes & global metrics...")
+            try:
+                cmc_data = {
+                    "quotes": self.coinmarketcap.get_quotes(),
+                    "global": self.coinmarketcap.get_global_metrics(),
+                }
+                if symbol:
+                    cmc_data["active_quote"] = self.coinmarketcap.get_price(symbol)
+            except Exception as e:
+                log.warning(f"Error fetching CoinMarketCap data: {e}")
+
         # 3. Quantitative Modules (On-Chain SOPR/MVRV, RS, Rotation, Volatility)
         log.info("Step 3/6: Computing On-Chain MVRV, Relative Strength & Vol Regimes...")
         active_sym = symbol or "BTC/USDT"
@@ -175,6 +204,7 @@ class DataPipeline:
             onchain_data=onchain_data,
             rs_data=rs_data,
             vol_data=vol_data,
+            coinmarketcap_data=cmc_data,
         )
 
         # 5. Monte Carlo Risk Check
@@ -210,6 +240,7 @@ class DataPipeline:
             "risk": risk,
             "agent_summary": summary,
             "historical_data": historical_data if historical_data else None,
+            "coinmarketcap": cmc_data,
         }
 
         log.info(

@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 """
 bitget_exchange.py
 ==================
@@ -39,8 +41,8 @@ class BitgetExchange:
             trading_mode: "spot" or "futures"
         """
         self.api_key = api_key or os.getenv("BITGET_API_KEY", "")
-        self.secret = secret or os.getenv("BITGET_SECRET", "")
-        self.passphrase = passphrase or os.getenv("BITGET_API_PASSPHRASE", "")
+        self.secret = secret or os.getenv("BITGET_SECRET", "") or os.getenv("BITGET_SECRET_KEY", "")
+        self.passphrase = passphrase or os.getenv("BITGET_API_PASSPHRASE", "") or os.getenv("BITGET_PASSPHRASE", "")
         self.sandbox = sandbox
         self.trading_mode = trading_mode
         self.exchange = None

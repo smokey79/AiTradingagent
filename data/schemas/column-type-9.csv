@@ -1,0 +1,10 @@
+﻿Column,Type,Description
+timestamp,TIMESTAMP,tick time
+venue,STRING,mt5 / cex / dex / defi
+symbol,STRING,"BTCUSDT, GBPUSD, ETH/USDC"
+bid,FLOAT,best bid
+ask,FLOAT,best ask
+price,FLOAT,mid price
+volume,FLOAT,tick volume
+liquidity_score,FLOAT,computed by feature-engine
+source,STRING,mt5 / dex / cex

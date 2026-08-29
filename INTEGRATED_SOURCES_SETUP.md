@@ -3,9 +3,10 @@
 ## Overview
 
 Your AI trading agent now integrates:
-- **Telegram** — Real-time trade notifications
+- **CoinMarketCap** — Multi-token quotes, global market cap, dominance, rankings
 - **CoinGecko** — Market data, trends, on-chain metrics
 - **Bitget** — Live trading execution and portfolio management
+- **Telegram** — Real-time trade notifications
 - Plus existing: CCXT, SoSoValue, SD Card, Google Drive
 
 ---
@@ -67,7 +68,31 @@ print(f"BTC Price: {price}")
 
 ---
 
-### 3. Bitget Setup
+### 3. CoinMarketCap Setup
+
+#### a. Get API Key
+1. Register for a free API key at: https://coinmarketcap.com/api/
+2. Copy your API Key from the Developer Dashboard (Basic Plan provides 10,000 free call credits/month).
+
+#### b. Configure Environment
+Add to your `.env` file:
+```env
+CMC_API_KEY=<YOUR_COINMARKETCAP_API_KEY>
+# or
+COINMARKETCAP_API_KEY=<YOUR_COINMARKETCAP_API_KEY>
+```
+
+#### c. Verify Connection
+```python
+from data_sources.coinmarketcap_feed import CoinMarketCapFeed
+cmc = CoinMarketCapFeed()
+quotes = cmc.get_quotes(["BTC", "ETH", "CRO", "SOL"])
+print("Quotes:", quotes)
+```
+
+---
+
+### 4. Bitget Setup
 
 #### a. Create Bitget Account
 1. Register at https://www.bitget.com/

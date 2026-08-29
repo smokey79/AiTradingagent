@@ -1,10 +1,9 @@
 {
   "_comment": "=== AiTradingAgent MCP Server Configuration ===",
   "_instructions": [
-    "1. Copy this file to: C:\\Users\\{YourUsername}\\AppData\\Roaming\\Claude\\claude_desktop_config.json",
-    "2. Replace {YourUsername} with your actual Windows username",
-    "3. Make sure you have run: npm install in each mcp-servers subfolder",
-    "4. Restart Claude Desktop after saving"
+    "1. Copy this file to: C:\\Users\\barcl\\AppData\\Roaming\\Claude\\claude_desktop_config.json",
+    "2. Make sure you have run: npm install in each mcp-servers subfolder",
+    "3. Restart Claude Desktop after saving"
   ],
 
   "mcpServers": {
@@ -12,14 +11,14 @@
       "_comment": "Provides live market data tools to Claude",
       "command": "node",
       "args": [
-        "F:\\aitradingagent\\mcp-servers\\trading-data-mcp\\index.js"
+        "c:\\Users\\barcl\\Aitradingbot-skeleton\\mcp-servers\\trading-data-mcp\\index.js"
       ]
     },
     "risk-gate": {
       "_comment": "Hard veto safety layer — evaluates every trade before execution",
       "command": "node",
       "args": [
-        "F:\\aitradingagent\\mcp-servers\\risk-gate-mcp\\index.js"
+        "c:\\Users\\barcl\\Aitradingbot-skeleton\\mcp-servers\\risk-gate-mcp\\index.js"
       ]
     }
   }

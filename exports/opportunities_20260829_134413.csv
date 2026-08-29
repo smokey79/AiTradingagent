@@ -1,0 +1,10 @@
+timestamp_utc,token,buy_chain,buy_chain_name,sell_chain,sell_chain_name,buy_price,sell_price,buy_dex,sell_dex,gross_pct,gas_cost_pct,net_pct,gross_usd_1k,net_usd_1k,buy_liquidity,sell_liquidity,buy_volume_24h,sell_volume_24h,opportunity,trade_amount_usd
+2026-08-29T13:44:13.806828+00:00,LINK,cronos,Cronos,ethereum,Ethereum,14.62,14.92,vvs_finance,uniswap_v3,2.052,0.2502,1.8018,20.5198,18.0178,80000,2000000,200000,8000000,True,1000.0
+2026-08-29T13:44:13.806828+00:00,LINK,cronos,Cronos,arbitrum,Arbitrum One,14.62,14.88,vvs_finance,uniswap_v3,1.7784,0.0032,1.7752,17.7839,17.7519,80000,900000,200000,3500000,True,1000.0
+2026-08-29T13:44:13.806828+00:00,LINK,cronos,Cronos,bsc,BNB Chain,14.62,14.85,vvs_finance,pancakeswap,1.5732,0.0102,1.563,15.7319,15.6299,80000,600000,200000,2000000,True,1000.0
+2026-08-29T13:44:13.806828+00:00,ETH,cronos,Cronos,base,Base,3490.0,3522.0,vvs_finance,baseswap,0.9169,0.0003,0.9166,9.1691,9.1661,200000,800000,500000,2000000,True,1000.0
+2026-08-29T13:44:13.806828+00:00,ETH,cronos,Cronos,arbitrum,Arbitrum One,3490.0,3519.5,vvs_finance,uniswap_v3,0.8453,0.0032,0.8421,8.4527,8.4207,200000,2000000,500000,8000000,True,1000.0
+2026-08-29T13:44:13.806828+00:00,ETH,cronos,Cronos,bsc,BNB Chain,3490.0,3518.0,vvs_finance,pancakeswap,0.8023,0.0102,0.7921,8.0229,7.9209,200000,1000000,500000,3000000,True,1000.0
+2026-08-29T13:44:13.806828+00:00,ETH,cronos,Cronos,polygon,Polygon,3490.0,3515.0,vvs_finance,quickswap,0.7163,0.0012,0.7151,7.1633,7.1513,200000,1500000,500000,5000000,True,1000.0
+2026-08-29T13:44:13.806828+00:00,ETH,cronos,Cronos,ethereum,Ethereum,3490.0,3521.0,vvs_finance,uniswap_v3,0.8883,0.2502,0.6381,8.8825,6.3805,200000,5000000,500000,20000000,True,1000.0
+2026-08-29T13:44:13.806828+00:00,ETH,cronos,Cronos,avalanche,Avalanche C-Chain,3490.0,3512.0,vvs_finance,trader_joe,0.6304,0.0052,0.6252,6.3037,6.2517,200000,600000,500000,1500000,True,1000.0

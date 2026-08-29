@@ -1,0 +1,209 @@
+{
+  "export_timestamp": "2026-08-29T13:45:30.689125+00:00",
+  "export_version": "2.0",
+  "summary": "Snapshot: 2026-08-29 13:45 UTC\nTokens: ETH, WBTC, LINK, AAVE, BNB, AVAX, MATIC, CRO\nChains: ethereum, polygon, cronos, arbitrum, base, bsc, avalanche\nOpportunities: 3 detected\n\nTop 3:\n  LINK BUY cronos @$14.62 \u2192 SELL ethereum @$14.92 | net=1.80%\n  LINK BUY cronos @$14.62 \u2192 SELL arbitrum @$14.88 | net=1.78%\n  LINK BUY cronos @$14.62 \u2192 SELL bsc @$14.85 | net=1.56%",
+  "prices_by_token": {
+    "ETH": {
+      "ethereum": 3521.0,
+      "arbitrum": 3519.5,
+      "polygon": 3515.0,
+      "base": 3522.0,
+      "cronos": 3490.0,
+      "bsc": 3518.0,
+      "avalanche": 3512.0
+    },
+    "WBTC": {
+      "ethereum": 67850.0,
+      "arbitrum": 67820.0,
+      "polygon": 67760.0,
+      "base": 67870.0
+    },
+    "LINK": {
+      "ethereum": 14.92,
+      "arbitrum": 14.88,
+      "cronos": 14.62,
+      "bsc": 14.85
+    }
+  },
+  "top_opportunities": [
+    {
+      "token": "LINK",
+      "buy_chain": "cronos",
+      "buy_chain_name": "Cronos",
+      "sell_chain": "ethereum",
+      "sell_chain_name": "Ethereum",
+      "buy_price": 14.62,
+      "sell_price": 14.92,
+      "buy_dex": "vvs_finance",
+      "sell_dex": "uniswap_v3",
+      "gross_pct": 2.052,
+      "gas_cost_pct": 0.2502,
+      "net_pct": 1.8018,
+      "min_liquidity": 80000,
+      "buy_volume_24h": 200000,
+      "sell_volume_24h": 8000000,
+      "opportunity": true,
+      "net_usd_1k": 18.018,
+      "gross_usd_1k": 20.52,
+      "gate": {
+        "gross_profit_usd": 20.52,
+        "gas_buy_usd": 0.002,
+        "gas_sell_usd": 2.5,
+        "total_gas_usd": 2.502,
+        "net_profit_usd": 18.018,
+        "profitable": true
+      }
+    },
+    {
+      "token": "LINK",
+      "buy_chain": "cronos",
+      "buy_chain_name": "Cronos",
+      "sell_chain": "arbitrum",
+      "sell_chain_name": "Arbitrum One",
+      "buy_price": 14.62,
+      "sell_price": 14.88,
+      "buy_dex": "vvs_finance",
+      "sell_dex": "uniswap_v3",
+      "gross_pct": 1.7784,
+      "gas_cost_pct": 0.0032,
+      "net_pct": 1.7752,
+      "min_liquidity": 80000,
+      "buy_volume_24h": 200000,
+      "sell_volume_24h": 3500000,
+      "opportunity": true,
+      "net_usd_1k": 17.752,
+      "gross_usd_1k": 17.784,
+      "gate": {
+        "gross_profit_usd": 17.784,
+        "gas_buy_usd": 0.002,
+        "gas_sell_usd": 0.03,
+        "total_gas_usd": 0.032,
+        "net_profit_usd": 17.752,
+        "profitable": true
+      }
+    },
+    {
+      "token": "LINK",
+      "buy_chain": "cronos",
+      "buy_chain_name": "Cronos",
+      "sell_chain": "bsc",
+      "sell_chain_name": "BNB Chain",
+      "buy_price": 14.62,
+      "sell_price": 14.85,
+      "buy_dex": "vvs_finance",
+      "sell_dex": "pancakeswap",
+      "gross_pct": 1.5732,
+      "gas_cost_pct": 0.0102,
+      "net_pct": 1.563,
+      "min_liquidity": 80000,
+      "buy_volume_24h": 200000,
+      "sell_volume_24h": 2000000,
+      "opportunity": true,
+      "net_usd_1k": 15.63,
+      "gross_usd_1k": 15.732,
+      "gate": {
+        "gross_profit_usd": 15.732,
+        "gas_buy_usd": 0.002,
+        "gas_sell_usd": 0.1,
+        "total_gas_usd": 0.102,
+        "net_profit_usd": 15.63,
+        "profitable": true
+      }
+    }
+  ],
+  "chain_metadata": [
+    {
+      "chain": "ethereum",
+      "name": "Ethereum",
+      "chain_id": 1,
+      "avg_gas_usd": 2.5,
+      "native_token": "ETH",
+      "primary_dex": "uniswap_v3",
+      "enabled": true,
+      "gas_tier": "high"
+    },
+    {
+      "chain": "polygon",
+      "name": "Polygon",
+      "chain_id": 137,
+      "avg_gas_usd": 0.01,
+      "native_token": "MATIC",
+      "primary_dex": "quickswap",
+      "enabled": true,
+      "gas_tier": "ultra_low"
+    },
+    {
+      "chain": "cronos",
+      "name": "Cronos",
+      "chain_id": 25,
+      "avg_gas_usd": 0.002,
+      "native_token": "CRO",
+      "primary_dex": "vvs_finance",
+      "enabled": true,
+      "gas_tier": "ultra_low"
+    },
+    {
+      "chain": "arbitrum",
+      "name": "Arbitrum One",
+      "chain_id": 42161,
+      "avg_gas_usd": 0.03,
+      "native_token": "ETH",
+      "primary_dex": "uniswap_v3",
+      "enabled": true,
+      "gas_tier": "low"
+    },
+    {
+      "chain": "base",
+      "name": "Base",
+      "chain_id": 8453,
+      "avg_gas_usd": 0.001,
+      "native_token": "ETH",
+      "primary_dex": "baseswap",
+      "enabled": true,
+      "gas_tier": "ultra_low"
+    },
+    {
+      "chain": "bsc",
+      "name": "BNB Chain",
+      "chain_id": 56,
+      "avg_gas_usd": 0.1,
+      "native_token": "BNB",
+      "primary_dex": "pancakeswap_v3",
+      "enabled": true,
+      "gas_tier": "low"
+    },
+    {
+      "chain": "avalanche",
+      "name": "Avalanche C-Chain",
+      "chain_id": 43114,
+      "avg_gas_usd": 0.05,
+      "native_token": "AVAX",
+      "primary_dex": "trader_joe",
+      "enabled": true,
+      "gas_tier": "low"
+    }
+  ],
+  "llm_analysis": null,
+  "scan_config": {
+    "tokens": [
+      "ETH",
+      "WBTC",
+      "LINK",
+      "AAVE",
+      "BNB",
+      "AVAX",
+      "MATIC",
+      "CRO"
+    ],
+    "trade_amount_usd": 1000.0,
+    "min_net_profit_pct": 0.5,
+    "min_liquidity_usd": 10000,
+    "project_modules": {
+      "chains": true,
+      "dexscreener": true,
+      "arb": true,
+      "gas": true,
+      "llm": false
+    }
+  }
+}

@@ -94,7 +94,7 @@ class TestAiTradingPlatform(unittest.TestCase):
     def test_data_pipeline_execution(self):
         pipeline = DataPipeline(symbols=["BTC/USDT", "ETH/USDT"])
         package = pipeline.run(account_balance=1000.0, proposed_position_pct=0.05, symbol="BTC/USDT")
-        self.assertIn(package["pipeline_version"], ["2.0.0", "4.0.0"])
+        self.assertIn(package["pipeline_version"], ["2.0.0", "4.0.0", "5.0.0", "6.0.0"])
         self.assertIn("market", package)
         self.assertIn("macro", package)
         self.assertIn("risk", package)

@@ -1,10 +1,66 @@
 {
   "version": 1,
-  "lastUpdated": "2026-08-29T01:24:30.397796+00:00",
+  "lastUpdated": "2026-08-29T04:00:30.189074+00:00",
   "tradeHistory": [],
   "channelCredibility": {},
   "notes": "This file is the persistent strategy brain \u2014 the orchestrator reads and appends to it every cycle via strategyMemoryLoader.js. Do not hand-edit tradeHistory.",
   "learnedStrategies": [
+    {
+      "id": "STRAT_LUX_BTC_USDT_1787976030",
+      "title": "LuxAlgo Enhanced: LuxAlgo Smart Money Concepts \u2014 Order Block & Liquidity Sweep 5X",
+      "channel": "LuxAlgo",
+      "winRate": 76.5,
+      "leverage": "5X Futures"
+    },
+    {
+      "id": "STRAT_LUX_BTC_USDT_1787975352",
+      "title": "LuxAlgo Enhanced: LuxAlgo Smart Money Concepts \u2014 Order Block & Liquidity Sweep 5X",
+      "channel": "LuxAlgo",
+      "winRate": 76.5,
+      "leverage": "5X Futures"
+    },
+    {
+      "id": "STRAT_LUX_BTC_USDT_1787975298",
+      "title": "LuxAlgo Enhanced: LuxAlgo Smart Money Concepts \u2014 Order Block & Liquidity Sweep 5X",
+      "channel": "LuxAlgo",
+      "winRate": 76.5,
+      "leverage": "5X Futures"
+    },
+    {
+      "id": "STRAT_LUX_BTC_USDT_1787974457",
+      "title": "LuxAlgo Enhanced: LuxAlgo Smart Money Concepts \u2014 Order Block & Liquidity Sweep 5X",
+      "channel": "LuxAlgo",
+      "winRate": 76.5,
+      "leverage": "5X Futures"
+    },
+    {
+      "id": "STRAT_LUX_BTC_USDT_1787974440",
+      "title": "LuxAlgo Enhanced: LuxAlgo Smart Money Concepts \u2014 Order Block & Liquidity Sweep 5X",
+      "channel": "LuxAlgo",
+      "winRate": 76.5,
+      "leverage": "5X Futures"
+    },
+    {
+      "id": "STRAT_LUX_BTC_USDT_1787974405",
+      "title": "LuxAlgo Enhanced: LuxAlgo Smart Money Concepts \u2014 Order Block & Liquidity Sweep 5X",
+      "channel": "LuxAlgo",
+      "winRate": 76.5,
+      "leverage": "5X Futures"
+    },
+    {
+      "id": "STRAT_LUX_BTC_USDT_1787974372",
+      "title": "LuxAlgo Enhanced: LuxAlgo Smart Money Concepts \u2014 Order Block & Liquidity Sweep 5X",
+      "channel": "LuxAlgo",
+      "winRate": 76.5,
+      "leverage": "5X Futures"
+    },
+    {
+      "id": "STRAT_LUX_BTC_USDT_1787974348",
+      "title": "LuxAlgo Enhanced: LuxAlgo Smart Money Concepts \u2014 Order Block & Liquidity Sweep 5X",
+      "channel": "LuxAlgo",
+      "winRate": 76.5,
+      "leverage": "5X Futures"
+    },
     {
       "id": "STRAT_LUX_BTC_USDT_1787966670",
       "title": "LuxAlgo Enhanced: LuxAlgo Smart Money Concepts \u2014 Order Block & Liquidity Sweep 5X",

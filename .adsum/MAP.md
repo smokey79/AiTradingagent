@@ -1,0 +1,26 @@
+# Workspace map — 0 file(s)
+
+A map, not a substitute for reading. Paths are workspace-relative. Use read_file (with
+start_line/end_line) or search_files on these paths instead of re-listing directories.
+
+(57 doc file(s) omitted)
+agents/AI-Trading-Agent/ — 13 more file(s) (use list_files to enumerate)
+Aitradingbot-skeleton/caudemllmcode2arbritrage/ — 16 more file(s) (use list_files to enumerate)
+Aitradingbot-skeleton/cllm7/ — 16 more file(s) (use list_files to enumerate)
+Aitradingbot-skeleton/data/ — 9 more file(s) (use list_files to enumerate)
+Aitradingbot-skeleton/exports/ — 12 more file(s) (use list_files to enumerate)
+freqtrade-stable/docker/ — 8 more file(s) (use list_files to enumerate)
+./ — 43 more file(s) (use list_files to enumerate)
+Aitradingbot-skeleton/ — 7 more file(s) (use list_files to enumerate)
+caudemllmcode2arbritrage/ — 16 more file(s) (use list_files to enumerate)
+cllm7/ — 16 more file(s) (use list_files to enumerate)
+data/ — 15 more file(s) (use list_files to enumerate)
+data_sources/ — 9 more file(s) (use list_files to enumerate)
+exports/ — 16 more file(s) (use list_files to enumerate)
+freqtrade-stable/ — 23 more file(s) (use list_files to enumerate)
+python_modules/ — 10 more file(s) (use list_files to enumerate)
+python-modules/ — 7 more file(s) (use list_files to enumerate)
+scripts/ — 7 more file(s) (use list_files to enumerate)
+tools/ — 19 more file(s) (use list_files to enumerate)
+(34 directories omitted)
+(walk stopped early: entry cap reached — use list_files for anything not listed)

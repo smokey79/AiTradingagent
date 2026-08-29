@@ -1,0 +1,3 @@
+﻿Column,Type
+risk_passed,BOOL
+risk_reason,STRING

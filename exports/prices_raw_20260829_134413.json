@@ -1,0 +1,203 @@
+{
+  "ETH": {
+    "ethereum": {
+      "price_usd": 3521.0,
+      "liquidity": 5000000,
+      "volume_24h": 20000000,
+      "dex": "uniswap_v3",
+      "chain": "ethereum",
+      "price_change_1h": 0.12,
+      "price_change_24h": -1.3,
+      "buys_24h": 12400,
+      "sells_24h": 10200,
+      "avg_gas_usd": 2.5,
+      "chain_id": 1
+    },
+    "arbitrum": {
+      "price_usd": 3519.5,
+      "liquidity": 2000000,
+      "volume_24h": 8000000,
+      "dex": "uniswap_v3",
+      "chain": "arbitrum",
+      "price_change_1h": 0.1,
+      "price_change_24h": -1.2,
+      "buys_24h": 5200,
+      "sells_24h": 4800,
+      "avg_gas_usd": 0.03,
+      "chain_id": 42161
+    },
+    "polygon": {
+      "price_usd": 3515.0,
+      "liquidity": 1500000,
+      "volume_24h": 5000000,
+      "dex": "quickswap",
+      "chain": "polygon",
+      "price_change_1h": 0.08,
+      "price_change_24h": -1.4,
+      "buys_24h": 3100,
+      "sells_24h": 2900,
+      "avg_gas_usd": 0.01,
+      "chain_id": 137
+    },
+    "base": {
+      "price_usd": 3522.0,
+      "liquidity": 800000,
+      "volume_24h": 2000000,
+      "dex": "baseswap",
+      "chain": "base",
+      "price_change_1h": 0.15,
+      "price_change_24h": -1.1,
+      "buys_24h": 1800,
+      "sells_24h": 1600,
+      "avg_gas_usd": 0.001,
+      "chain_id": 8453
+    },
+    "cronos": {
+      "price_usd": 3490.0,
+      "liquidity": 200000,
+      "volume_24h": 500000,
+      "dex": "vvs_finance",
+      "chain": "cronos",
+      "price_change_1h": -0.2,
+      "price_change_24h": -2.1,
+      "buys_24h": 420,
+      "sells_24h": 380,
+      "avg_gas_usd": 0.002,
+      "chain_id": 25
+    },
+    "bsc": {
+      "price_usd": 3518.0,
+      "liquidity": 1000000,
+      "volume_24h": 3000000,
+      "dex": "pancakeswap",
+      "chain": "bsc",
+      "price_change_1h": 0.09,
+      "price_change_24h": -1.3,
+      "buys_24h": 2800,
+      "sells_24h": 2600,
+      "avg_gas_usd": 0.1,
+      "chain_id": 56
+    },
+    "avalanche": {
+      "price_usd": 3512.0,
+      "liquidity": 600000,
+      "volume_24h": 1500000,
+      "dex": "trader_joe",
+      "chain": "avalanche",
+      "price_change_1h": 0.07,
+      "price_change_24h": -1.5,
+      "buys_24h": 1100,
+      "sells_24h": 980,
+      "avg_gas_usd": 0.05,
+      "chain_id": 43114
+    }
+  },
+  "WBTC": {
+    "ethereum": {
+      "price_usd": 67850.0,
+      "liquidity": 8000000,
+      "volume_24h": 30000000,
+      "dex": "uniswap_v3",
+      "chain": "ethereum",
+      "price_change_1h": 0.05,
+      "price_change_24h": 0.8,
+      "buys_24h": 3200,
+      "sells_24h": 2800,
+      "avg_gas_usd": 2.5,
+      "chain_id": 1
+    },
+    "arbitrum": {
+      "price_usd": 67820.0,
+      "liquidity": 3000000,
+      "volume_24h": 12000000,
+      "dex": "uniswap_v3",
+      "chain": "arbitrum",
+      "price_change_1h": 0.04,
+      "price_change_24h": 0.7,
+      "buys_24h": 1800,
+      "sells_24h": 1600,
+      "avg_gas_usd": 0.03,
+      "chain_id": 42161
+    },
+    "polygon": {
+      "price_usd": 67760.0,
+      "liquidity": 1200000,
+      "volume_24h": 4000000,
+      "dex": "quickswap",
+      "chain": "polygon",
+      "price_change_1h": 0.02,
+      "price_change_24h": 0.6,
+      "buys_24h": 900,
+      "sells_24h": 800,
+      "avg_gas_usd": 0.01,
+      "chain_id": 137
+    },
+    "base": {
+      "price_usd": 67870.0,
+      "liquidity": 500000,
+      "volume_24h": 1500000,
+      "dex": "baseswap",
+      "chain": "base",
+      "price_change_1h": 0.06,
+      "price_change_24h": 0.9,
+      "buys_24h": 600,
+      "sells_24h": 520,
+      "avg_gas_usd": 0.001,
+      "chain_id": 8453
+    }
+  },
+  "LINK": {
+    "ethereum": {
+      "price_usd": 14.92,
+      "liquidity": 2000000,
+      "volume_24h": 8000000,
+      "dex": "uniswap_v3",
+      "chain": "ethereum",
+      "price_change_1h": 0.3,
+      "price_change_24h": 2.1,
+      "buys_24h": 4200,
+      "sells_24h": 3800,
+      "avg_gas_usd": 2.5,
+      "chain_id": 1
+    },
+    "arbitrum": {
+      "price_usd": 14.88,
+      "liquidity": 900000,
+      "volume_24h": 3500000,
+      "dex": "uniswap_v3",
+      "chain": "arbitrum",
+      "price_change_1h": 0.25,
+      "price_change_24h": 1.9,
+      "buys_24h": 2100,
+      "sells_24h": 1900,
+      "avg_gas_usd": 0.03,
+      "chain_id": 42161
+    },
+    "cronos": {
+      "price_usd": 14.62,
+      "liquidity": 80000,
+      "volume_24h": 200000,
+      "dex": "vvs_finance",
+      "chain": "cronos",
+      "price_change_1h": -0.1,
+      "price_change_24h": 1.2,
+      "buys_24h": 220,
+      "sells_24h": 190,
+      "avg_gas_usd": 0.002,
+      "chain_id": 25
+    },
+    "bsc": {
+      "price_usd": 14.85,
+      "liquidity": 600000,
+      "volume_24h": 2000000,
+      "dex": "pancakeswap",
+      "chain": "bsc",
+      "price_change_1h": 0.2,
+      "price_change_24h": 1.8,
+      "buys_24h": 1800,
+      "sells_24h": 1600,
+      "avg_gas_usd": 0.1,
+      "chain_id": 56
+    }
+  }
+}

@@ -1,0 +1,9 @@
+﻿Column,Type
+timestamp,TIMESTAMP
+strategy_id,STRING
+signal_type,STRING
+symbol,STRING
+confidence,FLOAT
+expected_gain,FLOAT
+reason,STRING
+constraints,JSON

@@ -1,0 +1,8 @@
+chain,name,chain_id,avg_gas_usd,native_token,primary_dex,enabled,gas_tier
+ethereum,Ethereum,1,2.5,ETH,uniswap_v3,True,high
+polygon,Polygon,137,0.01,MATIC,quickswap,True,ultra_low
+cronos,Cronos,25,0.002,CRO,vvs_finance,True,ultra_low
+arbitrum,Arbitrum One,42161,0.03,ETH,uniswap_v3,True,low
+base,Base,8453,0.001,ETH,baseswap,True,ultra_low
+bsc,BNB Chain,56,0.1,BNB,pancakeswap_v3,True,low
+avalanche,Avalanche C-Chain,43114,0.05,AVAX,trader_joe,True,low
