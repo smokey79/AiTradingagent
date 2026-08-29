@@ -342,6 +342,7 @@
       transition: all 0.15s ease;
     }
     .chip-btn:hover { color: var(--accent-blue); border-color: var(--accent-blue); }
+    .copilot-results-scroll { max-height: 240px; overflow-y: auto; }
 
     /* Tables */
     .custom-table {
@@ -702,7 +703,7 @@ $ ready.</div>
               <input type="text" id="copilot-search-input" class="text-input w-100" placeholder="Search past chat sessions (e.g. Casper SMC, £250, Arbitrum)..." onkeydown="handleSearchKey(event)" />
               <button class="btn btn-sm btn-outline" onclick="searchCopilotHistory()">Search</button>
             </div>
-            <div id="copilot-search-results" class="flex-col gap-8 font-12 text-muted" style="max-height:240px; overflow-y:auto;">
+            <div id="copilot-search-results" class="flex-col gap-8 font-12 text-muted copilot-results-scroll">
               <div class="metric-subtle-box">
                 <div class="font-bold text-main">Cross-chain arbitrage system design</div>
                 <div class="font-11 text-muted">£250 initial capital, bridged inventory across 7 chains, Casper SMC 5-min ORB Retest.</div>
