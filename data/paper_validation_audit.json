@@ -1,0 +1,27 @@
+{
+  "timestamp": "2026-08-29T03:36:10.337040+00:00",
+  "trading_mode": "PAPER_TRADING_ACTIVE",
+  "sample_size": {
+    "completed_trades": 128,
+    "required_sample": 500,
+    "status": "VALIDATION_IN_PROGRESS"
+  },
+  "gate_1_win_rate": {
+    "current": 76.5,
+    "threshold": 68.0,
+    "passed": true
+  },
+  "gate_2_max_drawdown": {
+    "current_pct": 4.8,
+    "max_allowed_pct": 12.0,
+    "passed": true
+  },
+  "gate_3_avg_r_multiple": {
+    "current_avg_r": 2.42,
+    "min_required_r": 1.8,
+    "passed": true
+  },
+  "all_gates_cleared": true,
+  "live_trading_unlocked": false,
+  "verdict": "CLEARANCE_MET_FOR_PAPER_EXPANSION"
+}

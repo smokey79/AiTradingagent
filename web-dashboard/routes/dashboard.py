@@ -494,6 +494,35 @@ def api_copilot_search():
         return jsonify({"success": False, "error": str(e)})
 
 
+@dashboard.route("/api/system/connectors")
+def api_system_connectors():
+    try:
+        from src.config.project_config import PROJECT_CONFIG
+        return jsonify({"success": True, "connectors": PROJECT_CONFIG.get_connector_status()})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
+@dashboard.route("/api/validation/500trades")
+def api_validation_500trades():
+    try:
+        from python_modules.paper_validation_pipeline import PaperValidationPipeline
+        pipeline = PaperValidationPipeline()
+        return jsonify({"success": True, "validation": pipeline.run_validation_audit()})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
+@dashboard.route("/api/profit/sweeper")
+def api_profit_sweeper():
+    try:
+        from python_modules.nexo_profit_sweeper import NexoProfitSweeper
+        sweeper = NexoProfitSweeper()
+        return jsonify({"success": True, "sweeper": sweeper.get_sweeper_summary()})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
 @dashboard.route("/api/pinescript/template")
 def api_pinescript():
     return jsonify({
@@ -622,6 +651,9 @@ def api_terminal_execute():
         output = (
             "AiTradingAgent In-Browser Terminal Commands:\n"
             "  /copilot [query]      -> Ask Copilot AI with access to all 79 chat memories & live data\n"
+            "  /connectors           -> Inspect active API connectors, permissions, & model keys\n"
+            "  /validation           -> Run 500-Trade Paper Validation Gate Audit (Win Rate, DD, R)\n"
+            "  /sweeper              -> Inspect Nexo 60% Bitcoin Profit Sweeper Reserve Ledger\n"
             "  /arbitrage            -> Scan real-time cross-DEX price disparities across 7 chains\n"
             "  /flashloans           -> Simulate zero-capital flash loans (Balancer 0% & Aave v3 0.05%)\n"
             "  /futures5x [symbol]   -> Model 5X Leverage Futures contract margin & 17.5% liquidation buffer\n"
@@ -635,6 +667,55 @@ def api_terminal_execute():
             "  /status               -> Display live server health, equity, 5X margin & 68% gate status\n"
         )
         return jsonify({"success": True, "output": output})
+
+    elif base_cmd in ("/connectors", "connectors", "/integrations", "integrations"):
+        try:
+            from src.config.project_config import PROJECT_CONFIG
+            status = PROJECT_CONFIG.get_connector_status()
+            lines = ["=== CONNECTORS & SYSTEM INTEGRATIONS DIAGNOSTICS ==="]
+            for cat, items in status.items():
+                lines.append(f"\n[{cat.upper()}]:")
+                if isinstance(items, dict):
+                    for k, v in items.items():
+                        lines.append(f"  * {k:22s}: {v}")
+            return jsonify({"success": True, "output": "\n".join(lines)})
+        except Exception as e:
+            return jsonify({"success": False, "output": f"Connectors inspection error: {e}"})
+
+    elif base_cmd in ("/validation", "validation", "/500trades"):
+        try:
+            from python_modules.paper_validation_pipeline import PaperValidationPipeline
+            pipeline = PaperValidationPipeline()
+            res = pipeline.run_validation_audit()
+            output = (
+                "=== 500-TRADE PAPER VALIDATION AUDIT ===\n"
+                f"Sample Size     : {res['sample_size']['completed_trades']}/{res['sample_size']['required_sample']} trades ({res['sample_size']['status']})\n"
+                f"Gate 1 (Win %)  : {res['gate_1_win_rate']['current']}% (Target: >={res['gate_1_win_rate']['threshold']}%) -> {'PASSED' if res['gate_1_win_rate']['passed'] else 'FAIL'}\n"
+                f"Gate 2 (Max DD) : {res['gate_2_max_drawdown']['current_pct']}% (Max Allowed: <={res['gate_2_max_drawdown']['max_allowed_pct']}%) -> {'PASSED' if res['gate_2_max_drawdown']['passed'] else 'FAIL'}\n"
+                f"Gate 3 (Avg R)  : {res['gate_3_avg_r_multiple']['current_avg_r']}R (Target: >={res['gate_3_avg_r_multiple']['min_required_r']}R) -> {'PASSED' if res['gate_3_avg_r_multiple']['passed'] else 'FAIL'}\n"
+                f"Overall Verdict : {res['verdict']} (Live Trading Unlocked: {res['live_trading_unlocked']})"
+            )
+            return jsonify({"success": True, "output": output})
+        except Exception as e:
+            return jsonify({"success": False, "output": f"Validation error: {e}"})
+
+    elif base_cmd in ("/sweeper", "sweeper", "/nexo", "nexo"):
+        try:
+            from python_modules.nexo_profit_sweeper import NexoProfitSweeper
+            sweeper = NexoProfitSweeper()
+            summary = sweeper.get_sweeper_summary()
+            output = (
+                "=== NEXO AUTOMATED BITCOIN PROFIT SWEEPER ===\n"
+                f"Sweep Ratio          : {summary['sweep_ratio_pct']}%\n"
+                f"Target BTC Address   : {summary['sweep_address']}\n"
+                f"Total Swept USD      : ${summary['total_swept_usd']} USD\n"
+                f"Total BTC Reserve    : {summary['total_btc_accumulated']} BTC\n"
+                f"Total Sweep Events   : {summary['sweeps_count']}\n"
+                f"Latest Event         : {summary['history'][-1]['source']} (+${summary['history'][-1]['swept_to_btc_usd']} -> {summary['history'][-1]['btc_credited']} BTC)"
+            )
+            return jsonify({"success": True, "output": output})
+        except Exception as e:
+            return jsonify({"success": False, "output": f"Sweeper error: {e}"})
 
     elif base_cmd in ("/copilot", "copilot", "/chat", "chat", "/ask", "ask"):
         query = " ".join(parts[1:]) if len(parts) > 1 else "What is the current system status and active strategy?"
