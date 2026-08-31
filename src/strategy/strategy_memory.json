@@ -1,7 +1,16 @@
 {
   "version": 1,
-  "lastUpdated": null,
+  "lastUpdated": "2026-08-31T15:45:17.929993+00:00",
   "tradeHistory": [],
   "channelCredibility": {},
-  "notes": "This file is the persistent strategy brain — the orchestrator reads and appends to it every cycle via strategyMemoryLoader.js. Do not hand-edit tradeHistory."
+  "stats": {
+    "wins": 0,
+    "losses": 0,
+    "totalPnl": 0.0,
+    "winRate": 1.0,
+    "winAmounts": [],
+    "lossAmounts": [],
+    "symbolStats": {}
+  },
+  "notes": "This file is the persistent strategy brain."
 }

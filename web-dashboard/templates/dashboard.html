@@ -9,22 +9,26 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-main: #080c14;
-      --bg-card: #0f172a;
-      --bg-card-hover: #172033;
-      --bg-subtle: #1e293b;
-      --border-color: #334155;
-      --border-glow: rgba(59, 130, 246, 0.35);
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
-      --accent-blue: #38bdf8;
-      --accent-indigo: #6366f1;
-      --accent-green: #10b981;
-      --accent-red: #f43f5e;
-      --accent-gold: #f59e0b;
-      --accent-purple: #a855f7;
-      --accent-cyan: #06b6d4;
+      /* Crypto.com Silver/Grey Theme */
+      --bg-main: #f4f5f9;       /* Silver/grey background */
+      --bg-card: #ffffff;       /* Pure white cards */
+      --bg-card-hover: #eef0f6; /* Slight grey on hover */
+      --bg-subtle: #e2e4ec;     /* Subtle grey elements */
+      --border-color: #d1d5db;  /* Light grey borders */
+      --border-glow: rgba(0, 0, 0, 0.05);
+      --text-main: #000000;     /* Pure black for main text */
+      --text-muted: #374151;    /* Dark grey for secondary */
+      --text-dim: #6b7280;
+      
+      /* Accents (Darker to pop against white) */
+      --accent-blue: #113264;   /* Crypto.com Dark Blue */
+      --accent-indigo: #4338ca;
+      --accent-green: #059669;  /* Strong green */
+      --accent-red: #dc2626;    /* Strong red */
+      --accent-gold: #d97706;
+      --accent-purple: #6d28d9;
+      --accent-cyan: #0e7490;
+      
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
@@ -39,7 +43,7 @@
       overflow-x: hidden;
     }
     header {
-      background: rgba(15, 23, 42, 0.92);
+      background: rgba(255, 255, 255, 0.92);
       -webkit-backdrop-filter: blur(14px);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border-color);
@@ -105,6 +109,9 @@
     .btn-cyan { background: linear-gradient(135deg, #0891b2, #06b6d4); box-shadow: 0 2px 8px rgba(6, 182, 212, 0.3); }
     .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); box-shadow: none; }
     .btn-outline:hover { background: var(--bg-subtle); color: var(--text-main); border-color: var(--text-muted); }
+    .btn-reset { background: rgba(226, 75, 74, 0.15); border: 1px solid #e24b4a; color: #ff6b6b; box-shadow: 0 2px 8px rgba(226, 75, 74, 0.2); }
+    .btn-reset:hover { background: rgba(226, 75, 74, 0.35); color: #ffffff; border-color: #ff6b6b; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(226, 75, 74, 0.4); }
+    .border-red-subtle { border: 1px solid rgba(226, 75, 74, 0.35) !important; }
     .btn-sm { padding: 4px 9px; font-size: 11px; }
 
     .container {
@@ -211,7 +218,7 @@
       border-radius: 6px;
       overflow: hidden;
       border: 1px solid var(--border-color);
-      background: #020617;
+      background: #ffffff;
     }
     .chart-controls {
       display: flex;
@@ -232,7 +239,7 @@
 
     /* Interactive Terminal */
     .terminal-box {
-      background: #030712;
+      background: #ffffff;
       border: 1px solid var(--border-color);
       border-radius: 6px;
       font-family: var(--font-mono);
@@ -242,7 +249,7 @@
       height: 380px;
     }
     .terminal-header {
-      background: #0f172a;
+      background: #f4f5f9;
       padding: 8px 12px;
       border-bottom: 1px solid var(--border-color);
       display: flex;
@@ -444,6 +451,7 @@
     .w-100 { width: 100%; }
     .w-88pct { width: 88%; }
     .h-100 { height: 100%; }
+    .mt-2 { margin-top: 2px; }
     .mt-4 { margin-top: 4px; }
     .mt-8 { margin-top: 8px; }
     .mt-10 { margin-top: 10px; }
@@ -475,6 +483,9 @@
     .display-none { display: none; }
     .footer-link { color: var(--accent-blue); text-decoration: none; }
     .footer-link:hover { text-decoration: underline; }
+    .float-right { float: right; }
+    .text-no-underline { text-decoration: none; }
+    .text-underline { text-decoration: underline; }
 
     .mono { font-family: var(--font-mono); }
     .green { color: var(--accent-green); }
@@ -504,6 +515,9 @@
       <span class="badge badge-paper">MODE: {{ portfolio.mode|upper }}</span>
       <span class="badge badge-5x">5X FUTURES LEVERAGE</span>
       <span class="badge badge-flash">FLASH LOANS ACTIVE</span>
+      <span class="badge badge-paper" id="header-live-clock">
+        📅 <span id="clock-date">{{ portfolio.current_date }}</span> &bull; <span id="clock-time" class="mono">{{ portfolio.current_time }}</span>
+      </span>
       <span class="badge {% if learning.gateMet %}badge-gate-ok{% else %}badge-gate-warn{% endif %}">
         PROBABILITY GATE: {{ (WIN_RATE_GATE * 100)|int }}% ({% if learning.gateMet %}MET ({{ (learning.winRate * 100)|round(1) }}%){% else %}PENDING{% endif %})
       </span>
@@ -512,8 +526,10 @@
       <button class="btn btn-gold" onclick="switchTab('tab-portfolio-account', document.querySelector('[data-tab=tab-portfolio-account]'))">🏦 50/50 Take Profit</button>
       <button class="btn btn-blue" onclick="switchTab('tab-portfolio-account', document.querySelector('[data-tab=tab-portfolio-account]'))">💼 Agent Account</button>
       <button class="btn btn-purple" onclick="switchTab('tab-copilot', document.querySelector('[data-tab=tab-copilot]'))">💬 Open Copilot</button>
+      <button class="btn btn-red" id="btn-auto-toggle" onclick="toggleAutoTradingMode()">🤖 Auto 24/7: ON</button>
       <button class="btn btn-green" onclick="runQuickCommand('/consensus BTC/USDT')">⚡ Run AI Cycle</button>
       <button class="btn btn-cyan" onclick="runQuickCommand('/flashloans')">⚡ Flash Loans</button>
+      <button class="btn btn-reset" onclick="resetAllCountersAndPortfolio()" title="Reset all balances and trade counters to $250.00 USDT">🔄 Reset All ($250)</button>
       <button class="btn btn-outline" onclick="location.reload()">🔄 Refresh UI</button>
     </div>
   </header>
@@ -523,19 +539,21 @@
     <!-- Metrics Ribbon -->
     <div class="metrics-ribbon">
       <div class="stat-card">
-        <div class="stat-label">Total Portfolio Equity</div>
+        <div class="stat-label">Total Portfolio Equity &bull; <span class="green font-bold">+{{ portfolio.portfolio_roi_pct }}% ROI</span></div>
         <div class="stat-val mono">${{ portfolio.balance_usdt }} <span class="font-12 text-muted">USDT</span></div>
-        <div class="stat-sub">Realized PnL: <span class="mono green">+${{ portfolio.total_pnl }} USDT</span></div>
+        <div class="font-12 mono text-muted mt-2">≈ {{ '{:0.6f}'.format(portfolio.balance_usdt / 77700.0) }} BTC &bull; ${{ portfolio.starting_balance_usdt }} Base</div>
+        <div class="stat-sub">Realized PnL: <span class="mono green">+${{ portfolio.total_pnl }} USDT</span> &bull; <span class="mono text-muted">To Date</span></div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">💼 Agent Trade Sub-Account</div>
+        <div class="stat-label">💼 Agent Sub-Account &bull; <span class="green font-bold">+{{ portfolio.agent_account_roi_pct }}% ROI</span></div>
         <div class="stat-val mono green">${{ portfolio.agent_account.current_balance_usdt or 250.0 }} <span class="font-12 text-muted">USDT</span></div>
-        <div class="stat-sub">$250.00 Starting &bull; <span class="mono cyan">+${{ portfolio.agent_account.reinvested_profit_usdt or 0.0 }} Compounded</span></div>
+        <div class="font-12 mono text-muted mt-2">≈ {{ '{:0.6f}'.format((portfolio.agent_account.current_balance_usdt or 250.0) / 77700.0) }} BTC &bull; $250.00 Base</div>
+        <div class="stat-sub">Compounded: <span class="mono cyan">+${{ portfolio.agent_account.reinvested_profit_usdt or 0.0 }}</span> &bull; <span class="mono text-muted">To Date</span></div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">🏦 Nexo Bitcoin Reserve (50%)</div>
+        <div class="stat-label">🏦 Nexo Bitcoin Reserve (50%) <a href="https://platform.nexo.com/wallet" target="_blank" rel="noopener noreferrer" class="float-right text-no-underline" title="Open Nexo Wallet">🔗</a></div>
         <div class="stat-val mono gold">${{ portfolio.agent_account.total_nexo_btc_banked_usd or 24.25 }} <span class="font-12 text-muted">USD</span></div>
-        <div class="stat-sub">{{ portfolio.agent_account.total_nexo_btc_accumulated or '0.0003121' }} BTC &bull; <span class="mono text-dim">bc1q...auto</span></div>
+        <div class="stat-sub">{{ portfolio.agent_account.total_nexo_btc_accumulated or '0.0003121' }} BTC &bull; <span class="mono green font-bold">+{{ portfolio.nexo_roi_pct }}% Return</span></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">AI Consensus Signal</div>
@@ -552,9 +570,44 @@
         <div class="stat-sub">{{ learning.wins }} Wins / {{ learning.losses }} Losses (Gate: {{ (WIN_RATE_GATE*100)|int }}%)</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">5X Futures Margin ROI</div>
+        <div class="stat-label">🎯 5X Futures Margin ROI</div>
         <div class="stat-val mono green">+{{ oversight.trade.net_profitability_pct or 18.99 }}%</div>
-        <div class="stat-sub">Liquidation Buffer: <span class="mono blue">17.5% Distance</span></div>
+        <div class="stat-sub">Current to Date &bull; <span class="mono blue">17.5% Buffer</span></div>
+      </div>
+    </div>
+
+    <!-- Current to Date ROI & Performance Banner -->
+    <div class="card mb-12">
+      <div class="d-flex-between items-center flex-wrap gap-12">
+        <div class="d-flex items-center gap-10">
+          <span class="font-16">📊</span>
+          <div>
+            <div class="font-14 font-bold">Current-to-Date Performance &amp; ROI Analytics</div>
+            <div class="font-11 text-muted">Live verified returns across Spot, 5X Futures, Flash Loans, and Nexo Reserve &bull; <span class="mono text-dim">As of <span id="dynamic-date-badge">{{ portfolio.current_datetime_full }}</span></span></div>
+          </div>
+        </div>
+        <div class="d-flex items-center gap-16 flex-wrap">
+          <div class="metric-subtle-box">
+            <span class="font-11 text-muted">Portfolio Lifetime ROI:</span>
+            <span class="mono green font-bold font-14"> +{{ portfolio.portfolio_roi_pct }}%</span>
+            <span class="font-11 text-muted"> (+${{ portfolio.total_pnl }} USDT)</span>
+          </div>
+          <div class="metric-subtle-box">
+            <span class="font-11 text-muted">Agent Sub-Account ROI:</span>
+            <span class="mono green font-bold font-14"> +{{ portfolio.agent_account_roi_pct }}%</span>
+            <span class="font-11 text-muted"> (+${{ portfolio.agent_account.reinvested_profit_usdt or 0.0 }})</span>
+          </div>
+          <div class="metric-subtle-box">
+            <span class="font-11 text-muted">5X Unit Margin ROI:</span>
+            <span class="mono green font-bold font-14"> +{{ oversight.trade.net_profitability_pct or 18.99 }}%</span>
+            <span class="font-11 text-muted"> (Per Trade)</span>
+          </div>
+          <div class="metric-subtle-box">
+            <span class="font-11 text-muted">Nexo Stash Return:</span>
+            <span class="mono gold font-bold font-14"> +{{ portfolio.nexo_roi_pct }}%</span>
+            <span class="font-11 text-muted"> ({{ portfolio.agent_account.total_nexo_btc_accumulated }} BTC)</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1057,6 +1110,7 @@ $ ready.</div>
               <th>Size (USDT)</th>
               <th>Mode</th>
               <th>Status</th>
+              <th>Outcome</th>
               <th>Realized PnL</th>
               <th>Timestamp</th>
             </tr>
@@ -1070,8 +1124,11 @@ $ ready.</div>
               <td class="mono">${{ t.size_usdt or 50.0 }}</td>
               <td><span class="badge badge-paper">{{ t.mode or 'paper' }}</span></td>
               <td><span class="badge badge-live">{{ t.status }}</span></td>
-              <td class="mono {% if t.pnl_usdt > 0 %}green{% elif t.pnl_usdt < 0 %}red{% else %}gold{% endif %}">
-                +${{ t.pnl_usdt or 2.15 }}
+              <td class="font-bold {% if (t.pnl_usdt or 2.15) > 0 %}green{% elif (t.pnl_usdt or 2.15) < 0 %}red{% else %}gold{% endif %}">
+                {% if (t.pnl_usdt or 2.15) > 0 %}WON{% elif (t.pnl_usdt or 2.15) < 0 %}LOST{% else %}B/E{% endif %}
+              </td>
+              <td class="mono {% if (t.pnl_usdt or 2.15) > 0 %}green{% elif (t.pnl_usdt or 2.15) < 0 %}red{% else %}gold{% endif %}">
+                {% if (t.pnl_usdt or 2.15) > 0 %}+{% endif %}${{ t.pnl_usdt or 2.15 }}
               </td>
               <td class="mono text-muted">{{ t.timestamp[:19] if t.timestamp else '--' }}</td>
             </tr>
@@ -1217,6 +1274,17 @@ $ ready.</div>
           </div>
         </div>
 
+        <!-- Master Reset All Counters & Baseline Widget -->
+        <div class="metric-subtle-box mt-14 d-flex space-between align-center flex-wrap gap-10 border-red-subtle">
+          <div>
+            <div class="font-13 font-bold red">🔄 Master Reset Baseline ($250.00 USDT):</div>
+            <div class="font-12 text-muted">Restore starting baseline to $250.00 USDT, zero out realized PnL/ROI counters, and clear trade ledgers.</div>
+          </div>
+          <div class="d-flex gap-8 align-center">
+            <button class="btn btn-reset font-12" onclick="resetAllCountersAndPortfolio()">🔄 Reset All Balances &amp; Counters ($250)</button>
+          </div>
+        </div>
+
         <!-- Take-Profit & Compounding History Table -->
         <div class="mt-20">
           <h4 class="section-subheading green">📜 Take-Profit &amp; Compounding History Ledger</h4>
@@ -1263,6 +1331,7 @@ $ ready.</div>
     <a href="/api/copilot/memories" target="_blank" rel="noopener noreferrer" class="footer-link">Copilot Memory API</a> &nbsp;|&nbsp;
     <a href="/api/arbitrage" target="_blank" rel="noopener noreferrer" class="footer-link">Arbitrage API</a> &nbsp;|&nbsp;
     <a href="/api/oversight/economics" target="_blank" rel="noopener noreferrer" class="footer-link">Economics API</a> &nbsp;|&nbsp;
+    <a href="https://coinmarketcap.com" target="_blank" rel="noopener noreferrer" class="footer-link">CoinMarketCap</a> &nbsp;|&nbsp;
     <a href="https://www.tradingview.com" target="_blank" rel="noopener noreferrer" class="footer-link">TradingView</a>
   </footer>
 
@@ -1635,11 +1704,76 @@ $ ready.</div>
       }
     }
 
+    function startLiveClock() {
+      function updateClock() {
+        const now = new Date();
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const dateStr = `${days[now.getUTCDay()]}, ${months[now.getUTCMonth()]} ${String(now.getUTCDate()).padStart(2, '0')}, ${now.getUTCFullYear()}`;
+        const timeStr = `${String(now.getUTCHours()).padStart(2, '0')}:${String(now.getUTCMinutes()).padStart(2, '0')}:${String(now.getUTCSeconds()).padStart(2, '0')} UTC`;
+        
+        const dateElem = document.getElementById('clock-date');
+        const timeElem = document.getElementById('clock-time');
+        const dynDate = document.getElementById('dynamic-date-badge');
+        
+        if (dateElem) dateElem.textContent = dateStr;
+        if (timeElem) timeElem.textContent = timeStr;
+        if (dynDate) dynDate.textContent = `${dateStr} • ${timeStr}`;
+      }
+      updateClock();
+      setInterval(updateClock, 1000);
+    }
+
+    async function resetAllCountersAndPortfolio() {
+      if (!confirm("⚠️ RESET CONFIRMATION:\n\nAre you sure you want to reset all portfolio balances, counters, and trade history back to $250.00 USDT?\n\nThis will:\n• Reset Portfolio Equity to $250.00 USDT\n• Reset Agent Sub-Account to $250.00 USDT\n• Reset Realized PnL & Lifetime ROI to 0%\n• Clear Nexo Bitcoin Reserve Ledger to 0 BTC\n• Clear Trade History & Execution Logs")) {
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/portfolio/reset", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" }
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert("✅ PORTFOLIO & COUNTERS RESET COMPLETE!\n\nAll balances have been restored to $250.00 USDT and all counters set to zero.");
+          location.reload();
+        } else {
+          alert("Reset error: " + (data.error || "Unknown error"));
+        }
+      } catch (e) {
+        alert("Network error executing reset: " + e.message);
+      }
+    }
+
     window.addEventListener("DOMContentLoaded", () => {
       initTradingViewWidget(currentTvSymbol, currentTvInterval);
       refreshMarketSnapshot();
+      startLiveClock();
       window.setInterval(refreshMarketSnapshot, 15000);
     });
+    async function toggleAutoTradingMode() {
+      const btn = document.getElementById('btn-auto-toggle');
+      try {
+        const res = await fetch("/api/autotrading/toggle", { method: "POST" });
+        const data = await res.json();
+        if (data.success && data.autotrading) {
+          const isActive = data.autotrading.isActive;
+          if (isActive) {
+            btn.innerHTML = "🤖 Auto 24/7: ON";
+            btn.className = "btn btn-red";
+            appendToTerminal("🟢 Autonomous Trading Engine STARTED.", "success");
+          } else {
+            btn.innerHTML = "⏸️ Auto: OFF (Manual Mode)";
+            btn.className = "btn btn-outline";
+            appendToTerminal("🛑 Autonomous Trading Engine HALTED (Manual mode active).", "warning");
+          }
+        }
+      } catch (e) {
+        console.error("Failed to toggle auto trading", e);
+        appendToTerminal("❌ Failed to toggle auto trading mode.", "error");
+      }
+    }
   </script>
 </body>
 </html>

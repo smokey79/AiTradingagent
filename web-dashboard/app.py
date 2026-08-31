@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).parents[1]))
 
 from flask import Flask
 from routes.dashboard import dashboard
+from routes.health import health_bp
 from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).parents[1] / "config" / "master.env")
@@ -22,6 +23,7 @@ load_dotenv(Path(__file__).parents[1] / ".env")
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.register_blueprint(dashboard)
+app.register_blueprint(health_bp)
 
 if __name__ == "__main__":
     port = int(os.getenv("DASHBOARD_PORT", 3002))

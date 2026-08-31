@@ -179,17 +179,16 @@ class TraderOversightAgent:
                 log.warning(f"Error reading lifetime trade stats: {e}")
 
         if total_trades == 0:
-            # Default baseline metrics from verified paper trading memory
-            total_trades = 23
-            gross_profit = 52.80
-            total_fees = 1.72
-            total_gas = 0.46
-            total_model_costs = 0.35
+            total_trades = 0
+            gross_profit = 0.0
+            total_fees = 0.0
+            total_gas = 0.0
+            total_model_costs = 0.0
 
         total_costs = total_fees + total_gas + total_model_costs
         net_profit = gross_profit - total_costs
-        cir = (total_costs / max(gross_profit, 1e-6)) * 100
-        roi_pct = (net_profit / max(1000.0, 1.0)) * 100
+        cir = (total_costs / max(gross_profit, 1e-6)) * 100 if gross_profit > 0 else 0.0
+        roi_pct = (net_profit / 250.0) * 100
 
         return {
             "total_trades_analyzed": total_trades,

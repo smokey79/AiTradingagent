@@ -5,31 +5,33 @@ import { logger } from "../utils/logger.js";
 import { loadStrategyMemory, appendTradeRecord } from "../strategy/strategyMemoryLoader.js";
 
 /**
- * StrategyLearner — Self-Learning Module v2
- * ==========================================
- * Called after every paper trade closes. Updates:
+ * StrategyLearner — Self-Learning Module v3 (RAU Edition)
+ * =========================================================
+ * Called after every paper/live trade closes. Updates:
  *   1. strategy_memory.json  — win rate, avg win/loss, symbol stats
  *   2. agent_accuracy        — which agents voted correctly
- *   3. channel_credibility   — which YouTube channels predicted correctly
+ *   3. channel_credibility   — YouTube channel weights updated ONLY on outcome
  *   4. Kelly position sizing — recalculated from rolling win/loss data
- *   5. Win rate gate check   — alerts when 80%/20-trade gate is met
- *   6. Telegram notification — sends outcome + gate status
+ *   5. Learning memory decay — entries > 30 days halved, > 60 days pruned
+ *   6. Win rate gate check   — alerts when 80%/20-trade gate is met
+ *   7. Telegram notification — sends outcome + gate status
  *
- * File: F:\\aitradingagent\\src\\learning\\strategyLearner.js
- *
- * Usage:
- *   import { StrategyLearner } from "./src/learning/strategyLearner.js";
- *   const learner = new StrategyLearner();
- *   await learner.recordOutcome({ symbol, pnlUsdt, pnlPct, agentVotes, ... });
+ * RAU fix: channel credibility is NEVER updated at ingest time.
+ * It is updated here, and ONLY here, once a real trade outcome is known.
  */
 
-const MEMORY_PATH      = path.resolve("src/strategy/strategy_memory.json");
-const CREDIBILITY_PATH = path.resolve("src/sentiment/channel_credibility.json");
-const WIN_RATE_GATE    = parseFloat(process.env.WIN_RATE_GATE   || "0.80");
-const MIN_TRADES_GATE  = 20;
-const TELEGRAM_TOKEN   = process.env.TELEGRAM_BOT_TOKEN         || "";
-const TELEGRAM_CHAT    = process.env.TELEGRAM_CHAT_ID            || "";
-const TELEGRAM_ON      = (process.env.TELEGRAM_ALERTS_ENABLED   || "false").toLowerCase() === "true";
+const MEMORY_PATH         = path.resolve("src/strategy/strategy_memory.json");
+const CREDIBILITY_PATH    = path.resolve("src/sentiment/channel_credibility.json");
+const LEARNING_MEMORY_PATH = path.resolve("data/learning_memory.json");
+const WIN_RATE_GATE       = parseFloat(process.env.WIN_RATE_GATE   || "0.80");
+const MIN_TRADES_GATE     = 20;
+const TELEGRAM_TOKEN      = process.env.TELEGRAM_BOT_TOKEN         || "";
+const TELEGRAM_CHAT       = process.env.TELEGRAM_CHAT_ID            || "";
+const TELEGRAM_ON         = (process.env.TELEGRAM_ALERTS_ENABLED   || "false").toLowerCase() === "true";
+
+// Memory decay thresholds
+const DECAY_HALF_DAYS  = 30;  // entries older than 30 days → confidence halved
+const DECAY_PRUNE_DAYS = 60;  // entries older than 60 days → removed
 
 export class StrategyLearner {
   constructor() {
@@ -52,7 +54,8 @@ export class StrategyLearner {
 
     this.#updateStats(pnlUsdt, pnlPct, symbol, isWin);
     this.#updateAgentAccuracy(agentVotes, isWin);
-    this.#updateChannelCredibility(youtubeChannels, isWin);
+    this.#updateChannelCredibility(youtubeChannels, isWin); // outcome-only, never at ingest
+    this.#decayLearningMemory();                            // prune/decay stale learned content
 
     const kelly      = this.#recalcKelly();
     const gateStatus = this.#checkGate();
@@ -116,7 +119,7 @@ export class StrategyLearner {
     logger.info("Agent accuracy:", JSON.stringify(this.memory.agentAccuracy));
   }
 
-  // ── YouTube channel credibility ──────────────────────────────────────────
+  // ── YouTube channel credibility (outcome-only — never at ingest) ─────────
 
   #updateChannelCredibility(channelIds, isWin) {
     if (!channelIds || !channelIds.length) return;
@@ -126,18 +129,59 @@ export class StrategyLearner {
 
       for (const chId of channelIds) {
         const current   = creds[chId]?.weight ?? 1.0;
-        const newWeight = Math.min(2.0, Math.max(0.2, current + (isWin ? 0.05 : -0.05)));
+        // Asymmetric update: reward correct calls more than penalising wrong ones
+        // to prevent a single bad call from nuking a proven channel.
+        const delta     = isWin ? 0.06 : -0.04;
+        const newWeight = Math.min(2.0, Math.max(0.2, current + delta));
         creds[chId] = {
-          weight:      newWeight,
-          correct:    (creds[chId]?.correct || 0) + (isWin ? 1 : 0),
-          total:      (creds[chId]?.total   || 0) + 1,
-          lastUpdated: new Date().toISOString(),
+          weight:       newWeight,
+          correct:      (creds[chId]?.correct || 0) + (isWin ? 1 : 0),
+          total:        (creds[chId]?.total   || 0) + 1,
+          accuracy:     parseFloat(((((creds[chId]?.correct || 0) + (isWin ? 1 : 0)) /
+                          ((creds[chId]?.total || 0) + 1))).toFixed(4)),
+          lastUpdated:  new Date().toISOString(),
+          // RAU note: weight is only updated here, NEVER at video ingest time.
         };
       }
       fs.writeFileSync(CREDIBILITY_PATH, JSON.stringify(creds, null, 2));
-      logger.info(`Channel credibility updated for ${channelIds.length} channels`);
+      logger.info(`Channel credibility updated (outcome-based) for ${channelIds.length} channels | isWin=${isWin}`);
     } catch (err) {
       logger.error("Channel credibility update failed", { error: err.message });
+    }
+  }
+
+  // ── Learning memory decay ─────────────────────────────────────────────────
+
+  #decayLearningMemory() {
+    if (!fs.existsSync(LEARNING_MEMORY_PATH)) return;
+    try {
+      const memory = JSON.parse(fs.readFileSync(LEARNING_MEMORY_PATH, 'utf8'));
+      const now    = Date.now();
+      const pruneMs = DECAY_PRUNE_DAYS * 86400000;
+      const halfMs  = DECAY_HALF_DAYS  * 86400000;
+
+      const updated = memory
+        .filter(m => {
+          const age = now - new Date(m.timestamp).getTime();
+          return age < pruneMs; // remove entries older than 60 days
+        })
+        .map(m => {
+          const age = now - new Date(m.timestamp).getTime();
+          if (age > halfMs && m.confidence > 0.05) {
+            // Halve confidence for entries between 30–60 days old
+            return { ...m, confidence: parseFloat((m.confidence * 0.5).toFixed(4)), _decayed: true };
+          }
+          return m;
+        });
+
+      const pruned  = memory.length - updated.length;
+      const decayed = updated.filter(m => m._decayed).length;
+      if (pruned > 0 || decayed > 0) {
+        fs.writeFileSync(LEARNING_MEMORY_PATH, JSON.stringify(updated, null, 2));
+        logger.info(`Learning memory: pruned=${pruned} stale entries, decayed=${decayed} entries (30d halflife)`);
+      }
+    } catch (err) {
+      logger.warn('Learning memory decay failed', { error: err.message });
     }
   }
 
@@ -219,19 +263,55 @@ ${gateStatus.message}`;
 
   getStatus() {
     const s = this.memory.stats || {};
+    const totalTrades = (s.wins || 0) + (s.losses || 0);
+    const hitRatePct  = totalTrades > 0
+      ? parseFloat(((s.wins || 0) / totalTrades * 100).toFixed(2))
+      : 0;
+
+    // RAU source quality summary from learning memory
+    let rauSummary = { high: 0, normal: 0, low: 0, rejected: 0, totalEntries: 0 };
+    try {
+      if (fs.existsSync(LEARNING_MEMORY_PATH)) {
+        const mem = JSON.parse(fs.readFileSync(LEARNING_MEMORY_PATH, 'utf8'));
+        rauSummary.totalEntries = mem.length;
+        for (const m of mem) {
+          const tier = (m.rau?.tier || 'NORMAL').toUpperCase();
+          if (tier === 'HIGH')   rauSummary.high++;
+          else if (tier === 'LOW')    rauSummary.low++;
+          else                        rauSummary.normal++;
+        }
+      }
+    } catch (_) { /* ignore */ }
+
+    // Per-source feed weights from data_sourcer skill
+    const feedWeights = {
+      ccxt_orderbook:    { weight: 0.30, description: 'Market Structure & OHLCV' },
+      sosovalue_etf:     { weight: 0.20, description: 'Institutional ETF Flows' },
+      onchain_sopr_mvrv: { weight: 0.15, description: 'On-Chain Cycle Valuation' },
+      relative_strength: { weight: 0.15, description: 'Cross-Asset Momentum' },
+      volatility_regime: { weight: 0.10, description: 'ATR / Volatility Regime' },
+      youtube_sentiment: { weight: 0.10, description: 'RAU-Weighted YouTube Alpha' },
+    };
+
     return {
-      totalTrades:    (s.wins||0) + (s.losses||0),
+      totalTrades,
       wins:            s.wins    || 0,
       losses:          s.losses  || 0,
       winRate:         s.winRate || 0,
+      hitRatePct,                           // human-readable %
       totalPnl:        s.totalPnl || 0,
       avgWin:          s.avgWin   || 0.04,
       avgLoss:         s.avgLoss  || 0.02,
+      profitFactor:    s.avgLoss > 0
+        ? parseFloat(((s.avgWin || 0.04) / (s.avgLoss || 0.02)).toFixed(3))
+        : null,
       kelly:           s.kelly    || 0,
       recommendedPct:  s.recommendedPct || 0,
-      gateMet:        ((s.wins||0)+(s.losses||0)) >= MIN_TRADES_GATE && (s.winRate||0) >= WIN_RATE_GATE,
+      gateMet:         totalTrades >= MIN_TRADES_GATE && (s.winRate || 0) >= WIN_RATE_GATE,
       agentAccuracy:   this.memory.agentAccuracy || {},
       symbolStats:     s.symbolStats || {},
+      rauLearningStats: rauSummary,         // RAU quality breakdown
+      feedWeights,                          // weighted data sources
     };
   }
 }

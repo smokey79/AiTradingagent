@@ -1,5 +1,61 @@
 [
   {
+    "id": "TG_1788190116766",
+    "timestamp": "2026-08-31T15:28:36.766Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1788189667530",
+    "timestamp": "2026-08-31T15:21:07.530Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1788188513513",
+    "timestamp": "2026-08-31T15:01:53.513Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1788127825892",
+    "timestamp": "2026-08-30T22:10:25.892Z",
+    "sender": "intelligent_trading_signals",
+    "text": "Automatically generating trade signals based on machine learning and feature engineering\nSymbol: BTCUSDT\nFrequency 1 minute\nScore: 0.05",
+    "length": 135
+  },
+  {
+    "id": "TG_1788127825883",
+    "timestamp": "2026-08-30T22:10:25.883Z",
+    "sender": "intelligent_trading_signals",
+    "text": "Automatically generating trade signals based on machine learning and feature engineering\nSymbol: BTCUSDT\nFrequency 1 minute\nScore: -0.42",
+    "length": 136
+  },
+  {
+    "id": "TG_1788127825872",
+    "timestamp": "2026-08-30T22:10:25.872Z",
+    "sender": "intelligent_trading_signals",
+    "text": "Automatically generating trade signals based on machine learning and feature engineering\nSymbol: BTCUSDT\nFrequency 1 minute\nScore: 0.85",
+    "length": 135
+  },
+  {
+    "id": "TG_1788051506914",
+    "timestamp": "2026-08-30T00:58:26.914Z",
+    "sender": "channel",
+    "text": "https://t.me/intelligent_trading_signals",
+    "length": 40
+  },
+  {
+    "id": "TG_1788049685194",
+    "timestamp": "2026-08-30T00:28:05.194Z",
+    "sender": "channel",
+    "text": "https://t.me/intelligent_trading_signals",
+    "length": 40
+  },
+  {
     "id": "TG_1788014352892",
     "timestamp": "2026-08-29T14:39:12.892Z",
     "sender": "Whale Alert",

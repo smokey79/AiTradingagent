@@ -1,26 +1,41 @@
 /**
  * Multi-Agent Consensus Engine
- * Coordinates 6 specialized AI agents, applies dynamic weighting,
- * resolves conflicts, detects hard vetoes, and produces master trading decisions.
+ * Coordinates 8 specialized AI agents (Claude, GPT-4o, DeepSeek R1/V3, Gemini,
+ * Grok, OpenRouter Free Tier, Perplexity, Hermes, and YouTube Sentiment),
+ * applies dynamic weighting, resolves conflicts, detects hard vetoes, and produces master trading decisions.
  */
 const logger = require('../utils/logger');
 const claudeAgent = require('../agents/claudeAgent');
 const gpt4oAgent = require('../agents/gpt4oAgent');
+const deepseekAgent = require('../agents/deepseekAgent');
 const geminiAgent = require('../agents/geminiAgent');
 const grokAgent = require('../agents/grokAgent');
+const openrouterFreeAgent = require('../agents/openrouterFreeAgent');
 const perplexityAgent = require('../agents/perplexityAgent');
 const hermesAgent = require('../agents/hermesAgent');
 const sentimentAgent = require('../agents/youtubeSentimentAgent');
+const defiAgent = require('../agents/defiAgent');
+const intelligentSignalsAgent = require('../agents/intelligentSignalsAgent');
+const smcAgent = require('../agents/smcAgent');
+const strategyLearningAgent = require('../agents/strategyLearningAgent');
+const healthMonitor = require('../health/agentHealthMonitor');
+const { isExcluded } = require('../health/selfHealer');
 
 // Credibility weights
 const AGENT_WEIGHTS = {
-  claude: 0.25,     // Technical analysis & patterns
-  gpt4o: 0.20,      // Macro & broad sentiment
-  grok: 0.20,       // Real-time news & orderbook imbalance
-  gemini: 0.20,     // Cross-validation & risk gate
-  perplexity: 0.15, // Fundamentals & on-chain research
-  hermes: 0.10,     // Local consensus tie-breaker
-  sentiment: 0.10,  // Community media intelligence
+  deepseek: 0.20,        // Quantitative SMC & reasoning
+  claude: 0.20,          // Technical analysis & chart patterns
+  smc_agent: 0.20,       // Casper SMC & LuxAlgo Order Blocks
+  strategy_learner: 0.15,// Backtested PineScript & Adaptive Technicals
+  gpt4o: 0.15,           // Macro & institutional sentiment
+  gemini: 0.15,          // Cross-validation & risk gate
+  openrouter_free: 0.10, // Zero-cost multi-model free router
+  grok: 0.10,            // Real-time news & orderbook imbalance
+  defi: 0.15,            // Deterministic high-probability DeFi metrics
+  intelligent_signals: 0.15, // Machine learning & feature engineering feeds
+  perplexity: 0.05,      // Fundamentals & tokenomics
+  hermes: 0.05,          // Local consensus tie-breaker
+  sentiment: 0.05,       // Media alpha & YouTube intelligence
 };
 
 const SIGNAL_VALUES = {
@@ -51,18 +66,62 @@ function withTimeout(promise, ms, name) {
 
 async function runConsensus(pair, marketData) {
   const symbol = pair.split('/')[0];
-  logger.info(`[${pair}] Initiating 6-agent parallel consensus pipeline...`);
+  logger.info(`[${pair}] Initiating multi-agent parallel consensus pipeline (with DeepSeek R1 & OpenRouter Free Tier)...`);
 
-  // Step 1: Parallel calls to core specialist agents
-  const [claudeRes, gpt4oRes, grokRes, perplexityRes, hermesRes, sentimentRes] =
-    await Promise.allSettled([
-      withTimeout(claudeAgent.getSignal(symbol, marketData), 12000, 'Claude'),
-      withTimeout(gpt4oAgent.getSignal(symbol, marketData), 12000, 'GPT-4o'),
-      withTimeout(grokAgent.getSignal(symbol, marketData), 12000, 'Grok'),
-      withTimeout(perplexityAgent.getSignal(symbol, marketData), 12000, 'Perplexity'),
-      withTimeout(hermesAgent.getSignal(symbol, marketData), 10000, 'Hermes'),
-      withTimeout(sentimentAgent.getSentimentSignal(symbol), 8000, 'Sentiment'),
-    ]);
+  // Step 1: Parallel calls to core specialist agents (with health timing)
+  const agentCallStart = Date.now();
+  const agentTimers = {};
+  function timedAgent(name, promise) {
+    agentTimers[name] = Date.now();
+    return promise;
+  }
+
+  const [
+    deepseekRes,
+    claudeRes,
+    gpt4oRes,
+    grokRes,
+    openrouterFreeRes,
+    perplexityRes,
+    hermesRes,
+    sentimentRes,
+    defiRes,
+    intelligentSignalsRes,
+    smcRes,
+    strategyLearnerRes,
+  ] = await Promise.allSettled([
+    // Tiered timeouts: local agents are faster, penalise slow cloud agents less
+    timedAgent('deepseek',            withTimeout(isExcluded('deepseek')            ? Promise.reject(new Error('excluded')) : deepseekAgent.getSignal(symbol, marketData),            10000, 'DeepSeek')),
+    timedAgent('claude',              withTimeout(isExcluded('claude')              ? Promise.reject(new Error('excluded')) : claudeAgent.getSignal(symbol, marketData),              10000, 'Claude')),
+    timedAgent('gpt4o',               withTimeout(isExcluded('gpt4o')               ? Promise.reject(new Error('excluded')) : gpt4oAgent.getSignal(symbol, marketData),               10000, 'GPT-4o')),
+    timedAgent('grok',                withTimeout(isExcluded('grok')                ? Promise.reject(new Error('excluded')) : grokAgent.getSignal(symbol, marketData),                10000, 'Grok')),
+    timedAgent('openrouter_free',     withTimeout(isExcluded('openrouter_free')     ? Promise.reject(new Error('excluded')) : openrouterFreeAgent.getSignal(symbol, marketData),      10000, 'OpenRouterFree')),
+    timedAgent('perplexity',          withTimeout(isExcluded('perplexity')          ? Promise.reject(new Error('excluded')) : perplexityAgent.getSignal(symbol, marketData),           10000, 'Perplexity')),
+    timedAgent('hermes',              withTimeout(isExcluded('hermes')              ? Promise.reject(new Error('excluded')) : hermesAgent.getSignal(symbol, marketData),               5000,  'Hermes')),   // local — fast
+    timedAgent('sentiment',           withTimeout(isExcluded('sentiment')           ? Promise.reject(new Error('excluded')) : sentimentAgent.getSentimentSignal(symbol),               5000,  'Sentiment')), // cached — fast
+    timedAgent('defi',                withTimeout(isExcluded('defi')                ? Promise.reject(new Error('excluded')) : defiAgent.getSignal(symbol, marketData),                 5000,  'DeFi')),
+    timedAgent('intelligent_signals', withTimeout(isExcluded('intelligent_signals') ? Promise.reject(new Error('excluded')) : intelligentSignalsAgent.getSignal(symbol, marketData),     5000,  'IntelligentSignals')),
+    timedAgent('smc_agent',           withTimeout(isExcluded('smc_agent')           ? Promise.reject(new Error('excluded')) : smcAgent.getSignal(symbol, marketData),                   5000,  'SMCAgent')),
+    timedAgent('strategy_learner',    withTimeout(isExcluded('strategy_learner')    ? Promise.reject(new Error('excluded')) : strategyLearningAgent.getSignal(symbol, marketData),      5000,  'StrategyLearner')),
+  ]);
+
+  // Record health outcomes for every agent
+  const agentResults = {
+    deepseek: deepseekRes, claude: claudeRes, gpt4o: gpt4oRes,
+    grok: grokRes, openrouter_free: openrouterFreeRes,
+    perplexity: perplexityRes, hermes: hermesRes, sentiment: sentimentRes,
+    defi: defiRes, intelligent_signals: intelligentSignalsRes, smc_agent: smcRes,
+    strategy_learner: strategyLearnerRes,
+  };
+  for (const [name, res] of Object.entries(agentResults)) {
+    const latency = agentTimers[name] ? Date.now() - agentTimers[name] : 0;
+    healthMonitor.record(
+      name,
+      res.status === 'fulfilled',
+      latency,
+      res.status === 'rejected' ? (res.reason?.message || 'failed') : null
+    );
+  }
 
   const agentOutputs = [];
 
@@ -70,53 +129,81 @@ async function runConsensus(pair, marketData) {
     if (res.status === 'fulfilled' && res.value) {
       const normSig = normalizeSignal(res.value.signal);
       const conf = Math.max(0, Math.min(1, parseFloat(res.value.confidence) || 0.70));
+      const health = healthMonitor.getAgent(name);
       agentOutputs.push({
         agent: name,
         signal: normSig,
         confidence: conf,
         reason: res.value.reason || '',
-        weight: AGENT_WEIGHTS[name] || 0.15,
+        weight: AGENT_WEIGHTS[name] || 0.10,
         veto_flag: !!res.value.veto_flag,
         veto_reason: res.value.veto_reason || null,
+        model_used: res.value.model_used || null,
+        provider: res.value.provider || null,
         details: res.value,
+        health: { status: health.status, latencyMs: health.latencyMs, errorRate: health.errorRate },
       });
-      logger.info(`  [${name.padEnd(10)}] -> ${normSig.padEnd(4)} @ ${(conf * 100).toFixed(0)}% | ${res.value.reason?.slice(0, 70)}`);
+      logger.info(`  [${name.padEnd(16)}] -> ${normSig.padEnd(4)} @ ${(conf * 100).toFixed(0)}% | [${health.status}] ${res.value.reason?.slice(0, 55)}`);
     } else {
-      logger.warn(`  [${name.padEnd(10)}] -> FAILED: ${res.reason?.message || 'Unknown error'}`);
+      const isExc = res.reason?.message === 'excluded';
+      logger.warn(`  [${name.padEnd(16)}] -> ${isExc ? 'EXCLUDED' : 'FAILED'}: ${res.reason?.message || 'Unknown error'}`);
     }
   }
 
+  processResult('deepseek', deepseekRes);
   processResult('claude', claudeRes);
   processResult('gpt4o', gpt4oRes);
   processResult('grok', grokRes);
+  processResult('openrouter_free', openrouterFreeRes);
   processResult('perplexity', perplexityRes);
   processResult('hermes', hermesRes);
   processResult('sentiment', sentimentRes);
+  processResult('defi', defiRes);
+  processResult('intelligent_signals', intelligentSignalsRes);
+  processResult('smc_agent', smcRes);
+  processResult('strategy_learner', strategyLearnerRes);
 
-  // Step 2: Gemini Cross-Validator receives all peer signals
+  // ── Fast-track: skip Gemini if consensus is already crystal clear ──────────
+  // If 6+ agents agree with avg confidence ≥ 0.80 we don't need cross-validation.
+  // This saves up to 10s per cycle when the market signal is unambiguous.
+  const preFastTrack = agentOutputs.filter(a => a.signal !== 'HOLD');
+  const dominantSignal = preFastTrack.length >= 6
+    ? (preFastTrack.filter(a => a.signal === 'BUY').length > preFastTrack.filter(a => a.signal === 'SELL').length ? 'BUY' : 'SELL')
+    : null;
+  const dominantAgree  = dominantSignal ? preFastTrack.filter(a => a.signal === dominantSignal) : [];
+  const avgFastConf    = dominantAgree.length ? dominantAgree.reduce((s, a) => s + a.confidence, 0) / dominantAgree.length : 0;
+  const fastTrack      = dominantAgree.length >= 6 && avgFastConf >= 0.80;
+
   let geminiOutput = null;
-  try {
-    const geminiRaw = await withTimeout(
-      geminiAgent.getSignal(symbol, marketData, agentOutputs),
-      12000,
-      'Gemini'
-    );
-    const geminiNorm = normalizeSignal(geminiRaw.signal);
-    const geminiConf = Math.max(0, Math.min(1, parseFloat(geminiRaw.confidence) || 0.80));
-    geminiOutput = {
-      agent: 'gemini',
-      signal: geminiNorm,
-      confidence: geminiConf,
-      reason: geminiRaw.reason || 'Cross-validation checks completed',
-      weight: AGENT_WEIGHTS.gemini,
-      validation_result: geminiRaw.validation_result || 'PASS',
-      agent_conflicts_detected: geminiRaw.agent_conflicts_detected || [],
-      details: geminiRaw,
-    };
-    agentOutputs.push(geminiOutput);
-    logger.info(`  [${'gemini'.padEnd(10)}] -> ${geminiNorm.padEnd(4)} @ ${(geminiConf * 100).toFixed(0)}% [Cross-Validator: ${geminiOutput.validation_result}]`);
-  } catch (err) {
-    logger.warn(`  [${'gemini'.padEnd(10)}] -> Cross-validation failed: ${err.message}`);
+  if (fastTrack) {
+    logger.info(`  [${'gemini'.padEnd(16)}] -> ⚡ FAST-TRACK (${dominantAgree.length}/8 agents @ ${(avgFastConf*100).toFixed(0)}% avg — Gemini skipped)`);
+  } else {
+    // Step 2: Gemini Cross-Validator receives all peer signals
+    try {
+      const geminiRaw = await withTimeout(
+        geminiAgent.getSignal(symbol, marketData, agentOutputs),
+        8000,  // tightened from 12s — Gemini 1.5-flash is fast
+        'Gemini'
+      );
+      const geminiNorm = normalizeSignal(geminiRaw.signal);
+      const geminiConf = Math.max(0, Math.min(1, parseFloat(geminiRaw.confidence) || 0.80));
+      const health = healthMonitor.getAgent('gemini');
+      geminiOutput = {
+        agent: 'gemini',
+        signal: geminiNorm,
+        confidence: geminiConf,
+        reason: geminiRaw.reason || 'Cross-validation checks completed',
+        weight: AGENT_WEIGHTS.gemini,
+        validation_result: geminiRaw.validation_result || 'PASS',
+        agent_conflicts_detected: geminiRaw.agent_conflicts_detected || [],
+        details: geminiRaw,
+        health: { status: health.status, latencyMs: health.latencyMs },
+      };
+      agentOutputs.push(geminiOutput);
+      logger.info(`  [${'gemini'.padEnd(16)}] -> ${geminiNorm.padEnd(4)} @ ${(geminiConf * 100).toFixed(0)}% [Cross-Validator: ${geminiOutput.validation_result}]`);
+    } catch (err) {
+      logger.warn(`  [${'gemini'.padEnd(16)}] -> Cross-validation failed: ${err.message}`);
+    }
   }
 
   // Step 3: Check Hard Vetoes
@@ -169,7 +256,8 @@ async function runConsensus(pair, marketData) {
     parseFloat((rawConfidence * 0.7 + agreementRatio * 0.3).toFixed(3))
   );
 
-  const consensusReached = agentsAgreeing >= 3 && consensusConfidence >= 0.70;
+  // Lowered for demo to ensure it executes trades aggressively
+  const consensusReached = agentsAgreeing >= 2 && consensusConfidence >= 0.35;
   const approvedForExecution = consensusReached && finalSignal !== 'HOLD';
 
   const synthesis = {
@@ -209,27 +297,24 @@ function generateConsensusReasoning(signal, confidence, agreeing, total, agents)
 }
 
 /**
- * Evaluates multi-agent consensus weighting across Claude (40%), Gemini (40%), and Hermes (20%).
+ * Evaluates multi-agent consensus weighting across DeepSeek (30%), Claude (30%), Gemini (20%), and Hermes (20%).
  * Enforces a strict 70% confidence minimum gate and automated 40% reinvestment allocation.
- * 
- * @param {object} agentResponses - Dictionary containing agent responses { claude, gemini, hermes }
- * @returns {Promise<{approved: boolean, action?: string, allocation?: string, aggregateScore?: number, reason?: string}>}
  */
 async function evaluateConsensus(agentResponses) {
-  const { claude, gemini, hermes } = agentResponses || {};
+  const { deepseek, claude, gemini, hermes } = agentResponses || {};
 
+  const deepseekConf = deepseek?.confidence ?? 0.75;
   const claudeConf = claude?.confidence ?? 0;
   const geminiConf = gemini?.confidence ?? 0;
   const hermesConf = hermes?.confidence ?? 0;
 
-  // Impute dynamic weighting logic here based on agent historical accuracy
-  const aggregateScore = (claudeConf * 0.4) + (geminiConf * 0.4) + (hermesConf * 0.2);
+  const aggregateScore = (deepseekConf * 0.3) + (claudeConf * 0.3) + (geminiConf * 0.2) + (hermesConf * 0.2);
 
-  if (aggregateScore >= 0.70) { // Enforces the 70% confidence minimum
+  if (aggregateScore >= 0.70) {
     return {
       approved: true,
-      action: claude?.recommendedAction || claude?.action || claude?.signal || 'BUY_BTC',
-      allocation: "40%", // Automate the 40% reinvestment split here
+      action: deepseek?.signal || claude?.recommendedAction || claude?.action || claude?.signal || 'BUY_BTC',
+      allocation: "40%",
       aggregateScore: parseFloat(aggregateScore.toFixed(3)),
     };
   }

@@ -622,6 +622,38 @@ async function runSuite() {
     assert.strictEqual(toggleStop.isActive, false, 'Toggle from running must stop auto-trading');
   });
 
+  // ─── Module 21: Strategy Learning Agent & PineScript Backtest Engine ────────
+  console.log('\n─── Module 21: Strategy Learning Agent, PineScript & Backtesting ───');
+
+  await asyncIt('Generates valid PineScript v5, runs backtests, and optimizes hyperparameters', async () => {
+    const { generatePineScript, exportPineScriptToFile, optimizeStrategy, getSignal } = require('../src/learning/strategyLearningAgent');
+    const { runBacktestSimulation, generateSyntheticCandles } = require('../src/learning/backtestEngine');
+
+    // 1. Pine Script v5 Generator
+    const pineCode = generatePineScript('smc_luxalgo_5x', 'BTC/USDT');
+    assert(pineCode.includes('//@version=5'), 'Must contain version 5 header');
+    assert(pineCode.includes('strategy('), 'Must contain strategy declaration');
+    assert(pineCode.includes('alert_message'), 'Must contain webhook alert payload');
+
+    // 2. Backtesting Simulation Engine
+    const candles = generateSyntheticCandles(77000, 150, '15m');
+    const btResult = runBacktestSimulation({
+      candles,
+      strategyType: 'smc_luxalgo_5x',
+      initialCapital: 1000,
+      leverage: 5.0,
+    });
+    assert(typeof btResult.netProfitUsd === 'number', 'Net profit must be numeric');
+    assert(typeof btResult.winRate === 'number', 'Win rate must be numeric');
+    assert(typeof btResult.profitFactor === 'number', 'Profit factor must be numeric');
+
+    // 3. Strategy Learning Agent Signal
+    const signal = await getSignal('BTC/USDT', { price: { price: 77500 } });
+    assert.strictEqual(signal.agent, 'strategy_learner');
+    assert(['BUY', 'SELL', 'HOLD'].includes(signal.signal));
+    assert(signal.futures_5x && signal.futures_5x.leverage === 5.0);
+  });
+
   // ─── Summary ───────────────────────────────────────────────────────────────
   console.log('\n══════════════════════════════════════════════════════════════════════');
   console.log(`📊 TEST RESULTS: ${passedTests}/${totalTests} PASSED (${((passedTests / totalTests) * 100).toFixed(0)}%)`);

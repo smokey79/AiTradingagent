@@ -22,7 +22,19 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.append(str(PROJECT_ROOT))
 
 # Google Drive OAuth helper for loading config files
-from .google_drive_auth import list_files, download_file
+try:
+    from orchestrator.google_drive_auth import list_files, download_file
+except Exception:
+    try:
+        from google_drive_auth import list_files, download_file
+    except Exception:
+        try:
+            from .google_drive_auth import list_files, download_file
+        except Exception:
+            def list_files(folder_id=None):
+                return []
+            def download_file(file_id, dest_path):
+                return False
 
 # Environment variables for Drive access
 GOOGLE_DRIVE_FOLDER_ID = os.getenv("GOOGLE_DRIVE_FOLDER_ID")  # Folder ID containing .py/.json/.env files

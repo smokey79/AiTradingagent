@@ -1,12 +1,14 @@
-from dotenv import load_dotenv
-load_dotenv()
 #!/usr/bin/env python3
 """
 test_integrations.py
 ====================
-Test all integrations: Telegram, CoinGecko, Bitget
+Test all integrations: Telegram, CoinGecko, Bitget, SoSoValue Macro, and Pipeline.
 Run: python test_integrations.py
 """
+
+from dotenv import load_dotenv
+load_dotenv()
+
 
 import os
 import asyncio

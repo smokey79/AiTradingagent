@@ -55,7 +55,7 @@ Validate consensus consistency, detect conflicts, and output strictly JSON.`;
       },
       {
         headers: { 'Content-Type': 'application/json' },
-        timeout: 15000,
+        timeout: 3000,
       }
     );
 
@@ -75,8 +75,116 @@ Validate consensus consistency, detect conflicts, and output strictly JSON.`;
       raw: parsed,
     };
   } catch (err) {
-    logger.warn(`Gemini API call failed: ${err.message} — using cross-validator engine`);
-    return simulateGeminiValidation(symbol, marketData, peerSignals);
+    logger.warn(`Gemini direct API call failed: ${err.message} — trying OpenRouter fallback`);
+    try {
+      const openRouterKey = process.env.OPENROUTER_API_KEY;
+      if (openRouterKey && !openRouterKey.startsWith('your_') && openRouterKey.trim() !== '') {
+        const systemPrompt = loadSkillPrompt();
+        const userPrompt = `Cross-validate these trading signals for ${symbol}:
+Market Data: Price=$${marketData?.price?.price || 0}, 24h Change=${marketData?.price?.change24h || 0}%
+Other Agent Outputs for Validation:
+${JSON.stringify(peerSignals, null, 2)}
+
+Validate consensus consistency, detect conflicts, and output strictly JSON.`;
+
+        const res = await axios.post(
+          'https://openrouter.ai/api/v1/chat/completions',
+          {
+            model: 'google/gemini-2.0-flash-exp:free',
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: userPrompt }
+            ],
+            response_format: { type: 'json_object' }
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${openRouterKey}`,
+              'HTTP-Referer': 'https://github.com/asavinov/intelligent-trading-bot',
+              'X-Title': 'AiTradingAgent'
+            },
+            timeout: 3000,
+          }
+        );
+
+        const rawText = res.data?.choices?.[0]?.message?.content;
+        const parsed = cleanJson(rawText);
+
+        logger.info(`[Gemini Agent] Successfully validated via OpenRouter fallback model (google/gemini-2.0-flash-exp:free)`);
+        return {
+          agent: 'gemini',
+          symbol,
+          signal: parsed.signal?.toUpperCase() || 'HOLD',
+          confidence: parseFloat(parsed.confidence) || 0.80,
+          reason: parsed.reason || 'Cross-validation checks completed via OpenRouter',
+          validation_result: parsed.validation_result || 'PASS',
+          agent_conflicts_detected: parsed.agent_conflicts_detected || [],
+          portfolio_risk_score: parsed.portfolio_risk_score || 3.0,
+          strategy_profitability_gate: parsed.strategy_profitability_gate !== false,
+          raw: parsed,
+        };
+      }
+    } catch (orErr) {
+      logger.warn(`OpenRouter Gemini fallback also failed: ${orErr.message}`);
+    }
+
+    try {
+      return await callLocalOllama(symbol, marketData, peerSignals);
+    } catch (ollamaErr) {
+      logger.warn(`Ollama local fallback failed — using cross-validator rule simulation engine`);
+      return simulateGeminiValidation(symbol, marketData, peerSignals);
+    }
+  }
+}
+
+async function callLocalOllama(symbol, marketData, peerSignals = []) {
+  try {
+    const host = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
+    const model = process.env.OLLAMA_MODEL || 'llama3.2';
+    const systemPrompt = loadSkillPrompt();
+    const userPrompt = `Cross-validate these trading signals for ${symbol}:
+Market Data: Price=$${marketData?.price?.price || 0}, 24h Change=${marketData?.price?.change24h || 0}%
+Other Agent Outputs for Validation:
+${JSON.stringify(peerSignals, null, 2)}
+
+Validate consensus consistency, detect conflicts, and output strictly JSON.`;
+
+    const url = host.includes('/api/') ? host : `${host.replace(/\/+$/, '')}/api/generate`;
+
+    const res = await axios.post(
+      url,
+      {
+        model: model,
+        prompt: `${systemPrompt}\n\n${userPrompt}`,
+        stream: false,
+        format: 'json',
+        options: {
+          temperature: 0.2,
+        },
+      },
+      { timeout: 30000, proxy: false }
+    );
+
+    const rawText = res.data?.response?.trim();
+    const parsed = cleanJson(rawText);
+
+    logger.info(`[Gemini Agent] Successfully validated via local Ollama fallback model (${model})`);
+    return {
+      agent: 'gemini',
+      symbol,
+      signal: parsed.signal?.toUpperCase() || 'HOLD',
+      confidence: parseFloat(parsed.confidence) || 0.80,
+      reason: parsed.reason || `Cross-validation completed locally using Ollama ${model}`,
+      validation_result: parsed.validation_result || 'PASS',
+      agent_conflicts_detected: parsed.agent_conflicts_detected || [],
+      portfolio_risk_score: parsed.portfolio_risk_score || 3.0,
+      strategy_profitability_gate: parsed.strategy_profitability_gate !== false,
+      raw: parsed,
+    };
+  } catch (err) {
+    logger.warn(`Ollama local fallback also failed: ${err.message}`);
+    throw err;
   }
 }
 

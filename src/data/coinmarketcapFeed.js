@@ -30,8 +30,38 @@ async function fetchCoinMarketCapQuotes(symbols = ['BTC', 'ETH', 'SOL', 'CRO', '
   }
 
   if (!CMC_KEY || CMC_KEY.startsWith('your_') || CMC_KEY.trim() === '') {
-    logger.warn('No CMC_API_KEY configured — using fallback pricing');
-    return null;
+    logger.warn('No CMC_API_KEY configured — using live Binance fallback pricing');
+    try {
+      const binanceSymbols = symbolList.map(s => `"${s}USDT"`).join(',');
+      const res = await axios.get(`https://api.binance.com/api/v3/ticker/24hr?symbols=[${binanceSymbols}]`, { timeout: 5000 });
+      const formatted = {};
+      for (const item of res.data) {
+        const sym = item.symbol.replace('USDT', '');
+        formatted[sym] = {
+          id: sym,
+          name: sym,
+          symbol: sym,
+          cmcRank: 1,
+          circulatingSupply: 0,
+          totalSupply: 0,
+          maxSupply: 0,
+          priceUsd: parseFloat(item.lastPrice),
+          volume24hUsd: parseFloat(item.quoteVolume),
+          volumeChange24h: 0,
+          percentChange1h: 0,
+          percentChange24h: parseFloat(item.priceChangePercent),
+          percentChange7d: 0,
+          marketCapUsd: parseFloat(item.quoteVolume) * 100,
+          source: 'binance_live_fallback',
+          lastUpdated: new Date().toISOString()
+        };
+      }
+      cache.quotes.data[symbolKey] = formatted;
+      cache.quotes.ts = now;
+      return formatted;
+    } catch (e) {
+      return null;
+    }
   }
 
   try {

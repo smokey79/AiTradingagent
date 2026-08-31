@@ -133,9 +133,19 @@ function getVaultSummary() {
   };
 }
 
+function resetVaultState() {
+  btcSavingsUsd = 0.0;
+  longtermHoldUsd = 0.0;
+  totalProfitsHarvested = 0.0;
+  milestoneReached = false;
+  savePersistedVault();
+  return getVaultSummary();
+}
+
 module.exports = {
   allocateProfits,
   getVaultSummary,
+  resetVaultState,
   savePersistedVault,
   loadPersistedVault,
 };

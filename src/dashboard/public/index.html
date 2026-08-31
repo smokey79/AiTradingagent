@@ -2,255 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AiTradingAgent — Full Stack Autonomous Command Center</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-main: #090d16;
-      --bg-card: #111827;
-      --bg-subtle: #1f2937;
-      --border-color: #374151;
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
-      --accent-blue: #3b82f6;
-      --accent-green: #10b981;
-      --accent-red: #ef4444;
-      --accent-gold: #f59e0b;
-      --accent-purple: #8b5cf6;
-      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg-main);
-      color: var(--text-main);
-      font-family: var(--font-sans);
-      font-size: 14px;
-      line-height: 1.5;
-      min-height: 100vh;
-    }
-    header {
-      background: rgba(17, 24, 39, 0.95);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border-color);
-      padding: 12px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 10px;
-      border-radius: 9999px;
-      font-size: 12px;
-      font-weight: 500;
-    }
-    .badge-live { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-paper { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); border: 1px solid rgba(59, 130, 246, 0.3); }
-    .badge-alert { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); font-weight: 600; }
-    .badge-buy { background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 600; }
-    .badge-sell { background: rgba(239, 68, 68, 0.2); color: #f87171; font-weight: 600; }
-    .badge-hold { background: rgba(156, 163, 175, 0.2); color: #d1d5db; font-weight: 600; }
-    .pulse-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent-green);
-      box-shadow: 0 0 8px var(--accent-green);
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0% { transform: scale(0.95); opacity: 0.8; }
-      50% { transform: scale(1.15); opacity: 1; }
-      100% { transform: scale(0.95); opacity: 0.8; }
-    }
-    .btn {
-      background: var(--accent-blue);
-      color: white;
-      border: none;
-      padding: 7px 14px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.15s ease;
-    }
-    .btn:hover { opacity: 0.9; transform: translateY(-1px); }
-    .btn-green { background: #059669; }
-    .btn-purple { background: var(--accent-purple); }
-    .btn-gold { background: #d97706; }
-    .btn-red { background: var(--accent-red); }
-    .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
-    .btn-outline:hover { background: var(--bg-subtle); }
-    
-    .container { max-width: 1440px; margin: 0 auto; padding: 20px; }
-    
-    /* Margin Sentinel Warning Banner */
-    #margin-banner {
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      color: var(--accent-green);
-      padding: 10px 16px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 13px;
-      font-weight: 500;
-    }
-    #margin-banner.critical {
-      background: rgba(239, 68, 68, 0.2);
-      border-color: rgba(239, 68, 68, 0.6);
-      color: #fca5a5;
-      animation: alertPulse 1.5s infinite;
-    }
-    @keyframes alertPulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-      50% { box-shadow: 0 0 16px 2px rgba(239, 68, 68, 0.6); }
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-    .stat-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 14px 18px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-    .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 4px; }
-    .stat-val { font-size: 22px; font-weight: 700; font-family: var(--font-mono); color: var(--text-main); }
-    .stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; display: flex; align-items: center; gap: 6px; }
-
-    .nav-tabs {
-      display: flex;
-      gap: 6px;
-      border-bottom: 1px solid var(--border-color);
-      margin-bottom: 20px;
-      overflow-x: auto;
-      padding-bottom: 2px;
-    }
-    .tab-btn {
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid transparent;
-      color: var(--text-muted);
-      padding: 9px 16px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      white-space: nowrap;
-    }
-    .tab-btn.active {
-      color: var(--accent-blue);
-      border-bottom-color: var(--accent-blue);
-      font-weight: 600;
-    }
-
-    .table-container {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      overflow-x: auto;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-    table { width: 100%; border-collapse: collapse; text-align: left; }
-    th {
-      background: #151e2e;
-      padding: 12px 14px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border-color);
-      white-space: nowrap;
-    }
-    td {
-      padding: 11px 14px;
-      border-bottom: 1px solid rgba(55, 65, 81, 0.5);
-      font-size: 13px;
-    }
-    tr:hover td { background: rgba(31, 41, 55, 0.4); }
-    
-    .mono { font-family: var(--font-mono); }
-    .green { color: var(--accent-green); }
-    .red { color: var(--accent-red); }
-    
-    .agent-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-    .agent-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 10px;
-      margin-top: 12px;
-    }
-    .agent-vote {
-      background: var(--bg-subtle);
-      border: 1px solid rgba(55, 65, 81, 0.6);
-      border-radius: 6px;
-      padding: 10px;
-    }
-    
-    .form-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-    .input-field {
-      background: var(--bg-subtle);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 13px;
-      width: 100%;
-      outline: none;
-    }
-    .input-field:focus { border-color: var(--accent-blue); }
-  </style>
+  <link rel="stylesheet" href="style.css">
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 </head>
 <body>
 
   <header>
-    <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
-      <h1 style="font-size:18px; font-weight:700; display:flex; align-items:center; gap:8px;">
-        <span style="color:var(--accent-blue);">AiTradingAgent</span>
-        <span style="font-size:11px; font-weight:400; color:var(--text-muted);">Command Center</span>
+    <div class="header-title-box">
+      <h1 class="header-title">
+        <span class="text-blue">AiTradingAgent</span>
+        <span class="header-subtitle">Command Center</span>
       </h1>
       <span class="badge badge-paper">📄 Paper Execution</span>
       <span class="badge badge-live"><span class="pulse-dot"></span> CMC Pro Live</span>
-      <span class="badge" style="background:#1f2937; color:#93c5fd;">🎯 72% Win Rate Gate</span>
+      <span class="badge badge-gate">🎯 72% Win Rate Gate</span>
+      <span class="badge badge-paper" id="node-clock-badge">
+        📅 <span id="node-clock-text">--:--:-- UTC</span>
+      </span>
     </div>
-    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-      <div style="display:flex; align-items:center; background:var(--bg-subtle); border:1px solid var(--border-color); border-radius:6px; padding:4px 8px; gap:6px;">
-        <span style="font-size:11px; color:var(--text-muted);">⏱️ Interval:</span>
-        <select id="autotrade-interval-select" style="background:transparent; border:none; color:var(--text-main); font-size:12px; outline:none; cursor:pointer;">
+    <div class="header-actions">
+      <div class="d-flex items-center subtle-box gap-6">
+        <span class="font-xs text-muted">⏱️ Interval:</span>
+        <select id="autotrade-interval-select" title="Auto-trading interval selector" aria-label="Auto-trading interval selector" class="select-clean">
           <option value="15">15s Fast</option>
           <option value="30" selected>30s Standard</option>
           <option value="60">60s (1 min)</option>
@@ -258,36 +36,40 @@
           <option value="300">5 min</option>
         </select>
       </div>
-      <button class="btn btn-green" id="btn-autotrade-toggle" style="font-weight:700; padding:8px 16px; display:flex; align-items:center; gap:6px; box-shadow:0 0 12px rgba(16,185,129,0.3);">
-        <span id="autotrade-btn-icon">▶️</span> <span id="autotrade-btn-text">START AUTO-TRADING</span>
+      <button class="btn btn-green btn-autotrade-start" id="btn-autotrade-toggle">
+        <span id="autotrade-btn-icon">▶️</span> <span id="autotrade-btn-text">START 24/7 AUTOPILOT</span>
       </button>
       <button class="btn btn-purple" id="btn-run-cycle">⚡ Single AI Cycle</button>
+      <button class="btn btn-danger-subtle" id="btn-reset-counters" onclick="resetAllNodeCounters()" title="Reset all balances and trade counters to $250.00 USDT">🔄 Reset All ($250)</button>
       <button class="btn btn-outline" id="btn-refresh">🔄 Refresh</button>
     </div>
   </header>
 
   <div class="container">
 
-    <!-- Auto-Trading Live Engine Status Banner -->
-    <div id="autotrade-banner" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-        <span class="badge" id="autotrade-status-badge" style="background:#374151; color:#9ca3af;">🛑 AUTO-TRADING STOPPED</span>
-        <span style="font-size:12px;" id="autotrade-status-desc">Click <strong>"START AUTO-TRADING"</strong> to begin continuous automated trades on BTC, ETH, SOL, CRO, AVAX, ARB.</span>
+    <!-- Auto-Trading Live Engine Status Banner (All Platforms) -->
+    <div id="autotrade-banner">
+      <div class="d-flex items-center gap-12 flex-wrap">
+        <span class="badge badge-stopped" id="autotrade-status-badge">🛑 AUTOPILOT PAUSED</span>
+        <span class="font-sm" id="autotrade-status-desc">Click <strong>"START 24/7 AUTOPILOT"</strong> to run continuous trades across <strong>5X Futures (Bitget), Zero-Capital DeFi Flash Loans (Balancer/Aave), DEX Arbitrage, and DexScreener Memes</strong>.</span>
       </div>
-      <div style="display:flex; align-items:center; gap:16px; font-size:12px;">
+      <div class="d-flex items-center gap-14 font-xs flex-wrap">
         <div>Cycles: <strong class="mono" id="autotrade-cycle-count">0</strong></div>
-        <div>Auto Trades Placed: <strong class="mono green" id="autotrade-trade-count">0</strong></div>
-        <div>Next Execution: <strong class="mono" id="autotrade-timer" style="color:var(--accent-blue);">--</strong></div>
+        <div>Futures/Spot: <strong class="mono green" id="autotrade-trade-count">0</strong></div>
+        <div>Flash Loans: <strong class="mono purple" id="autotrade-fl-count">0</strong></div>
+        <div>Meme Scalps: <strong class="mono gold" id="autotrade-meme-count">0</strong></div>
+        <div>Total Profit: <strong class="mono green" id="autotrade-profit-count">$0.00</strong></div>
+        <div>Next Cycle: <strong class="mono blue" id="autotrade-timer">--</strong></div>
       </div>
     </div>
 
     <!-- Margin Sentinel & 72% Gate Status Banner -->
     <div id="margin-banner">
-      <div style="display:flex; align-items:center; gap:10px;">
-        <span style="font-size:16px;">🛡️</span>
+      <div class="d-flex items-center gap-10">
+        <span class="font-lg">🛡️</span>
         <span id="margin-banner-text"><strong>Margin Sentinel Active:</strong> Portfolio Balance $275.50 exceeds $30.00 Floor (Healthy) · Minimum 72% AI Confidence Enforced</span>
       </div>
-      <div style="display:flex; gap:8px; align-items:center;">
+      <div class="d-flex gap-8 items-center">
         <span class="badge badge-live" id="margin-badge">🟢 Healthy (Margin &gt; $30)</span>
       </div>
     </div>
@@ -300,13 +82,18 @@
         <div class="stat-sub"><span id="kpi-exposure" class="green">0.0% Exposure</span> · Initial $250.00</div>
       </div>
       <div class="stat-card">
+        <div class="stat-label">Cumulative ROI (To Date)</div>
+        <div class="stat-val mono green" id="kpi-roi">+19.40%</div>
+        <div class="stat-sub" id="kpi-roi-sub">Live Current-to-Date Performance</div>
+      </div>
+      <div class="stat-card">
         <div class="stat-label">50% BTC Savings Pool</div>
         <div class="stat-val mono green" id="kpi-btc-vault">$0.00</div>
         <div class="stat-sub mono" id="kpi-btc-accum">0.00000000 BTC Saved</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">10% Long-Term Vault</div>
-        <div class="stat-val mono" style="color:var(--accent-gold);" id="kpi-cold-vault">$0.00</div>
+        <div class="stat-val mono gold" id="kpi-cold-vault">$0.00</div>
         <div class="stat-sub">Protected Cold Storage Vault</div>
       </div>
       <div class="stat-card">
@@ -316,14 +103,15 @@
       </div>
       <div class="stat-card">
         <div class="stat-label">CMC Global BTC Dominance</div>
-        <div class="stat-val mono" style="color:var(--accent-blue);" id="kpi-btc-dom">59.7%</div>
+        <div class="stat-val mono blue" id="kpi-btc-dom">59.7%</div>
         <div class="stat-sub" id="kpi-total-mcap">Total MCAP: $2.66T</div>
       </div>
     </div>
 
     <!-- Navigation Tabs -->
     <div class="nav-tabs">
-      <button class="tab-btn active" onclick="switchTab('tab-cmc', this)">📊 CoinMarketCap Live</button>
+      <button class="tab-btn active" onclick="switchTab('tab-tv', this)">📈 TradingView Candlesticks</button>
+      <button class="tab-btn" onclick="switchTab('tab-cmc', this)">📊 CoinMarketCap Live</button>
       <button class="tab-btn" onclick="switchTab('tab-bot', this)">🤖 AI Consensus (72% Gate)</button>
       <button class="tab-btn" onclick="switchTab('tab-trades', this)">📜 Executed Trades Feed</button>
       <button class="tab-btn" onclick="switchTab('tab-settings', this)">⚙️ Allocation & Currency Overrides</button>
@@ -336,8 +124,91 @@
       <button class="tab-btn" onclick="switchTab('tab-onchain', this)">🔗 On-Chain Valuation</button>
     </div>
 
+    <!-- TAB: TradingView Live Candlestick Studio -->
+    <div id="tab-tv" class="tab-pane">
+      <div class="card-box">
+        <div class="d-flex justify-between items-center flex-wrap gap-12 mb-14">
+          <div class="d-flex items-center gap-10 flex-wrap">
+            <span class="font-lg font-bold">📈 TradingView Real-Time Candlestick Studio</span>
+            <span class="badge badge-live"><span class="pulse-dot"></span> Live Feed</span>
+            <span class="badge badge-gate">⚡ PineScript v5 SMC</span>
+          </div>
+          <div class="d-flex items-center gap-10 flex-wrap">
+            <label class="font-sm text-muted" for="tv-symbol-select">Asset:</label>
+            <select id="tv-symbol-select" title="TradingView Asset Symbol" aria-label="TradingView Asset Symbol" class="input-field select-symbol" onchange="updateTradingViewSymbol(this.value)">
+              <option value="BINANCE:BTCUSDT" selected>BTC/USDT (Bitcoin)</option>
+              <option value="BINANCE:ETHUSDT">ETH/USDT (Ethereum)</option>
+              <option value="BINANCE:SOLUSDT">SOL/USDT (Solana)</option>
+              <option value="GATEIO:CROUSDT">CRO/USDT (Cronos)</option>
+              <option value="BINANCE:AVAXUSDT">AVAX/USDT (Avalanche)</option>
+              <option value="BINANCE:ARBUSDT">ARB/USDT (Arbitrum)</option>
+              <option value="BINANCE:OPUSDT">OP/USDT (Optimism)</option>
+              <option value="BINANCE:LINKUSDT">LINK/USDT (Chainlink)</option>
+            </select>
+            <label class="font-sm text-muted" for="tv-interval-select">Interval:</label>
+            <select id="tv-interval-select" title="TradingView Interval Timeframe" aria-label="TradingView Interval Timeframe" class="input-field select-interval" onchange="updateTradingViewInterval(this.value)">
+              <option value="1">1m</option>
+              <option value="5">5m</option>
+              <option value="15" selected>15m</option>
+              <option value="60">1h</option>
+              <option value="240">4h</option>
+              <option value="D">1D</option>
+            </select>
+            <a id="tv-external-link" href="https://www.tradingview.com/chart/?symbol=BINANCE:BTCUSDT" target="_blank" rel="noopener noreferrer" class="btn btn-outline no-decor">
+              ↗ Full TradingView Chart
+            </a>
+          </div>
+        </div>
+
+        <!-- Embedded TradingView Advanced Chart -->
+        <div class="tv-chart-wrapper" id="tradingview-widget-container">
+          <div id="tv_chart_container" class="w-full h-full"></div>
+        </div>
+
+        <!-- PineScript Strategy Box -->
+        <div class="mt-16 card-subtle p-14 rounded-lg">
+          <div class="d-flex justify-between items-center flex-wrap gap-10 mb-10">
+            <div>
+              <strong class="font-md gold">📜 PineScript v5 LuxAlgo SMC & 5X Futures Strategy (72% Gate)</strong>
+              <div class="font-xs text-muted">Copy and paste this script into TradingView Pine Editor to run strategy alerts and quantitative backtesting.</div>
+            </div>
+            <button class="btn btn-gold" onclick="copyPineScript()">📋 Copy PineScript Code</button>
+          </div>
+          <textarea id="pinescript-code-box" title="PineScript Strategy Code" aria-label="PineScript Strategy Code" placeholder="//@version=5..." readonly class="pinescript-textarea">
+//@version=5
+strategy("AiTradingAgent — LuxAlgo SMC 5X Futures (72% Gate)", overlay=true, initial_capital=1000, default_qty_type=strategy.percent_of_equity, default_qty_value=40)
+
+// Indicators
+ema20 = ta.ema(close, 20)
+ema50 = ta.ema(close, 50)
+rsi14 = ta.rsi(close, 14)
+[macdLine, signalLine, hist] = ta.macd(close, 12, 26, 9)
+
+// SMC Liquidity Sweep & Order Block Conditions
+bullish_ob = ta.crossover(close, ema20) and rsi14 > 45 and rsi14 < 65 and hist > 0
+bearish_ob = ta.crossunder(close, ema20) and rsi14 > 68 and hist < 0
+
+// Strategy Execution (5X Preset with ATR Trailing Stop)
+atr = ta.atr(14)
+longStop = close - (atr * 1.5)
+longTakeProfit = close + (atr * 3.5)
+
+if (bullish_ob)
+    strategy.entry("Long 5X", strategy.long)
+    strategy.exit("Exit Long", "Long 5X", stop=longStop, limit=longTakeProfit)
+
+if (bearish_ob)
+    strategy.close("Long 5X", comment="Take Profit / Sweep")
+
+plot(ema20, color=color.blue, title="20 EMA")
+plot(ema50, color=color.orange, title="50 EMA")
+          </textarea>
+        </div>
+      </div>
+    </div>
+
     <!-- TAB 1: CoinMarketCap Live Quotes -->
-    <div id="tab-cmc" class="tab-pane">
+    <div id="tab-cmc" class="tab-pane tab-pane-hidden">
       <div class="table-container">
         <table>
           <thead>
@@ -355,42 +226,42 @@
             </tr>
           </thead>
           <tbody id="cmc-quotes-body">
-            <tr><td colspan="10" style="text-align:center; padding:20px; color:var(--text-muted);">Fetching live CoinMarketCap quotes...</td></tr>
+            <tr><td colspan="10" class="loading-placeholder">Fetching live CoinMarketCap quotes...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <!-- TAB 2: AI Bot Consensus Signals -->
-    <div id="tab-bot" class="tab-pane" style="display:none;">
+    <div id="tab-bot" class="tab-pane tab-pane-hidden">
       <div id="bot-signals-container">
-        <div style="text-align:center; padding:40px; color:var(--text-muted); background:var(--bg-card); border-radius:10px;">
+        <div class="loading-card-placeholder">
           Loading AI consensus pipeline decisions...
         </div>
       </div>
     </div>
 
     <!-- TAB 3: Executed Trades Feed -->
-    <div id="tab-trades" class="tab-pane" style="display:none;">
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:16px;">
-        <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:12px 16px;">
+    <div id="tab-trades" class="tab-pane tab-pane-hidden">
+      <div class="grid-stats-trades">
+        <div class="stat-card">
           <div class="stat-label">Total Amount Traded (Volume)</div>
-          <div class="stat-val mono" id="trade-sum-volume" style="font-size:20px;">$0.00</div>
+          <div class="stat-val mono stat-val-sm" id="trade-sum-volume">$0.00</div>
           <div class="stat-sub" id="trade-sum-count">0 transactions</div>
         </div>
-        <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:12px 16px;">
+        <div class="stat-card">
           <div class="stat-label">Total Realized Profit</div>
-          <div class="stat-val mono green" id="trade-sum-profit" style="font-size:20px;">+$0.00</div>
+          <div class="stat-val mono green stat-val-sm" id="trade-sum-profit">+$0.00</div>
           <div class="stat-sub green" id="trade-sum-wins">0 winning trades</div>
         </div>
-        <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:12px 16px;">
+        <div class="stat-card">
           <div class="stat-label">Total Realized Loss</div>
-          <div class="stat-val mono red" id="trade-sum-loss" style="font-size:20px;">-$0.00</div>
+          <div class="stat-val mono red stat-val-sm" id="trade-sum-loss">-$0.00</div>
           <div class="stat-sub red" id="trade-sum-losses">0 losing trades</div>
         </div>
-        <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:12px 16px;">
+        <div class="stat-card">
           <div class="stat-label">Net Realized PnL</div>
-          <div class="stat-val mono" id="trade-sum-net" style="font-size:20px;">$0.00</div>
+          <div class="stat-val mono stat-val-sm" id="trade-sum-net">$0.00</div>
           <div class="stat-sub" id="trade-sum-winrate">100% win rate</div>
         </div>
       </div>
@@ -406,8 +277,8 @@
               <th>Execution Price</th>
               <th>Amount Traded (Asset)</th>
               <th>Amount Traded (USD)</th>
-              <th style="color:var(--accent-green);">Profit ($)</th>
-              <th style="color:var(--accent-red);">Loss ($)</th>
+              <th class="green">Profit ($)</th>
+              <th class="red">Loss ($)</th>
               <th>Net PnL (% / $)</th>
               <th>Outcome</th>
               <th>Confidence</th>
@@ -415,24 +286,24 @@
             </tr>
           </thead>
           <tbody id="trades-body">
-            <tr><td colspan="13" style="text-align:center; padding:20px; color:var(--text-muted);">Loading executed trades ledger...</td></tr>
+            <tr><td colspan="13" class="loading-placeholder">Loading executed trades ledger...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <!-- TAB: Allocation & Currency Settings Override -->
-    <div id="tab-settings" class="tab-pane" style="display:none;">
+    <div id="tab-settings" class="tab-pane tab-pane-hidden">
       <div class="form-box">
-        <h3 style="margin-bottom:10px; font-size:16px;">⚙️ Capital Allocation Percentage & Multi-Currency Override Controls</h3>
-        <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">
+        <h3 class="mb-10 font-lg">⚙️ Capital Allocation Percentage & Multi-Currency Override Controls</h3>
+        <p class="font-sm text-muted mb-16">
           Configure proportionate trade position sizing calculated strictly as a percentage of your total account balance across <strong>GBPX, USDP, USDT, or USD</strong>.
         </p>
 
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; margin-bottom:16px;">
+        <div class="grid-settings">
           <div>
-            <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:4px;">Base Account Currency</label>
-            <select id="set-base-currency" class="input-field">
+            <label for="set-base-currency" class="font-xs text-muted d-block mb-4">Base Account Currency</label>
+            <select id="set-base-currency" name="set-base-currency" title="Base Account Currency" aria-label="Base Account Currency" class="input-field">
               <option value="USDT">USDT (Tether USD — 1.00 USD)</option>
               <option value="GBPX">GBPX (Tokenized British Pound — 1.30 USD)</option>
               <option value="USDP">USDP (Paxos Dollar — 1.00 USD)</option>
@@ -441,37 +312,37 @@
           </div>
 
           <div>
-            <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:4px;">Default Allocation % Per Trade (<span id="lbl-default-alloc">10%</span>)</label>
-            <input type="range" id="set-default-alloc" min="1" max="30" value="10" class="input-field" style="padding:0;" oninput="document.getElementById('lbl-default-alloc').textContent = this.value + '%'" />
+            <label for="set-default-alloc" class="font-xs text-muted d-block mb-4">Default Allocation % Per Trade (<span id="lbl-default-alloc">10%</span>)</label>
+            <input type="range" id="set-default-alloc" name="set-default-alloc" title="Default Allocation Percentage Per Trade" aria-label="Default Allocation Percentage Per Trade" min="1" max="30" value="10" class="input-field slider-input" oninput="document.getElementById('lbl-default-alloc').textContent = this.value + '%'" />
           </div>
 
           <div>
-            <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:4px;">Allocation Override % (Optional)</label>
-            <input type="number" id="set-override-alloc" class="input-field" placeholder="e.g. 15 (leave empty for automatic)" />
+            <label for="set-override-alloc" class="font-xs text-muted d-block mb-4">Allocation Override % (Optional)</label>
+            <input type="number" id="set-override-alloc" name="set-override-alloc" title="Allocation Override Percentage" aria-label="Allocation Override Percentage" class="input-field" placeholder="e.g. 15 (leave empty for automatic)" />
           </div>
 
           <div>
-            <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:4px;">Meme Coin Max Allocation % (<span id="lbl-meme-alloc">3%</span>)</label>
-            <input type="range" id="set-meme-alloc" min="1" max="10" step="0.5" value="3" class="input-field" style="padding:0;" oninput="document.getElementById('lbl-meme-alloc').textContent = this.value + '%'" />
+            <label for="set-meme-alloc" class="font-xs text-muted d-block mb-4">Meme Coin Max Allocation % (<span id="lbl-meme-alloc">3%</span>)</label>
+            <input type="range" id="set-meme-alloc" name="set-meme-alloc" title="Meme Coin Maximum Allocation Percentage" aria-label="Meme Coin Maximum Allocation Percentage" min="1" max="10" step="0.5" value="3" class="input-field slider-input" oninput="document.getElementById('lbl-meme-alloc').textContent = this.value + '%'" />
           </div>
 
           <div>
-            <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:4px;">Max Portfolio Exposure % (<span id="lbl-max-exp">40%</span>)</label>
-            <input type="range" id="set-max-exp" min="10" max="80" value="40" class="input-field" style="padding:0;" oninput="document.getElementById('lbl-max-exp').textContent = this.value + '%'" />
+            <label for="set-max-exp" class="font-xs text-muted d-block mb-4">Max Portfolio Exposure % (<span id="lbl-max-exp">40%</span>)</label>
+            <input type="range" id="set-max-exp" name="set-max-exp" title="Maximum Portfolio Exposure Percentage" aria-label="Maximum Portfolio Exposure Percentage" min="10" max="80" value="40" class="input-field slider-input" oninput="document.getElementById('lbl-max-exp').textContent = this.value + '%'" />
           </div>
         </div>
 
-        <div style="display:flex; gap:10px; align-items:center;">
+        <div class="d-flex gap-10 items-center">
           <button class="btn btn-green" id="btn-save-settings">💾 Save & Apply Allocation Settings</button>
           <button class="btn btn-outline" id="btn-preview-alloc">🔍 Calculate Position Sizing</button>
         </div>
       </div>
 
       <!-- Live Calculation Box -->
-      <div id="alloc-calc-box" class="form-box" style="background:var(--bg-subtle);">
-        <h4 style="font-size:14px; margin-bottom:8px;">🧠 Skill Expert Trader — Proportionate Sizing Breakdown</h4>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
-          <div class="stat-card"><div class="stat-label">Active Base Currency</div><div class="stat-val mono" id="calc-currency" style="color:var(--accent-blue);">USDT</div></div>
+      <div id="alloc-calc-box" class="form-box card-subtle">
+        <h4 class="font-md mb-8">🧠 Skill Expert Trader — Proportionate Sizing Breakdown</h4>
+        <div class="grid-alloc-cards">
+          <div class="stat-card"><div class="stat-label">Active Base Currency</div><div class="stat-val mono text-blue" id="calc-currency">USDT</div></div>
           <div class="stat-card"><div class="stat-label">Account Balance</div><div class="stat-val mono" id="calc-balance">275.50 USDT</div></div>
           <div class="stat-card"><div class="stat-label">Effective Trade Allocation</div><div class="stat-val mono green" id="calc-pct">10.0%</div></div>
           <div class="stat-card"><div class="stat-label">Calculated Position Size</div><div class="stat-val mono green" id="calc-pos">$27.55 USD</div></div>
@@ -480,12 +351,12 @@
     </div>
 
     <!-- TAB: DexScreener Meme Coin Breakout Scanner -->
-    <div id="tab-memes" class="tab-pane" style="display:none;">
+    <div id="tab-memes" class="tab-pane tab-pane-hidden">
       <div class="form-box">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div class="d-flex justify-between items-center flex-wrap gap-10">
           <div>
-            <h3 style="margin-bottom:4px; font-size:16px;">🐸 DexScreener Live Meme Coin Breakout Scanner</h3>
-            <p style="font-size:12px; color:var(--text-muted);">
+            <h3 class="mb-4 font-lg">🐸 DexScreener Live Meme Coin Breakout Scanner</h3>
+            <p class="font-sm text-muted">
               Scans trending DEX meme tokens across Base, Solana, Ethereum, BSC, and Arbitrum. Filtered by <strong>$50k+ Liquidity & $100k+ 24h Volume</strong> with strict safety scores.
             </p>
           </div>
@@ -510,22 +381,22 @@
             </tr>
           </thead>
           <tbody id="memes-body">
-            <tr><td colspan="10" style="text-align:center; padding:20px; color:var(--text-muted);">Scanning DexScreener liquidity pools for meme coin breakouts...</td></tr>
+            <tr><td colspan="10" class="loading-placeholder">Scanning DexScreener liquidity pools for meme coin breakouts...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <!-- TAB 4: YouTube Continuous Learning Loop -->
-    <div id="tab-learning" class="tab-pane" style="display:none;">
+    <div id="tab-learning" class="tab-pane tab-pane-hidden">
       <div class="form-box">
-        <h3 style="margin-bottom:10px; font-size:16px;">🎓 Ingest YouTube URL for Autonomous Agent Learning</h3>
-        <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">
+        <h3 class="mb-10 font-lg">🎓 Ingest YouTube URL for Autonomous Agent Learning</h3>
+        <p class="font-sm text-muted mb-14">
           Paste any YouTube video or analysis link. The agent extracts transcripts, detects mentioned coins, generates bullish/bearish catalysts, and updates channel reliability weights.
         </p>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <input type="text" id="input-yt-url" class="input-field" style="flex:2;" placeholder="https://www.youtube.com/watch?v=..." value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
-          <input type="text" id="input-yt-channel" class="input-field" style="flex:1;" placeholder="Channel / Analyst Name" value="Macro Alpha Insights" />
+        <div class="d-flex gap-10 flex-wrap">
+          <input type="text" id="input-yt-url" name="input-yt-url" title="YouTube Video URL" aria-label="YouTube Video URL" class="input-field flex-grow-2" placeholder="https://www.youtube.com/watch?v=..." value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
+          <input type="text" id="input-yt-channel" name="input-yt-channel" title="Channel or Analyst Name" aria-label="Channel or Analyst Name" class="input-field flex-grow-1" placeholder="Channel / Analyst Name" value="Macro Alpha Insights" />
           <button class="btn btn-green" id="btn-submit-yt">🚀 Ingest & Learn Alpha</button>
         </div>
       </div>
@@ -545,23 +416,23 @@
             </tr>
           </thead>
           <tbody id="yt-memory-body">
-            <tr><td colspan="8" style="text-align:center; padding:20px; color:var(--text-muted);">Loading agent YouTube memory...</td></tr>
+            <tr><td colspan="8" class="loading-placeholder">Loading agent YouTube memory...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <!-- TAB 5: DeFi Flash Loans Engine -->
-    <div id="tab-flashloan" class="tab-pane" style="display:none;">
+    <div id="tab-flashloan" class="tab-pane tab-pane-hidden">
       <div class="form-box">
-        <h3 style="margin-bottom:10px; font-size:16px;">⚡ DeFi Zero-Capital Flash Loan Arbitrage Simulator</h3>
-        <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">
+        <h3 class="mb-10 font-lg">⚡ DeFi Zero-Capital Flash Loan Arbitrage Simulator</h3>
+        <p class="font-sm text-muted mb-14">
           Borrow uncollateralized capital from Aave v3 (0.05% fee) or Balancer Vault (0.00% free fee) to execute atomic cross-DEX arbitrage.
         </p>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:14px;">
+        <div class="grid-flashloan">
           <div>
-            <label style="font-size:11px; color:var(--text-muted);">Token</label>
-            <select id="fl-token" class="input-field">
+            <label for="fl-token" class="font-xs text-muted">Token</label>
+            <select id="fl-token" name="fl-token" title="Flash Loan Token" aria-label="Flash Loan Token" class="input-field">
               <option value="WETH">WETH</option>
               <option value="WBTC">WBTC</option>
               <option value="USDC">USDC</option>
@@ -570,50 +441,50 @@
             </select>
           </div>
           <div>
-            <label style="font-size:11px; color:var(--text-muted);">Borrow Amount (USD)</label>
-            <input type="number" id="fl-amount" class="input-field" value="25000" />
+            <label for="fl-amount" class="font-xs text-muted">Borrow Amount (USD)</label>
+            <input type="number" id="fl-amount" name="fl-amount" title="Borrow Amount in USD" aria-label="Borrow Amount in USD" class="input-field" value="25000" />
           </div>
           <div>
-            <label style="font-size:11px; color:var(--text-muted);">Flash Loan Provider</label>
-            <select id="fl-provider" class="input-field">
+            <label for="fl-provider" class="font-xs text-muted">Flash Loan Provider</label>
+            <select id="fl-provider" name="fl-provider" title="Flash Loan Provider" aria-label="Flash Loan Provider" class="input-field">
               <option value="balancer">Balancer Vault (0% Fee)</option>
               <option value="aave_v3">Aave v3 (0.05% Fee)</option>
             </select>
           </div>
           <div>
-            <label style="font-size:11px; color:var(--text-muted);">Buy Chain ➔ Sell Chain</label>
-            <input type="text" id="fl-route" class="input-field" value="Arbitrum ➔ Base" />
+            <label for="fl-route" class="font-xs text-muted">Buy Chain ➔ Sell Chain</label>
+            <input type="text" id="fl-route" name="fl-route" title="Arbitrage Route" aria-label="Arbitrage Route" class="input-field" value="Arbitrum ➔ Base" />
           </div>
         </div>
-        <div style="display:flex; gap:10px;">
+        <div class="d-flex gap-10">
           <button class="btn btn-purple" id="btn-sim-fl">⚡ Simulate Flash Loan</button>
           <button class="btn btn-green" id="btn-exec-fl">🚀 Execute Paper Flash Loan</button>
         </div>
       </div>
 
-      <div id="fl-result-box" style="display:none;" class="form-box">
-        <h4 style="font-size:14px; margin-bottom:8px;" id="fl-result-title">Simulation Output</h4>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:10px;">
+      <div id="fl-result-box" class="form-box d-none">
+        <h4 class="font-md mb-8" id="fl-result-title">Simulation Output</h4>
+        <div class="grid-results-4">
           <div class="stat-card"><div class="stat-label">Gross Profit</div><div class="stat-val mono green" id="fl-gross">$0.00</div></div>
           <div class="stat-card"><div class="stat-label">Flash Loan Fee</div><div class="stat-val mono red" id="fl-fee">$0.00</div></div>
           <div class="stat-card"><div class="stat-label">Estimated Gas</div><div class="stat-val mono red" id="fl-gas">$0.00</div></div>
           <div class="stat-card"><div class="stat-label">Net Profit (USD)</div><div class="stat-val mono green" id="fl-net">$0.00</div></div>
         </div>
-        <p style="margin-top:12px; font-size:12px;" id="fl-recommendation"></p>
+        <p class="mt-12 font-sm" id="fl-recommendation"></p>
       </div>
     </div>
 
     <!-- TAB 6: Fiat & DeFi Onboarding -->
-    <div id="tab-onboarding" class="tab-pane" style="display:none;">
+    <div id="tab-onboarding" class="tab-pane tab-pane-hidden">
       <div class="form-box">
-        <h3 style="margin-bottom:10px; font-size:16px;">💳 Multi-Provider Fiat On-Ramp & Wallet Funding Aggregator</h3>
-        <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">
+        <h3 class="mb-10 font-lg">💳 Multi-Provider Fiat On-Ramp & Wallet Funding Aggregator</h3>
+        <p class="font-sm text-muted mb-14">
           Fund your automated trading balances with debit card, Apple Pay, Google Pay, ACH, or SEPA bank wire across Base, Cronos, Arbitrum, and Solana.
         </p>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:14px;">
+        <div class="grid-onramp">
           <div>
-            <label style="font-size:11px; color:var(--text-muted);">Fiat Currency</label>
-            <select id="ob-fiat" class="input-field">
+            <label for="ob-fiat" class="font-xs text-muted">Fiat Currency</label>
+            <select id="ob-fiat" name="ob-fiat" title="Fiat Currency" aria-label="Fiat Currency" class="input-field">
               <option value="USD">USD ($)</option>
               <option value="EUR">EUR (€)</option>
               <option value="GBP">GBP (£)</option>
@@ -622,12 +493,12 @@
             </select>
           </div>
           <div>
-            <label style="font-size:11px; color:var(--text-muted);">Deposit Amount</label>
-            <input type="number" id="ob-amount" class="input-field" value="250" />
+            <label for="ob-amount" class="font-xs text-muted">Deposit Amount</label>
+            <input type="number" id="ob-amount" name="ob-amount" title="Deposit Amount" aria-label="Deposit Amount" class="input-field" value="250" />
           </div>
           <div>
-            <label style="font-size:11px; color:var(--text-muted);">Crypto to Receive</label>
-            <select id="ob-crypto" class="input-field">
+            <label for="ob-crypto" class="font-xs text-muted">Crypto to Receive</label>
+            <select id="ob-crypto" name="ob-crypto" title="Crypto Asset to Receive" aria-label="Crypto Asset to Receive" class="input-field">
               <option value="USDC">USDC</option>
               <option value="BTC">BTC / cbBTC</option>
               <option value="ETH">ETH</option>
@@ -636,13 +507,17 @@
             </select>
           </div>
           <div>
-            <label style="font-size:11px; color:var(--text-muted);">Target Network</label>
-            <select id="ob-network" class="input-field">
+            <label for="ob-network" class="font-xs text-muted">Target Network</label>
+            <select id="ob-network" name="ob-network" title="Target Network" aria-label="Target Network" class="input-field">
               <option value="base">Base</option>
               <option value="cronos">Cronos</option>
               <option value="arbitrum">Arbitrum One</option>
               <option value="solana">Solana</option>
             </select>
+          </div>
+          <div>
+            <label for="ob-wallet" class="font-xs text-muted">Destination Wallet Address (Optional)</label>
+            <input type="text" id="ob-wallet" name="ob-wallet" title="Destination Wallet Address" aria-label="Destination Wallet Address" class="input-field" placeholder="Default network address..." />
           </div>
         </div>
         <button class="btn btn-green" id="btn-fetch-quotes">🔄 Fetch Live On-Ramp Quotes</button>
@@ -663,26 +538,26 @@
             </tr>
           </thead>
           <tbody id="onramp-quotes-body">
-            <tr><td colspan="8" style="text-align:center; padding:20px; color:var(--text-muted);">Click "Fetch Live On-Ramp Quotes" to compare rates.</td></tr>
+            <tr><td colspan="8" class="loading-placeholder">Click "Fetch Live On-Ramp Quotes" to compare rates.</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <!-- TAB 7: Telegram Sentinel & Live Alpha Feeds -->
-    <div id="tab-telegram" class="tab-pane" style="display:none;">
+    <div id="tab-telegram" class="tab-pane tab-pane-hidden">
       <div class="form-box">
-        <h3 style="margin-bottom:10px; font-size:16px;">📱 Telegram Sentinel Alerts & Channel Alpha Ingestion</h3>
-        <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">
+        <h3 class="mb-10 font-lg">📱 Telegram Sentinel Alerts & Channel Alpha Ingestion</h3>
+        <p class="font-sm text-muted mb-14">
           Directly test emergency $30 margin alerts, broadcast trade notifications, and ingest market alpha from Telegram channels into AI memory.
         </p>
-        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
+        <div class="d-flex gap-10 flex-wrap mb-14">
           <button class="btn btn-gold" id="btn-tg-test-trade">🔔 Send Test Trade Alert</button>
           <button class="btn btn-red" id="btn-tg-test-margin">🚨 Test $30 Margin Trigger</button>
         </div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <input type="text" id="tg-alpha-input" class="input-field" style="flex:3;" placeholder="Paste Telegram channel message/alpha snippet..." />
-          <input type="text" id="tg-alpha-sender" class="input-field" style="flex:1;" placeholder="Channel / Source" value="Whale Alert Alpha" />
+        <div class="d-flex gap-10 flex-wrap">
+          <input type="text" id="tg-alpha-input" name="tg-alpha-input" title="Telegram Channel Alpha Message" aria-label="Telegram Channel Alpha Message" class="input-field flex-grow-3" placeholder="Paste Telegram channel message/alpha snippet..." />
+          <input type="text" id="tg-alpha-sender" name="tg-alpha-sender" title="Channel or Source Name" aria-label="Channel or Source Name" class="input-field flex-grow-1" placeholder="Channel / Source" value="Whale Alert Alpha" />
           <button class="btn btn-green" id="btn-tg-ingest">📥 Ingest Alpha</button>
         </div>
       </div>
@@ -698,14 +573,14 @@
             </tr>
           </thead>
           <tbody id="tg-messages-body">
-            <tr><td colspan="4" style="text-align:center; padding:20px; color:var(--text-muted);">Loading ingested Telegram messages...</td></tr>
+            <tr><td colspan="4" class="loading-placeholder">Loading ingested Telegram messages...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <!-- TAB 8: Multi-Chain DEX Arbitrage Scanner -->
-    <div id="tab-arb" class="tab-pane" style="display:none;">
+    <div id="tab-arb" class="tab-pane tab-pane-hidden">
       <div class="table-container">
         <table>
           <thead>
@@ -723,14 +598,14 @@
             </tr>
           </thead>
           <tbody id="arb-body">
-            <tr><td colspan="10" style="text-align:center; padding:20px; color:var(--text-muted);">Scanning multi-chain DEX orderbooks...</td></tr>
+            <tr><td colspan="10" class="loading-placeholder">Scanning multi-chain DEX orderbooks...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <!-- TAB 9: On-Chain & Valuation Metrics -->
-    <div id="tab-onchain" class="tab-pane" style="display:none;">
+    <div id="tab-onchain" class="tab-pane tab-pane-hidden">
       <div class="stats-grid" id="onchain-metrics-grid">
         <div class="stat-card"><div class="stat-label">Loading On-Chain Intelligence...</div></div>
       </div>
@@ -738,8 +613,67 @@
 
   </div>
 
+
   <script>
     let fullStackData = null;
+    let currentTvSymbol = "BINANCE:BTCUSDT";
+    let currentTvInterval = "15";
+    let tvWidget = null;
+
+    function initTradingViewWidget(symbol, interval) {
+      currentTvSymbol = symbol || currentTvSymbol;
+      currentTvInterval = interval || currentTvInterval;
+      const container = document.getElementById('tv_chart_container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (typeof TradingView !== "undefined") {
+        try {
+          tvWidget = new TradingView.widget({
+            "autosize": true,
+            "symbol": currentTvSymbol,
+            "interval": currentTvInterval,
+            "timezone": "Etc/UTC",
+            "theme": "dark",
+            "style": "1",
+            "locale": "en",
+            "toolbar_bg": "#111827",
+            "enable_publishing": false,
+            "hide_side_toolbar": false,
+            "allow_symbol_change": true,
+            "studies": [
+              "RSI@tv-basicstudies",
+              "MASimple@tv-basicstudies",
+              "Volume@tv-basicstudies"
+            ],
+            "container_id": "tv_chart_container"
+          });
+        } catch (err) {
+          console.warn('TradingView initialization notice:', err);
+        }
+      }
+    }
+
+    function updateTradingViewSymbol(symbol) {
+      currentTvSymbol = symbol;
+      const extLink = document.getElementById('tv-external-link');
+      if (extLink) extLink.href = "https://www.tradingview.com/chart/?symbol=" + symbol;
+      initTradingViewWidget(currentTvSymbol, currentTvInterval);
+    }
+
+    function updateTradingViewInterval(interval) {
+      currentTvInterval = interval;
+      initTradingViewWidget(currentTvSymbol, currentTvInterval);
+    }
+
+    function copyPineScript() {
+      const box = document.getElementById('pinescript-code-box');
+      if (box) {
+        box.select();
+        navigator.clipboard.writeText(box.value);
+        alert("PineScript v5 strategy code copied to clipboard! Paste into TradingView Pine Editor.");
+      }
+    }
 
     function switchTab(tabId, btnElem) {
       try {
@@ -753,12 +687,17 @@
           const btn = window.event.target.closest('.tab-btn') || window.event.target;
           if (btn && btn.classList) btn.classList.add('active');
         }
+
+        if (tabId === 'tab-tv') {
+          setTimeout(() => initTradingViewWidget(currentTvSymbol, currentTvInterval), 100);
+        }
       } catch (e) {
         console.warn('Tab switch note:', e);
       }
     }
 
     async function loadFullStackData() {
+
       try {
         const res = await fetch('/api/full-stack');
         const data = await res.json();
@@ -846,9 +785,24 @@
       const perf = data.performance || {};
       const g = data.cmcGlobal || {};
 
-      document.getElementById('kpi-portfolio').textContent = `$${(p.currentBalance || 250).toFixed(2)}`;
+      const startingBalance = p.startingBalance || 250;
+      const currBalance = p.currentBalance || 250;
+      const profit = perf.totalProfitUsd !== undefined ? perf.totalProfitUsd : (currBalance - startingBalance);
+      const roiPct = startingBalance > 0 ? ((currBalance - startingBalance) / startingBalance * 100) : 0;
+
+      document.getElementById('kpi-portfolio').textContent = `$${currBalance.toFixed(2)}`;
       document.getElementById('kpi-exposure').textContent = `${(p.activeExposurePct || 0).toFixed(1)}% Exposure`;
       
+      const roiEl = document.getElementById('kpi-roi');
+      if (roiEl) {
+        roiEl.textContent = `${roiPct >= 0 ? '+' : ''}${roiPct.toFixed(2)}%`;
+        roiEl.className = `stat-val mono ${roiPct >= 0 ? 'green' : 'red'}`;
+      }
+      const roiSubEl = document.getElementById('kpi-roi-sub');
+      if (roiSubEl) {
+        roiSubEl.textContent = `+$${profit >= 0 ? profit.toFixed(2) : '0.00'} • Live to Date`;
+      }
+
       document.getElementById('kpi-btc-vault').textContent = `$${(v.btcSavingsPoolUsd || 0).toFixed(2)}`;
       document.getElementById('kpi-btc-accum').textContent = `${(v.btcAccumulated || 0).toFixed(6)} BTC Saved`;
       
@@ -864,7 +818,7 @@
     function renderCMCQuotes(quotes) {
       const tbody = document.getElementById('cmc-quotes-body');
       if (!quotes || Object.keys(quotes).length === 0) {
-        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:20px;">No CoinMarketCap quotes returned.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="10" class="loading-placeholder">No CoinMarketCap quotes returned.</td></tr>';
         return;
       }
 
@@ -874,8 +828,8 @@
         const c7d = q.percentChange7d || 0;
         return `
           <tr>
-            <td><span class="badge" style="background:#1f2937;">#${q.cmcRank || '-'}</span></td>
-            <td><strong>${q.name || sym}</strong> <span class="mono" style="color:var(--text-muted);">(${sym})</span></td>
+            <td><span class="badge badge-chain">#${q.cmcRank || '-'}</span></td>
+            <td><strong>${q.name || sym}</strong> <span class="mono text-muted">(${sym})</span></td>
             <td class="mono"><strong>$${Number(q.price).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 4})}</strong></td>
             <td class="mono ${c1h >= 0 ? 'green' : 'red'}">${c1h >= 0 ? '+' : ''}${c1h.toFixed(2)}%</td>
             <td class="mono ${c24h >= 0 ? 'green' : 'red'}">${c24h >= 0 ? '+' : ''}${c24h.toFixed(2)}%</td>
@@ -889,43 +843,64 @@
       }).join('');
     }
 
+    function getAgentDisplayName(agentName) {
+      const map = {
+        'deepseek': '🧠 DeepSeek R1 (SMC)',
+        'openrouter_free': '🚀 OpenRouter Free Pool',
+        'claude': '⚡ Claude 3.7 (Technical)',
+        'gpt4o': '🌐 GPT-4o (Macro)',
+        'gemini': '🛡️ Gemini (Cross-Validator)',
+        'grok': '⚡ Grok (Realtime)',
+        'perplexity': '🔬 Perplexity (Research)',
+        'hermes': '⚖️ Hermes (Consensus)',
+        'sentiment': '🎥 YouTube Sentiment',
+        'trader_oversight': '🎯 5X Trader Oversight',
+        'luxalgo_learner': '📊 LuxAlgo SMC Strategy'
+      };
+      return map[agentName] || agentName.toUpperCase();
+    }
+
     function renderBotOutputs(outputs) {
       const container = document.getElementById('bot-signals-container');
       if (!outputs || Object.keys(outputs).length === 0) {
-        container.innerHTML = '<div style="padding:20px; text-align:center;">No AI signals available.</div>';
+        container.innerHTML = '<div class="loading-placeholder">No AI signals available.</div>';
         return;
       }
 
       container.innerHTML = Object.entries(outputs).map(([pair, item]) => {
         const c = item.consensus || {};
-        const signalClass = c.masterSignal === 'BUY' ? 'badge-buy' : c.masterSignal === 'SELL' ? 'badge-sell' : 'badge-hold';
+        const signalClass = c.signal === 'BUY' || c.masterSignal === 'BUY' ? 'badge-buy' : (c.signal === 'SELL' || c.masterSignal === 'SELL' ? 'badge-sell' : 'badge-hold');
+        const finalSig = c.signal || c.masterSignal || 'HOLD';
         const breakdown = c.breakdown || [];
 
         return `
           <div class="agent-card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+            <div class="signal-header">
               <div>
-                <span style="font-size:16px; font-weight:700;">${pair}</span>
-                <span class="mono" style="margin-left:8px; color:var(--text-muted);">$${(item.price || 0).toFixed(2)}</span>
-                <span class="mono ${item.change24h >= 0 ? 'green' : 'red'}" style="font-size:12px; margin-left:6px;">(${item.change24h >= 0 ? '+' : ''}${(item.change24h || 0).toFixed(2)}%)</span>
+                <span class="font-lg font-bold">${pair}</span>
+                <span class="mono ml-8 text-muted">$${(item.price || 0).toFixed(2)}</span>
+                <span class="mono ${item.change24h >= 0 ? 'green' : 'red'} font-sm ml-6">(${item.change24h >= 0 ? '+' : ''}${(item.change24h || 0).toFixed(2)}%)</span>
               </div>
-              <div style="display:flex; gap:8px; align-items:center;">
-                <span class="badge ${signalClass}">${c.masterSignal || 'HOLD'}</span>
-                <span class="badge" style="background:#1f2937;">${((c.confidence || 0) * 100).toFixed(0)}% Confidence</span>
-                <span class="badge" style="background:#1f2937;">${c.agentsAgreeing || 0}/${c.totalAgents || 7} Agreeing</span>
+              <div class="d-flex gap-8 items-center flex-wrap">
+                <span class="badge ${signalClass}">${finalSig}</span>
+                <span class="badge badge-chain">${((c.confidence || 0) * 100).toFixed(0)}% Confidence</span>
+                <span class="badge badge-chain">${c.agentsAgreeing || 0}/${c.totalAgents || breakdown.length} Agreeing</span>
                 <span class="badge ${c.approved_for_execution ? 'badge-live' : 'badge-sell'}">${c.approved_for_execution ? '✅ 72% Gate Approved' : '⚠️ Preserved (<72%)'}</span>
               </div>
             </div>
-            <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">${c.reasoning || ''}</p>
+            <p class="font-sm text-muted mb-10">${c.reasoning || ''}</p>
             <div class="agent-grid">
               ${breakdown.map(a => `
                 <div class="agent-vote">
-                  <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                    <strong style="font-size:11px; text-transform:uppercase;">${a.agent}</strong>
-                    <span class="badge ${a.signal === 'BUY' ? 'badge-buy' : a.signal === 'SELL' ? 'badge-sell' : 'badge-hold'}" style="padding:1px 6px; font-size:10px;">${a.signal}</span>
+                  <div class="signal-agent-header">
+                    <strong class="font-xs">${getAgentDisplayName(a.agent)}</strong>
+                    <span class="badge ${a.signal === 'BUY' ? 'badge-buy' : a.signal === 'SELL' ? 'badge-sell' : 'badge-hold'} badge-xs">${a.signal}</span>
                   </div>
-                  <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">${((a.confidence || 0) * 100).toFixed(0)}% Conf</div>
-                  <div style="font-size:11px; color:#d1d5db; margin-top:4px; line-height:1.3; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">${a.reason || ''}</div>
+                  <div class="signal-agent-meta">
+                    <span>${((a.confidence || 0) * 100).toFixed(0)}% Conf</span>
+                    <span class="badge-model">${a.model_used ? a.model_used.split('/').pop() : (a.agent === 'deepseek' ? 'deepseek-r1' : '')}</span>
+                  </div>
+                  <div class="font-xs text-light mt-4 line-clamp-2">${a.reason || ''}</div>
                 </div>
               `).join('')}
             </div>
@@ -937,7 +912,7 @@
     function renderTrades(trades) {
       const tbody = document.getElementById('trades-body');
       if (!trades || trades.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; padding:20px; color:var(--text-muted);">No trades executed yet. Click "Run AI Cycle" to execute.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="13" class="loading-placeholder">No trades executed yet. Click "Run AI Cycle" to execute.</td></tr>';
         return;
       }
 
@@ -990,19 +965,19 @@
 
         return `
           <tr>
-            <td class="mono" style="color:var(--text-muted); font-size:11px;">${t.id}</td>
-            <td style="font-size:12px; color:var(--text-muted);">${new Date(t.timestamp).toLocaleTimeString()}</td>
+            <td class="mono text-muted font-xs">${t.id}</td>
+            <td class="font-sm text-muted">${new Date(t.timestamp).toLocaleTimeString()}</td>
             <td><strong>${t.pair || t.symbol}</strong></td>
             <td><span class="badge ${sideClass}">${t.side}</span></td>
             <td class="mono">$${Number(t.price || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 4})}</td>
-            <td class="mono"><strong>${t.amount ? Number(t.amount).toFixed(6) : '-'}</strong> <span style="font-size:11px; color:var(--text-muted);">${sym}</span></td>
+            <td class="mono"><strong>${t.amount ? Number(t.amount).toFixed(6) : '-'}</strong> <span class="font-xs text-muted">${sym}</span></td>
             <td class="mono"><strong>$${Number(t.positionSizeUsd || 0).toFixed(2)}</strong></td>
-            <td class="mono ${profit > 0 ? 'green' : ''}" style="font-weight:600;">${profit > 0 ? '+$' + profit.toFixed(2) : '<span style="color:#6b7280;">$0.00</span>'}</td>
-            <td class="mono ${loss > 0 ? 'red' : ''}" style="font-weight:600;">${loss > 0 ? '-$' + loss.toFixed(2) : '<span style="color:#6b7280;">$0.00</span>'}</td>
-            <td class="mono ${isWin ? 'green' : isLoss ? 'red' : ''}" style="font-weight:600;">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} (${Number(t.pnlPct || 0).toFixed(2)}%)</td>
+            <td class="mono ${profit > 0 ? 'green' : ''} font-semibold">${profit > 0 ? '+$' + profit.toFixed(2) : '<span class="text-dim">$0.00</span>'}</td>
+            <td class="mono ${loss > 0 ? 'red' : ''} font-semibold">${loss > 0 ? '-$' + loss.toFixed(2) : '<span class="text-dim">$0.00</span>'}</td>
+            <td class="mono ${isWin ? 'green' : isLoss ? 'red' : ''} font-semibold">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} (${Number(t.pnlPct || 0).toFixed(2)}%)</td>
             <td><span class="badge ${outcomeClass}">${t.outcome || (isWin ? 'WIN' : isLoss ? 'LOSS' : 'BREAKEVEN')}</span></td>
             <td class="mono">${((t.confidence || 0.85) * 100).toFixed(0)}%</td>
-            <td style="font-size:12px; color:var(--text-muted); max-width:260px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${t.reason || 'Paper execution validated'}</td>
+            <td class="font-sm text-muted truncate-260">${t.reason || 'Paper execution validated'}</td>
           </tr>
         `;
       }).join('');
@@ -1011,20 +986,20 @@
     function renderYouTubeMemory(memory) {
       const tbody = document.getElementById('yt-memory-body');
       if (!memory || memory.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px; color:var(--text-muted);">No YouTube alpha ingested yet. Paste a link above to begin learning.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" class="loading-placeholder">No YouTube alpha ingested yet. Paste a link above to begin learning.</td></tr>';
         return;
       }
 
       tbody.innerHTML = memory.map(m => `
         <tr>
-          <td style="font-size:12px; color:var(--text-muted);">${new Date(m.timestamp).toLocaleTimeString()}</td>
+          <td class="font-sm text-muted">${new Date(m.timestamp).toLocaleTimeString()}</td>
           <td><strong>${m.channel}</strong></td>
-          <td><a href="${m.url}" target="_blank" style="color:var(--accent-blue); text-decoration:none;">${m.title}</a></td>
+          <td><a href="${m.url}" target="_blank" class="text-blue no-decor">${m.title}</a></td>
           <td class="mono">${(m.mentionedCoins || []).join(', ')}</td>
           <td><span class="badge ${m.signal === 'BUY' ? 'badge-buy' : 'badge-sell'}">${m.signal}</span></td>
           <td class="mono ${m.sentimentScore >= 0 ? 'green' : 'red'}">${m.sentimentScore >= 0 ? '+' : ''}${(m.sentimentScore || 0).toFixed(2)}</td>
           <td class="mono">${(m.channelReliability || 0.5).toFixed(2)} / 1.0</td>
-          <td style="font-size:12px; color:#d1d5db;">${m.keyTakeaway || ''}</td>
+          <td class="font-sm text-light">${m.keyTakeaway || ''}</td>
         </tr>
       `).join('');
     }
@@ -1032,16 +1007,16 @@
     function renderTelegramMessages(messages) {
       const tbody = document.getElementById('tg-messages-body');
       if (!messages || messages.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--text-muted);">No Telegram alpha messages ingested yet.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" class="loading-placeholder">No Telegram alpha messages ingested yet.</td></tr>';
         return;
       }
 
       tbody.innerHTML = messages.map(msg => `
         <tr>
-          <td style="font-size:12px; color:var(--text-muted);">${new Date(msg.timestamp).toLocaleTimeString()}</td>
+          <td class="font-sm text-muted">${new Date(msg.timestamp).toLocaleTimeString()}</td>
           <td><strong>${msg.sender}</strong></td>
-          <td style="font-size:13px; color:#f3f4f6;">${msg.text}</td>
-          <td class="mono" style="color:var(--text-muted); font-size:11px;">${msg.length} chars</td>
+          <td class="font-md text-bright">${msg.text}</td>
+          <td class="mono text-muted font-xs">${msg.length} chars</td>
         </tr>
       `).join('');
     }
@@ -1049,21 +1024,21 @@
     function renderArbitrage(opps) {
       const tbody = document.getElementById('arb-body');
       if (!opps || opps.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:20px; color:var(--text-muted);">No arbitrage opportunities detected above gas threshold.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="10" class="loading-placeholder">No arbitrage opportunities detected above gas threshold.</td></tr>';
         return;
       }
 
       tbody.innerHTML = opps.map(o => `
         <tr>
           <td><strong>${o.token}</strong></td>
-          <td><span class="badge" style="background:#1f2937;">${o.buy_chain_name || o.buy_chain}</span> ➔ <span class="badge" style="background:#1f2937;">${o.sell_chain_name || o.sell_chain}</span></td>
+          <td><span class="badge badge-chain">${o.buy_chain_name || o.buy_chain}</span> ➔ <span class="badge badge-chain">${o.sell_chain_name || o.sell_chain}</span></td>
           <td class="mono">$${(o.buy_price || 0).toFixed(4)}</td>
           <td class="mono">$${(o.sell_price || 0).toFixed(4)}</td>
           <td class="mono green">+${(o.gross_pct || 0).toFixed(2)}%</td>
           <td class="mono red">-${(o.gas_cost_pct || 0).toFixed(3)}%</td>
           <td class="mono green"><strong>+${(o.net_pct || 0).toFixed(2)}%</strong></td>
           <td class="mono green">+$${(o.net_usd_1k || 0).toFixed(2)}</td>
-          <td class="mono" style="font-size:11px; color:var(--text-muted);">$${Number(o.buy_liquidity || 0).toLocaleString(undefined, {maximumFractionDigits:0})}</td>
+          <td class="mono font-xs text-muted">$${Number(o.buy_liquidity || 0).toLocaleString(undefined, {maximumFractionDigits:0})}</td>
           <td><span class="badge badge-live">Actionable</span></td>
         </tr>
       `).join('');
@@ -1097,23 +1072,6 @@
       } catch(e) {
         btn.disabled = false;
         btn.textContent = '🚀 Run AI Cycle';
-      }
-    });
-
-    document.getElementById('btn-scan-dex').addEventListener('click', async function() {
-      const btn = this;
-      btn.disabled = true;
-      btn.textContent = '⏳ Scanning DEXs...';
-      try {
-        await fetch('/api/export/live', { method: 'POST' });
-        setTimeout(async () => {
-          await loadFullStackData();
-          btn.disabled = false;
-          btn.textContent = '⚡ Scan DEX Arb';
-        }, 3000);
-      } catch(e) {
-        btn.disabled = false;
-        btn.textContent = '⚡ Scan DEX Arb';
       }
     });
 
@@ -1167,7 +1125,8 @@
         const data = await res.json();
         if (data.success && data.simulation) {
           const sim = data.simulation;
-          document.getElementById('fl-result-box').style.display = 'block';
+          const resBox = document.getElementById('fl-result-box');
+          if (resBox) resBox.classList.remove('d-none');
           document.getElementById('fl-gross').textContent = `+$${sim.grossProfitUsd.toFixed(2)}`;
           document.getElementById('fl-fee').textContent = `-$${sim.flashLoanFeeUsd.toFixed(2)} (${sim.protocolFeeRate})`;
           document.getElementById('fl-gas').textContent = `-$${(sim.gasCostUsd + sim.slippageUsd).toFixed(2)}`;
@@ -1204,9 +1163,10 @@
       const fiatAmount = document.getElementById('ob-amount').value;
       const cryptoAsset = document.getElementById('ob-crypto').value;
       const network = document.getElementById('ob-network').value;
+      const walletAddress = document.getElementById('ob-wallet').value;
 
       try {
-        const res = await fetch(`/api/onboarding/quotes?fiatCurrency=${fiatCurrency}&fiatAmount=${fiatAmount}&cryptoAsset=${cryptoAsset}&network=${network}`);
+        const res = await fetch(`/api/onboarding/quotes?fiatCurrency=${fiatCurrency}&fiatAmount=${fiatAmount}&cryptoAsset=${cryptoAsset}&network=${network}&walletAddress=${encodeURIComponent(walletAddress)}`);
         const data = await res.json();
         const tbody = document.getElementById('onramp-quotes-body');
         if (data.success && data.quotes) {
@@ -1217,9 +1177,9 @@
               <td class="mono red">${q.feePct} ($${q.feeUsd})</td>
               <td class="mono green"><strong>$${q.netDepositUsd}</strong></td>
               <td class="mono green"><strong>${q.estCryptoReceived} ${q.cryptoAsset}</strong></td>
-              <td style="font-size:12px; color:var(--text-muted);">${q.paymentMethods.join(', ')}</td>
-              <td style="font-size:12px;">${q.speed}</td>
-              <td><a href="${q.checkoutUrl}" target="_blank" class="btn btn-green" style="padding:4px 8px; font-size:11px; text-decoration:none;">💳 Fund Wallet</a></td>
+              <td class="font-sm text-muted">${q.paymentMethods.join(', ')}</td>
+              <td class="font-sm">${q.speed}</td>
+              <td><a href="${q.checkoutUrl}" target="_blank" class="btn btn-green btn-fund-wallet">💳 Fund Wallet</a></td>
             </tr>
           `).join('');
         }
@@ -1368,8 +1328,8 @@
             const c24h = m.change24h || 0;
             return `
               <tr>
-                <td><strong>${m.name}</strong> <span class="mono" style="color:var(--text-muted);">(${m.symbol})</span></td>
-                <td><span class="badge" style="background:#1f2937; text-transform:uppercase;">${m.chain || 'DEX'}</span></td>
+                <td><strong>${m.name}</strong> <span class="mono text-muted">(${m.symbol})</span></td>
+                <td><span class="badge badge-chain">${m.chain || 'DEX'}</span></td>
                 <td class="mono"><strong>$${m.priceUsd < 0.01 ? m.priceUsd.toFixed(8) : m.priceUsd.toFixed(4)}</strong></td>
                 <td class="mono ${c5m >= 0 ? 'green' : 'red'}">${c5m >= 0 ? '+' : ''}${c5m.toFixed(2)}%</td>
                 <td class="mono ${c1h >= 0 ? 'green' : 'red'}">${c1h >= 0 ? '+' : ''}${c1h.toFixed(2)}%</td>
@@ -1383,9 +1343,10 @@
           }).join('');
         }
       } catch (e) {
-        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:20px;">Failed to scan DexScreener tokens.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="10" class="loading-placeholder">Failed to scan DexScreener tokens.</td></tr>';
       }
     }
+
 
     // ==============================================================================
     // Autonomous Auto-Trading Engine Controls & Live Countdown
@@ -1410,33 +1371,44 @@
 
           document.getElementById('autotrade-cycle-count').textContent = at.totalAutoCycles || 0;
           document.getElementById('autotrade-trade-count').textContent = at.totalAutoTrades || 0;
+          if (document.getElementById('autotrade-fl-count')) {
+            document.getElementById('autotrade-fl-count').textContent = at.totalFlashLoanTrades || 0;
+          }
+          if (document.getElementById('autotrade-meme-count')) {
+            document.getElementById('autotrade-meme-count').textContent = at.totalMemeTrades || 0;
+          }
+          if (document.getElementById('autotrade-profit-count')) {
+            const p = Number(at.totalAutoProfitUsd || 0);
+            document.getElementById('autotrade-profit-count').textContent = `${p >= 0 ? '+' : ''}$${p.toFixed(2)}`;
+          }
           document.getElementById('autotrade-interval-select').value = at.intervalSeconds || 30;
 
           if (at.isActive) {
             btn.className = 'btn btn-red';
             btn.style.boxShadow = '0 0 16px rgba(239, 68, 68, 0.4)';
             icon.textContent = '⏹️';
-            text.textContent = 'STOP AUTO-TRADING';
+            text.textContent = 'STOP 24/7 AUTOPILOT';
 
             badge.className = 'badge badge-live';
-            badge.textContent = `🟢 LIVE (${at.intervalSeconds}s Interval)`;
-            desc.innerHTML = `Automated trading engine is <strong>ACTIVE</strong> across ${at.pairs.length} pairs. Trades place automatically upon 72% AI consensus.`;
+            badge.textContent = `🟢 24/7 AUTOPILOT ACTIVE (${at.intervalSeconds}s Interval)`;
+            desc.innerHTML = `Automated trading engine is <strong>ACTIVE</strong> across <strong>5X Futures (Bitget), Zero-Capital Flash Loans (Balancer/Aave), and DexScreener Breakouts</strong>. Max profit target enforced.`;
           } else {
             btn.className = 'btn btn-green';
             btn.style.boxShadow = '0 0 12px rgba(16, 185, 129, 0.3)';
             icon.textContent = '▶️';
-            text.textContent = 'START AUTO-TRADING';
+            text.textContent = 'START 24/7 AUTOPILOT';
 
             badge.className = 'badge';
             badge.style.background = '#374151';
             badge.style.color = '#9ca3af';
-            badge.textContent = '🛑 AUTO-TRADING STOPPED';
-            desc.innerHTML = `Click <strong>"START AUTO-TRADING"</strong> to begin continuous automated trades on BTC, ETH, SOL, CRO, AVAX, ARB.`;
+            badge.textContent = '🛑 AUTOPILOT PAUSED';
+            desc.innerHTML = `Click <strong>"START 24/7 AUTOPILOT"</strong> to run continuous automated trading across 5X Futures (Bitget), DeFi Flash Loans, and DexScreener Breakouts.`;
             document.getElementById('autotrade-timer').textContent = '--';
           }
         }
       } catch (e) {}
     }
+
 
     document.getElementById('btn-autotrade-toggle').addEventListener('click', async function() {
       const btn = this;
@@ -1472,6 +1444,18 @@
       }
     });
 
+    function updateNodeClock() {
+      const now = new Date();
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const dateStr = `${days[now.getUTCDay()]}, ${months[now.getUTCMonth()]} ${String(now.getUTCDate()).padStart(2, '0')}, ${now.getUTCFullYear()}`;
+      const timeStr = `${String(now.getUTCHours()).padStart(2, '0')}:${String(now.getUTCMinutes()).padStart(2, '0')}:${String(now.getUTCSeconds()).padStart(2, '0')} UTC`;
+      const el = document.getElementById('node-clock-text');
+      if (el) el.textContent = `${dateStr} • ${timeStr}`;
+    }
+    updateNodeClock();
+    setInterval(updateNodeClock, 1000);
+
     // Second-by-second countdown ticker
     setInterval(() => {
       if (autoTradeActive) {
@@ -1487,7 +1471,32 @@
       }
     }, 1000);
 
+    async function resetAllNodeCounters() {
+      if (!confirm("⚠️ RESET CONFIRMATION:\n\nAre you sure you want to reset all portfolio balances, trade counters, and execution history back to $250.00 USDT?\n\nThis will:\n• Reset Portfolio Balance to $250.00 USDT\n• Reset 50% BTC Savings Vault to $0.00\n• Reset 10% Long-Term Vault to $0.00\n• Clear Executed Trade History & PnL")) {
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/reset', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert("✅ PORTFOLIO & COUNTERS RESET COMPLETE!\n\nAll balances have been restored to $250.00 USDT and all counters set to zero.");
+          await loadFullStackData();
+          await loadBotOutputs();
+          await loadMarginStatus();
+        } else {
+          alert("Reset error: " + (data.error || "Unknown error"));
+        }
+      } catch (e) {
+        alert("Network error executing reset: " + e.message);
+      }
+    }
+
     // Auto-polling lifecycle
+    initTradingViewWidget(currentTvSymbol, currentTvInterval);
     loadFullStackData();
     loadBotOutputs();
     loadOnChainData();

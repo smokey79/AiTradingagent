@@ -1,5 +1,47 @@
 [
   {
+    "id": "YT_1788046041844",
+    "timestamp": "2026-08-29T23:27:21.844Z",
+    "videoId": "dQw4w9WgXcQ",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "channel": "Rick Astley",
+    "title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+    "mentionedCoins": [
+      "BTC",
+      "ETH"
+    ],
+    "signal": "BUY",
+    "sentimentScore": 0.45,
+    "confidence": 0.82,
+    "catalysts": [
+      "Constructive market consolidation",
+      "Accumulation phase in progress"
+    ],
+    "keyTakeaway": "Video analysis from Rick Astley: BUY signal on BTC, ETH with net sentiment +0.45.",
+    "channelReliability": 0.7039000000000001
+  },
+  {
+    "id": "YT_1788045989124",
+    "timestamp": "2026-08-29T23:26:29.124Z",
+    "videoId": "dQw4w9WgXcQ",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "channel": "Rick Astley",
+    "title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+    "mentionedCoins": [
+      "BTC",
+      "ETH"
+    ],
+    "signal": "BUY",
+    "sentimentScore": 0.45,
+    "confidence": 0.82,
+    "catalysts": [
+      "Constructive market consolidation",
+      "Accumulation phase in progress"
+    ],
+    "keyTakeaway": "Video analysis from Rick Astley: BUY signal on BTC, ETH with net sentiment +0.45.",
+    "channelReliability": 0.6715
+  },
+  {
     "id": "YT_1788014352869",
     "timestamp": "2026-08-29T14:39:12.869Z",
     "videoId": "dQw4w9WgXcQ",

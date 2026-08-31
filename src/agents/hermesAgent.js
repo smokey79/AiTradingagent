@@ -11,7 +11,7 @@ const path = require('path');
 const logger = require('../utils/logger');
 
 const SKILL_PATH = path.resolve(__dirname, '../../agents/skills/SKILL_HERMES_VALIDATOR.md');
-const OLLAMA_BASE = process.env.OLLAMA_URL || 'http://localhost:11434';
+const OLLAMA_BASE = process.env.OLLAMA_URL || 'http://127.0.0.1:11434';
 const HERMES_MODEL = process.env.HERMES_MODEL || 'hermes3';
 const OPENROUTER_HERMES_MODEL = process.env.OPENROUTER_HERMES_MODEL || 'nousresearch/hermes-3-llama-3.1-8b';
 
@@ -60,7 +60,7 @@ Output strictly valid JSON with keys: signal, confidence, reason, constraints, r
         temperature: 0.2,
       },
     },
-    { timeout: 8000 }
+    { timeout: 30000, proxy: false }
   );
 
   const text = res.data?.response?.trim();

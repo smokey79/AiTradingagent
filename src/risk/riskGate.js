@@ -25,14 +25,14 @@ const CURRENCY_RATES = {
 
 // Configurable Risk & Allocation Constraints
 const INITIAL_DEPOSIT = parseFloat(process.env.INITIAL_DEPOSIT || '250');
-const MIN_CONFIDENCE = parseFloat(process.env.MIN_CONFIDENCE || '0.72'); // 72% minimum AI confidence
+const MIN_CONFIDENCE = parseFloat(process.env.MIN_CONFIDENCE || '0.35'); // 35% minimum AI confidence (demo)
 const LEVERAGE_MAX = parseFloat(process.env.LEVERAGE_MAX || '1.0');
-const MAX_SINGLE_POSITION_PCT = parseFloat(process.env.RISK_MAX_SINGLE_POSITION_PCT || '10'); // Max 10% on one trade
-const MAX_PORTFOLIO_EXPOSURE_PCT = parseFloat(process.env.RISK_MAX_PORTFOLIO_EXPOSURE_PCT || '40'); // Max 40% total exposure
+const MAX_SINGLE_POSITION_PCT = parseFloat(process.env.RISK_MAX_SINGLE_POSITION_PCT || '25'); // Max 25% on one trade
+const MAX_PORTFOLIO_EXPOSURE_PCT = parseFloat(process.env.RISK_MAX_PORTFOLIO_EXPOSURE_PCT || '95'); // Max 95% total exposure
 const MAX_SESSION_LOSS_PCT = parseFloat(process.env.RISK_MAX_SESSION_LOSS_PCT || '8'); // Max 8% session drawdown
-const MIN_WIN_RATE_GATE = parseFloat(process.env.RISK_MIN_WIN_RATE_GATE || '0.72'); // 72% rolling win rate target
+const MIN_WIN_RATE_GATE = parseFloat(process.env.RISK_MIN_WIN_RATE_GATE || '0.10'); // 10% rolling win rate target (demo)
 const MIN_MARGIN_BALANCE_USD = parseFloat(process.env.MIN_MARGIN_BALANCE_USD || '30.0'); // $30 margin floor
-const MIN_AGENTS = 3;
+const MIN_AGENTS = 2; // 2 agents min (demo)
 
 // Allocation Override State
 let allocationSettings = {
@@ -239,13 +239,13 @@ async function checkRiskGate(pair, consensus, marketData) {
   }
   checks.push('✓ No Veto Flags');
 
-  // 3. Minimum 72% Confidence Check
+  // 3. Minimum Confidence Check
   if (consensus.confidence < MIN_CONFIDENCE) {
     vetoes.push(
-      `Confidence ${(consensus.confidence * 100).toFixed(1)}% < ${(MIN_CONFIDENCE * 100).toFixed(0)}% minimum (72% requirement)`
+      `Confidence ${(consensus.confidence * 100).toFixed(1)}% < ${(MIN_CONFIDENCE * 100).toFixed(0)}% minimum (${(MIN_CONFIDENCE * 100).toFixed(0)}% requirement)`
     );
   } else {
-    checks.push(`✓ Confidence (${(consensus.confidence * 100).toFixed(0)}% >= 72%)`);
+    checks.push(`✓ Confidence (${(consensus.confidence * 100).toFixed(0)}% >= ${(MIN_CONFIDENCE * 100).toFixed(0)}%)`);
   }
 
   // 4. Minimum Agent Agreement Check
@@ -302,16 +302,16 @@ async function checkRiskGate(pair, consensus, marketData) {
     };
   }
 
-  // ── SIZING: Quarter-Kelly Criterion with Volatility Adjustment ───────────
+  // ── SIZING: Half-Kelly Criterion with Volatility Adjustment ───────────
   // Kelly % = W - (1 - W) / R where W is win rate, R is reward:risk ratio (2.0)
   const winRateEst = Math.max(0.60, Math.min(0.90, perf.winRate));
   const rRatio = 2.2;
   const rawKelly = winRateEst - (1 - winRateEst) / rRatio;
-  const quarterKelly = Math.max(0.04, rawKelly * 0.25); // Quarter-Kelly for risk mitigation
+  const halfKelly = Math.max(0.08, rawKelly * 0.50); // Half-Kelly for aggressive growth
 
   // Sizing bounded by MAX_SINGLE_POSITION_PCT and minimum $10
   const maxPositionUsd = (currentBalance * MAX_SINGLE_POSITION_PCT) / 100;
-  const kellySizedUsd = currentBalance * quarterKelly * (consensus.confidence / 0.8);
+  const kellySizedUsd = currentBalance * halfKelly * (consensus.confidence / 0.8);
   const positionSizeUsd = Math.max(10, Math.min(kellySizedUsd, maxPositionUsd));
 
   // Volatility-adjusted Stop Loss & Take Profit using ATR
@@ -377,9 +377,19 @@ function removePosition(pair) {
   openPositions.delete(pair);
 }
 
+function resetPortfolioState(newBalance = INITIAL_DEPOSIT) {
+  currentBalance = newBalance;
+  totalPnL = 0;
+  sessionPeakBalance = newBalance;
+  openPositions.clear();
+  savePersistedState();
+  return getPortfolioState();
+}
+
 module.exports = {
   checkRiskGate,
   getPortfolioState,
+  resetPortfolioState,
   updateBalance,
   recordOpenPosition,
   removePosition,

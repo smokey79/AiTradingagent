@@ -9,8 +9,8 @@ const http = require('http');
 const { WebSocketServer } = require('ws');
 const path = require('path');
 const logger = require('../utils/logger');
-const { getPortfolioState } = require('../risk/riskGate');
-const { getVaultSummary } = require('../utils/profitAllocator');
+const { getPortfolioState, resetPortfolioState } = require('../risk/riskGate');
+const { getVaultSummary, resetVaultState } = require('../utils/profitAllocator');
 const { getPerformanceStats, loadLedger } = require('../risk/tradeLedger');
 const { detectArbitrageOpportunities } = require('../arbitrage/arbScanner');
 
@@ -18,7 +18,7 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
-const PORT = parseInt(process.env.DASHBOARD_PORT || '3001', 10);
+const PORT = parseInt(process.env.PORT || process.env.DASHBOARD_PORT || '3001', 10);
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 app.use(express.json());
@@ -98,6 +98,78 @@ app.get('/api/vault', (req, res) => {
   }
 });
 
+app.post(['/api/reset', '/api/portfolio/reset'], (req, res) => {
+  try {
+    const fs = require('fs');
+    const dataDir = path.resolve(__dirname, '../../data');
+    const nowIso = new Date().toISOString();
+
+    // 1. Reset Risk Gate in-memory balance and portfolio_state.json
+    const portfolio = resetPortfolioState(250.0);
+
+    // 2. Reset Vault in-memory balance and vault_summary.json
+    const vault = resetVaultState();
+
+    // 3. Reset agent_account_ledger.json
+    const agentLedger = {
+      sub_account_name: 'Agent Trade Account',
+      is_sub_account: true,
+      starting_balance_usdt: 250.0,
+      manual_allocated_usdt: 250.0,
+      reinvested_profit_usdt: 0.0,
+      current_balance_usdt: 250.0,
+      available_margin_usdt: 250.0,
+      active_positions_margin_usdt: 0.0,
+      daily_profit_split_ratio: { nexo_btc_bank_pct: 50.0, agent_account_reinvest_pct: 50.0 },
+      nexo_btc_wallet: 'bc1qsmokey79nexoautoreserve',
+      total_nexo_btc_banked_usd: 0.0,
+      total_nexo_btc_accumulated: 0.0,
+      total_realized_profit_usd: 0.0,
+      daily_take_profit_cycles_count: 0,
+      history: [],
+    };
+    fs.writeFileSync(path.join(dataDir, 'agent_account_ledger.json'), JSON.stringify(agentLedger, null, 2));
+
+    // 4. Reset nexo_btc_sweeper_ledger.json
+    const nexoLedger = {
+      total_swept_usd: 0.0,
+      total_btc_accumulated: 0.0,
+      sweep_address: 'bc1qsmokey79nexoautoreserve',
+      sweep_ratio_pct: 50.0,
+      sweeps_count: 0,
+      history: [],
+    };
+    fs.writeFileSync(path.join(dataDir, 'nexo_btc_sweeper_ledger.json'), JSON.stringify(nexoLedger, null, 2));
+
+    // 5. Reset strategy_memory.json
+    const stratMem = {
+      version: 1,
+      lastUpdated: nowIso,
+      tradeHistory: [],
+      channelCredibility: {},
+      stats: { wins: 0, losses: 0, totalPnl: 0.0, winRate: 1.0, winAmounts: [], lossAmounts: [], symbolStats: {} },
+      notes: 'This file is the persistent strategy brain.',
+    };
+    fs.writeFileSync(path.resolve(__dirname, '../strategy/strategy_memory.json'), JSON.stringify(stratMem, null, 2));
+
+    // 6. Reset trade_ledger.json
+    fs.writeFileSync(path.join(dataDir, 'trade_ledger.json'), '\n');
+
+    logger.info('[DashboardServer] Master reset executed: restored $250.00 USDT baseline and cleared all counters.');
+
+    res.json({
+      success: true,
+      message: 'All balances, counters, and trade history reset to $250.00 USDT.',
+      portfolio,
+      vault,
+      performance: getPerformanceStats(20),
+    });
+  } catch (err) {
+    logger.error(`[DashboardServer] Reset error: ${err.message}`);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 app.get('/api/config', (req, res) => {
   try {
     const { validateConfig } = require('../utils/envValidator');
@@ -135,6 +207,92 @@ app.get('/api/prices', async (req, res) => {
     }
 
     res.json({ success: true, count: Object.keys(results).length, prices: results, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ─── Strategy Learning & Backtesting Endpoints ──────────────────────────────
+
+app.get('/api/strategy/learned', (req, res) => {
+  try {
+    const { loadLearnedStrategies } = require('../learning/strategyLearningAgent');
+    const strategies = loadLearnedStrategies();
+    res.json({ success: true, count: strategies.length, strategies });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/strategy/backtest', async (req, res) => {
+  try {
+    const { backtestStrategy } = require('../learning/strategyLearningAgent');
+    const {
+      symbol = 'BTC/USDT',
+      timeframe = '15m',
+      strategyType = 'smc_luxalgo_5x',
+      params = {},
+      initialCapital = 1000,
+      leverage = 5.0,
+      limit = 250,
+    } = req.body || {};
+
+    const results = await backtestStrategy({
+      symbol,
+      timeframe,
+      strategyType,
+      params,
+      initialCapital,
+      leverage,
+      limit,
+    });
+    res.json({ success: true, results });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/strategy/learn', async (req, res) => {
+  try {
+    const { optimizeStrategy } = require('../learning/strategyLearningAgent');
+    const {
+      symbol = 'BTC/USDT',
+      timeframe = '15m',
+      strategyType = 'smc_luxalgo_5x',
+      iterations = 8,
+      leverage = 5.0,
+    } = req.body || {};
+
+    const learned = await optimizeStrategy({
+      symbol,
+      timeframe,
+      strategyType,
+      iterations,
+      leverage,
+    });
+    res.json({ success: true, learned });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/strategy/pinescript', (req, res) => {
+  try {
+    const { generatePineScript, exportPineScriptToFile } = require('../learning/strategyLearningAgent');
+    const {
+      symbol = 'BTC/USDT',
+      strategyType = 'smc_luxalgo_5x',
+      params = {},
+      saveToFile = false,
+    } = req.body || {};
+
+    const pineCode = generatePineScript(strategyType, symbol, params);
+    let filePath = null;
+    if (saveToFile) {
+      const exp = exportPineScriptToFile(strategyType, symbol, params);
+      filePath = exp.filePath;
+    }
+    res.json({ success: true, symbol, strategyType, pinescript: pineCode, filePath });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -693,7 +851,12 @@ function startServer() {
 }
 
 if (require.main === module) {
-  startServer();
+  startServer().then(() => {
+    // Make ready for demo: fully automated trading 24/7 by default
+    const { startAutoTrading } = require('../orchestrator/autoTrader');
+    logger.info('🚀 Starting fully automated 24/7 trading engine for demo...');
+    startAutoTrading();
+  });
 }
 
 module.exports = {

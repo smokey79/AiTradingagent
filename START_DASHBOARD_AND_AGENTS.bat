@@ -7,7 +7,9 @@ REM  AiTradingAgent v4 — Master Desktop Launcher
 REM  Starts Live Web Dashboard + Multi-Agent Consensus Trading Engine
 REM ================================================================
 
-set PROJECT_ROOT=F:\aitradingagent
+cd /d "%~dp0"
+set PROJECT_ROOT=%~dp0
+if "%PROJECT_ROOT:~-1%"=="\" set PROJECT_ROOT=%PROJECT_ROOT:~0,-1%
 set LOG_DIR=%PROJECT_ROOT%\logs
 
 color 0B
@@ -16,13 +18,11 @@ cls
 echo =======================================================================
 echo          ⚡ AITRADINGAGENT — DASHBOARD & AUTONOMOUS AGENTS ⚡
 echo =======================================================================
-echo  Multi-LLM Consensus  : GPT-4o, Claude 3.5, DeepSeek, Gemini, Hermes
-echo  Market Feeds         : CCXT, CoinMarketCap, DexScreener, On-Chain
-echo  Risk Sentinels       : $30 Floor, Kelly Criterion, 72%% Gate
+echo  Multi-LLM Consensus  : DeepSeek R1, GPT-4o, Claude 3.7, Gemini, Grok
+echo  Multi-Platform Engine: 5X Futures (Bitget), Flash Loans, DEX Breakouts
+echo  Risk Sentinels       : $30 Floor, Kelly Criterion, 72%% Win Rate Gate
 echo =======================================================================
 echo.
-
-cd /d "%PROJECT_ROOT%"
 
 REM Ensure logs directory exists
 if not exist "%LOG_DIR%" mkdir "%LOG_DIR%"
@@ -51,31 +51,44 @@ if exist "%PROJECT_ROOT%\venv\Scripts\activate.bat" (
     set PYTHON_BIN=python
 )
 
-echo [OK] Environments verified.
+echo [OK] Runtime environments verified.
 echo.
+
+echo [*] Cleaning previous instances to prevent port conflicts...
+taskkill /FI "WINDOWTITLE eq Dashboard-3001*" /F /T >nul 2>&1
+taskkill /FI "WINDOWTITLE eq Studio-3002*" /F /T >nul 2>&1
+taskkill /FI "WINDOWTITLE eq Trading-Agents*" /F /T >nul 2>&1
+taskkill /FI "WINDOWTITLE eq Telegram-Listener*" /F /T >nul 2>&1
 
 REM 3. Start Live Dashboard (Express + WebSockets + Real-Time Engine) on port 3001
 echo [*] Starting Live Trading Dashboard & WebSocket Server on port 3001...
 set PORT=3001
 set DASHBOARD_PORT=3001
-start "AiTradingAgent - Live Dashboard (Port 3001)" /MIN cmd /c "title Dashboard-3001 && node src/dashboard/server.js >> logs\dashboard_node.log 2>&1"
+start "AiTradingAgent - Live Dashboard (Port 3001)" /MIN cmd /c "title Dashboard-3001 && cd /d %PROJECT_ROOT% && node src\dashboard\server.js >> logs\dashboard_node.log 2>&1"
 
 REM 4. Start WSGI Developments Studio (Waitress Flask Server) on port 3002
 echo [*] Starting Developments Studio & Charting WSGI on port 3002...
 set DASHBOARD_PORT=3002
-start "AiTradingAgent - WSGI Studio (Port 3002)" /MIN cmd /c "title Studio-3002 && %PYTHON_BIN% wsgi.py >> logs\wsgi_studio.log 2>&1"
+start "AiTradingAgent - WSGI Studio (Port 3002)" /MIN cmd /c "title Studio-3002 && cd /d %PROJECT_ROOT% && python wsgi.py >> logs\wsgi_studio.log 2>&1"
 
 REM 5. Start Multi-Agent Consensus Trading Orchestrator
 echo [*] Starting Multi-Agent Consensus Trading Engine...
-start "AiTradingAgent - Multi-Agent Engine" cmd /k "title Trading-Agents && cd /d %PROJECT_ROOT% && node src/orchestrator/index.js"
+start "AiTradingAgent - Multi-Agent Engine" cmd /k "title Trading-Agents && cd /d %PROJECT_ROOT% && node src\orchestrator\index.js"
 
-REM Wait 3 seconds for servers to bind ports
-timeout /t 3 /nobreak >nul
+REM 5.5 Start Telegram Signals Listener (Background)
+echo [*] Starting Telegram Signals Listener...
+start "AiTradingAgent - Telegram Listener" /MIN cmd /c "title Telegram-Listener && cd /d %PROJECT_ROOT% && node src\notifications\telegramListener.js >> logs\telegram_listener.log 2>&1"
+
+REM Wait 2 seconds for servers to bind ports
+timeout /t 2 /nobreak >nul
 
 REM 6. Open Web Dashboard in default browser
 echo [*] Opening Live Trading Dashboard in browser...
-start http://localhost:3001
-start http://localhost:3002
+start "" "http://localhost:3001"
+explorer "http://localhost:3001"
+powershell -Command "Start-Process 'http://localhost:3001'" >nul 2>&1
+powershell -Command "Start-Process 'chrome.exe' 'http://localhost:3001'" >nul 2>&1
+powershell -Command "Start-Process 'msedge.exe' 'http://localhost:3001'" >nul 2>&1
 
 echo.
 echo =======================================================================
@@ -90,5 +103,5 @@ echo.
 echo  [TIP] To stop all services at any time, use the "Stop AiTradingAgent"
 echo        shortcut on your desktop, or run STOP_DASHBOARD_AND_AGENTS.bat
 echo.
-echo Press any key to minimize this status window...
+echo Press any key to close this status window (services keep running)...
 pause >nul

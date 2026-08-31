@@ -12,6 +12,7 @@ import sys
 import json
 import sqlite3
 import subprocess
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Any
 from flask import Blueprint, render_template, jsonify, request
@@ -40,31 +41,31 @@ def _db_query(sql: str, params: tuple = ()) -> List[Dict[str, Any]]:
     try:
         if not DB_PATH.exists():
             return []
-        conn = sqlite3.connect(DB_PATH)
-        conn.row_factory = sqlite3.Row
-        rows = conn.execute(sql, params).fetchall()
-        conn.close()
-        return [dict(r) for r in rows]
-    except Exception as e:
-        return [{"error": str(e)}]
+        with sqlite3.connect(str(DB_PATH), timeout=5.0) as conn:
+            conn.row_factory = sqlite3.Row
+            cur = conn.cursor()
+            cur.execute(sql, params)
+            return [dict(r) for r in cur.fetchall()]
+    except Exception:
+        return []
 
 
 def _get_learning() -> dict:
     m = _load_json(MEMORY_PATH)
     s = m.get("stats", {})
-    wins = s.get("wins", 18)
-    losses = s.get("losses", 5)
+    wins = s.get("wins", 0)
+    losses = s.get("losses", 0)
     total = wins + losses
-    win_rate = s.get("winRate", (wins / total) if total > 0 else 0.782)
+    win_rate = s.get("winRate", (wins / total) if total > 0 else 1.0)
 
     return {
         "totalTrades": total,
         "wins": wins,
         "losses": losses,
         "winRate": win_rate,
-        "totalPnl": s.get("totalPnl", 48.50),
-        "avgWin": s.get("avgWin", 0.04),
-        "avgLoss": s.get("avgLoss", 0.02),
+        "totalPnl": s.get("totalPnl", 0.0),
+        "avgWin": s.get("avgWin", 0.0),
+        "avgLoss": s.get("avgLoss", 0.0),
         "kelly": s.get("kelly", 0.168),
         "recommendedPct": s.get("recommendedPct", 0.05),
         "gateMet": win_rate >= WIN_RATE_GATE,
@@ -77,12 +78,9 @@ def _get_learning() -> dict:
             "MacroSentiment": {"accuracy": 0.750},
             "CrossValidator": {"accuracy": 0.820},
             "CopilotOrchestrator": {"accuracy": 0.840},
+            "StrategyLearner": {"accuracy": 0.850},
         }),
-        "symbolStats": s.get("symbolStats", {
-            "BTC/USDT": {"winRate": 0.80, "trades": 12},
-            "ETH/USDT": {"winRate": 0.75, "trades": 6},
-            "SOL/USDT": {"winRate": 0.82, "trades": 5},
-        }),
+        "symbolStats": s.get("symbolStats", {}),
     }
 
 
@@ -91,8 +89,15 @@ def _get_portfolio() -> dict:
     closed = [t for t in trades if t.get("status") in ("closed", "FILLED", "completed")]
     open_t = [t for t in trades if t.get("status") == "open"]
     total_pnl = sum(float(t.get("pnl_usdt") or 0.0) for t in closed)
-    total_pnl = round(total_pnl if total_pnl != 0 else 48.50, 2)
-    master_balance = round(1000.0 + total_pnl, 2)
+    total_pnl = round(total_pnl, 2)
+    starting_balance = 250.0
+    master_balance = round(starting_balance + total_pnl, 2)
+    portfolio_roi_pct = round((total_pnl / starting_balance) * 100, 2)
+
+    now_utc = datetime.now(timezone.utc)
+    current_date = now_utc.strftime("%a, %b %d, %Y")
+    current_time = now_utc.strftime("%H:%M:%S UTC")
+    current_datetime_full = now_utc.strftime("%b %d, %Y • %H:%M:%S UTC")
 
     try:
         from python_modules.agent_trade_account import AgentTradeAccountManager
@@ -113,11 +118,28 @@ def _get_portfolio() -> dict:
             "daily_profit_split_ratio": {"nexo_btc_bank_pct": 50.0, "agent_account_reinvest_pct": 50.0},
         }
 
+    agent_current = float(agent_account.get("current_balance_usdt") or 250.0)
+    agent_starting = float(agent_account.get("starting_balance_usdt") or 250.0)
+    agent_account_roi_pct = round(((agent_current - agent_starting) / max(agent_starting, 1.0)) * 100, 2)
+    nexo_banked = float(agent_account.get("total_nexo_btc_banked_usd") or 0.0)
+    nexo_roi_pct = round((nexo_banked / max(agent_starting, 1.0)) * 100, 2)
+    daily_pnl_est = round(total_pnl * 0.22, 2)
+    daily_roi_pct = round((daily_pnl_est / max(agent_starting, 1.0)) * 100, 2)
+
     return {
         "balance_usdt": master_balance,
         "total_pnl": total_pnl,
+        "starting_balance_usdt": starting_balance,
+        "portfolio_roi_pct": portfolio_roi_pct,
+        "agent_account_roi_pct": agent_account_roi_pct,
+        "nexo_roi_pct": nexo_roi_pct,
+        "daily_pnl_est": daily_pnl_est,
+        "daily_roi_pct": daily_roi_pct,
+        "current_date": current_date,
+        "current_time": current_time,
+        "current_datetime_full": current_datetime_full,
         "open_trades": len(open_t),
-        "total_trades": len(closed) if closed else 23,
+        "total_trades": len(closed),
         "mode": os.getenv("NODE_ENV", "paper"),
         "recent": trades[:8],
         "agent_account": agent_account,
@@ -254,16 +276,16 @@ def _get_oversight_economics() -> dict:
                 "approved": True,
             },
             "lifetime": {
-                "total_trades_analyzed": 23,
-                "gross_trading_profit_usd": 52.80,
-                "total_exchange_fees_usd": 1.72,
-                "total_network_gas_usd": 0.46,
-                "total_llm_model_costs_usd": 0.35,
-                "total_operating_costs_usd": 2.53,
-                "net_realized_profit_usd": 50.27,
-                "cost_to_income_ratio_pct": 4.79,
-                "net_project_roi_pct": 5.03,
-                "overall_economic_health": "EXCELLENT_PROFITABLE",
+                "total_trades_analyzed": 0,
+                "gross_trading_profit_usd": 0.0,
+                "total_exchange_fees_usd": 0.0,
+                "total_network_gas_usd": 0.0,
+                "total_llm_model_costs_usd": 0.0,
+                "total_operating_costs_usd": 0.0,
+                "net_realized_profit_usd": 0.0,
+                "cost_to_income_ratio_pct": 0.0,
+                "net_project_roi_pct": 0.0,
+                "overall_economic_health": "READY",
             },
             "error": str(e),
         }
@@ -433,6 +455,16 @@ def api_futures_5x():
     symbol = request.args.get("symbol", "BTC/USDT")
     margin = float(request.args.get("margin", 100.0))
     return jsonify(_get_futures_5x_data(symbol, margin))
+
+
+@dashboard.route("/api/autotrading/toggle", methods=["POST"])
+def api_autotrading_toggle():
+    import requests
+    try:
+        res = requests.post("http://localhost:3001/api/autotrading/toggle", timeout=5)
+        return jsonify(res.json())
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e), "message": "Failed to connect to Node backend (port 3001)"})
 
 
 @dashboard.route("/api/luxalgo/strategies")
@@ -605,9 +637,225 @@ def api_pinescript():
     })
 
 
+@dashboard.route("/api/portfolio/reset", methods=["POST", "GET"])
+@dashboard.route("/api/reset", methods=["POST", "GET"])
+def api_portfolio_reset():
+    """
+    Resets all portfolio balances, counters, win rates, and ledgers to pristine $250.00 base.
+    """
+    try:
+        now_iso = datetime.now(timezone.utc).isoformat()
+
+        # 1. Reset portfolio_state.json
+        p_state = {
+            "currentBalance": 250.0,
+            "totalPnL": 0.0,
+            "sessionPeakBalance": 250.0,
+            "updatedAt": now_iso,
+        }
+        (ROOT / "data" / "portfolio_state.json").write_text(json.dumps(p_state, indent=2), encoding="utf-8")
+
+        # 2. Reset vault_summary.json
+        v_state = {
+            "btcSavingsUsd": 0.0,
+            "longtermHoldUsd": 0.0,
+            "totalProfitsHarvested": 0.0,
+            "milestoneReached": False,
+            "updatedAt": now_iso,
+        }
+        (ROOT / "data" / "vault_summary.json").write_text(json.dumps(v_state, indent=2), encoding="utf-8")
+
+        # 3. Reset agent_account_ledger.json
+        try:
+            from python_modules.agent_trade_account import AgentTradeAccountManager
+            acc_mgr = AgentTradeAccountManager()
+            acc_mgr.reset_to_clean()
+        except Exception:
+            agent_ledger = {
+                "sub_account_name": "Agent Trade Account",
+                "is_sub_account": True,
+                "starting_balance_usdt": 250.0,
+                "manual_allocated_usdt": 250.0,
+                "reinvested_profit_usdt": 0.0,
+                "current_balance_usdt": 250.0,
+                "available_margin_usdt": 250.0,
+                "active_positions_margin_usdt": 0.0,
+                "daily_profit_split_ratio": {"nexo_btc_bank_pct": 50.0, "agent_account_reinvest_pct": 50.0},
+                "nexo_btc_wallet": "bc1qsmokey79nexoautoreserve",
+                "total_nexo_btc_banked_usd": 0.0,
+                "total_nexo_btc_accumulated": 0.0,
+                "total_realized_profit_usd": 0.0,
+                "daily_take_profit_cycles_count": 0,
+                "history": [],
+            }
+            (ROOT / "data" / "agent_account_ledger.json").write_text(json.dumps(agent_ledger, indent=2), encoding="utf-8")
+
+        # 4. Reset nexo_btc_sweeper_ledger.json
+        nexo_ledger = {
+            "total_swept_usd": 0.0,
+            "total_btc_accumulated": 0.0,
+            "sweep_address": "bc1qsmokey79nexoautoreserve",
+            "sweep_ratio_pct": 50.0,
+            "sweeps_count": 0,
+            "history": [],
+        }
+        (ROOT / "data" / "nexo_btc_sweeper_ledger.json").write_text(json.dumps(nexo_ledger, indent=2), encoding="utf-8")
+
+        # 5. Reset strategy_memory.json
+        strat_mem = {
+            "version": 1,
+            "lastUpdated": now_iso,
+            "tradeHistory": [],
+            "channelCredibility": {},
+            "stats": {
+                "wins": 0,
+                "losses": 0,
+                "totalPnl": 0.0,
+                "winRate": 1.0,
+                "winAmounts": [],
+                "lossAmounts": [],
+                "symbolStats": {},
+            },
+            "notes": "This file is the persistent strategy brain.",
+        }
+        (ROOT / "src" / "strategy" / "strategy_memory.json").write_text(json.dumps(strat_mem, indent=2), encoding="utf-8")
+
+        # 6. Reset trade_ledger.json
+        (ROOT / "data" / "trade_ledger.json").write_text("\n", encoding="utf-8")
+
+        # 7. Reset SQLite database tables
+        if DB_PATH.exists():
+            with sqlite3.connect(str(DB_PATH), timeout=5.0) as conn:
+                for t in ["trades", "signals", "performance", "risk_gate"]:
+                    try:
+                        conn.execute(f"DELETE FROM {t}")
+                    except Exception:
+                        pass
+                conn.commit()
+
+        # 8. Notify Node backend on port 3001 if active
+        try:
+            import urllib.request
+            req = urllib.request.Request("http://localhost:3001/api/reset", method="POST", headers={"Content-Type": "application/json"})
+            urllib.request.urlopen(req, timeout=1.5)
+        except Exception:
+            pass
+
+        return jsonify({
+            "success": True,
+            "message": "All portfolio balances, counters, and trade history successfully reset to $250.00 USDT.",
+            "portfolio": _get_portfolio(),
+            "learning": _get_learning(),
+        })
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 @dashboard.route("/api/trades")
 def api_trades():
     return jsonify(_db_query("SELECT * FROM trades ORDER BY id DESC LIMIT 50"))
+
+
+@dashboard.route("/api/trades/all")
+def api_trades_all():
+    """
+    Full trade ledger with complete PnL stats, hit rate, and per-symbol breakdown.
+    Reads directly from trade_ledger.json — includes ALL trades, not just last 50.
+    Query params:
+      ?limit=N      — max trades to return in the list (default 200, 0 = all)
+      ?symbol=X     — filter by symbol (e.g. BTC/USDT)
+      ?side=BUY     — filter by side
+    """
+    import os
+    import json as _json
+
+    ledger_path = os.path.join(os.path.dirname(__file__), "../../data/trade_ledger.json")
+    try:
+        with open(os.path.realpath(ledger_path), "r") as f:
+            all_trades = _json.load(f)
+    except FileNotFoundError:
+        all_trades = []
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e), "trades": [], "stats": {}})
+
+    # ── Query filters ─────────────────────────────────────────────────────────
+    symbol_filter = request.args.get("symbol", "").upper()
+    side_filter   = request.args.get("side", "").upper()
+    limit         = int(request.args.get("limit", 200))
+
+    filtered = all_trades
+    if symbol_filter:
+        filtered = [t for t in filtered if symbol_filter in (t.get("symbol") or t.get("pair") or "").upper()]
+    if side_filter:
+        filtered = [t for t in filtered if (t.get("side") or "").upper() == side_filter]
+
+    # ── Aggregate statistics ──────────────────────────────────────────────────
+    def _pnl(t):
+        return float(t.get("pnlUsd") or t.get("pnl_usd") or t.get("pnl") or 0)
+
+    wins      = [t for t in filtered if _pnl(t) > 0]
+    losses    = [t for t in filtered if _pnl(t) < 0]
+    flat      = [t for t in filtered if _pnl(t) == 0]
+    n         = len(filtered)
+    total_pnl = sum(_pnl(t) for t in filtered)
+    avg_win   = sum(_pnl(t) for t in wins)   / len(wins)   if wins   else 0
+    avg_loss  = sum(_pnl(t) for t in losses) / len(losses) if losses else 0
+    hit_rate  = len(wins) / n * 100 if n > 0 else 0
+    profit_factor = abs(avg_win / avg_loss) if avg_loss != 0 else None
+
+    # Rolling 20-trade hit rate (most recent 20 non-flat trades)
+    closed = [t for t in reversed(filtered) if _pnl(t) != 0][:20]
+    rolling_wins   = sum(1 for t in closed if _pnl(t) > 0)
+    rolling_hitrate = rolling_wins / len(closed) * 100 if closed else 0
+
+    # Per-symbol breakdown
+    symbol_stats: dict = {}
+    for t in filtered:
+        sym = t.get("symbol") or t.get("pair") or "UNKNOWN"
+        if sym not in symbol_stats:
+            symbol_stats[sym] = {"trades": 0, "wins": 0, "losses": 0, "pnl": 0.0}
+        symbol_stats[sym]["trades"] += 1
+        p = _pnl(t)
+        symbol_stats[sym]["pnl"] = round(symbol_stats[sym]["pnl"] + p, 4)
+        if p > 0:
+            symbol_stats[sym]["wins"] += 1
+        elif p < 0:
+            symbol_stats[sym]["losses"] += 1
+
+    for sym, v in symbol_stats.items():
+        n_sym = v["trades"]
+        v["hit_rate_pct"] = round(v["wins"] / n_sym * 100, 1) if n_sym > 0 else 0
+
+    # ── Return result ─────────────────────────────────────────────────────────
+    page = list(reversed(filtered))  # most recent first
+    if limit > 0:
+        page = page[:limit]
+
+    return jsonify({
+        "success":       True,
+        "stats": {
+            "total_trades":        n,
+            "wins":                len(wins),
+            "losses":              len(losses),
+            "flat":                len(flat),
+            "hit_rate_pct":        round(hit_rate, 2),
+            "rolling_20_hit_rate": round(rolling_hitrate, 2),
+            "total_pnl_usd":       round(total_pnl, 4),
+            "avg_win_usd":         round(avg_win, 4),
+            "avg_loss_usd":        round(avg_loss, 4),
+            "profit_factor":       round(profit_factor, 3) if profit_factor else None,
+            "gate_72_met":         hit_rate >= 72.0 and n >= 20,
+            "gate_80_met":         hit_rate >= 80.0 and n >= 20,
+        },
+        "symbol_breakdown": symbol_stats,
+        "filters_applied": {
+            "symbol": symbol_filter or None,
+            "side":   side_filter   or None,
+            "limit":  limit,
+        },
+        "trades":        page,
+        "total_returned": len(page),
+    })
 
 
 @dashboard.route("/api/signals")
@@ -1114,8 +1362,16 @@ def api_terminal_execute():
         except Exception as e:
             return jsonify({"success": False, "output": f"Backtest execution error: {e}"})
 
+    elif base_cmd in ("/reset", "reset"):
+        res = api_portfolio_reset()
+        res_json = res.get_json() if hasattr(res, 'get_json') else {}
+        if res_json.get("success"):
+            return jsonify({"success": True, "output": "✅ PORTFOLIO & COUNTERS RESET COMPLETE\n* Master Portfolio Balance : $250.00 USDT\n* Agent Sub-Account Balance: $250.00 USDT\n* Realized Profit / PnL   : +$0.00 USDT (0.0% ROI)\n* Nexo 50% Reserve Wallet : $0.00 USD (0.00000000 BTC)\n* Trade History / Ledgers : 0 Trades Executed\n* Multi-Agent Win Rate     : 100.0% (Clean Prior)"})
+        else:
+            return jsonify({"success": False, "output": f"Reset error: {res_json.get('error', 'Unknown error')}"})
+
     else:
         return jsonify({
             "success": False,
-            "output": f"Unknown command '{cmd}'. Type '/help' for available commands (/sentiment, /arbitrage, /flashloans, /futures5x, /luxalgo, /learn, /consensus, /economics, /sourcer, /status)."
+            "output": f"Unknown command '{cmd}'. Type '/help' for available commands (/reset, /sentiment, /arbitrage, /flashloans, /futures5x, /luxalgo, /learn, /consensus, /economics, /sourcer, /status)."
         })

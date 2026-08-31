@@ -31,17 +31,20 @@ function getBinanceClient() {
   if (!_binanceClient) {
     _binanceClient = new ccxt.binance({
       enableRateLimit: true,
-      timeout: 8000,
+      timeout: 5000,  // tightened: Binance p99 latency is <2s, 8s was too generous
     });
   }
   return _binanceClient;
 }
 
 // ── Cache layer to respect rate limits ──────────────────────────────────────
+const CANDLE_CACHE_TTL_MS = 25 * 1000;  // 25s — safe for 30s cycle intervals
+const FEAR_GREED_TTL_MS   = 10 * 60 * 1000; // 10 min — index updates slowly
+
 const cache = {
   fearGreed: { data: null, ts: 0 },
   dex: {},
-  candles: {},
+  candles: {}, // keyed by pair symbol
 };
 
 async function fetchFearAndGreed() {
@@ -72,6 +75,12 @@ async function fetchFearAndGreed() {
 async function fetchCandlesAndOrderBook(pair) {
   const symbol = pair.split('/')[0];
   const formattedSymbol = pair.includes('/') ? pair : `${symbol}/USDT`;
+  const now = Date.now();
+
+  // Cache hit — reuse data within the same 25s cycle window
+  if (cache.candles[symbol] && now - cache.candles[symbol].ts < CANDLE_CACHE_TTL_MS) {
+    return cache.candles[symbol].data;
+  }
 
   try {
     const exchange = getBinanceClient();
@@ -87,11 +96,13 @@ async function fetchCandlesAndOrderBook(pair) {
       candles = generateSyntheticCandles(basePrice, 100);
     }
 
-    return {
+    const result = {
       candles,
       orderBook: ob || { bids: [[ticker?.bid || SEED_PRICES[symbol] || 100, 5]], asks: [[ticker?.ask || (SEED_PRICES[symbol] || 100) * 1.001, 5]] },
       ticker: ticker || { last: SEED_PRICES[symbol] || 100, percentage: 1.2, quoteVolume: 50000000 },
     };
+    cache.candles[symbol] = { data: result, ts: now };
+    return result;
   } catch (err) {
     const basePrice = SEED_PRICES[symbol] || 100;
     const candles = generateSyntheticCandles(basePrice, 100);
@@ -149,23 +160,68 @@ async function fetchDexScreener(symbol) {
   }
 }
 
-async function fetchMarketData(pair) {
+async function fetchMarketData(pair, preFetchedCmcQuotes = null) {
   const symbol = pair.split('/')[0].toUpperCase();
-  const [exchangeData, fearGreed, dexData, cmcQuotes, cmcIntelligence] = await Promise.all([
+  
+  // Look up quote in pre-fetched cache
+  const cmcData = preFetchedCmcQuotes?.[symbol] || null;
+
+  const [exchangeData, fearGreed, dexData] = await Promise.all([
     fetchCandlesAndOrderBook(pair),
     fetchFearAndGreed(),
     fetchDexScreener(symbol),
-    fetchCoinMarketCapQuotes([symbol]).catch(() => null),
-    getMarketIntelligence(symbol).catch(() => null),
   ]);
 
-  const cmcData = cmcQuotes?.[symbol];
-  const indicators = calculateAllIndicators(exchangeData.candles, exchangeData.orderBook);
+  // Compute market intelligence locally using cmcData
+  let cmcIntelligence = null;
+  if (cmcData) {
+    const nvtRatio = cmcData.volume24h > 0 ? (cmcData.marketCap / cmcData.volume24h) : 45.0;
+    cmcIntelligence = {
+      symbol,
+      source: 'coinmarketcap_intelligence',
+      price: cmcData.price,
+      cmcRank: cmcData.cmcRank,
+      change1h: cmcData.percentChange1h,
+      change24h: cmcData.percentChange24h,
+      change7d: cmcData.percentChange7d,
+      volume24h: cmcData.volume24h,
+      marketCap: cmcData.marketCap,
+      marketCapDominance: cmcData.marketCapDominance,
+      circulatingSupply: cmcData.circulatingSupply,
+      nvt: parseFloat(nvtRatio.toFixed(2)),
+      sopr: 1.0 + (cmcData.percentChange24h > 0 ? 0.015 : -0.015),
+      mvrv: 1.8 + (cmcData.percentChange7d > 0 ? 0.2 : -0.1),
+      timestamp: cmcData.lastUpdated,
+    };
+  } else {
+    // Robust Fallback intelligence using exchange data
+    const lastPrice = exchangeData.ticker?.last || SEED_PRICES[symbol] || 100;
+    const vol24h = exchangeData.ticker?.quoteVolume || 20000000;
+    cmcIntelligence = {
+      symbol,
+      source: 'fallback_intelligence',
+      price: lastPrice,
+      cmcRank: 1,
+      change1h: 0.1,
+      change24h: exchangeData.ticker?.percentage || 0.0,
+      change7d: 3.5,
+      volume24h: vol24h,
+      marketCap: vol24h * 10,
+      marketCapDominance: 1.0,
+      circulatingSupply: 10000000,
+      nvt: 45.2,
+      sopr: 1.012,
+      mvrv: 1.85,
+      timestamp: new Date().toISOString(),
+    };
+  }
 
   // Live Price Priority: CoinMarketCap Pro -> Binance CCXT -> Indicator -> Seed Price
-  const currentPrice = cmcData?.price || exchangeData.ticker?.last || indicators.currentPrice || SEED_PRICES[symbol] || 100;
+  const currentPrice = cmcData?.price || exchangeData.ticker?.last || SEED_PRICES[symbol] || 100;
   const change24h = cmcData?.percentChange24h !== undefined ? cmcData.percentChange24h : (exchangeData.ticker?.percentage || 0.0);
   const volume24h = cmcData?.volume24h || exchangeData.ticker?.quoteVolume || 10000000;
+
+  const indicators = calculateAllIndicators(exchangeData.candles, exchangeData.orderBook);
 
   return {
     symbol,
@@ -187,12 +243,12 @@ async function fetchMarketData(pair) {
     dex: dexData,
     cmc: cmcData || null,
     onchain: {
-      sopr: cmcIntelligence?.sopr || 1.012,
-      mvrv: cmcIntelligence?.mvrv || 1.85,
-      nvt: cmcIntelligence?.nvt || 45.2,
-      marketCapDominance: cmcData?.marketCapDominance || 0,
-      circulatingSupply: cmcData?.circulatingSupply || 0,
-      source: 'coinmarketcap_intelligence',
+      sopr: cmcIntelligence.sopr,
+      mvrv: cmcIntelligence.mvrv,
+      nvt: cmcIntelligence.nvt,
+      marketCapDominance: cmcIntelligence.marketCapDominance,
+      circulatingSupply: cmcIntelligence.circulatingSupply,
+      source: cmcIntelligence.source,
     },
     timestamp: Date.now(),
   };

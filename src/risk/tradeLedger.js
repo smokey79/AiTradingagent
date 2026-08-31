@@ -17,7 +17,18 @@ function loadLedger() {
   ensureDataDir();
   try {
     if (fs.existsSync(LEDGER_PATH)) {
-      return JSON.parse(fs.readFileSync(LEDGER_PATH, 'utf8'));
+      const data = fs.readFileSync(LEDGER_PATH, 'utf8');
+      return data
+        .split('\n')
+        .filter(line => line.trim())
+        .map(line => {
+          try {
+            return JSON.parse(line);
+          } catch (err) {
+            return null;
+          }
+        })
+        .filter(Boolean);
     }
   } catch (e) {
     logger.warn(`Could not read trade ledger: ${e.message}`);
@@ -25,13 +36,7 @@ function loadLedger() {
   return [];
 }
 
-function saveLedger(trades) {
-  ensureDataDir();
-  fs.writeFileSync(LEDGER_PATH, JSON.stringify(trades, null, 2));
-}
-
 function recordTrade(trade) {
-  const ledger = loadLedger();
   const entry = {
     id: trade.id || `T${Date.now()}`,
     timestamp: trade.timestamp || new Date().toISOString(),
@@ -51,8 +56,8 @@ function recordTrade(trade) {
     reason: trade.reason || '',
   };
 
-  ledger.push(entry);
-  saveLedger(ledger);
+  ensureDataDir();
+  fs.appendFileSync(LEDGER_PATH, JSON.stringify(entry) + '\n');
 
   // Dispatch asynchronous Telegram trade alert
   try {

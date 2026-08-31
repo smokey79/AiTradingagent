@@ -60,54 +60,20 @@ class AgentTradeAccountManager:
             "is_sub_account": True,
             "starting_balance_usdt": self.starting_balance_usdt,
             "manual_allocated_usdt": self.starting_balance_usdt,
-            "reinvested_profit_usdt": 24.25,  # 50% of recent 48.50 USDT demo profits
-            "current_balance_usdt": round(self.starting_balance_usdt + 24.25, 2),
-            "available_margin_usdt": round(self.starting_balance_usdt + 24.25, 2),
+            "reinvested_profit_usdt": 0.0,
+            "current_balance_usdt": self.starting_balance_usdt,
+            "available_margin_usdt": self.starting_balance_usdt,
             "active_positions_margin_usdt": 0.0,
             "daily_profit_split_ratio": {
                 "nexo_btc_bank_pct": round(self.nexo_bank_ratio * 100, 1),
                 "agent_account_reinvest_pct": round(self.reinvest_ratio * 100, 1),
             },
             "nexo_btc_wallet": self.nexo_sweep_address,
-            "total_nexo_btc_banked_usd": 24.25,
-            "total_nexo_btc_accumulated": 0.0003121,
-            "total_realized_profit_usd": 48.50,
-            "daily_take_profit_cycles_count": 3,
-            "history": [
-                {
-                    "id": "TP-001",
-                    "timestamp": "2026-08-27T18:00:00.000000+00:00",
-                    "source": "5X Futures BTC/USDT Breakout",
-                    "gross_profit_usd": 18.50,
-                    "nexo_btc_banked_usd": 9.25,
-                    "agent_reinvested_usd": 9.25,
-                    "btc_rate_usd": 77600.0,
-                    "btc_credited": 0.0001192,
-                    "status": "COMPLETED",
-                },
-                {
-                    "id": "TP-002",
-                    "timestamp": "2026-08-28T18:00:00.000000+00:00",
-                    "source": "DEX Arbitrage Arbitrum/Polygon",
-                    "gross_profit_usd": 14.00,
-                    "nexo_btc_banked_usd": 7.00,
-                    "agent_reinvested_usd": 7.00,
-                    "btc_rate_usd": 77700.0,
-                    "btc_credited": 0.0000901,
-                    "status": "COMPLETED",
-                },
-                {
-                    "id": "TP-003",
-                    "timestamp": "2026-08-29T12:00:00.000000+00:00",
-                    "source": "LuxAlgo SMC 5-Min Retest ETH/USDT",
-                    "gross_profit_usd": 16.00,
-                    "nexo_btc_banked_usd": 8.00,
-                    "agent_reinvested_usd": 8.00,
-                    "btc_rate_usd": 77800.0,
-                    "btc_credited": 0.0001028,
-                    "status": "COMPLETED",
-                },
-            ],
+            "total_nexo_btc_banked_usd": 0.0,
+            "total_nexo_btc_accumulated": 0.0,
+            "total_realized_profit_usd": 0.0,
+            "daily_take_profit_cycles_count": 0,
+            "history": [],
         }
         self._save_ledger(initial)
         return initial
@@ -223,6 +189,33 @@ class AgentTradeAccountManager:
             "current_balance_usdt": self.data["current_balance_usdt"],
             "available_margin_usdt": self.data["available_margin_usdt"],
         }
+
+    def reset_to_clean(self) -> Dict[str, Any]:
+        """
+        Resets sub-account ledger to initial $250.00 base with 0 history.
+        """
+        initial = {
+            "sub_account_name": self.sub_account_name,
+            "is_sub_account": True,
+            "starting_balance_usdt": self.starting_balance_usdt,
+            "manual_allocated_usdt": self.starting_balance_usdt,
+            "reinvested_profit_usdt": 0.0,
+            "current_balance_usdt": self.starting_balance_usdt,
+            "available_margin_usdt": self.starting_balance_usdt,
+            "active_positions_margin_usdt": 0.0,
+            "daily_profit_split_ratio": {
+                "nexo_btc_bank_pct": round(self.nexo_bank_ratio * 100, 1),
+                "agent_account_reinvest_pct": round(self.reinvest_ratio * 100, 1),
+            },
+            "nexo_btc_wallet": self.nexo_sweep_address,
+            "total_nexo_btc_banked_usd": 0.0,
+            "total_nexo_btc_accumulated": 0.0,
+            "total_realized_profit_usd": 0.0,
+            "daily_take_profit_cycles_count": 0,
+            "history": [],
+        }
+        self._save_ledger(initial)
+        return initial
 
     def get_account_summary(self) -> Dict[str, Any]:
         """

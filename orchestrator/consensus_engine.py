@@ -61,12 +61,15 @@ else:
     load_dotenv(PROJECT_ROOT / ".env")
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "")
 
-PRIMARY_MODEL = os.getenv("PRIMARY_MODEL", "openrouter/free")
-SECONDARY_MODEL = os.getenv("SECONDARY_MODEL", "inclusionai/ling-3.0-flash-fin:free")
-FALLBACK_MODEL = os.getenv("FALLBACK_MODEL", "openrouter/free")
-QWEN_FREE_MODEL = "openrouter/free"
-PHI_FREE_MODEL = "inclusionai/ling-3.0-flash-fin:free"
+# ── Free & High-Performance OpenRouter Models Pool ─────────────────────────────
+DEEPSEEK_MODEL = os.getenv("DEEPSEEK_MODEL", "deepseek/deepseek-r1:free")
+PRIMARY_MODEL = os.getenv("PRIMARY_MODEL", "deepseek/deepseek-r1:free")
+SECONDARY_MODEL = os.getenv("SECONDARY_MODEL", "meta-llama/llama-3.3-70b-instruct:free")
+FALLBACK_MODEL = os.getenv("FALLBACK_MODEL", "deepseek/deepseek-chat:free")
+QWEN_FREE_MODEL = os.getenv("QWEN_FREE_MODEL", "qwen/qwen-2.5-coder-32b-instruct:free")
+PHI_FREE_MODEL = os.getenv("PHI_FREE_MODEL", "google/gemini-2.0-flash-exp:free")
 
 # ── Logging ────────────────────────────────────────────────────────────────────
 os.makedirs(PROJECT_ROOT / "data", exist_ok=True)
@@ -232,6 +235,18 @@ def generate_rule_based_agent_response(agent_name: str, context: str) -> dict:
 # ══════════════════════════════════════════════════════════════════════════════
 # AGENT CALLERS
 # ══════════════════════════════════════════════════════════════════════════════
+
+async def call_deepseek(symbol: str, market_package: dict) -> dict:
+    """DeepSeek R1 Quantitative Reasoning & SMC Order Block Agent."""
+    system_prompt = load_skill("SKILL_DEEPSEEK_REASONER.md")
+    user_message = (
+        f"Analyse quantitative market indicators, SMC order block liquidity, and risk-reward ratios for {symbol}:\n"
+        f"{market_package['agent_summary']['text']}"
+    )
+    res = await call_openrouter(DEEPSEEK_MODEL, system_prompt, user_message, agent_name="deepseek_reasoner")
+    res["agent"] = "deepseek_reasoner"
+    return res
+
 
 async def call_claude(market_package: dict) -> dict:
     """Technical Analyst & Smart Money Concepts (SMC) Agent."""
@@ -429,9 +444,10 @@ async def run_consensus(
         symbol=symbol,
     )
 
-    # Step 1: Parallel Analyst Invocations + Data Sourcer + Trader Oversight + LuxAlgo Learner
-    log.info("Step 1: Ingesting Technical, Macro, Real-Time, Deep Research, Data Sourcer, Trader Oversight (5X Futures), and LuxAlgo SMC in parallel...")
+    # Step 1: Parallel Analyst Invocations + DeepSeek R1 + Data Sourcer + Trader Oversight + LuxAlgo Learner
+    log.info("Step 1: Ingesting DeepSeek R1, Technical, Macro, Real-Time, Deep Research, Data Sourcer, Trader Oversight (5X Futures), and LuxAlgo SMC in parallel...")
     results = await asyncio.gather(
+        call_deepseek(symbol, market_package),
         call_claude(market_package),
         call_gpt4o(market_package),
         call_grok(market_package),
@@ -442,7 +458,7 @@ async def run_consensus(
         return_exceptions=True,
     )
 
-    agent_names = ["technical_analyst", "sentiment_macro", "realtime_news", "deep_research", "data_sourcer", "trader_oversight", "luxalgo_learner"]
+    agent_names = ["deepseek_reasoner", "technical_analyst", "sentiment_macro", "realtime_news", "deep_research", "data_sourcer", "trader_oversight", "luxalgo_learner"]
     agent_outputs = []
     for name, res in zip(agent_names, results):
         if isinstance(res, Exception):

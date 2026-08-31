@@ -12,7 +12,7 @@ const PROVIDERS = {
     supportedFiats: ['USD', 'EUR', 'GBP', 'AUD', 'CAD', 'SGD'],
     paymentMethods: ['Bank Transfer (ACH/SEPA)', 'Credit/Debit Card', 'Apple Pay', 'Google Pay'],
     speed: 'Instant (Card) / 1-2 Days (Bank)',
-    urlTemplate: 'https://global.transak.com?cryptoCurrencyCode={CRYPTO}&defaultFiatAmount={AMOUNT}&fiatCurrency={FIAT}&network={NETWORK}',
+    urlTemplate: 'https://global.transak.com?cryptoCurrencyCode={CRYPTO}&defaultFiatAmount={AMOUNT}&fiatCurrency={FIAT}&network={NETWORK}&walletAddress={WALLET}',
   },
   moonpay: {
     name: 'MoonPay',
@@ -20,7 +20,7 @@ const PROVIDERS = {
     supportedFiats: ['USD', 'EUR', 'GBP', 'AUD', 'CAD'],
     paymentMethods: ['Debit/Credit Card', 'Apple Pay', 'Google Pay', 'SEPA'],
     speed: 'Instant (5-10 mins)',
-    urlTemplate: 'https://buy.moonpay.com?currencyCode={CRYPTO}&baseCurrencyAmount={AMOUNT}&baseCurrencyCode={FIAT}',
+    urlTemplate: 'https://buy.moonpay.com?currencyCode={CRYPTO}&baseCurrencyAmount={AMOUNT}&baseCurrencyCode={FIAT}&walletAddress={WALLET}',
   },
   stripe_crypto: {
     name: 'Stripe Crypto Onramp',
@@ -28,7 +28,7 @@ const PROVIDERS = {
     supportedFiats: ['USD', 'EUR'],
     paymentMethods: ['US Bank Account (ACH)', 'Debit Card', 'Apple Pay'],
     speed: 'Instant',
-    urlTemplate: 'https://crypto.link.com',
+    urlTemplate: 'https://crypto.link.com?walletAddress={WALLET}',
   },
   cryptocom_pay: {
     name: 'Crypto.com Pay',
@@ -36,7 +36,7 @@ const PROVIDERS = {
     supportedFiats: ['USD', 'EUR', 'GBP', 'SGD', 'HKD'],
     paymentMethods: ['Crypto.com App Balance', 'Debit Card', 'Bank Wire'],
     speed: 'Instant Zero-Fee Top Up',
-    urlTemplate: 'https://crypto.com/pay',
+    urlTemplate: 'https://crypto.com/pay?address={WALLET}',
   },
 };
 
@@ -48,8 +48,23 @@ function getFiatOnrampQuotes({
   fiatAmount = 250,
   cryptoAsset = 'USDC',
   network = 'base',
-  walletAddress = process.env.WALLET_ADDRESS_BASE || '0x49B31006509f6e16972049e0B967FE1b6a22cE25',
+  walletAddress = null,
 }) {
+  // Determine network-specific default wallet from environment variables if not provided
+  let targetWallet = walletAddress;
+  if (!targetWallet) {
+    const net = String(network).toLowerCase();
+    if (net === 'solana') {
+      targetWallet = process.env.WALLET_ADDRESS_SOL || 'HN7cABviJ3D4we6zQX51FzQ49e0B967FE1b6a22cE25';
+    } else if (net === 'cronos') {
+      targetWallet = process.env.WALLET_ADDRESS_CRO || '0xB1f64d57370c4965cBEd6319ECD058544B3Ef227';
+    } else if (net === 'arbitrum' || net === 'arbitrum one') {
+      targetWallet = process.env.WALLET_ADDRESS_ARB || process.env.WALLET_ADDRESS || '0x49B31006509f6e16972049e0B967FE1b6a22cE25';
+    } else { // default to base / ethereum
+      targetWallet = process.env.WALLET_ADDRESS_BASE || process.env.WALLET_ADDRESS || '0x49B31006509f6e16972049e0B967FE1b6a22cE25';
+    }
+  }
+
   const quotes = Object.entries(PROVIDERS).map(([key, provider]) => {
     const feeUsd = (fiatAmount * provider.feePct) / 100;
     const netDepositUsd = fiatAmount - feeUsd;
@@ -67,7 +82,8 @@ function getFiatOnrampQuotes({
       .replace('{CRYPTO}', cryptoAsset)
       .replace('{AMOUNT}', fiatAmount)
       .replace('{FIAT}', fiatCurrency)
-      .replace('{NETWORK}', network);
+      .replace('{NETWORK}', network)
+      .replace('{WALLET}', targetWallet);
 
     return {
       providerKey: key,
@@ -82,7 +98,7 @@ function getFiatOnrampQuotes({
       estCryptoReceived: parseFloat(estCryptoReceived),
       paymentMethods: provider.paymentMethods,
       speed: provider.speed,
-      destinationWallet: walletAddress,
+      destinationWallet: targetWallet,
       checkoutUrl,
     };
   });
@@ -96,7 +112,7 @@ function getFiatOnrampQuotes({
     fiatCurrency,
     cryptoAsset,
     network,
-    walletAddress,
+    walletAddress: targetWallet,
     bestQuote: quotes[0],
     quotes,
   };

@@ -3,8 +3,10 @@ import axios from "axios";
 import fs from "fs";
 import path from "path";
 import { logger } from "../utils/logger.js";
+import { scoreRAU, channelRelevanceAvg } from "../learning/rauScorer.js";
 
-const CREDIBILITY_FILE = path.resolve("src/sentiment/channel_credibility.json");
+const CREDIBILITY_FILE   = path.resolve("src/sentiment/channel_credibility.json");
+const MIN_CHANNEL_RELEVANCE = 0.30; // Skip channels whose recent videos avg below this
 
 /**
  * YoutubeSentimentAgent — Enhanced v2
@@ -206,52 +208,105 @@ Content: ${text}`;
    * Returns structured signal ready for the consensus engine.
    */
   async run() {
-    logger.info("YouTubeSentimentAgent: starting scan...");
-    const channels = await this.getSubscriptions();
+    logger.info("YouTubeSentimentAgent: starting scan with RAU-weighted filtering...");
+    const allChannels = await this.getSubscriptions();
 
-    if (channels.length === 0) {
+    if (allChannels.length === 0) {
       logger.warn("No YouTube subscriptions found — check OAuth credentials in master.env");
       return this.#emptyResult();
     }
 
+    // ── Step 1: Filter out non-trading channels ────────────────────────────
+    const tradingChannels = [];
+    const skippedChannels = [];
+
+    for (const channel of allChannels) {
+      const uploads     = await this.getRecentUploads(channel.channelId);
+      const recentTitles = uploads.map(v => v.snippet?.title || "");
+      const avgRelevance = channelRelevanceAvg(recentTitles, channel.tag || "");
+
+      if (avgRelevance >= MIN_CHANNEL_RELEVANCE) {
+        tradingChannels.push({ ...channel, uploads, avgRelevance });
+      } else {
+        skippedChannels.push(channel.title);
+      }
+    }
+
+    if (skippedChannels.length) {
+      logger.info(`[YouTube] Skipped ${skippedChannels.length} non-trading channels: ${skippedChannels.slice(0,5).join(', ')}...`);
+    }
+    logger.info(`[YouTube] Scanning ${tradingChannels.length}/${allChannels.length} relevant channels`);
+
+    // ── Step 2: Score each video with RAU + credibility composite weight ───
     const rawResults = [];
-    for (const channel of channels) {
-      const uploads = await this.getRecentUploads(channel.channelId);
-      for (const video of uploads) {
-        const sentiment = await this.scoreSentiment(video);
-        const weight    = this.credibility[channel.channelId]?.weight ?? 1.0;
+    for (const channel of tradingChannels) {
+      for (const video of channel.uploads) {
+        const title       = video.snippet?.title       || "";
+        const description = (video.snippet?.description || "").slice(0, 500);
+        const credRecord  = this.credibility[channel.channelId] || {};
+
+        // RAU score for this specific video
+        const rauResult = scoreRAU({
+          title,
+          description,
+          channelTag:  channel.tag || "",
+          credibility: credRecord,
+        });
+
+        // Skip videos that don't pass the RAU gate
+        if (!rauResult.accept) {
+          logger.debug(`[YouTube] RAU REJECT (${rauResult.rau.toFixed(3)}): "${title}"`);
+          continue;
+        }
+
+        const sentiment   = await this.scoreSentiment(video);
+        const credWeight  = credRecord.weight ?? 1.0;
+
+        // Composite weight = RAU score × channel credibility weight
+        const compositeWeight = parseFloat((rauResult.rau * credWeight).toFixed(4));
+
         rawResults.push({
-          channelId:    channel.channelId,
-          channelTitle: channel.title,
-          videoTitle:   video.snippet?.title || "",
-          published:    video.snippet?.publishedAt || "",
-          weight,
+          channelId:        channel.channelId,
+          channelTitle:     channel.title,
+          videoTitle:       title,
+          published:        video.snippet?.publishedAt || "",
+          credWeight,
+          rauScore:         rauResult.rau,
+          rauTier:          rauResult.tier,
+          compositeWeight,
           ...sentiment,
-          weightedConfidence: sentiment.confidence * weight,
+          // RAU-adjusted confidence replaces raw sentiment confidence
+          weightedConfidence: sentiment.confidence * compositeWeight,
         });
       }
     }
 
-    // Aggregate by symbol
+    // ── Step 3: Aggregate ─────────────────────────────────────────────────
     const symbolSignals = this.#aggregateBySymbol(rawResults);
     const overall       = this.#overallSignal(rawResults);
+    const highTierCount = rawResults.filter(r => r.rauTier === 'HIGH').length;
 
-    logger.info(`YouTube scan complete. ${rawResults.length} videos from ${channels.length} channels. Overall: ${overall.sentiment.toUpperCase()}`);
+    logger.info(
+      `[YouTube] Scan complete. ${rawResults.length} videos passed RAU gate from ` +
+      `${tradingChannels.length} channels. HIGH-tier: ${highTierCount}. ` +
+      `Overall: ${overall.sentiment.toUpperCase()} (conf=${overall.confidence.toFixed(3)})`
+    );
 
     return {
-      signal:          overall.sentiment,
-      confidence:      overall.confidence,
-      reason:          overall.reason,
+      signal:           overall.sentiment,
+      confidence:       overall.confidence,
+      reason:           overall.reason,
       symbolSignals,
       rawResults,
-      videosAnalysed:  rawResults.length,
-      channelsChecked: channels.length,
-      timestamp:       new Date().toISOString(),
-      // Structured output for consensus engine
+      videosAnalysed:   rawResults.length,
+      channelsChecked:  tradingChannels.length,
+      channelsSkipped:  skippedChannels.length,
+      highTierVideos:   highTierCount,
+      timestamp:        new Date().toISOString(),
       agentOutput: {
         signal:     overall.sentiment === "bullish" ? "BUY" : overall.sentiment === "bearish" ? "SELL" : "HOLD",
         confidence: overall.confidence,
-        reason:     `YouTube sentiment (${rawResults.length} videos, ${channels.length} channels): ${overall.reason}`,
+        reason:     `RAU-weighted YouTube (${rawResults.length} videos, ${tradingChannels.length} channels, ${highTierCount} HIGH-tier): ${overall.reason}`,
         constraints: {},
       },
     };
@@ -262,19 +317,24 @@ Content: ${text}`;
     for (const r of results) {
       const syms = r.detectedSymbols?.length ? r.detectedSymbols : ["general"];
       for (const sym of syms) {
-        if (!bySymbol[sym]) bySymbol[sym] = { scores: [], videos: [] };
-        const score = r.sentiment === "bullish" ? r.weightedConfidence
+        if (!bySymbol[sym]) bySymbol[sym] = { scores: [], weights: [], videos: [] };
+        // Use compositeWeight (RAU × credibility) as the weighting factor
+        const w     = r.compositeWeight ?? r.weightedConfidence ?? 1.0;
+        const score = r.sentiment === "bullish" ?  r.weightedConfidence
                     : r.sentiment === "bearish" ? -r.weightedConfidence : 0;
         bySymbol[sym].scores.push(score);
-        bySymbol[sym].videos.push(r.videoTitle);
+        bySymbol[sym].weights.push(w);
+        bySymbol[sym].videos.push(`[${r.rauTier||'?'}] ${r.videoTitle}`);
       }
     }
     const out = {};
     for (const [sym, data] of Object.entries(bySymbol)) {
-      const avg = data.scores.reduce((a, b) => a + b, 0) / data.scores.length;
+      // Weighted average using compositeWeight
+      const totalW = data.weights.reduce((a, b) => a + b, 0) || 1;
+      const wavg   = data.scores.reduce((s, sc, i) => s + sc * data.weights[i], 0) / totalW;
       out[sym] = {
-        signal:     avg > 0.05 ? "bullish" : avg < -0.05 ? "bearish" : "neutral",
-        avgScore:   parseFloat(avg.toFixed(3)),
+        signal:     wavg > 0.05 ? "bullish" : wavg < -0.05 ? "bearish" : "neutral",
+        avgScore:   parseFloat(wavg.toFixed(3)),
         videoCount: data.scores.length,
         topVideos:  data.videos.slice(0, 3),
       };

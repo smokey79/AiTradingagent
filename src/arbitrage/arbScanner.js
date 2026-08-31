@@ -74,7 +74,7 @@ function detectArbitrageOpportunities(prices = SEED_ARB_PRICES, tradeAmountUsd =
         const gasPct = (gasCostUsd / tradeAmountUsd) * 100;
         const netPct = grossPct - gasPct;
 
-        if (netPct < 0.25) continue; // Skip sub-0.25% noise
+        if (netPct < 0.25 || grossPct > 20.0) continue; // Skip sub-0.25% noise and >20% phantom token mismatches
 
         const buyLiq = chainPrices[buyChain]?.liq ?? chainPrices[buyChain]?.liquidityUsd ?? 0;
         const sellLiq = chainPrices[sellChain]?.liq ?? chainPrices[sellChain]?.liquidityUsd ?? 0;
