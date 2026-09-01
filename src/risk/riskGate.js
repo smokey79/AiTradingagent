@@ -25,14 +25,14 @@ const CURRENCY_RATES = {
 
 // Configurable Risk & Allocation Constraints
 const INITIAL_DEPOSIT = parseFloat(process.env.INITIAL_DEPOSIT || '250');
-const MIN_CONFIDENCE = parseFloat(process.env.MIN_CONFIDENCE || '0.35'); // 35% minimum AI confidence (demo)
+const MIN_CONFIDENCE = parseFloat(process.env.MIN_CONFIDENCE || '0.72'); // 72% minimum AI confidence
 const LEVERAGE_MAX = parseFloat(process.env.LEVERAGE_MAX || '1.0');
-const MAX_SINGLE_POSITION_PCT = parseFloat(process.env.RISK_MAX_SINGLE_POSITION_PCT || '25'); // Max 25% on one trade
+const MAX_SINGLE_POSITION_PCT = parseFloat(process.env.RISK_MAX_SINGLE_POSITION_PCT || '10'); // Max 10% on one trade ($25 on $250)
 const MAX_PORTFOLIO_EXPOSURE_PCT = parseFloat(process.env.RISK_MAX_PORTFOLIO_EXPOSURE_PCT || '95'); // Max 95% total exposure
 const MAX_SESSION_LOSS_PCT = parseFloat(process.env.RISK_MAX_SESSION_LOSS_PCT || '8'); // Max 8% session drawdown
-const MIN_WIN_RATE_GATE = parseFloat(process.env.RISK_MIN_WIN_RATE_GATE || '0.10'); // 10% rolling win rate target (demo)
+const MIN_WIN_RATE_GATE = parseFloat(process.env.RISK_MIN_WIN_RATE_GATE || '0.72'); // 72% rolling win rate target
 const MIN_MARGIN_BALANCE_USD = parseFloat(process.env.MIN_MARGIN_BALANCE_USD || '30.0'); // $30 margin floor
-const MIN_AGENTS = 2; // 2 agents min (demo)
+const MIN_AGENTS = parseInt(process.env.MIN_AGENTS || '3', 10); // 3 agents minimum agreement
 
 // Allocation Override State
 let allocationSettings = {
@@ -145,6 +145,17 @@ let currentBalance = INITIAL_DEPOSIT;
 let totalPnL = 0;
 let sessionPeakBalance = INITIAL_DEPOSIT;
 const openPositions = new Map(); // pair -> { sizeUsd, entryPrice, side, timestamp }
+const POSITION_TTL_MS = 5 * 60 * 1000; // 5 minutes max simulated position duration for paper trades
+
+function pruneStalePositions() {
+  const now = Date.now();
+  for (const [pair, p] of openPositions.entries()) {
+    const age = p.timestamp ? (now - new Date(p.timestamp).getTime()) : POSITION_TTL_MS + 1;
+    if (age > POSITION_TTL_MS) {
+      openPositions.delete(pair);
+    }
+  }
+}
 
 function loadPersistedState() {
   try {
@@ -178,6 +189,7 @@ function savePersistedState() {
 loadPersistedState();
 
 function getPortfolioState() {
+  pruneStalePositions();
   const positions = Array.from(openPositions.entries()).map(([pair, p]) => ({
     pair,
     ...p,
@@ -377,6 +389,10 @@ function removePosition(pair) {
   openPositions.delete(pair);
 }
 
+function clearOpenPositions() {
+  openPositions.clear();
+}
+
 function resetPortfolioState(newBalance = INITIAL_DEPOSIT) {
   currentBalance = newBalance;
   totalPnL = 0;
@@ -393,6 +409,7 @@ module.exports = {
   updateBalance,
   recordOpenPosition,
   removePosition,
+  clearOpenPositions,
   savePersistedState,
   loadPersistedState,
   getAllocationSettings,

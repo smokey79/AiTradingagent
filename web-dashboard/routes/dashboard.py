@@ -85,14 +85,51 @@ def _get_learning() -> dict:
 
 
 def _get_portfolio() -> dict:
-    trades = _db_query("SELECT * FROM trades ORDER BY id DESC LIMIT 50") if DB_PATH.exists() else []
+    trades = []
+    if DB_PATH.exists():
+        trades = _db_query("SELECT * FROM trades ORDER BY id DESC LIMIT 50")
+    
+    # Also load from data/trade_ledger.json to guarantee sync with Node.js autoTrader engine
+    ledger_file = ROOT / "data" / "trade_ledger.json"
+    if ledger_file.exists():
+        try:
+            for line in ledger_file.read_text(encoding="utf-8").splitlines():
+                line = line.strip()
+                if line:
+                    t = json.loads(line)
+                    trades.append({
+                        "id": t.get("id"),
+                        "pair": t.get("pair") or t.get("symbol"),
+                        "symbol": t.get("symbol") or t.get("pair"),
+                        "signal": t.get("side"),
+                        "side": t.get("side"),
+                        "size_usdt": t.get("positionSizeUsd") or 25.0,
+                        "pnl_usdt": t.get("pnlUsd") or 0.0,
+                        "status": "completed" if t.get("pnlUsd") != 0 else "FILLED",
+                        "mode": "paper" if t.get("paper") else "live",
+                        "timestamp": t.get("timestamp") or "",
+                    })
+        except Exception:
+            pass
+
     closed = [t for t in trades if t.get("status") in ("closed", "FILLED", "completed")]
     open_t = [t for t in trades if t.get("status") == "open"]
     total_pnl = sum(float(t.get("pnl_usdt") or 0.0) for t in closed)
     total_pnl = round(total_pnl, 2)
     starting_balance = 250.0
+
+    # Read persisted portfolio state if available
+    p_file = ROOT / "data" / "portfolio_state.json"
     master_balance = round(starting_balance + total_pnl, 2)
-    portfolio_roi_pct = round((total_pnl / starting_balance) * 100, 2)
+    if p_file.exists():
+        try:
+            p_data = json.loads(p_file.read_text(encoding="utf-8"))
+            if "currentBalance" in p_data and isinstance(p_data["currentBalance"], (int, float)):
+                master_balance = round(float(p_data["currentBalance"]), 2)
+        except Exception:
+            pass
+
+    portfolio_roi_pct = round(((master_balance - starting_balance) / starting_balance) * 100, 2)
 
     now_utc = datetime.now(timezone.utc)
     current_date = now_utc.strftime("%a, %b %d, %Y")
@@ -575,6 +612,11 @@ def api_profit_sweeper():
         return jsonify({"success": True, "sweeper": sweeper.get_sweeper_summary()})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
+
+
+@dashboard.route("/api/portfolio")
+def api_portfolio():
+    return jsonify({"success": True, "portfolio": _get_portfolio(), "timestamp": datetime.now(timezone.utc).isoformat()})
 
 
 @dashboard.route("/api/portfolio/account")

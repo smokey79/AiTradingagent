@@ -67,7 +67,7 @@ Output strictly valid JSON matching your schema.`;
           Authorization: `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
-        timeout: 15000,
+        timeout: 3500,
       }
     );
 

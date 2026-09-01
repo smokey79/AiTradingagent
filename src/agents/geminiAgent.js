@@ -163,7 +163,7 @@ Validate consensus consistency, detect conflicts, and output strictly JSON.`;
           temperature: 0.2,
         },
       },
-      { timeout: 30000, proxy: false }
+      { timeout: 2500, proxy: false }
     );
 
     const rawText = res.data?.response?.trim();

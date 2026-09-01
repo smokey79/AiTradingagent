@@ -244,8 +244,10 @@ class ArbitrageFlashLoanEngine:
 
     def execute_paper_flashloan(self, deal_id: str, custom_deals: Optional[List[Dict[str, Any]]] = None) -> Dict[str, Any]:
         """
-        Executes paper / simulated flash loan transaction and records settlement.
+        Executes paper / simulated flash loan transaction, records settlement into trade ledger,
+        and allocates profit to Nexo BTC bank and agent trading capital.
         """
+        from pathlib import Path
         deals = custom_deals or self.scan_flashloans()
         match = next((d for d in deals if d.get("id") == deal_id), None)
         if not match and deals:
@@ -254,20 +256,86 @@ class ArbitrageFlashLoanEngine:
         if not match:
             return {"success": False, "error": "No viable flash loan opportunity found."}
 
+        token = match.get("token", "ETH")
+        net_profit = float(match.get("net_profit_usd", 0.0))
+        borrow_amount = float(match.get("borrow_amount_usd", 10000.0))
+        route = match.get("route", "DEX ➔ DEX")
+        provider = match.get("provider_name", "Balancer Vault")
+        timestamp = datetime.now(timezone.utc).isoformat()
+        tx_hash = f"0xfl_{os.urandom(8).hex()}"
+        trade_id = f"FL_{int(datetime.now().timestamp() * 1000)}"
+
+        # 1. Record into data/trade_ledger.json
+        data_dir = Path(__file__).resolve().parent.parent / "data"
+        data_dir.mkdir(parents=True, exist_ok=True)
+        ledger_file = data_dir / "trade_ledger.json"
+        
+        trade_record = {
+            "id": trade_id,
+            "timestamp": timestamp,
+            "pair": f"{token}/USDT",
+            "symbol": token,
+            "side": "FLASHLOAN",
+            "price": float(match.get("buy_price", 1.0)),
+            "amount": round(borrow_amount / max(float(match.get("buy_price", 1.0)), 0.0001), 6),
+            "positionSizeUsd": borrow_amount,
+            "leverage": 1,
+            "pnlUsd": round(net_profit, 2),
+            "pnlPct": float(match.get("net_profit_pct", 0.0)),
+            "outcome": "WIN" if net_profit > 0 else "LOSS",
+            "confidence": 0.95,
+            "agentsAgreeing": 6,
+            "paper": True,
+            "reason": f"Zero-Capital Flash Loan: {route} via {provider} (Net +${net_profit:,.2f})",
+        }
+
+        try:
+            with open(ledger_file, "a", encoding="utf-8") as f:
+                f.write(json.dumps(trade_record) + "\n")
+        except Exception as e:
+            log.warning(f"Could not append flashloan to ledger: {e}")
+
+        # 2. Update agent trade account and Nexo BTC bank
+        try:
+            from python_modules.agent_trade_account import AgentTradeAccountManager
+            acc_mgr = AgentTradeAccountManager()
+            acc_mgr.execute_daily_take_profit(
+                gross_profit_usd=net_profit,
+                btc_price_usd=77700.0,
+                source=f"Flash Loan Arbitrage ({provider})"
+            )
+        except Exception as e:
+            log.warning(f"Could not allocate flashloan profit in account manager: {e}")
+
+        # 3. Update data/portfolio_state.json
+        portfolio_file = data_dir / "portfolio_state.json"
+        try:
+            p_state = {}
+            if portfolio_file.exists():
+                p_state = json.loads(portfolio_file.read_text(encoding="utf-8"))
+            current_bal = float(p_state.get("currentBalance", 250.0))
+            reinvest_profit = round(net_profit * 0.5, 2)
+            p_state["currentBalance"] = round(current_bal + reinvest_profit, 2)
+            p_state["lastUpdated"] = timestamp
+            portfolio_file.write_text(json.dumps(p_state, indent=2), encoding="utf-8")
+        except Exception as e:
+            log.warning(f"Could not update portfolio_state.json: {e}")
+
         return {
             "success": True,
             "deal_id": match.get("id"),
-            "token": match.get("token"),
-            "borrow_amount_usd": match.get("borrow_amount_usd"),
-            "provider": match.get("provider_name"),
-            "route": match.get("route"),
+            "trade_id": trade_id,
+            "token": token,
+            "borrow_amount_usd": borrow_amount,
+            "provider": provider,
+            "route": route,
             "gross_profit_usd": match.get("gross_profit_usd"),
-            "net_realized_usd": match.get("net_profit_usd"),
+            "net_realized_usd": round(net_profit, 2),
             "net_roi_pct": match.get("net_profit_pct"),
             "total_gas_paid_usd": match.get("gas_cost_usd"),
             "status": "SETTLED_ATOMICALLY",
-            "tx_hash": f"0xfl_{os.urandom(8).hex()}",
-            "settled_at": datetime.now(timezone.utc).isoformat(),
+            "tx_hash": tx_hash,
+            "settled_at": timestamp,
             "paper": True,
         }
 

@@ -90,19 +90,19 @@ async function runConsensus(pair, marketData) {
     smcRes,
     strategyLearnerRes,
   ] = await Promise.allSettled([
-    // Tiered timeouts: local agents are faster, penalise slow cloud agents less
-    timedAgent('deepseek',            withTimeout(isExcluded('deepseek')            ? Promise.reject(new Error('excluded')) : deepseekAgent.getSignal(symbol, marketData),            10000, 'DeepSeek')),
-    timedAgent('claude',              withTimeout(isExcluded('claude')              ? Promise.reject(new Error('excluded')) : claudeAgent.getSignal(symbol, marketData),              10000, 'Claude')),
-    timedAgent('gpt4o',               withTimeout(isExcluded('gpt4o')               ? Promise.reject(new Error('excluded')) : gpt4oAgent.getSignal(symbol, marketData),               10000, 'GPT-4o')),
-    timedAgent('grok',                withTimeout(isExcluded('grok')                ? Promise.reject(new Error('excluded')) : grokAgent.getSignal(symbol, marketData),                10000, 'Grok')),
-    timedAgent('openrouter_free',     withTimeout(isExcluded('openrouter_free')     ? Promise.reject(new Error('excluded')) : openrouterFreeAgent.getSignal(symbol, marketData),      10000, 'OpenRouterFree')),
-    timedAgent('perplexity',          withTimeout(isExcluded('perplexity')          ? Promise.reject(new Error('excluded')) : perplexityAgent.getSignal(symbol, marketData),           10000, 'Perplexity')),
-    timedAgent('hermes',              withTimeout(isExcluded('hermes')              ? Promise.reject(new Error('excluded')) : hermesAgent.getSignal(symbol, marketData),               5000,  'Hermes')),   // local — fast
-    timedAgent('sentiment',           withTimeout(isExcluded('sentiment')           ? Promise.reject(new Error('excluded')) : sentimentAgent.getSentimentSignal(symbol),               5000,  'Sentiment')), // cached — fast
-    timedAgent('defi',                withTimeout(isExcluded('defi')                ? Promise.reject(new Error('excluded')) : defiAgent.getSignal(symbol, marketData),                 5000,  'DeFi')),
-    timedAgent('intelligent_signals', withTimeout(isExcluded('intelligent_signals') ? Promise.reject(new Error('excluded')) : intelligentSignalsAgent.getSignal(symbol, marketData),     5000,  'IntelligentSignals')),
-    timedAgent('smc_agent',           withTimeout(isExcluded('smc_agent')           ? Promise.reject(new Error('excluded')) : smcAgent.getSignal(symbol, marketData),                   5000,  'SMCAgent')),
-    timedAgent('strategy_learner',    withTimeout(isExcluded('strategy_learner')    ? Promise.reject(new Error('excluded')) : strategyLearningAgent.getSignal(symbol, marketData),      5000,  'StrategyLearner')),
+    // Tiered timeouts: local and cloud agents with automated quantitative fallbacks
+    timedAgent('deepseek',            withTimeout(deepseekAgent.getSignal(symbol, marketData),            10000, 'DeepSeek')),
+    timedAgent('claude',              withTimeout(claudeAgent.getSignal(symbol, marketData),              10000, 'Claude')),
+    timedAgent('gpt4o',               withTimeout(gpt4oAgent.getSignal(symbol, marketData),               10000, 'GPT-4o')),
+    timedAgent('grok',                withTimeout(grokAgent.getSignal(symbol, marketData),                10000, 'Grok')),
+    timedAgent('openrouter_free',     withTimeout(openrouterFreeAgent.getSignal(symbol, marketData),      10000, 'OpenRouterFree')),
+    timedAgent('perplexity',          withTimeout(perplexityAgent.getSignal(symbol, marketData),           10000, 'Perplexity')),
+    timedAgent('hermes',              withTimeout(hermesAgent.getSignal(symbol, marketData),               5000,  'Hermes')),   // local — fast
+    timedAgent('sentiment',           withTimeout(sentimentAgent.getSentimentSignal(symbol),               5000,  'Sentiment')), // cached — fast
+    timedAgent('defi',                withTimeout(defiAgent.getSignal(symbol, marketData),                 5000,  'DeFi')),
+    timedAgent('intelligent_signals', withTimeout(intelligentSignalsAgent.getSignal(symbol, marketData),     5000,  'IntelligentSignals')),
+    timedAgent('smc_agent',           withTimeout(smcAgent.getSignal(symbol, marketData),                   5000,  'SMCAgent')),
+    timedAgent('strategy_learner',    withTimeout(strategyLearningAgent.getSignal(symbol, marketData),      5000,  'StrategyLearner')),
   ]);
 
   // Record health outcomes for every agent
@@ -182,7 +182,7 @@ async function runConsensus(pair, marketData) {
     try {
       const geminiRaw = await withTimeout(
         geminiAgent.getSignal(symbol, marketData, agentOutputs),
-        8000,  // tightened from 12s — Gemini 1.5-flash is fast
+        3500,  // Fast timeout with immediate rule engine fallback
         'Gemini'
       );
       const geminiNorm = normalizeSignal(geminiRaw.signal);

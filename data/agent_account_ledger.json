@@ -3,18 +3,31 @@
   "is_sub_account": true,
   "starting_balance_usdt": 250.0,
   "manual_allocated_usdt": 250.0,
-  "reinvested_profit_usdt": 0.0,
-  "current_balance_usdt": 250.0,
-  "available_margin_usdt": 250.0,
+  "reinvested_profit_usdt": 94.47,
+  "current_balance_usdt": 344.47,
+  "available_margin_usdt": 344.47,
   "active_positions_margin_usdt": 0.0,
   "daily_profit_split_ratio": {
     "nexo_btc_bank_pct": 50.0,
     "agent_account_reinvest_pct": 50.0
   },
   "nexo_btc_wallet": "bc1qsmokey79nexoautoreserve",
-  "total_nexo_btc_banked_usd": 0.0,
-  "total_nexo_btc_accumulated": 0.0,
-  "total_realized_profit_usd": 0.0,
-  "daily_take_profit_cycles_count": 0,
-  "history": []
+  "total_nexo_btc_banked_usd": 94.47,
+  "total_nexo_btc_accumulated": 0.00121583,
+  "total_realized_profit_usd": 188.93,
+  "daily_take_profit_cycles_count": 1,
+  "history": [
+    {
+      "id": "TP-001",
+      "timestamp": "2026-08-31T16:22:53.539891+00:00",
+      "source": "Flash Loan Arbitrage (Uniswap v3 Flash (0.05% fee))",
+      "gross_profit_usd": 188.93,
+      "nexo_btc_banked_usd": 94.47,
+      "agent_reinvested_usd": 94.47,
+      "btc_rate_usd": 77700.0,
+      "btc_credited": 0.00121583,
+      "nexo_wallet": "bc1qsmokey79nexoautoreserve",
+      "status": "COMPLETED"
+    }
+  ]
 }

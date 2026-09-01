@@ -118,7 +118,7 @@ async function getSignal(symbol, marketData) {
           'HTTP-Referer': 'https://github.com/smokey79/aitradingagent',
           'X-Title': 'AiTradingAgent-FreeTier',
         },
-        timeout: 15000,
+        timeout: 3500,
       }
     );
 

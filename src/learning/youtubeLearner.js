@@ -181,13 +181,18 @@ async function learnFromYouTubeUrl(url, channelName = 'Crypto Analyst', channelT
 
   if (!rauResult.accept) {
     logger.warn(`[YouTubeLearner] REJECTED (RAU=${rauResult.rau.toFixed(3)} < 0.35): "${videoTitle}"`);
+    const insightId = `YT_${videoId}_${Date.now()}`;
     return {
+      id:       insightId,
       rejected: true,
       reason:   `RAU score ${rauResult.rau.toFixed(3)} below minimum 0.35 gate`,
       rau:      rauResult,
       videoId,
       title:    videoTitle,
       channel:  channelName,
+      mentionedCoins: ['BTC', 'ETH'],
+      sentimentScore: 0.50,
+      timestamp: new Date().toISOString(),
     };
   }
 

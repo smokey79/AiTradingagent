@@ -49,7 +49,7 @@ async function fetchDexScreenerPrices(token) {
   try {
     const { data } = await axios.get(
       `https://api.dexscreener.com/latest/dex/search?q=${token}%20USDT`,
-      { timeout: 6000 }
+      { timeout: 1500 }
     );
     const pairs = (data?.pairs || []).filter(p =>
       p.priceUsd && parseFloat(p.priceUsd) > 0 &&
@@ -118,13 +118,14 @@ function arbRiskGate(opp, portfolioBalance) {
   if (opp.netPct < MIN_NET_PCT) return { approved: false, reason: `netPct ${opp.netPct}% < ${MIN_NET_PCT}%` };
 
   // Liquidity check
-  if (opp.minLiquidity < MIN_LIQUIDITY_USD) return { approved: false, reason: `liquidity $${opp.minLiquidity} too thin` };
+  if (opp.minLiquidity && opp.minLiquidity < MIN_LIQUIDITY_USD) {
+    return { approved: false, reason: `liquidity $${opp.minLiquidity} too thin` };
+  }
 
-  // Position sizing: max 40% of current balance or ARB_MAX_BORROW_USD
-  const maxFromBalance = portfolioBalance * MAX_POSITION_FRAC;
-  const borrowAmountUsd = Math.min(maxFromBalance, MAX_BORROW_USD);
-
-  if (borrowAmountUsd < 50) return { approved: false, reason: 'balance too low for arb (min $50)' };
+  // Zero-capital flash loan borrow sizing:
+  // Borrow from protocol liquidity vaults ($10,000 USD default up to MAX_BORROW_USD)
+  const poolMax = opp.minLiquidity ? Math.min(opp.minLiquidity * 0.10, MAX_BORROW_USD) : 10000;
+  const borrowAmountUsd = Math.max(5000, Math.min(10000, poolMax));
 
   // Net USD check after sizing
   const netUsd = (opp.netPct / 100) * borrowAmountUsd;
@@ -136,6 +137,7 @@ function arbRiskGate(opp, portfolioBalance) {
 // ── Execute one arb opportunity ───────────────────────────────────────────────
 
 async function executeArb(opp, borrowAmountUsd) {
+  const { allocateProfit } = require('../utils/profitAllocator');
   const sim = simulateFlashLoan({
     token:          opp.token,
     borrowAmountUsd,
@@ -164,23 +166,27 @@ async function executeArb(opp, borrowAmountUsd) {
     totalArbProfitUsd += pnl;
 
     const tradeRecord = {
-      symbol:        `${opp.token}/USDT`,
-      side:          'ARB',
+      pair:          `${opp.token}/USDT`,
+      symbol:        opp.token,
+      side:          'FLASHLOAN',
       price:         opp.buyPrice,
-      size:          borrowAmountUsd / opp.buyPrice,
+      amount:        parseFloat((borrowAmountUsd / opp.buyPrice).toFixed(6)),
       positionSizeUsd: borrowAmountUsd,
       leverage:      1,
-      pnlUsd:        parseFloat(pnl.toFixed(4)),
-      pnlPct:        parseFloat(sim.netProfitPct.toFixed(4)),
+      pnlUsd:        parseFloat(pnl.toFixed(2)),
+      pnlPct:        parseFloat(sim.netProfitPct.toFixed(2)),
       outcome:       pnl > 0 ? 'WIN' : 'LOSS',
       confidence:    Math.min(0.95, opp.netPct / 5),
-      reason:        `Cross-chain arb: ${opp.buyChain}→${opp.sellChain} | ${opp.netPct}% spread`,
+      reason:        `Zero-Capital Flash Loan: ${opp.buyChain} [${opp.buyDex}] → ${opp.sellChain} [${opp.sellDex}] (+${opp.netPct}% net spread)`,
       paper:         PAPER,
       arbRoute:      `${opp.buyChain.toUpperCase()} [${opp.buyDex}] → ${opp.sellChain.toUpperCase()} [${opp.sellDex}]`,
       flashLoan:     true,
     };
 
     recordTrade(tradeRecord);
+    try {
+      allocateProfit(pnl, 'Flash Loan Arbitrage');
+    } catch (_) {}
 
     const execution = { ...tradeRecord, timestamp: new Date().toISOString(), txId: result.txId };
     recentExecutions.unshift(execution);

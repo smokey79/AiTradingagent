@@ -22,6 +22,7 @@ const os     = require('os');
 const logger = require('../utils/logger');
 const monitor = require('./agentHealthMonitor');
 const healer  = require('./selfHealer');
+const { getPerformanceStats } = require('../risk/tradeLedger');
 
 const HEALTH_STATE_PATH = path.resolve(__dirname, '../../data/system_health.json');
 const TRADE_LEDGER_PATH = path.resolve(__dirname, '../../data/trade_ledger.json');
@@ -113,23 +114,17 @@ function checkMemory() {
 
 function checkWinRateGate() {
   try {
-    if (!fs.existsSync(TRADE_LEDGER_PATH)) {
-      return { ok: true, detail: 'No trades yet', hitRate: null, totalTrades: 0 };
-    }
-    const trades = JSON.parse(fs.readFileSync(TRADE_LEDGER_PATH, 'utf8'));
-    const wins   = trades.filter(t => (t.pnlUsd || 0) > 0).length;
-    const n      = trades.length;
-    const rate   = n > 0 ? wins / n : 0;
-    const gate72 = rate >= 0.72 || n < 20; // pass if < 20 trades (warming up)
+    const stats = getPerformanceStats(20);
+    const gate72 = stats.sampleSize < 20 || stats.winRate >= 0.72;
     return {
       ok:          gate72,
-      detail:      `${(rate * 100).toFixed(1)}% hit rate over ${n} trades`,
-      hitRate:     parseFloat((rate * 100).toFixed(2)),
-      totalTrades: n,
-      gate72Met:   rate >= 0.72 && n >= 20,
+      detail:      `${stats.winRatePct} hit rate over ${stats.sampleSize} recent trades`,
+      hitRate:     stats.winRate * 100,
+      totalTrades: stats.totalTradesEver,
+      gate72Met:   stats.winRate >= 0.72 && stats.sampleSize >= 20,
     };
   } catch (e) {
-    return { ok: true, detail: 'Could not read trade ledger' };
+    return { ok: true, detail: `Trade ledger status check: ${e.message}` };
   }
 }
 

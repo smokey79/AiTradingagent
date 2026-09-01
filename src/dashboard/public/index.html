@@ -917,6 +917,8 @@ plot(ema50, color=color.orange, title="50 EMA")
       }
 
       let totalVolume = 0;
+      let flashloanVolume = 0;
+      let spotVolume = 0;
       let totalProfit = 0;
       let totalLoss = 0;
       let wins = 0;
@@ -926,6 +928,11 @@ plot(ema50, color=color.orange, title="50 EMA")
         const pnl = Number(t.pnlUsd) || 0;
         const size = Number(t.positionSizeUsd) || 0;
         totalVolume += size;
+        if (t.side === 'FLASHLOAN' || (t.id && String(t.id).startsWith('FL_'))) {
+          flashloanVolume += size;
+        } else {
+          spotVolume += size;
+        }
         if (pnl > 0 || t.outcome === 'WIN') {
           totalProfit += pnl;
           wins++;
@@ -939,7 +946,7 @@ plot(ema50, color=color.orange, title="50 EMA")
       const winRate = trades.length > 0 ? (wins / trades.length * 100).toFixed(1) : '100.0';
 
       document.getElementById('trade-sum-volume').textContent = `$${totalVolume.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-      document.getElementById('trade-sum-count').textContent = `${trades.length} total executed transactions`;
+      document.getElementById('trade-sum-count').textContent = `${trades.length} trades ($${spotVolume.toFixed(2)} spot | $${flashloanVolume.toLocaleString()} flash loans)`;
 
       document.getElementById('trade-sum-profit').textContent = `+$${totalProfit.toFixed(2)}`;
       document.getElementById('trade-sum-wins').textContent = `${wins} winning trades`;

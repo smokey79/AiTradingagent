@@ -49,7 +49,7 @@ const SEED_ARB_PRICES = {
   },
 };
 
-function detectArbitrageOpportunities(prices = SEED_ARB_PRICES, tradeAmountUsd = 1000) {
+function detectArbitrageOpportunities(prices = SEED_ARB_PRICES, tradeAmountUsd = 10000) {
   const opps = [];
   const now = new Date().toISOString();
 

@@ -1,8 +1,20 @@
 {
-  "total_swept_usd": 0.0,
-  "total_btc_accumulated": 0.0,
+  "total_swept_usd": 94.47,
+  "total_btc_accumulated": 0.00121583,
   "sweep_address": "bc1qsmokey79nexoautoreserve",
   "sweep_ratio_pct": 50.0,
-  "sweeps_count": 0,
-  "history": []
+  "sweeps_count": 1,
+  "history": [
+    {
+      "id": "TP-001",
+      "timestamp": "2026-08-31T16:22:53.558208+00:00",
+      "source": "Flash Loan Arbitrage (Uniswap v3 Flash (0.05% fee))",
+      "gross_profit_usd": 188.93,
+      "swept_to_btc_usd": 94.47,
+      "btc_rate_usd": 77700.0,
+      "btc_credited": 0.00121583,
+      "destination": "bc1qsmokey79nexoautoreserve",
+      "status": "COMPLETED"
+    }
+  ]
 }

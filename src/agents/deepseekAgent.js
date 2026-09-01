@@ -75,7 +75,7 @@ Provide your quantitative decision in strict JSON.`;
             'Authorization': `Bearer ${deepseekApiKey}`,
             'Content-Type': 'application/json'
           },
-          timeout: 15000
+          timeout: 3500
         }
       );
 
@@ -119,7 +119,7 @@ Respond strictly in valid JSON.`;
             'HTTP-Referer': 'https://github.com/smokey79/aitradingagent',
             'X-Title': 'AiTradingAgent'
           },
-          timeout: 15000
+          timeout: 3500
         }
       );
 

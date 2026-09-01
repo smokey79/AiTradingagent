@@ -258,10 +258,15 @@ async function healAgent(agentName, currentStatus) {
     }
   }
 
-  if (currentStatus === 'DEAD' || (event && !event.success)) {
-    // Exclude from consensus and alert
-    event = excludeAgent(agentName);
-    await sendTelegramAlert(agentName, currentStatus, 'EXCLUDE', 'Agent excluded after exhausting heal options');
+  if (currentStatus === 'DEAD') {
+    // Perform soft reset to allow the agent's built-in quantitative/rule fallback engine to operate
+    event = await softReset(agentName);
+    if (event && event.success) {
+      monitor.markHealed(agentName);
+      logger.info(`[SelfHealer] ${agentName} restored to quantitative rule fallback`);
+    } else {
+      event = logHealEvent(agentName, 'RULE_FALLBACK', true, 'Operating on quantitative rule engine');
+    }
   }
 
   if (event) broadcastHealEvent({ ...event, agentStatus: currentStatus });

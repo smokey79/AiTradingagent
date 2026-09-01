@@ -1,7 +1,7 @@
 {
-  "btcSavingsUsd": 0.0,
-  "longtermHoldUsd": 0.0,
-  "totalProfitsHarvested": 0.0,
+  "btcSavingsUsd": 15,
+  "longtermHoldUsd": 3,
+  "totalProfitsHarvested": 30,
   "milestoneReached": false,
-  "updatedAt": "2026-08-31T15:45:17.929993+00:00"
+  "updatedAt": "2026-08-31T16:36:40.416Z"
 }

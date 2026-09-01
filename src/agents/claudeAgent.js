@@ -63,7 +63,7 @@ Respond ONLY with valid JSON conforming to your output schema.`;
           'anthropic-version': '2023-06-01',
           'content-type': 'application/json',
         },
-        timeout: 15000,
+        timeout: 3500,
       }
     );
 

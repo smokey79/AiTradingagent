@@ -60,7 +60,7 @@ Output strictly valid JSON with keys: signal, confidence, reason, constraints, r
         temperature: 0.2,
       },
     },
-    { timeout: 30000, proxy: false }
+    { timeout: 1500, proxy: false }
   );
 
   const text = res.data?.response?.trim();
