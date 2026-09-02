@@ -1,0 +1,56 @@
+# EditorConfig helps maintain consistent coding styles for multiple developers
+# working on the same project across various editors and IDEs.
+# editorconfig.org
+
+root = true
+
+# All files
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# JavaScript, TypeScript, JSON
+[*.{js,jsx,ts,tsx,json}]
+indent_style = space
+indent_size = 2
+
+# Python files
+[*.py]
+indent_style = space
+indent_size = 4
+
+# YAML files
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# HTML files
+[*.{html,htm}]
+indent_style = space
+indent_size = 2
+
+# CSS, SCSS files
+[*.{css,scss,less}]
+indent_style = space
+indent_size = 2
+
+# Markdown files
+[*.{md,mdx,markdown}]
+trim_trailing_whitespace = false
+max_line_length = 120
+
+# Shell scripts
+[*.{sh,bash}]
+indent_style = space
+indent_size = 2
+
+# PowerShell scripts
+[*.ps1]
+indent_style = space
+indent_size = 4
+
+# Batch files
+[*.{bat,cmd}]
+end_of_line = crlf

@@ -178,7 +178,9 @@ def api_heal_agent(agent_name: str):
     try:
         result = subprocess.run(
             ["node", heal_script, agent_name],
-            capture_output=True, text=True, timeout=15,
+            capture_output=True, text=True,
+            encoding="utf-8", errors="replace",
+            timeout=15,
             cwd=_ROOT,
         )
         return jsonify({

@@ -25,14 +25,14 @@ const CURRENCY_RATES = {
 
 // Configurable Risk & Allocation Constraints
 const INITIAL_DEPOSIT = parseFloat(process.env.INITIAL_DEPOSIT || '250');
-const MIN_CONFIDENCE = parseFloat(process.env.MIN_CONFIDENCE || '0.72'); // 72% minimum AI confidence
-const LEVERAGE_MAX = parseFloat(process.env.LEVERAGE_MAX || '1.0');
+const MIN_CONFIDENCE = parseFloat(process.env.MIN_CONFIDENCE || '0.50'); // Dynamic AI confidence threshold
+const LEVERAGE_MAX = parseFloat(process.env.LEVERAGE_MAX || '20.0');
 const MAX_SINGLE_POSITION_PCT = parseFloat(process.env.RISK_MAX_SINGLE_POSITION_PCT || '10'); // Max 10% on one trade ($25 on $250)
 const MAX_PORTFOLIO_EXPOSURE_PCT = parseFloat(process.env.RISK_MAX_PORTFOLIO_EXPOSURE_PCT || '95'); // Max 95% total exposure
 const MAX_SESSION_LOSS_PCT = parseFloat(process.env.RISK_MAX_SESSION_LOSS_PCT || '8'); // Max 8% session drawdown
 const MIN_WIN_RATE_GATE = parseFloat(process.env.RISK_MIN_WIN_RATE_GATE || '0.72'); // 72% rolling win rate target
 const MIN_MARGIN_BALANCE_USD = parseFloat(process.env.MIN_MARGIN_BALANCE_USD || '30.0'); // $30 margin floor
-const MIN_AGENTS = parseInt(process.env.MIN_AGENTS || '3', 10); // 3 agents minimum agreement
+const MIN_AGENTS = parseInt(process.env.MIN_AGENTS || '2', 10); // 2 agents minimum agreement
 
 // Allocation Override State
 let allocationSettings = {
@@ -332,14 +332,17 @@ async function checkRiskGate(pair, consensus, marketData) {
   const stopLossPct = Math.max(1.5, Math.min(4.0, parseFloat((atrPct * 1.2).toFixed(2))));
   const takeProfitPct = parseFloat((stopLossPct * rRatio).toFixed(2));
 
-  // Leverage constraint
+  // Dynamic leverage constraint based on consensus strength (scaled up to LEVERAGE_MAX, e.g. 20x)
   let leverage = 1.0;
-  if (consensus.confidence >= 0.88 && LEVERAGE_MAX > 1.0) {
-    leverage = Math.min(LEVERAGE_MAX, 2.0);
+  if (LEVERAGE_MAX > 1.0 && consensus.confidence >= 0.40) {
+    const minStrength = 0.40;
+    const maxStrength = 0.95;
+    const strengthRatio = Math.max(0, Math.min(1, (consensus.confidence - minStrength) / (maxStrength - minStrength)));
+    leverage = parseFloat((1.0 + strengthRatio * (LEVERAGE_MAX - 1.0)).toFixed(1));
   }
 
   logger.info(
-    `[${pair}] ✅ Risk Gate Approved: $${positionSizeUsd.toFixed(2)} position | ${leverage}x leverage | SL: -${stopLossPct}% | TP: +${takeProfitPct}%`
+    `[${pair}] ✅ Risk Gate Approved: $${positionSizeUsd.toFixed(2)} position | ${leverage}x leverage (Consensus Strength: ${(consensus.confidence * 100).toFixed(1)}%) | SL: -${stopLossPct}% | TP: +${takeProfitPct}%`
   );
 
   return {

@@ -42,6 +42,37 @@ let lastScanAt    = null;
 let lastOpps      = [];
 let recentExecutions = []; // ring buffer last 20 executed arbs
 
+// ── Cooldown: prevent re-executing same token+route within cooldown window ────
+const ARB_COOLDOWN_MS = parseInt(process.env.ARB_COOLDOWN_MS || '300000', 10); // 5 min default
+const MAX_ARB_TRADES_PER_HOUR = parseInt(process.env.MAX_ARB_TRADES_PER_HOUR || '6', 10);
+const recentArbKeys = new Map(); // key → timestamp of last execution
+let hourlyArbCount = 0;
+let hourlyResetAt = Date.now();
+
+function isOnCooldown(token, buyChain, sellChain) {
+  const key = `${token}:${buyChain}→${sellChain}`;
+  const last = recentArbKeys.get(key);
+  if (last && (Date.now() - last) < ARB_COOLDOWN_MS) return true;
+  return false;
+}
+
+function markExecuted(token, buyChain, sellChain) {
+  const key = `${token}:${buyChain}→${sellChain}`;
+  recentArbKeys.set(key, Date.now());
+  // Prune old keys
+  for (const [k, ts] of recentArbKeys) {
+    if (Date.now() - ts > ARB_COOLDOWN_MS * 2) recentArbKeys.delete(k);
+  }
+}
+
+function checkHourlyLimit() {
+  if (Date.now() - hourlyResetAt > 3600000) {
+    hourlyArbCount = 0;
+    hourlyResetAt = Date.now();
+  }
+  return hourlyArbCount < MAX_ARB_TRADES_PER_HOUR;
+}
+
 // ── Live price fetching ───────────────────────────────────────────────────────
 
 // DexScreener: pull top pairs for a token across all supported chains
@@ -164,6 +195,8 @@ async function executeArb(opp, borrowAmountUsd) {
     const pnl = sim.netProfitUsd;
     totalArbTrades++;
     totalArbProfitUsd += pnl;
+    hourlyArbCount++;
+    markExecuted(opp.token, opp.buyChain, opp.sellChain);
 
     const tradeRecord = {
       pair:          `${opp.token}/USDT`,
@@ -210,12 +243,21 @@ async function runScan() {
   const t0 = Date.now();
 
   try {
-    // 1. Fetch live prices
-    const livePrices = await buildLivePriceMap();
-    const priceMapToUse = Object.keys(livePrices).length >= 2 ? livePrices : undefined;
+    // Hourly trade limit check
+    if (!checkHourlyLimit()) {
+      logger.debug(`[ArbEngine] Scan #${scanCount} — hourly arb limit reached (${hourlyArbCount}/${MAX_ARB_TRADES_PER_HOUR})`);
+      return;
+    }
 
-    // 2. Detect opportunities (uses live prices if available, seed prices as fallback)
-    const opps = detectArbitrageOpportunities(priceMapToUse);
+    // 1. Fetch LIVE prices — require real DexScreener data, never trade on seed prices alone
+    const livePrices = await buildLivePriceMap();
+    if (Object.keys(livePrices).length < 2) {
+      logger.debug(`[ArbEngine] Scan #${scanCount} — insufficient live price data (${Object.keys(livePrices).length} tokens), skipping`);
+      return;
+    }
+
+    // 2. Detect opportunities using LIVE prices only
+    const opps = detectArbitrageOpportunities(livePrices);
     lastOpps = opps;
 
     const actionable = opps.filter(o => o.netPct >= MIN_NET_PCT && o.minLiquidity >= MIN_LIQUIDITY_USD);
@@ -227,17 +269,23 @@ async function runScan() {
 
     logger.info(`[ArbEngine] Scan #${scanCount} — ${actionable.length} actionable opps | top: ${actionable[0].token} ${actionable[0].buyChain}→${actionable[0].sellChain} net=${actionable[0].netPct}%`);
 
-    // 3. Execute each actionable opp through risk gate (best first)
+    // 3. Execute BEST opportunity only (1 per scan), with cooldown check
     const portfolio = getPortfolioState();
     const balance   = portfolio.currentBalance || 250;
 
-    for (const opp of actionable.slice(0, 3)) { // max 3 concurrent arbs per scan
+    for (const opp of actionable) {
+      // Skip if this route was recently executed
+      if (isOnCooldown(opp.token, opp.buyChain, opp.sellChain)) {
+        logger.debug(`[ArbEngine] ${opp.token} ${opp.buyChain}→${opp.sellChain} on cooldown, skipping`);
+        continue;
+      }
       const gate = arbRiskGate(opp, balance);
       if (!gate.approved) {
         logger.debug(`[ArbEngine] ${opp.token} ${opp.buyChain}→${opp.sellChain} gated: ${gate.reason}`);
         continue;
       }
       await executeArb(opp, gate.borrowAmountUsd);
+      break; // Only 1 arb execution per scan cycle
     }
 
     if (global.broadcastDashboardEvent) {

@@ -103,7 +103,8 @@ async function executeTrade(pair, signal, riskCheck, marketData, isPaper = true)
     const winProbability = riskCheck.consensusConfidence || 0.78;
     const isWin = Math.random() < winProbability;
     const pnlMultiplier = isWin ? (riskCheck.takeProfitPct || 4.0) / 100 : -(riskCheck.stopLossPct || 2.0) / 100;
-    const simulatedPnl = parseFloat((sizeUsd * pnlMultiplier).toFixed(2));
+    const effectiveLeverage = riskCheck.leverage || 1.0;
+    const simulatedPnl = parseFloat((sizeUsd * pnlMultiplier * effectiveLeverage).toFixed(2));
 
     const tradeRecord = {
       pair,
@@ -114,7 +115,7 @@ async function executeTrade(pair, signal, riskCheck, marketData, isPaper = true)
       positionSizeUsd: sizeUsd,
       leverage: riskCheck.leverage || 1,
       pnlUsd: simulatedPnl,
-      pnlPct: parseFloat((pnlMultiplier * 100).toFixed(2)),
+      pnlPct: parseFloat((pnlMultiplier * 100 * effectiveLeverage).toFixed(2)),
       outcome: simulatedPnl > 0 ? 'WIN' : simulatedPnl < 0 ? 'LOSS' : 'BREAKEVEN',
       confidence: riskCheck.consensusConfidence || 0.8,
       paper: true,

@@ -1,0 +1,53 @@
+# Prettier ignore patterns
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Production
+build/
+dist/
+out/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+ENV/
+
+# Generated files
+*.min.js
+*.min.css
+
+# Asset files
+*.ico
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+
+# Build artifacts
+src/dashboard/public/assets/
+
+# Configuration templates
+*.env.example
+*.env.*.example
+
+# Old backups
+_OLD_BACKUPS/
+aitradingbot-skeleton/
+aitradingagent_skills_mcp_7/
+
+# Temporary files
+cache/
+logs/
+exports/
+files3/
+
+# Third-party
+freqtrade-stable/
+node_modules/

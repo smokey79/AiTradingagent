@@ -46,6 +46,7 @@ from flask import Flask
 
 sys.path.insert(0, str(ROOT_DIR / "web-dashboard"))
 from routes.dashboard import dashboard as app_bp
+from routes.health import health_bp
 
 app = Flask(
     __name__,
@@ -53,13 +54,14 @@ app = Flask(
     static_folder=str(ROOT_DIR / "web-dashboard" / "static"),
 )
 app.register_blueprint(app_bp)
+app.register_blueprint(health_bp)
 
 
 def main():
     import waitress
 
     host = os.getenv("HOST", "0.0.0.0")
-    port = int(os.getenv("DASHBOARD_PORT", os.getenv("PORT", 3002)))
+    port = int(os.getenv("STUDIO_PORT", os.getenv("WSGI_PORT", 3002)))
     threads = int(os.getenv("WAITRESS_THREADS", 8))
 
     logger.info("=" * 65)

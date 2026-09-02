@@ -372,14 +372,15 @@ def _get_futures_5x_data(symbol: str = "BTC/USDT", margin: float = 100.0) -> dic
 
 def _get_luxalgo_data() -> dict:
     try:
-        from orchestrator.luxalgo_strategy_learner import LuxAlgoStrategyLearnerAgent
+        from orchestrator.luxalgo_strategy_learner import LuxAlgoStrategyLearnerAgent, _normalize_strategy
         learner = LuxAlgoStrategyLearnerAgent()
         strategies = learner.get_all_strategies()
+        normalized_strategies = [_normalize_strategy(s) for s in strategies if isinstance(s, dict)]
         feed = learner.source_all_subscription_alpha()
         return {
-            "strategies": strategies,
-            "total_learned": len(strategies),
-            "top_strategy": strategies[0] if strategies else {},
+            "strategies": normalized_strategies,
+            "total_learned": len(normalized_strategies),
+            "top_strategy": normalized_strategies[0] if normalized_strategies else {},
             "credibility": learner.credibility,
             "youtube_feed": feed,
         }
@@ -387,6 +388,7 @@ def _get_luxalgo_data() -> dict:
         return {
             "strategies": [],
             "total_learned": 0,
+            "top_strategy": {},
             "credibility": {},
             "youtube_feed": {},
             "error": str(e),
@@ -1368,6 +1370,8 @@ def api_terminal_execute():
                 [sys.executable, str(ROOT / "orchestrator" / "consensus_engine.py"), "--symbol", symbol, "--paper"],
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 timeout=45,
                 cwd=str(ROOT),
             )
@@ -1382,6 +1386,8 @@ def api_terminal_execute():
                 [sys.executable, str(ROOT / "data_pipeline.py")],
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 timeout=30,
                 cwd=str(ROOT),
             )
@@ -1396,6 +1402,8 @@ def api_terminal_execute():
                 [sys.executable, str(ROOT / "backtester" / "engine.py")],
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 timeout=30,
                 cwd=str(ROOT),
             )

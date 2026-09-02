@@ -998,16 +998,16 @@ $ ready.</div>
             {% for s in luxalgo.strategies[:4] %}
             <div class="metric-card-box">
               <div class="d-flex space-between align-center mb-8">
-                <span class="font-bold font-13">{{ s.title }}</span>
-                <span class="badge badge-5x">{{ s.leverage }}</span>
+                <span class="font-bold font-13">{{ s.title or s.name or 'LuxAlgo 5X Strategy' }}</span>
+                <span class="badge badge-5x">{{ s.leverage or '5X' }}</span>
               </div>
-              <div class="font-12 text-muted mb-6">Channel Source: <span class="blue font-bold">{{ s.channel_source }}</span></div>
+              <div class="font-12 text-muted mb-6">Channel Source: <span class="blue font-bold">{{ s.channel_source or 'LuxAlgo & YouTube Alpha' }}</span></div>
               <div class="font-12 text-muted mb-8">
-                Target Hit-Rate: <span class="green font-bold">{{ s.target_win_rate_pct }}%</span> &bull; 
-                Risk/Reward: <span class="cyan font-bold">1:{{ s.risk_management.risk_reward_ratio }}</span>
+                Target Hit-Rate: <span class="green font-bold">{{ s.target_win_rate_pct or 75 }}%</span> &bull; 
+                Risk/Reward: <span class="cyan font-bold">1:{{ (s.risk_management.risk_reward_ratio if s.risk_management else 2.5) }}</span>
               </div>
               <div class="font-11-5 text-dim mb-10">
-                Concepts: {{ s.concepts|join(', ') }}
+                Concepts: {{ (s.concepts|join(', ')) if s.concepts else 'Order Blocks, 5X Futures' }}
               </div>
               <button class="btn btn-sm btn-outline" onclick="copyLearnedStrategyPine('{{ loop.index0 }}')">📋 Copy PineScript Code</button>
             </div>
@@ -1564,10 +1564,13 @@ $ ready.</div>
 
     function copyLearnedStrategyPine(idx) {
       const strat = learnedStrategiesData[idx];
-      if (strat && strat.pinescript_code) {
-        navigator.clipboard.writeText(strat.pinescript_code).then(() => {
-          alert(`Copied "${strat.title}" PineScript v5 code to clipboard!`);
+      const code = strat ? (strat.pinescript_code || strat.pinescript) : null;
+      if (strat && code) {
+        navigator.clipboard.writeText(code).then(() => {
+          alert(`Copied "${strat.title || strat.name || 'Strategy'}" PineScript v5 code to clipboard!`);
         });
+      } else {
+        alert("No PineScript code available for this strategy yet.");
       }
     }
 

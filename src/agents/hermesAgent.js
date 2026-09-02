@@ -12,7 +12,7 @@ const logger = require('../utils/logger');
 
 const SKILL_PATH = path.resolve(__dirname, '../../agents/skills/SKILL_HERMES_VALIDATOR.md');
 const OLLAMA_BASE = process.env.OLLAMA_URL || 'http://127.0.0.1:11434';
-const HERMES_MODEL = process.env.HERMES_MODEL || 'hermes3';
+const HERMES_MODEL = process.env.HERMES_MODEL || 'llama3.2';
 const OPENROUTER_HERMES_MODEL = process.env.OPENROUTER_HERMES_MODEL || 'nousresearch/hermes-3-llama-3.1-8b';
 
 function loadSkillPrompt() {
@@ -38,12 +38,33 @@ async function callLocalOllama(symbol, marketData, skillPrompt) {
   const ind = marketData?.indicators || {};
   const prompt = `${skillPrompt}
 
-Analyze ${symbol}:
-Price: $${price?.price?.toFixed(2) || '0'}, 24h Change: ${price?.change24h?.toFixed(2) || '0'}%, 24h Volume: $${((price?.volume24h || 0) / 1e6).toFixed(1)}M
-Indicators: RSI(14)=${ind.rsi14 || 50}, EMA20=$${ind.ema20 || 0}, EMA50=$${ind.ema50 || 0}, EMA200=$${ind.ema200 || 0}
-Price vs EMA50: ${ind.priceVsEma50 || 'above'}, Price vs EMA200: ${ind.priceVsEma200 || 'above'}
-MACD: hist=${ind.macd?.histogram || 0}, line=${ind.macd?.macd || 0}, signal=${ind.macd?.signal || 0}
-On-Chain: SOPR=${marketData?.onchain?.sopr?.toFixed(3) || '1.0'}, MVRV=${marketData?.onchain?.mvrv?.toFixed(2) || '1.8'}
+Analyze ${symbol} for a trading decision:
+── Price Action ──
+Current Price: $${price?.price?.toFixed(2) || '0'}
+24h Change: ${price?.change24h?.toFixed(2) || '0'}%
+24h Volume: $${((price?.volume24h || 0) / 1e6).toFixed(1)}M
+Market Cap Rank: ${price?.marketCapRank || 'N/A'}
+
+── Technical Indicators ──
+RSI(14): ${ind.rsi14 || 50}
+EMA20: $${ind.ema20 || 0} | EMA50: $${ind.ema50 || 0} | EMA200: $${ind.ema200 || 0}
+Price vs EMA50: ${ind.priceVsEma50 || 'N/A'} | Price vs EMA200: ${ind.priceVsEma200 || 'N/A'}
+MACD Histogram: ${ind.macd?.histogram || 0} | MACD Line: ${ind.macd?.macd || 0} | Signal: ${ind.macd?.signal || 0}
+Bollinger Band Width: ${ind.bbWidth || 'N/A'}
+ATR(14): ${ind.atr14 || 'N/A'}
+Stochastic K: ${ind.stochK || 'N/A'} | D: ${ind.stochD || 'N/A'}
+
+── On-Chain (if available) ──
+SOPR: ${marketData?.onchain?.sopr?.toFixed(3) || '1.0'}
+MVRV: ${marketData?.onchain?.mvrv?.toFixed(2) || '1.8'}
+Net Flow: ${marketData?.onchain?.netFlow || 'N/A'}
+
+Provide a thorough analysis covering:
+1. Trend direction and strength
+2. Key support/resistance levels
+3. Risk assessment (1-5 scale)
+4. Position sizing recommendation
+5. Stop loss and take profit levels
 
 Output strictly valid JSON with keys: signal, confidence, reason, constraints, risk_score.`;
 
@@ -57,10 +78,12 @@ Output strictly valid JSON with keys: signal, confidence, reason, constraints, r
       stream: false,
       format: 'json',
       options: {
-        temperature: 0.2,
+        temperature: 0.3,
+        num_predict: 1024,
+        num_ctx: 4096,
       },
     },
-    { timeout: 1500, proxy: false }
+    { timeout: 30000, proxy: false }
   );
 
   const text = res.data?.response?.trim();

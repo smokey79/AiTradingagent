@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Production
+build/
+dist/
+out/
+
+# Misc
+.DS_Store
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+
+# Cache
+.cache/
+.eslintcache
+
+# Build outputs
+src/dashboard/public/assets/
+
+# Old backups
+_OLD_BACKUPS/
+aitradingbot-skeleton/
+aitradingagent_skills_mcp_7/
+
+# Temporary files
+cache/
+logs/
+exports/
+files3/
+
+# Environment
+.env
+.env.local
+.env.*.local

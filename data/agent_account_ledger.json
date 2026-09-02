@@ -3,19 +3,19 @@
   "is_sub_account": true,
   "starting_balance_usdt": 250.0,
   "manual_allocated_usdt": 250.0,
-  "reinvested_profit_usdt": 94.47,
-  "current_balance_usdt": 344.47,
-  "available_margin_usdt": 344.47,
+  "reinvested_profit_usdt": 295.91,
+  "current_balance_usdt": 545.91,
+  "available_margin_usdt": 545.91,
   "active_positions_margin_usdt": 0.0,
   "daily_profit_split_ratio": {
     "nexo_btc_bank_pct": 50.0,
     "agent_account_reinvest_pct": 50.0
   },
   "nexo_btc_wallet": "bc1qsmokey79nexoautoreserve",
-  "total_nexo_btc_banked_usd": 94.47,
-  "total_nexo_btc_accumulated": 0.00121583,
-  "total_realized_profit_usd": 188.93,
-  "daily_take_profit_cycles_count": 1,
+  "total_nexo_btc_banked_usd": 295.91,
+  "total_nexo_btc_accumulated": 0.00380837,
+  "total_realized_profit_usd": 591.79,
+  "daily_take_profit_cycles_count": 4,
   "history": [
     {
       "id": "TP-001",
@@ -26,6 +26,42 @@
       "agent_reinvested_usd": 94.47,
       "btc_rate_usd": 77700.0,
       "btc_credited": 0.00121583,
+      "nexo_wallet": "bc1qsmokey79nexoautoreserve",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "TP-002",
+      "timestamp": "2026-09-01T13:09:50.330775+00:00",
+      "source": "Flash Loan Arbitrage (Uniswap v3 Flash (0.05% fee))",
+      "gross_profit_usd": 188.93,
+      "nexo_btc_banked_usd": 94.47,
+      "agent_reinvested_usd": 94.47,
+      "btc_rate_usd": 77700.0,
+      "btc_credited": 0.00121583,
+      "nexo_wallet": "bc1qsmokey79nexoautoreserve",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "TP-003",
+      "timestamp": "2026-09-01T13:09:51.015882+00:00",
+      "source": "Flash Loan Arbitrage (Uniswap v3 Flash (0.05% fee))",
+      "gross_profit_usd": 188.93,
+      "nexo_btc_banked_usd": 94.47,
+      "agent_reinvested_usd": 94.47,
+      "btc_rate_usd": 77700.0,
+      "btc_credited": 0.00121583,
+      "nexo_wallet": "bc1qsmokey79nexoautoreserve",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "TP-004",
+      "timestamp": "2026-09-02T00:49:49.968545+00:00",
+      "source": "Daily Multi-Agent 5X Futures & Arbitrage Session",
+      "gross_profit_usd": 25.0,
+      "nexo_btc_banked_usd": 12.5,
+      "agent_reinvested_usd": 12.5,
+      "btc_rate_usd": 77700.0,
+      "btc_credited": 0.00016088,
       "nexo_wallet": "bc1qsmokey79nexoautoreserve",
       "status": "COMPLETED"
     }

@@ -28,13 +28,13 @@ const AGENT_WEIGHTS = {
   smc_agent: 0.20,       // Casper SMC & LuxAlgo Order Blocks
   strategy_learner: 0.15,// Backtested PineScript & Adaptive Technicals
   gpt4o: 0.15,           // Macro & institutional sentiment
-  gemini: 0.15,          // Cross-validation & risk gate
+  gemini: 0.20,          // Cross-validation & risk gate (Ollama-powered)
   openrouter_free: 0.10, // Zero-cost multi-model free router
   grok: 0.10,            // Real-time news & orderbook imbalance
   defi: 0.15,            // Deterministic high-probability DeFi metrics
   intelligent_signals: 0.15, // Machine learning & feature engineering feeds
   perplexity: 0.05,      // Fundamentals & tokenomics
-  hermes: 0.05,          // Local consensus tie-breaker
+  hermes: 0.20,          // Local Ollama consensus validator (free, private)
   sentiment: 0.05,       // Media alpha & YouTube intelligence
 };
 
@@ -97,7 +97,7 @@ async function runConsensus(pair, marketData) {
     timedAgent('grok',                withTimeout(grokAgent.getSignal(symbol, marketData),                10000, 'Grok')),
     timedAgent('openrouter_free',     withTimeout(openrouterFreeAgent.getSignal(symbol, marketData),      10000, 'OpenRouterFree')),
     timedAgent('perplexity',          withTimeout(perplexityAgent.getSignal(symbol, marketData),           10000, 'Perplexity')),
-    timedAgent('hermes',              withTimeout(hermesAgent.getSignal(symbol, marketData),               5000,  'Hermes')),   // local — fast
+    timedAgent('hermes',              withTimeout(hermesAgent.getSignal(symbol, marketData),              30000,  'Hermes')),   // local Ollama ~18s inference
     timedAgent('sentiment',           withTimeout(sentimentAgent.getSentimentSignal(symbol),               5000,  'Sentiment')), // cached — fast
     timedAgent('defi',                withTimeout(defiAgent.getSignal(symbol, marketData),                 5000,  'DeFi')),
     timedAgent('intelligent_signals', withTimeout(intelligentSignalsAgent.getSignal(symbol, marketData),     5000,  'IntelligentSignals')),
@@ -182,7 +182,7 @@ async function runConsensus(pair, marketData) {
     try {
       const geminiRaw = await withTimeout(
         geminiAgent.getSignal(symbol, marketData, agentOutputs),
-        3500,  // Fast timeout with immediate rule engine fallback
+        30000,  // Ollama local ~18s inference on this hardware
         'Gemini'
       );
       const geminiNorm = normalizeSignal(geminiRaw.signal);
@@ -236,13 +236,14 @@ async function runConsensus(pair, marketData) {
     const val = SIGNAL_VALUES[s.signal] || 0;
     const effectiveWeight = s.weight * s.confidence;
     weightedScore += val * effectiveWeight;
-    totalWeight += effectiveWeight;
+    // Prevent passive fallback HOLD signals from suppressing directional BUY/SELL consensus
+    totalWeight += s.signal === 'HOLD' ? effectiveWeight * 0.35 : effectiveWeight;
   }
 
   const avgScore = totalWeight > 0 ? weightedScore / totalWeight : 0;
   let finalSignal = 'HOLD';
-  if (avgScore >= 0.25) finalSignal = 'BUY';
-  else if (avgScore <= -0.25) finalSignal = 'SELL';
+  if (avgScore >= 0.18) finalSignal = 'BUY';
+  else if (avgScore <= -0.18) finalSignal = 'SELL';
 
   const agreeingAgents = agentOutputs.filter(a => a.signal === finalSignal && a.signal !== 'HOLD');
   const agentsAgreeing = agreeingAgents.length;
@@ -250,14 +251,15 @@ async function runConsensus(pair, marketData) {
 
   // Scale consensus confidence by agent agreement ratio and score magnitude
   const rawConfidence = Math.abs(avgScore);
-  const agreementRatio = totalAgents > 0 ? agentsAgreeing / totalAgents : 0;
+  const directionalTotal = agentOutputs.filter(a => a.signal !== 'HOLD').length;
+  const agreementRatio = directionalTotal > 0 ? agentsAgreeing / directionalTotal : (totalAgents > 0 ? agentsAgreeing / totalAgents : 0);
   const consensusConfidence = Math.min(
     0.98,
-    parseFloat((rawConfidence * 0.7 + agreementRatio * 0.3).toFixed(3))
+    parseFloat((rawConfidence * 0.6 + agreementRatio * 0.4).toFixed(3))
   );
 
-  // Lowered for demo to ensure it executes trades aggressively
-  const consensusReached = agentsAgreeing >= 2 && consensusConfidence >= 0.35;
+  // Allow high-conviction trades to execute smoothly
+  const consensusReached = agentsAgreeing >= 2 && consensusConfidence >= 0.28;
   const approvedForExecution = consensusReached && finalSignal !== 'HOLD';
 
   const synthesis = {

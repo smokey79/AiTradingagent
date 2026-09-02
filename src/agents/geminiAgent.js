@@ -143,12 +143,29 @@ async function callLocalOllama(symbol, marketData, peerSignals = []) {
     const host = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
     const model = process.env.OLLAMA_MODEL || 'llama3.2';
     const systemPrompt = loadSkillPrompt();
-    const userPrompt = `Cross-validate these trading signals for ${symbol}:
-Market Data: Price=$${marketData?.price?.price || 0}, 24h Change=${marketData?.price?.change24h || 0}%
-Other Agent Outputs for Validation:
-${JSON.stringify(peerSignals, null, 2)}
+    const ind = marketData?.indicators || {};
+    const price = marketData?.price || {};
 
-Validate consensus consistency, detect conflicts, and output strictly JSON.`;
+    const userPrompt = `Cross-validate trading signals for ${symbol}:
+
+── Market Context ──
+Price: $${price.price || 0} | 24h Change: ${price.change24h || 0}%
+Volume: $${((price.volume24h || 0) / 1e6).toFixed(1)}M
+RSI(14): ${ind.rsi14 || 50} | EMA50: $${ind.ema50 || 0} | EMA200: $${ind.ema200 || 0}
+MACD Histogram: ${ind.macd?.histogram || 0}
+Price vs EMA50: ${ind.priceVsEma50 || 'N/A'} | Price vs EMA200: ${ind.priceVsEma200 || 'N/A'}
+
+── Peer Agent Signals to Validate ──
+${JSON.stringify(peerSignals.map(s => ({ agent: s.agent, signal: s.signal, confidence: s.confidence, reason: s.reason })), null, 2)}
+
+Tasks:
+1. Validate consensus consistency across agents
+2. Detect conflicts or disagreements
+3. Assess overall portfolio risk
+4. Determine if the majority signal is reliable
+5. Provide a final validated signal with reasoning
+
+Output strictly valid JSON with keys: signal, confidence, reason, validation_result, agent_conflicts_detected, portfolio_risk_score, strategy_profitability_gate.`;
 
     const url = host.includes('/api/') ? host : `${host.replace(/\/+$/, '')}/api/generate`;
 
@@ -160,10 +177,12 @@ Validate consensus consistency, detect conflicts, and output strictly JSON.`;
         stream: false,
         format: 'json',
         options: {
-          temperature: 0.2,
+          temperature: 0.3,
+          num_predict: 1024,
+          num_ctx: 4096,
         },
       },
-      { timeout: 2500, proxy: false }
+      { timeout: 30000, proxy: false }
     );
 
     const rawText = res.data?.response?.trim();

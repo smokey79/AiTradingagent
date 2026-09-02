@@ -26,7 +26,7 @@ app.register_blueprint(dashboard)
 app.register_blueprint(health_bp)
 
 if __name__ == "__main__":
-    port = int(os.getenv("DASHBOARD_PORT", 3002))
+    port = int(os.getenv("STUDIO_PORT", os.getenv("WSGI_PORT", 3002)))
     host = os.getenv("HOST", "0.0.0.0")
     try:
         import waitress

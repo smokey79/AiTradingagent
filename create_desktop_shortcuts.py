@@ -61,15 +61,25 @@ sc3.WindowStyle = 1
 sc3.IconLocation = "{str(icon_file)},0"
 sc3.Save
 ''')
-        # 4. Stop AiTradingAgent.lnk
+        # 4. Developments Studio.lnk
         vbs_lines.append(f'''
-Set sc4 = WshShell.CreateShortcut("{str(d / 'Stop AiTradingAgent.lnk')}")
-sc4.TargetPath = "{str(stop_bat)}"
+Set sc4 = WshShell.CreateShortcut("{str(d / 'Developments Studio.lnk')}")
+sc4.TargetPath = "{str(project_root / 'START_DEVELOPMENTS_STUDIO.bat')}"
 sc4.WorkingDirectory = "{str(project_root)}"
-sc4.Description = "Stop all AiTradingAgent Dashboard and Agent processes"
+sc4.Description = "Start AiTradingAgent Developments Studio (TradingView, PineScript, 5X Futures)"
 sc4.WindowStyle = 1
-sc4.IconLocation = "shell32.dll,27"
+sc4.IconLocation = "{str(icon_file)},0"
 sc4.Save
+''')
+        # 5. Stop AiTradingAgent.lnk
+        vbs_lines.append(f'''
+Set sc5 = WshShell.CreateShortcut("{str(d / 'Stop AiTradingAgent.lnk')}")
+sc5.TargetPath = "{str(stop_bat)}"
+sc5.WorkingDirectory = "{str(project_root)}"
+sc5.Description = "Stop all AiTradingAgent Dashboard and Agent processes"
+sc5.WindowStyle = 1
+sc5.IconLocation = "shell32.dll,27"
+sc5.Save
 ''')
         
     vbs_script = "".join(vbs_lines)

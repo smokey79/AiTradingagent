@@ -191,6 +191,71 @@ LUXALGO_KNOWLEDGE_BASE = {
 }
 
 
+def _normalize_strategy(s: Dict[str, Any]) -> Dict[str, Any]:
+    """Normalizes any strategy dictionary to ensure all required fields are present."""
+    if not isinstance(s, dict):
+        return {}
+    title = s.get("title") or s.get("name") or "LuxAlgo 5X Strategy"
+    channel = s.get("channel_source") or s.get("channel") or "LuxAlgo Official & YouTube Alpha"
+    leverage = s.get("leverage") or "5X"
+    symbol = s.get("symbol") or "BTC/USDT"
+    timeframe = s.get("timeframe") or "15m"
+
+    target_win_rate = s.get("target_win_rate_pct")
+    if target_win_rate is None:
+        if isinstance(s.get("backtest"), dict) and s["backtest"].get("winRate") is not None:
+            target_win_rate = s["backtest"]["winRate"]
+        else:
+            target_win_rate = 75.0
+
+    rm = s.get("risk_management")
+    if not isinstance(rm, dict):
+        rr = 2.5
+        if isinstance(s.get("backtest"), dict) and s["backtest"].get("riskRewardRatio"):
+            rr = s["backtest"]["riskRewardRatio"]
+        rm = {
+            "take_profit_pct": 4.0,
+            "take_profit_leveraged_pct": 20.0,
+            "stop_loss_pct": 1.5,
+            "stop_loss_leveraged_pct": 7.5,
+            "liquidation_safety_buffer_pct": 17.5,
+            "risk_reward_ratio": rr,
+        }
+    elif "risk_reward_ratio" not in rm:
+        rm["risk_reward_ratio"] = 2.5
+
+    concepts = s.get("concepts")
+    if not isinstance(concepts, list) or not concepts:
+        concepts = [
+            "Order Block (OB) Identification",
+            "Liquidity Sweep Invalidation",
+            "Dynamic ATR Trailing Stop (1.5x)",
+            "Isolated 5X Leverage Margin",
+        ]
+
+    pinescript = s.get("pinescript_code") or s.get("pinescript") or ""
+
+    return {
+        "id": s.get("id") or f"STRAT_SMC_{symbol.replace('/', '_')}",
+        "title": title,
+        "name": title,
+        "type": s.get("type") or s.get("strategyType") or "luxalgo_smc",
+        "symbol": symbol,
+        "timeframe": timeframe,
+        "leverage": leverage,
+        "channel_source": channel,
+        "target_win_rate_pct": target_win_rate,
+        "concepts": concepts,
+        "risk_management": rm,
+        "pinescript_code": pinescript,
+        "pinescript": pinescript,
+        "learned_at": s.get("learned_at") or s.get("learnedAt") or datetime.now(timezone.utc).isoformat(),
+        "status": s.get("status") or "ACTIVE_PRODUCTION_STRATEGY",
+        "backtest": s.get("backtest") or {},
+        "parameters": s.get("parameters") or {},
+    }
+
+
 class LuxAlgoStrategyLearnerAgent:
     """
     Unified YouTube Alpha Sourcing, Sentiment Gauging & Strategy Learner Agent.
@@ -211,7 +276,9 @@ class LuxAlgoStrategyLearnerAgent:
     def _load_learned_strategies(self) -> List[Dict[str, Any]]:
         try:
             if LEARNED_STRATEGIES_PATH.exists():
-                return json.loads(LEARNED_STRATEGIES_PATH.read_text(encoding="utf-8"))
+                raw = json.loads(LEARNED_STRATEGIES_PATH.read_text(encoding="utf-8"))
+                if isinstance(raw, list):
+                    return [_normalize_strategy(item) for item in raw if isinstance(item, dict)]
         except Exception as e:
             log.warning(f"Could not load learned strategies: {e}")
         return []

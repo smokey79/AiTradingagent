@@ -82,13 +82,12 @@ start "AiTradingAgent - Telegram Listener" /MIN cmd /c "title Telegram-Listener 
 REM Wait 2 seconds for servers to bind ports
 timeout /t 2 /nobreak >nul
 
-REM 6. Open Web Dashboard in default browser
-echo [*] Opening Live Trading Dashboard in browser...
+REM 6. Open Web Dashboard & Developments Studio in default browser
+echo [*] Opening Live Trading Dashboard (Port 3001) & Developments Studio (Port 3002) in browser...
 start "" "http://localhost:3001"
-explorer "http://localhost:3001"
+start "" "http://localhost:3002"
 powershell -Command "Start-Process 'http://localhost:3001'" >nul 2>&1
-powershell -Command "Start-Process 'chrome.exe' 'http://localhost:3001'" >nul 2>&1
-powershell -Command "Start-Process 'msedge.exe' 'http://localhost:3001'" >nul 2>&1
+powershell -Command "Start-Process 'http://localhost:3002'" >nul 2>&1
 
 echo.
 echo =======================================================================

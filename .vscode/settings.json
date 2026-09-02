@@ -25,5 +25,10 @@
     "tests"
   ],
   "python.testing.unittestEnabled": false,
-  "python.testing.pytestEnabled": true
+  "python.testing.pytestEnabled": true,
+  "js/ts.experimental.useTsgo": false,
+  "ocaml.sandbox": {
+    "kind": "global"
+  },
+  "claudeCodeChat.permissions.yoloMode": true
 }
