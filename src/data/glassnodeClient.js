@@ -1,5 +1,5 @@
-import axios from "axios";
-import { logger } from "../utils/logger.js";
+const axios = require("axios");
+const logger = require("../utils/logger.js");
 
 const BASE_URL = "https://api.glassnode.com/v1/metrics";
 
@@ -8,7 +8,7 @@ const BASE_URL = "https://api.glassnode.com/v1/metrics";
  * referenced across the strategy: SOPR, MVRV, peer-rotation signals.
  * Requires GLASSNODE_API_KEY in .env.
  */
-export class GlassnodeClient {
+class GlassnodeClient {
   constructor(apiKey = process.env.GLASSNODE_API_KEY) {
     if (!apiKey) {
       throw new Error("GLASSNODE_API_KEY missing from environment");
@@ -43,3 +43,5 @@ export class GlassnodeClient {
     return this.#get(endpointPath, { a: asset, ...params });
   }
 }
+
+module.exports = { GlassnodeClient };

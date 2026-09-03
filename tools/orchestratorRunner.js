@@ -1,5 +1,5 @@
-orchestratorRunnerimport { runTradingOrchestrator } from "./orchestrator.js";
-import { logger } from "./utils/logger.js";
+const { runTradingOrchestrator } = require("./orchestrator.js");
+const logger = require("../src/utils/logger.js");
 
 async function main() {
   const marketData = {}; // plug in your feed
@@ -7,5 +7,8 @@ async function main() {
   logger.info("Final ruling", ruling);
 }
 
-main();
-.js
+if (require.main === module) {
+  main();
+}
+
+module.exports = { main };

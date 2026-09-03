@@ -98,58 +98,67 @@ async function executeTrade(pair, signal, riskCheck, marketData, isPaper = true)
     // Realistic Paper Execution simulation
     const slippagePct = 0.0008; // 0.08% simulated slippage
     const fillPrice = side === 'BUY' ? price * (1 + slippagePct) : price * (1 - slippagePct);
-
-    // Simulate realistic outcome based on signal quality & indicators
-    const winProbability = riskCheck.consensusConfidence || 0.78;
-    const isWin = Math.random() < winProbability;
-    const pnlMultiplier = isWin ? (riskCheck.takeProfitPct || 4.0) / 100 : -(riskCheck.stopLossPct || 2.0) / 100;
     const effectiveLeverage = riskCheck.leverage || 1.0;
-    const simulatedPnl = parseFloat((sizeUsd * pnlMultiplier * effectiveLeverage).toFixed(2));
 
-    const tradeRecord = {
-      pair,
-      symbol: pair.split('/')[0],
-      side,
-      price: parseFloat(fillPrice.toFixed(4)),
-      amount,
-      positionSizeUsd: sizeUsd,
-      leverage: riskCheck.leverage || 1,
-      pnlUsd: simulatedPnl,
-      pnlPct: parseFloat((pnlMultiplier * 100 * effectiveLeverage).toFixed(2)),
-      outcome: simulatedPnl > 0 ? 'WIN' : simulatedPnl < 0 ? 'LOSS' : 'BREAKEVEN',
-      confidence: riskCheck.consensusConfidence || 0.8,
-      paper: true,
-      reason: riskCheck.reason || 'Paper execution validated',
-      venue: 'PaperEngine',
-    };
-
-    recordTrade(tradeRecord);
+    // Fixed 2026-09-03: this used to fabricate the outcome with
+    // `Math.random() < riskCheck.consensusConfidence` — a coin-flip weighted
+    // by the AI's own confidence score, completely divorced from what price
+    // actually did. That silently made "confidence" and "win rate" the same
+    // number by construction, so the reported win rate never measured
+    // prediction skill at all.
+    //
+    // Real fix: open a REAL pending position (entry price, side, TP/SL,
+    // timestamp) via riskGate.recordOpenPosition, same as riskGate already
+    // does for live trades. No outcome is recorded yet. The position sits
+    // open until riskGate.resolveOpenPosition() (called each cycle from
+    // orchestrator/index.js with the next real fetched price) sees the
+    // price actually cross the take-profit or stop-loss level, or the
+    // position's TTL expires — at which point THAT function records the
+    // real WIN/LOSS/BREAKEVEN outcome based on genuine price movement.
     recordOpenPosition(pair, {
       sizeUsd,
       entryPrice: fillPrice,
       side,
+      leverage: effectiveLeverage,
       stopLossPct: riskCheck.stopLossPct,
       takeProfitPct: riskCheck.takeProfitPct,
+      confidence: riskCheck.consensusConfidence || 0.8,
     });
 
     logger.info(
-      `📄 PAPER EXECUTION: ${side} ${amount} ${pair} @ $${fillPrice.toFixed(2)} ($${sizeUsd} USD) -> Result: ${simulatedPnl >= 0 ? '+' : ''}$${simulatedPnl}`
+      `📄 PAPER POSITION OPENED: ${side} ${amount} ${pair} @ $${fillPrice.toFixed(2)} ($${sizeUsd} USD, ${effectiveLeverage}x) — SL ${riskCheck.stopLossPct}% / TP ${riskCheck.takeProfitPct}% — awaiting real price resolution`
     );
 
     return {
       success: true,
       paper: true,
+      pending: true,
       venue: 'PaperEngine',
       side,
       amount,
       fillPrice,
       sizeUsd,
-      pnlUsd: simulatedPnl,
+      pnlUsd: 0,
       orderId: `SIM-${Date.now()}`,
     };
   }
 
-  // Live Exchange Execution
+  // Live Exchange Execution Guard
+  if (process.env.NO_TRADES === 'true' || process.env.EXECUTION_ENABLED === 'false') {
+    logger.warn(`🛡️ [NO TRADES POLICY] Real order blocked by user configuration (NO_TRADES=true).`);
+    return {
+      success: true,
+      paper: true,
+      venue: 'ObservationOnly',
+      side,
+      amount,
+      fillPrice: price,
+      sizeUsd: 0,
+      pnlUsd: 0,
+      orderId: `NO-TRADE-${Date.now()}`
+    };
+  }
+
   const venue = await getBestVenue(pair);
   if (!venue.client) {
     throw new Error('No live exchange API keys configured. Switch to PAPER_TRADING=true.');

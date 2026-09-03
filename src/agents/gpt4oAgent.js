@@ -28,10 +28,11 @@ function cleanJson(text) {
 }
 
 async function getSignal(symbol, marketData) {
-  const apiKey = process.env.OPENAI_API_KEY || process.env.OPENROUTER_API_KEY;
-  const isRouter = !process.env.OPENAI_API_KEY && !!process.env.OPENROUTER_API_KEY;
+  const apiKey = (process.env.OPENAI_API_KEY || process.env.CLAUDE_API_KEY || process.env.OPENROUTER_API_KEY || '').trim();
+  const baseUrl = process.env.OPENAI_BASE_URL || (apiKey.startsWith('ci_live_') ? 'https://api.cheaperinference.com/v1' : '');
+  const isRouter = !baseUrl && !process.env.OPENAI_API_KEY && !!process.env.OPENROUTER_API_KEY;
 
-  if (!apiKey || apiKey.startsWith('your_') || apiKey.trim() === '') {
+  if (!apiKey || apiKey.startsWith('your_')) {
     return simulateGpt4oAnalysis(symbol, marketData);
   }
 
@@ -47,27 +48,28 @@ On-Chain SOPR: ${marketData?.onchain?.sopr?.toFixed(3) || '1.0'}, MVRV: ${market
 
 Output strictly valid JSON matching your schema.`;
 
-    const url = isRouter
-      ? 'https://openrouter.ai/api/v1/chat/completions'
-      : 'https://api.openai.com/v1/chat/completions';
+    const model = process.env.OPENAI_MODEL || (baseUrl ? 'gpt-4.1-nano' : (isRouter ? 'openai/gpt-4o' : 'gpt-4o'));
+    const url = baseUrl
+      ? `${baseUrl.replace(/\/+$/, '')}/chat/completions`
+      : (isRouter ? 'https://openrouter.ai/api/v1/chat/completions' : 'https://api.openai.com/v1/chat/completions');
 
     const res = await axios.post(
       url,
       {
-        model: isRouter ? 'openai/gpt-4o' : 'gpt-4o',
+        model,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt },
         ],
         response_format: { type: 'json_object' },
-        max_tokens: 500,
+        max_tokens: 600,
       },
       {
         headers: {
           Authorization: `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
-        timeout: 3500,
+        timeout: 12000,
       }
     );
 
@@ -142,4 +144,7 @@ function simulateGpt4oAnalysis(symbol, marketData) {
   };
 }
 
-module.exports = { getSignal };
+module.exports = {
+  getSignal,
+  getGpt4oSignal: getSignal,
+};

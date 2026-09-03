@@ -1,11 +1,11 @@
-import axios from "axios";
-import crypto from "crypto";
-import { logger } from "../utils/logger.js";
+const axios = require("axios");
+const crypto = require("crypto");
+const logger = require("../utils/logger.js");
 
 const BASE_URL = "https://api.crypto.com/exchange/v1";
 
 /** Minimal Crypto.com Exchange order executor (HMAC-SHA256 signed). */
-export class CryptoComExecutor {
+class CryptoComExecutor {
   constructor() {
     this.apiKey = process.env.CRYPTOCOM_API_KEY;
     this.apiSecret = process.env.CRYPTOCOM_API_SECRET;
@@ -20,7 +20,7 @@ export class CryptoComExecutor {
   }
 
   async placeOrder({ symbol, side, quantity }) {
-    const isLive = process.env.TRADING_MODE === "live";
+    const isLive = process.env.TRADING_MODE === "live" && process.env.NO_TRADES !== "true";
     if (!isLive) {
       logger.info("[PAPER MODE] Simulated Crypto.com order", { symbol, side, quantity });
       return { simulated: true, symbol, side, quantity };
@@ -49,3 +49,5 @@ export class CryptoComExecutor {
     }
   }
 }
+
+module.exports = { CryptoComExecutor };

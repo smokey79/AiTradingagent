@@ -1,8 +1,8 @@
-import fs from "fs";
-import path from "path";
-import axios from "axios";
-import { logger } from "../utils/logger.js";
-import { loadStrategyMemory, appendTradeRecord } from "../strategy/strategyMemoryLoader.js";
+const fs = require("fs");
+const path = require("path");
+const axios = require("axios");
+const logger = require("../utils/logger.js");
+const { loadStrategyMemory, appendTradeRecord } = require("../strategy/strategyMemoryLoader.js");
 
 /**
  * StrategyLearner — Self-Learning Module v3 (RAU Edition)
@@ -33,7 +33,7 @@ const TELEGRAM_ON         = (process.env.TELEGRAM_ALERTS_ENABLED   || "false").t
 const DECAY_HALF_DAYS  = 30;  // entries older than 30 days → confidence halved
 const DECAY_PRUNE_DAYS = 60;  // entries older than 60 days → removed
 
-export class StrategyLearner {
+class StrategyLearner {
   constructor() {
     this.memory = loadStrategyMemory();
     logger.info(`StrategyLearner ready. Trades so far: ${this.memory.tradeHistory?.length || 0}`);
@@ -315,3 +315,5 @@ ${gateStatus.message}`;
     };
   }
 }
+
+module.exports = { StrategyLearner };

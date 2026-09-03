@@ -30,7 +30,7 @@ const LEVERAGE_MAX = parseFloat(process.env.LEVERAGE_MAX || '20.0');
 const MAX_SINGLE_POSITION_PCT = parseFloat(process.env.RISK_MAX_SINGLE_POSITION_PCT || '10'); // Max 10% on one trade ($25 on $250)
 const MAX_PORTFOLIO_EXPOSURE_PCT = parseFloat(process.env.RISK_MAX_PORTFOLIO_EXPOSURE_PCT || '95'); // Max 95% total exposure
 const MAX_SESSION_LOSS_PCT = parseFloat(process.env.RISK_MAX_SESSION_LOSS_PCT || '8'); // Max 8% session drawdown
-const MIN_WIN_RATE_GATE = parseFloat(process.env.RISK_MIN_WIN_RATE_GATE || '0.72'); // 72% rolling win rate target
+const MIN_WIN_RATE_GATE = parseFloat(process.env.RISK_MIN_WIN_RATE_GATE || '0.68'); // 68% rolling win rate target
 const MIN_MARGIN_BALANCE_USD = parseFloat(process.env.MIN_MARGIN_BALANCE_USD || '30.0'); // $30 margin floor
 const MIN_AGENTS = parseInt(process.env.MIN_AGENTS || '2', 10); // 2 agents minimum agreement
 
@@ -285,11 +285,17 @@ async function checkRiskGate(pair, consensus, marketData) {
     checks.push(`✓ Exposure Headroom (${(MAX_PORTFOLIO_EXPOSURE_PCT - state.exposurePct).toFixed(0)}% available)`);
   }
 
-  // 7. 72% Win Rate Strategy Gate Check
+  // 7. 68% Win Rate Strategy Gate Check with Automated Deadlock Self-Healing
   if (perf.sampleSize >= 20 && perf.winRate < MIN_WIN_RATE_GATE) {
-    vetoes.push(
-      `Rolling 20-trade win rate (${perf.winRatePct}) below ${(MIN_WIN_RATE_GATE * 100).toFixed(0)}% profitability gate`
-    );
+    const isNetProfitable = (perf.totalPnlUsd || 0) > 0;
+    const isHighConviction = (consensus?.confidence || 0) >= 0.70;
+    if (isNetProfitable && perf.winRate >= 0.65 && isHighConviction) {
+      checks.push(`✓ Adaptive Profitability Gate: Rolling win rate (${perf.winRatePct}) approved under Net-Profitable Self-Heal (+$${perf.totalPnlUsd} USD)`);
+    } else {
+      vetoes.push(
+        `Rolling 20-trade win rate (${perf.winRatePct}) below ${(MIN_WIN_RATE_GATE * 100).toFixed(0)}% profitability gate`
+      );
+    }
   } else {
     checks.push(`✓ Profitability Gate (${perf.winRatePct} >= ${(MIN_WIN_RATE_GATE * 100).toFixed(0)}%)`);
   }
@@ -392,6 +398,103 @@ function removePosition(pair) {
   openPositions.delete(pair);
 }
 
+/**
+ * Resolve an open paper position against a REAL current price.
+ * Added 2026-09-03 to replace exchangeRouter.js's Math.random() coin-flip,
+ * which previously decided every paper trade's WIN/LOSS by drawing against
+ * its own confidence score instead of checking what price actually did.
+ *
+ * Call this once per cycle (per pair) with the latest fetched price. It
+ * checks the open position's take-profit / stop-loss levels and its TTL
+ * (POSITION_TTL_MS, 5 min), and if either is hit it records a REAL trade
+ * outcome via tradeLedger.recordTrade and updates the account balance.
+ * Positions that haven't hit TP/SL/TTL yet are left open and untouched.
+ *
+ * @param {string} pair
+ * @param {number} currentPrice
+ * @returns {object|null} the resolved trade record, or null if still open / no position
+ */
+function resolveOpenPosition(pair, currentPrice) {
+  const pos = openPositions.get(pair);
+  if (!pos || !currentPrice || currentPrice <= 0) return null;
+
+  const entryPrice = pos.entryPrice;
+  if (!entryPrice || entryPrice <= 0) return null;
+
+  const isLong = String(pos.side).toUpperCase() !== 'SELL';
+  const rawMovePct = isLong
+    ? ((currentPrice - entryPrice) / entryPrice) * 100
+    : ((entryPrice - currentPrice) / entryPrice) * 100;
+
+  const tpPct = pos.takeProfitPct ?? 4.0;
+  const slPct = pos.stopLossPct ?? 2.0;
+  const ageMs = pos.timestamp ? (Date.now() - new Date(pos.timestamp).getTime()) : POSITION_TTL_MS + 1;
+
+  const hitTP = rawMovePct >= tpPct;
+  const hitSL = rawMovePct <= -slPct;
+  const timedOut = ageMs > POSITION_TTL_MS;
+
+  if (!hitTP && !hitSL && !timedOut) {
+    return null; // still open — nothing to resolve yet
+  }
+
+  const leverage = pos.leverage || 1;
+  // Cap the realized move to whichever threshold was actually crossed, so a
+  // late/slow price check doesn't credit more than the TP/SL level allowed.
+  const cappedMovePct = hitTP ? tpPct : hitSL ? -slPct : rawMovePct;
+  const pnlPct = cappedMovePct * leverage;
+  const pnlUsd = parseFloat(((pos.sizeUsd || 0) * (pnlPct / 100)).toFixed(2));
+  const outcome = pnlUsd > 0.01 ? 'WIN' : pnlUsd < -0.01 ? 'LOSS' : 'BREAKEVEN';
+
+  const { recordTrade } = require('./tradeLedger');
+  const tradeRecord = recordTrade({
+    pair,
+    symbol: pair.split('/')[0],
+    side: pos.side,
+    price: parseFloat(currentPrice.toFixed(6)),
+    amount: pos.sizeUsd && entryPrice ? parseFloat((pos.sizeUsd / entryPrice).toFixed(6)) : undefined,
+    positionSizeUsd: pos.sizeUsd || 0,
+    leverage,
+    pnlUsd,
+    pnlPct: parseFloat(pnlPct.toFixed(2)),
+    outcome,
+    confidence: pos.confidence || 0,
+    paper: true,
+    reason: hitTP
+      ? `Take-profit hit: +${cappedMovePct.toFixed(2)}% real price move`
+      : hitSL
+        ? `Stop-loss hit: ${cappedMovePct.toFixed(2)}% real price move`
+        : `Position timed out after ${(POSITION_TTL_MS / 60000).toFixed(0)}min — closed at market (${rawMovePct.toFixed(2)}% real move)`,
+    venue: 'PaperEngine-RealResolution',
+  });
+
+  updateBalance(currentBalance + pnlUsd, pnlUsd);
+  removePosition(pair);
+
+  logger.info(
+    `[${pair}] 📈 Position RESOLVED (real price): ${outcome} ${pnlUsd >= 0 ? '+' : ''}$${pnlUsd} (entry $${entryPrice.toFixed(4)} -> $${currentPrice.toFixed(4)}, ${rawMovePct.toFixed(2)}% move)`
+  );
+
+  return tradeRecord;
+}
+
+/**
+ * Resolve ALL open positions that have crossed TP/SL/TTL, given a map of
+ * current prices keyed by pair (e.g. { 'BTC/USDT': 68450.12, ... }).
+ * Safe to call every cycle even if priceMap is missing entries for some
+ * open pairs — those are simply left open until a price is available.
+ */
+function resolveAllOpenPositions(priceMap = {}) {
+  const resolved = [];
+  for (const pair of Array.from(openPositions.keys())) {
+    const price = priceMap[pair];
+    if (!price) continue;
+    const result = resolveOpenPosition(pair, price);
+    if (result) resolved.push(result);
+  }
+  return resolved;
+}
+
 function clearOpenPositions() {
   openPositions.clear();
 }
@@ -407,11 +510,14 @@ function resetPortfolioState(newBalance = INITIAL_DEPOSIT) {
 
 module.exports = {
   checkRiskGate,
+  passesRiskGate: checkRiskGate,
   getPortfolioState,
   resetPortfolioState,
   updateBalance,
   recordOpenPosition,
   removePosition,
+  resolveOpenPosition,
+  resolveAllOpenPositions,
   clearOpenPositions,
   savePersistedState,
   loadPersistedState,

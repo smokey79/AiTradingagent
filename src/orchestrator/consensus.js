@@ -3,6 +3,11 @@
  * Coordinates 8 specialized AI agents (Claude, GPT-4o, DeepSeek R1/V3, Gemini,
  * Grok, OpenRouter Free Tier, Perplexity, Hermes, and YouTube Sentiment),
  * applies dynamic weighting, resolves conflicts, detects hard vetoes, and produces master trading decisions.
+ * 
+ * v2: providerRotator added as 13th parallel agent — runs 5 free/subscription
+ * models (DeepSeek R1, Llama 3.3, Gemini Flash, Qwen, Mistral + Gemini Pro + Ollama)
+ * and synthesises a rotated consensus. This ensures 24/7 uptime even when
+ * primary paid API keys are rate-limited.
  */
 const logger = require('../utils/logger');
 const claudeAgent = require('../agents/claudeAgent');
@@ -18,6 +23,7 @@ const defiAgent = require('../agents/defiAgent');
 const intelligentSignalsAgent = require('../agents/intelligentSignalsAgent');
 const smcAgent = require('../agents/smcAgent');
 const strategyLearningAgent = require('../agents/strategyLearningAgent');
+const providerRotator = require('../agents/providerRotator');
 const healthMonitor = require('../health/agentHealthMonitor');
 const { isExcluded } = require('../health/selfHealer');
 
@@ -36,6 +42,7 @@ const AGENT_WEIGHTS = {
   perplexity: 0.05,      // Fundamentals & tokenomics
   hermes: 0.20,          // Local Ollama consensus validator (free, private)
   sentiment: 0.05,       // Media alpha & YouTube intelligence
+  provider_rotator: 0.15,// 24/7 rotation: free OpenRouter + Gemini Pro + Ollama fallback
 };
 
 const SIGNAL_VALUES = {
@@ -76,6 +83,18 @@ async function runConsensus(pair, marketData) {
     return promise;
   }
 
+  // providerRotator wrapper — converts rotated consensus output to standard agent signal format
+  async function runRotatorAsAgent() {
+    const result = await providerRotator.runRotatedConsensus(symbol, marketData);
+    return {
+      signal: result.signal,
+      confidence: result.confidence,
+      reason: `ProviderRotator (${result.agentsAgreeing} rotated agents): ${result.breakdown?.map(b => b.provider).join(', ') || 'free+sub pool'}`,
+      model_used: 'rotation-pool',
+      provider: 'provider_rotator',
+    };
+  }
+
   const [
     deepseekRes,
     claudeRes,
@@ -89,6 +108,7 @@ async function runConsensus(pair, marketData) {
     intelligentSignalsRes,
     smcRes,
     strategyLearnerRes,
+    providerRotatorRes,
   ] = await Promise.allSettled([
     // Tiered timeouts: local and cloud agents with automated quantitative fallbacks
     timedAgent('deepseek',            withTimeout(deepseekAgent.getSignal(symbol, marketData),            10000, 'DeepSeek')),
@@ -103,6 +123,7 @@ async function runConsensus(pair, marketData) {
     timedAgent('intelligent_signals', withTimeout(intelligentSignalsAgent.getSignal(symbol, marketData),     5000,  'IntelligentSignals')),
     timedAgent('smc_agent',           withTimeout(smcAgent.getSignal(symbol, marketData),                   5000,  'SMCAgent')),
     timedAgent('strategy_learner',    withTimeout(strategyLearningAgent.getSignal(symbol, marketData),      5000,  'StrategyLearner')),
+    timedAgent('provider_rotator',    withTimeout(runRotatorAsAgent(),                                     35000,  'ProviderRotator')), // 5 agents in parallel internally
   ]);
 
   // Record health outcomes for every agent
@@ -111,7 +132,7 @@ async function runConsensus(pair, marketData) {
     grok: grokRes, openrouter_free: openrouterFreeRes,
     perplexity: perplexityRes, hermes: hermesRes, sentiment: sentimentRes,
     defi: defiRes, intelligent_signals: intelligentSignalsRes, smc_agent: smcRes,
-    strategy_learner: strategyLearnerRes,
+    strategy_learner: strategyLearnerRes, provider_rotator: providerRotatorRes,
   };
   for (const [name, res] of Object.entries(agentResults)) {
     const latency = agentTimers[name] ? Date.now() - agentTimers[name] : 0;
@@ -162,6 +183,7 @@ async function runConsensus(pair, marketData) {
   processResult('intelligent_signals', intelligentSignalsRes);
   processResult('smc_agent', smcRes);
   processResult('strategy_learner', strategyLearnerRes);
+  processResult('provider_rotator', providerRotatorRes);
 
   // ── Fast-track: skip Gemini if consensus is already crystal clear ──────────
   // If 6+ agents agree with avg confidence ≥ 0.80 we don't need cross-validation.
@@ -258,8 +280,12 @@ async function runConsensus(pair, marketData) {
     parseFloat((rawConfidence * 0.6 + agreementRatio * 0.4).toFixed(3))
   );
 
-  // Allow high-conviction trades to execute smoothly
-  const consensusReached = agentsAgreeing >= 2 && consensusConfidence >= 0.28;
+  // Require a real majority, not just 2 stragglers agreeing at a low bar.
+  // Tightened 2026-09-03: was agentsAgreeing >= 2 && consensusConfidence >= 0.28
+  // (out of 13 agents, that let 2 agree at 28% confidence trigger a trade).
+  const MIN_AGENTS_AGREEING = parseInt(process.env.CONSENSUS_MIN_AGENTS_AGREEING || '5', 10);
+  const MIN_CONSENSUS_CONFIDENCE = parseFloat(process.env.CONSENSUS_MIN_CONFIDENCE || '0.45');
+  const consensusReached = agentsAgreeing >= MIN_AGENTS_AGREEING && consensusConfidence >= MIN_CONSENSUS_CONFIDENCE;
   const approvedForExecution = consensusReached && finalSignal !== 'HOLD';
 
   const synthesis = {

@@ -1,84 +1,145 @@
+# ==============================================================================
+# AiTradingAgent .gitignore
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. ENVIRONMENT & SECRETS (CRITICAL - NEVER COMMIT)
+# ------------------------------------------------------------------------------
 .env
+.env.*
 *.env
+*.env.*
+*.env.txt
+*.env.text
+*.env.json
+*.env.bak
+*.env.backup
+**/.env
+**/.env.*
+**/*.env
+**/*.env.*
+**/*.env.txt
+**/*.env.text
 config/master.env
 config/*.env
+config/secrets_archive/
 data1.env
+
+# Raw credential, API key, and token text dumps
+keys.env.txt
+bitget_keys.txt
+Bitget api*.txt
+GeminiAPI.ENV.TXT
+GIGUIAPI.env.text
+API,omnicode.env.txt
+CUsersbarcl.geminiconfigpluginsgoog.txt
+SurfShrkAlt_id.txt
+curl httpsgenerativelanguage*
+curl*generativelanguage*
+agents/AI-Trading-Agent/*.env.txt
+agents/AI-Trading-Agent/FAI-Trading-Agent.env.txt
+
+# Keys and Certificate formats
+*.pem
+*.key
+*.keystore
+*.p12
+*.pfx
+*.crt
+*.cer
+*id_rsa*
+*id_ed25519*
+*id_ecdsa*
+*.token
+*.secret
+
+# General sensitive text/odt dumps (preserving requirements)
+*.odt
+*.txt
+!requirements*.txt
+!requirements/*.txt
+!**/requirements*.txt
+
+# Allow template and example env files
+!.env.example
+!**/.env.example
+!.env.template
+!**/.env.template
+
+# ------------------------------------------------------------------------------
+# 2. LOCAL DATA & DATABASES
+# ------------------------------------------------------------------------------
 data/trading.db
 *.db
 *.sqlite
-__pycache__/
-*.py[cod]
-venv/
-.venv/
+*.sqlite3
+data/scan_log.jsonl
+data/cycle_*.json
+data/trade_ledger_backup_*.json
+src/sentiment/channel_credibility.json
+cache/
+_OLD_BACKUPS/
+Prodjects.zip
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# ------------------------------------------------------------------------------
+# 3. RUNTIME, DEPENDENCIES & LOGS
+# ------------------------------------------------------------------------------
 node_modules/
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 *.log
 logs/
-data/scan_log.jsonl
+.pm2/
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+.pytest_cache/
+
+# ------------------------------------------------------------------------------
+# 4. LARGE MODEL WEIGHTS & THIRD-PARTY BUNDLES
+# ------------------------------------------------------------------------------
+*.gguf
+*.ggml
+Aitradingbot-skeleton/ccxt/
+Aitradingbot-skeleton/ccxt/dist/
+
+# ------------------------------------------------------------------------------
+# 5. OS & IDE ARTIFACTS
+# ------------------------------------------------------------------------------
 .DS_Store
 Thumbs.db
 desktop.ini
 .vscode/
-*.gguf
-*.ggml
-src/sentiment/channel_credibility.json
-.pytest_cache/
-.pm2/
+.kilo/
+.snapshots/
 
-# Sensitive text files with API keys
-*.txt
-keys.env.txt
-bitget_keys.txt
-GeminiAPI.ENV.TXT
-CUsersbarcl.geminiconfigpluginsgoog.txt
-API,omnicode.env.txt
-*.odt
-*.env.txt
-config/secrets_archive/
-agents/AI-Trading-Agent/*.env.txt
-Aitradingbot-skeleton/.env.example
-agents/AI-Trading-Agent/.env.example
-
-# Cycle data (too noisy)
-data/cycle_*.json
-data/trade_ledger_backup_*.json
-cache/
-
-# Docker (not needed for GitHub)
+# ------------------------------------------------------------------------------
+# 6. DOCKER & LOCAL LAUNCH SCRIPTS (EXCLUDED FROM VCS)
+# ------------------------------------------------------------------------------
 docker-compose.yml
 docker-stack-launch.bat
 docker-stack-launch.sh
 Dockerfile.trading
+START_DEVELOPMENTS_STUDIO.bat
+claude_batch_processor.py
+batch_trading_engine.py
 
-# Misc
-.kilo/
-.snapshots/
-CLAUDE_BATCH_API_GUIDE.md
-
-# ccxt bundled library (too large, install via npm instead)
-Aitradingbot-skeleton/ccxt/
-Aitradingbot-skeleton/ccxt/dist/
-
-# Agent subproject env files
-agents/AI-Trading-Agent/FAI-Trading-Agent.env.txt
-agents/AI-Trading-Agent/.env.example
-
-# Misc large/irrelevant
+# ------------------------------------------------------------------------------
+# 7. MISC REPO EXCLUSIONS
+# ------------------------------------------------------------------------------
 CLAUDE_BATCH_API_GUIDE.md
 CODE_QUALITY_GUIDE.md
 DOCKER_DEPLOYMENT_GUIDE.md
 ENVIRONMENT_SETUP.md
-Dockerfile.trading
-docker-compose.yml
-docker-stack-launch.bat
-docker-stack-launch.sh
-claude_batch_processor.py
-batch_trading_engine.py
-.kilo/
-.snapshots/
 .editorconfig
 .eslintignore
 .eslintrc.json
 .prettierignore
 .prettierrc.json
-START_DEVELOPMENTS_STUDIO.bat

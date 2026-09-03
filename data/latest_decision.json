@@ -1,17 +1,67 @@
 {
   "orchestrator": "copilot",
-  "timestamp": "2026-08-29T13:45:36.514051+00:00",
+  "timestamp": "2026-09-02T09:59:36.192440+00:00",
   "symbol": "BTC/USDT",
   "final_signal": "HOLD",
   "consensus_confidence": 0.5,
   "consensus_reached": false,
   "approved_for_execution": false,
   "agents_agreeing": 2,
-  "agents_total": 2,
+  "agents_total": 5,
   "veto_triggered": false,
   "veto_reason": null,
-  "reasoning": "Institutional consensus confirmed by 2/2 specialized AI models.",
+  "reasoning": "Institutional consensus confirmed by 2/5 specialized AI models.",
   "agent_signals": [
+    {
+      "agent": "claude",
+      "timestamp": "2026-09-02T09:59:17.899261+00:00",
+      "symbol": "BTC/USDT",
+      "signal": "HOLD",
+      "confidence": 0.35,
+      "reason": "Insufficient candle data across multiple timeframes prevents reliable multi-timeframe confluence analysis; awaiting OHLCV, RSI, MACD, volume, and on-chain metrics for informed decision.",
+      "constraints": {
+        "max_position_size_pct": 5.0,
+        "stop_loss_pct": 2.5,
+        "take_profit_pct": 6.0,
+        "timeframe_validity_minutes": 60,
+        "entry_price_range": [
+          66841.0,
+          70059.0
+        ]
+      },
+      "indicators_used": [],
+      "pattern_detected": "none",
+      "risk_score": 0.65
+    },
+    {
+      "agent": "gpt4o",
+      "timestamp": "2026-09-02T09:59:17.899261+00:00",
+      "symbol": "BTC/USDT",
+      "signal": "HOLD",
+      "confidence": 0.0,
+      "reason": "Insufficient data provided; no recent news, funding rates, or macro events included.",
+      "constraints": {
+        "max_position_size_pct": 5.0,
+        "stop_loss_pct": 2.5,
+        "take_profit_pct": 6.0,
+        "timeframe_validity_minutes": 120,
+        "avoid_entry_window_minutes": 0
+      },
+      "sentiment_score": 0.0,
+      "fear_greed_index": 50,
+      "funding_rate_bias": "neutral",
+      "macro_risk": "medium",
+      "social_spike_detected": false,
+      "risk_score": 0.0
+    },
+    {
+      "agent": "grok",
+      "symbol": "BTC/USDT",
+      "signal": "BUY",
+      "confidence": 0.79,
+      "reason": "Positive real-time orderbook bid imbalance (64%) and zero liquidation cascades",
+      "breaking_event": false
+    },
     {
       "agent": "perplexity",
       "symbol": "BTC/USDT",
@@ -22,12 +72,27 @@
     },
     {
       "agent": "gemini",
+      "timestamp": "2026-09-02T09:59:18.000Z",
       "symbol": "BTC/USDT",
-      "signal": "BUY",
-      "confidence": 0.86,
-      "validation_result": "PASS",
-      "agent_conflicts_detected": [],
-      "reason": "Cross-validation confirmed: 4 peer agents bullish with strong statistical confluence"
+      "signal": "HOLD",
+      "confidence": 0.5,
+      "reason": "Consensus is fragmented; technical (Claude) and macro (GPT-4o) agents signal HOLD due to missing data, offsetting sentiment and fundamental BUY signals.",
+      "constraints": {
+        "max_position_size_pct": 3.5,
+        "stop_loss_pct": 2.5,
+        "take_profit_pct": 6.0,
+        "timeframe_validity_minutes": 60
+      },
+      "validation_result": "PARTIAL",
+      "agent_conflicts_detected": [
+        "Claude/GPT-4o (HOLD) vs Grok/Perplexity (BUY)"
+      ],
+      "portfolio_risk_score": 0.45,
+      "max_correlated_exposure_pct": 15.0,
+      "drawdown_proximity_warning": false,
+      "strategy_profitability_gate": false,
+      "win_rate_last_20": 0.75,
+      "risk_score": 0.45
     }
   ]
 }

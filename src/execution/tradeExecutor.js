@@ -1,6 +1,6 @@
-import { BitgetExecutor } from "./bitgetExecutor.js";
-import { CryptoComExecutor } from "./cryptoComExecutor.js";
-import { logger } from "../utils/logger.js";
+const { BitgetExecutor } = require("./bitgetExecutor.js");
+const { CryptoComExecutor } = require("./cryptoComExecutor.js");
+const logger = require("../utils/logger.js");
 
 const bitgetClient = new BitgetExecutor();
 const cryptoComClient = new CryptoComExecutor();
@@ -48,7 +48,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
  * @param {object} [options] - Optional execution options (market price, max retries)
  * @returns {Promise<{ executed: boolean, exchange?: string, orderId?: string, error?: string }>}
  */
-export async function executeTrade(consensusDecision, options = {}) {
+async function executeTrade(consensusDecision, options = {}) {
   if (!consensusDecision || !consensusDecision.approved) {
     logger.warn("Trade execution skipped: consensus decision not approved", {
       reason: consensusDecision?.reason || "Consensus threshold not met",
@@ -166,3 +166,8 @@ export async function executeTrade(consensusDecision, options = {}) {
     primaryError: primaryError?.message,
   };
 }
+
+module.exports = {
+  executeTrade,
+  parseAction,
+};

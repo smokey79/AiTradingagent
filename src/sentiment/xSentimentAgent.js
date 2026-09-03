@@ -1,5 +1,5 @@
-import axios from "axios";
-import { logger } from "../utils/logger.js";
+const axios = require("axios");
+const logger = require("../utils/logger.js");
 
 const SEARCH_URL = "https://api.x.com/2/tweets/search/recent";
 
@@ -8,7 +8,7 @@ const SEARCH_URL = "https://api.x.com/2/tweets/search/recent";
  * recent-search endpoint, then scores sentiment locally with Hermes.
  * Requires X_BEARER_TOKEN in .env (X Developer Portal, Elevated/Basic tier).
  */
-export class XSentimentAgent {
+class XSentimentAgent {
   async fetchRecentPosts(query, maxResults = 25) {
     try {
       const { data } = await axios.get(SEARCH_URL, {
@@ -54,3 +54,5 @@ ${asset} as JSON: {"asset": "${asset}", "sentiment": "bullish"|"bearish"|"neutra
     return this.scoreSentiment(posts, asset);
   }
 }
+
+module.exports = { XSentimentAgent };

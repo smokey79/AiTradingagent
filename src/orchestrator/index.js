@@ -13,13 +13,18 @@ const cron = require('node-cron');
 const logger = require('../utils/logger');
 const { fetchMarketData } = require('../data/marketData');
 const { runConsensus } = require('./consensus');
-const { checkRiskGate, getPortfolioState } = require('../risk/riskGate');
+const { checkRiskGate, getPortfolioState, resolveAllOpenPositions } = require('../risk/riskGate');
+const { isKillSwitchEngaged } = require('../utils/killSwitch');
 const { executeTrade } = require('../utils/exchangeRouter');
 const { allocateProfits, getVaultSummary } = require('../utils/profitAllocator');
 const { getPerformanceStats } = require('../risk/tradeLedger');
 
 const PAPER = process.env.PAPER_TRADING !== 'false';
-const MIN_CONFIDENCE = parseFloat(process.env.MIN_CONFIDENCE || '0.72');
+// Note: removed unused local MIN_CONFIDENCE (2026-09-03) — it was declared
+// here but never referenced anywhere in this file, which read like a safety
+// gate that did nothing. The real confidence gate is enforced in
+// riskGate.js's checkRiskGate() (env var MIN_CONFIDENCE, same name) — this
+// file doesn't need its own copy.
 
 let isCycleRunning = false;
 let dynamicPairsCache = null;
@@ -72,6 +77,28 @@ async function runTradingCycle() {
   isCycleRunning = true;
   const cycleStart = Date.now();
 
+  // ── Kill switch check ───────────────────────────────────────────────────
+  // Added 2026-09-03. Still resolves already-open positions against real
+  // price (so nothing is abandoned mid-flight), but opens NO new positions
+  // while engaged. Persists across PM2 restarts via data/KILL_SWITCH_ENGAGED.
+  const killSwitch = isKillSwitchEngaged();
+  if (killSwitch) {
+    logger.warn(`🛑 KILL SWITCH ENGAGED (${killSwitch.reason}, since ${killSwitch.engagedAt}) — skipping new trade evaluation this cycle. Existing positions still resolve against real price.`);
+    const pairsForResolveOnly = await getActivePairs();
+    const priceMapOnly = {};
+    await Promise.allSettled(
+      pairsForResolveOnly.map(async (pair) => {
+        try {
+          const md = await fetchMarketData(pair);
+          if (md?.price?.price) priceMapOnly[pair] = md.price.price;
+        } catch (e) {}
+      })
+    );
+    const resolvedWhileHalted = resolveAllOpenPositions(priceMapOnly);
+    isCycleRunning = false;
+    return resolvedWhileHalted.map(t => ({ pair: t.pair, executed: false, reason: 'Kill switch engaged — no new trades', resolved: true }));
+  }
+
   const pairs = await getActivePairs();
 
   logger.info(`\n══════════════════════════════════════════════════════════════════════`);
@@ -103,6 +130,27 @@ async function runTradingCycle() {
     })
   );
   logger.info(`⚡ [Parallel] Market data ready in ${Date.now() - cycleStart}ms`);
+
+  // ── Step 2a: Resolve any open paper positions against REAL current prices ──
+  // Added 2026-09-03 alongside the exchangeRouter.js fix that stopped
+  // fabricating win/loss with Math.random(). This is where positions opened
+  // in a previous cycle actually get their real outcome recorded, once price
+  // crosses their take-profit / stop-loss level or their TTL expires.
+  const currentPriceMap = {};
+  for (const pair of pairs) {
+    if (marketDataMap[pair]?.price?.price) {
+      currentPriceMap[pair] = marketDataMap[pair].price.price;
+    }
+  }
+  const resolvedPositions = resolveAllOpenPositions(currentPriceMap);
+  if (resolvedPositions.length > 0) {
+    logger.info(`📊 [Orchestrator] Resolved ${resolvedPositions.length} open position(s) against real price movement this cycle.`);
+    if (global.broadcastDashboardEvent) {
+      resolvedPositions.forEach(trade => {
+        global.broadcastDashboardEvent({ type: 'position_resolved', trade, portfolio: getPortfolioState() });
+      });
+    }
+  }
 
   // ── Step 2: Run consensus + execution for ALL pairs in parallel ────────────
   const pairResults = await Promise.allSettled(

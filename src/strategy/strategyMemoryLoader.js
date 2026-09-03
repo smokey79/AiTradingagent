@@ -1,10 +1,10 @@
-import fs from "fs";
-import path from "path";
-import { logger } from "../utils/logger.js";
+const fs = require("fs");
+const path = require("path");
+const logger = require("../utils/logger.js");
 
 const MEMORY_PATH = path.resolve("src/strategy/strategy_memory.json");
 
-export function loadStrategyMemory() {
+function loadStrategyMemory() {
   try {
     return JSON.parse(fs.readFileSync(MEMORY_PATH, "utf-8"));
   } catch (err) {
@@ -15,9 +15,14 @@ export function loadStrategyMemory() {
   }
 }
 
-export function appendTradeRecord(memory, record) {
+function appendTradeRecord(memory, record) {
   memory.tradeHistory.push({ ...record, timestamp: new Date().toISOString() });
   memory.lastUpdated = new Date().toISOString();
   fs.writeFileSync(MEMORY_PATH, JSON.stringify(memory, null, 2));
   return memory;
 }
+
+module.exports = {
+  loadStrategyMemory,
+  appendTradeRecord,
+};

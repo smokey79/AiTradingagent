@@ -71,6 +71,9 @@
       </div>
       <div class="d-flex gap-8 items-center">
         <span class="badge badge-live" id="margin-badge">🟢 Healthy (Margin &gt; $30)</span>
+        <button id="btn-kill-switch" class="btn" style="background:#dc2626;color:#fff;font-weight:bold;padding:8px 16px;border-radius:6px;border:none;cursor:pointer;" onclick="toggleKillSwitch()">
+          🛑 STOP BOT
+        </button>
       </div>
     </div>
 
@@ -105,6 +108,11 @@
         <div class="stat-label">CMC Global BTC Dominance</div>
         <div class="stat-val mono blue" id="kpi-btc-dom">59.7%</div>
         <div class="stat-sub" id="kpi-total-mcap">Total MCAP: $2.66T</div>
+      </div>
+      <div class="stat-card" style="border-left:2px solid #f59e0b;">
+        <div class="stat-label">🏦 Nexo BTC Savings Wallet</div>
+        <div class="stat-val mono gold" id="nexo-wallet-bal">$0.00</div>
+        <div class="stat-sub mono" id="nexo-btc-accum">0.00000000 BTC · 50% Profit Sweep</div>
       </div>
     </div>
 
@@ -169,39 +177,70 @@
         <div class="mt-16 card-subtle p-14 rounded-lg">
           <div class="d-flex justify-between items-center flex-wrap gap-10 mb-10">
             <div>
-              <strong class="font-md gold">📜 PineScript v5 LuxAlgo SMC & 5X Futures Strategy (72% Gate)</strong>
-              <div class="font-xs text-muted">Copy and paste this script into TradingView Pine Editor to run strategy alerts and quantitative backtesting.</div>
+              <strong class="font-md gold">📜 PineScript v5 Gemini Pattern Recognition, 50-EMA & 5X Futures Strategy (68% Gate)</strong>
+              <div class="font-xs text-muted">Copy and paste this script into TradingView Pine Editor to run strategy alerts, Gemini pattern recognition, and quantitative backtesting.</div>
             </div>
             <button class="btn btn-gold" onclick="copyPineScript()">📋 Copy PineScript Code</button>
           </div>
           <textarea id="pinescript-code-box" title="PineScript Strategy Code" aria-label="PineScript Strategy Code" placeholder="//@version=5..." readonly class="pinescript-textarea">
 //@version=5
-strategy("AiTradingAgent — LuxAlgo SMC 5X Futures (72% Gate)", overlay=true, initial_capital=1000, default_qty_type=strategy.percent_of_equity, default_qty_value=40)
+strategy("AiTradingAgent — Gemini Pattern Recognition & 50-EMA 5X Futures (68% Gate)", overlay=true, initial_capital=1000, default_qty_type=strategy.percent_of_equity, default_qty_value=10)
 
-// Indicators
-ema20 = ta.ema(close, 20)
-ema50 = ta.ema(close, 50)
+// ==========================================
+// 1. Core Moving Averages & 50-EMA Baseline
+// ==========================================
+ema20  = ta.ema(close, 20)
+ema50  = ta.ema(close, 50)
+ema200 = ta.ema(close, 200)
+
+// Golden Alignment: EMA20 > EMA50 > EMA200
+golden_aligned = ema20 > ema50 and ema50 > ema200
+death_aligned  = ema20 < ema50 and ema50 < ema200
+
+// ==========================================
+// 2. Momentum & Volatility Indicators
+// ==========================================
 rsi14 = ta.rsi(close, 14)
-[macdLine, signalLine, hist] = ta.macd(close, 12, 26, 9)
+[macdLine, signalLine, macdHist] = ta.macd(close, 12, 26, 9)
+atr14 = ta.atr(14)
 
-// SMC Liquidity Sweep & Order Block Conditions
-bullish_ob = ta.crossover(close, ema20) and rsi14 > 45 and rsi14 < 65 and hist > 0
-bearish_ob = ta.crossunder(close, ema20) and rsi14 > 68 and hist < 0
+// Distance to 50-EMA
+dist_ema50_pct = ((close - ema50) / ema50) * 100
 
-// Strategy Execution (5X Preset with ATR Trailing Stop)
-atr = ta.atr(14)
-longStop = close - (atr * 1.5)
-longTakeProfit = close + (atr * 3.5)
+// ==========================================
+// 3. Gemini Chart Pattern Recognition
+// ==========================================
+// Bull Flag: 50-EMA dynamic bounce with RSI in expansion zone (45-68)
+bull_flag_retest = close > ema50 and low <= ema50 * 1.006 and close > open and rsi14 >= 45 and rsi14 <= 68 and macdHist >= 0
 
-if (bullish_ob)
-    strategy.entry("Long 5X", strategy.long)
-    strategy.exit("Exit Long", "Long 5X", stop=longStop, limit=longTakeProfit)
+// Double Bottom Sweep: Oversold dip reclaiming 50-EMA with bullish volume
+double_bottom_sweep = rsi14 < 38 and close > ema50 and close > open and volume > ta.sma(volume, 20) * 1.25
 
-if (bearish_ob)
-    strategy.close("Long 5X", comment="Take Profit / Sweep")
+// Confluence Buy Signal (68% Gate)
+gemini_buy = (bull_flag_retest or (golden_aligned and ta.crossover(close, ema20))) and rsi14 > 45 and rsi14 < 68 and dist_ema50_pct < 3.5
 
-plot(ema20, color=color.blue, title="20 EMA")
-plot(ema50, color=color.orange, title="50 EMA")
+// Bearish 50-EMA Rejection Signal
+gemini_sell = (close < ema50 and high >= ema50 * 0.994 and close < open and rsi14 < 52) or rsi14 > 74
+
+// ==========================================
+// 4. Automated Figures (5X Futures SL / TP)
+// ==========================================
+long_stop_loss   = ema50 * 0.996 // 0.4% below 50-EMA
+long_take_profit = close + (close - long_stop_loss) * 2.2 // 1:2.2 Risk/Reward
+
+if (gemini_buy)
+    strategy.entry("Gemini Long 5X", strategy.long)
+    strategy.exit("Exit Long 5X", "Gemini Long 5X", stop=long_stop_loss, limit=long_take_profit)
+
+if (gemini_sell)
+    strategy.close("Gemini Long 5X", comment="50-EMA Resistance Rejection / Profit Lock")
+
+// Plots
+plot(ema20,  color=color.new(color.blue, 0),   title="20 EMA (Fast Momentum)")
+plot(ema50,  color=color.new(color.orange, 0), title="50 EMA (Gemini Baseline)", linewidth=2)
+plot(ema200, color=color.new(color.purple, 0), title="200 EMA (Macro Baseline)")
+plotshape(bull_flag_retest, title="Bull Flag 50-EMA Bounce", location=location.belowbar, color=color.green, style=shape.triangleup, size=size.small, text="50-EMA Bounce")
+plotshape(double_bottom_sweep, title="Double Bottom Sweep", location=location.belowbar, color=color.aqua, style=shape.labelup, size=size.small, text="W-Sweep")
           </textarea>
         </div>
       </div>
@@ -608,6 +647,20 @@ plot(ema50, color=color.orange, title="50 EMA")
     <div id="tab-onchain" class="tab-pane tab-pane-hidden">
       <div class="stats-grid" id="onchain-metrics-grid">
         <div class="stat-card"><div class="stat-label">Loading On-Chain Intelligence...</div></div>
+      </div>
+
+      <!-- Read-only DeFi wallet balance panel — added 2026-09-03 -->
+      <div class="card-box mt-16">
+        <div class="d-flex justify-between items-center flex-wrap gap-12 mb-14">
+          <div class="d-flex items-center gap-10 flex-wrap">
+            <span class="font-lg font-bold">👛 DeFi Wallet Balance</span>
+            <span class="badge" style="background:#1f2937;color:#9ca3af;">🔒 Read-Only — no private key, cannot send transactions</span>
+          </div>
+        </div>
+        <div class="stats-grid" id="wallet-balance-grid">
+          <div class="stat-card"><div class="stat-label">Loading wallet balances...</div></div>
+        </div>
+        <div class="font-xs text-muted mt-10" id="wallet-balance-address"></div>
       </div>
     </div>
 
@@ -1501,6 +1554,109 @@ plot(ema50, color=color.orange, title="50 EMA")
         alert("Network error executing reset: " + e.message);
       }
     }
+
+    // ── Meme refresh button (was missing its listener) ───────────────────────
+    document.getElementById('btn-refresh-memes').addEventListener('click', async function() {
+      const btn = this;
+      btn.disabled = true;
+      btn.textContent = '⏳ Scanning...';
+      await loadMemeCoins();
+      btn.disabled = false;
+      btn.textContent = '⚡ Refresh Meme Scanner';
+    });
+
+    // ── Nexo vault live update ────────────────────────────────────────────────
+    async function loadNexoVault() {
+      try {
+        const res = await fetch('/api/vault');
+        const data = await res.json();
+        if (data.success && data.vault) {
+          const v = data.vault;
+          const el = document.getElementById('nexo-wallet-bal');
+          if (el) el.textContent = `$${(v.btcSavingsPoolUsd || 0).toFixed(2)}`;
+          const btcEl = document.getElementById('nexo-btc-accum');
+          if (btcEl) btcEl.textContent = `${(v.btcAccumulated || 0).toFixed(8)} BTC`;
+        }
+      } catch(e) {}
+    }
+    loadNexoVault();
+    setInterval(loadNexoVault, 15000);
+
+    // ── Read-only DeFi wallet balance panel ───────────────────────────────────
+    async function loadWalletBalance() {
+      const grid = document.getElementById('wallet-balance-grid');
+      const addrEl = document.getElementById('wallet-balance-address');
+      if (!grid) return;
+      try {
+        const res = await fetch('/api/wallet-balance');
+        const data = await res.json();
+        if (!data.success) {
+          grid.innerHTML = `<div class="stat-card"><div class="stat-label">${data.error || 'Wallet not configured'}</div></div>`;
+          return;
+        }
+        grid.innerHTML = data.balances.map(b => `
+          <div class="stat-card">
+            <div class="stat-label">${b.chain}</div>
+            <div class="stat-val mono">${b.balanceFormatted}</div>
+          </div>
+        `).join('');
+        if (addrEl) {
+          addrEl.textContent = `🔒 Public address (read-only): ${data.address}`;
+        }
+      } catch (e) {
+        grid.innerHTML = `<div class="stat-card"><div class="stat-label">Unable to fetch wallet balance</div></div>`;
+      }
+    }
+    loadWalletBalance();
+    setInterval(loadWalletBalance, 30000);
+
+    // ── Kill switch (real stop button) ────────────────────────────────────────
+    async function loadKillSwitchStatus() {
+      const btn = document.getElementById('btn-kill-switch');
+      if (!btn) return;
+      try {
+        const res = await fetch('/api/kill-switch');
+        const data = await res.json();
+        if (data.engaged) {
+          btn.textContent = '▶️ RESUME BOT';
+          btn.style.background = '#16a34a';
+          btn.dataset.engaged = 'true';
+        } else {
+          btn.textContent = '🛑 STOP BOT';
+          btn.style.background = '#dc2626';
+          btn.dataset.engaged = 'false';
+        }
+      } catch (e) {}
+    }
+
+    async function toggleKillSwitch() {
+      const btn = document.getElementById('btn-kill-switch');
+      if (!btn) return;
+      const isEngaged = btn.dataset.engaged === 'true';
+      btn.disabled = true;
+      try {
+        if (isEngaged) {
+          await fetch('/api/kill-switch/release', { method: 'POST' });
+        } else {
+          if (!confirm('Stop the bot from opening any NEW trades? Already-open paper positions will still resolve normally against real price. This does not cancel live exchange orders (none are placed today anyway in paper mode).')) {
+            btn.disabled = false;
+            return;
+          }
+          await fetch('/api/kill-switch/engage', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ reason: 'Manual stop via dashboard button' }),
+          });
+        }
+      } catch (e) {
+        alert('Network error toggling kill switch: ' + e.message);
+      }
+      btn.disabled = false;
+      await loadKillSwitchStatus();
+    }
+
+    loadKillSwitchStatus();
+    setInterval(loadKillSwitchStatus, 10000);
 
     // Auto-polling lifecycle
     initTradingViewWidget(currentTvSymbol, currentTvInterval);

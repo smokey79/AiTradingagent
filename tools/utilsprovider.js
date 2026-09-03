@@ -1,7 +1,7 @@
-import axios from "axios";
-import fs from "fs";
+const axios = require("axios");
+const fs = require("fs");
 
-export async function benchmarkProviders() {
+async function benchmarkProviders() {
   const results = {
     ollama: { latency: null, ok: false },
     openrouter: { latency: null, ok: false },
@@ -53,3 +53,5 @@ export async function benchmarkProviders() {
   fs.writeFileSync("./provider_benchmark.json", JSON.stringify(results, null, 2));
   return results;
 }
+
+module.exports = { benchmarkProviders };

@@ -9,8 +9,13 @@ from pathlib import Path
 from typing import Optional, Dict, List, Any
 from dotenv import load_dotenv
 
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8')
+
 # Load .env file from root directory
-ENV_FILE = Path(__file__).parent.parent / '.env'
+ENV_FILE = Path(__file__).resolve().parent.parent.parent / '.env'
 if ENV_FILE.exists():
     load_dotenv(ENV_FILE)
 

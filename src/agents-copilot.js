@@ -16,15 +16,17 @@
  * }
  */
 
-import fs from "fs";
-import path from "path";
-import { TradingDataClient } from "../utils/tradingDataClient.js";
-import { RiskGateClient } from "../utils/riskGateClient.js";
-import { SentimentClient } from "../sentiment/sentimentClient.js";
+const fs = require("fs");
+const path = require("path");
+
+let TradingDataClient, RiskGateClient, SentimentClient;
+try { TradingDataClient = require("./utils/tradingDataClient.js").TradingDataClient; } catch (e) { TradingDataClient = class {}; }
+try { RiskGateClient = require("./utils/riskGateClient.js").RiskGateClient; } catch (e) { RiskGateClient = class {}; }
+try { SentimentClient = require("./sentiment/sentimentClient.js").SentimentClient; } catch (e) { SentimentClient = class {}; }
 
 const STRATEGY_MEMORY_PATH = path.join(process.cwd(), "strategy_memory.json");
 
-export default class CopilotAgent {
+class CopilotAgent {
     constructor() {
         this.name = "CopilotAgent";
         this.tradingData = new TradingDataClient();
@@ -126,3 +128,5 @@ export default class CopilotAgent {
         }
     }
 }
+
+module.exports = CopilotAgent;

@@ -1,1 +1,2 @@
-﻿export const log = (...args) => { console.log("[core]", ...args); };
+const log = (...args) => { console.log("[core]", ...args); };
+module.exports = { log };

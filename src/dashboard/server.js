@@ -13,6 +13,8 @@ const { getPortfolioState, resetPortfolioState } = require('../risk/riskGate');
 const { getVaultSummary, resetVaultState } = require('../utils/profitAllocator');
 const { getPerformanceStats, loadLedger } = require('../risk/tradeLedger');
 const { detectArbitrageOpportunities } = require('../arbitrage/arbScanner');
+const { fetchMultiChainBalances } = require('../data/defiWalletBalance');
+const { engageKillSwitch, releaseKillSwitch, isKillSwitchEngaged } = require('../utils/killSwitch');
 
 const app = express();
 const server = http.createServer(app);
@@ -20,6 +22,16 @@ const wss = new WebSocketServer({ server });
 
 const PORT = parseInt(process.env.PORT || process.env.DASHBOARD_PORT || '3001', 10);
 const PUBLIC_DIR = path.join(__dirname, 'public');
+
+// Real wallet address from .env — set NEXO_WALLET_ADDRESS in .env to override
+const NEXO_WALLET = process.env.NEXO_WALLET_ADDRESS || 'bc1qsm6drqgey8x25nunsayu6q0nmjhvfa8n6fz2lc';
+
+// READ-ONLY DeFi wallet balance display. DEFI_WALLET_ADDRESS is a PUBLIC
+// address only — set in .env, never a private key or seed phrase. This
+// wallet is display-only: nothing in this codebase can sign a transaction
+// or move funds from it. Added 2026-09-03.
+const DEFI_WALLET_ADDRESS = process.env.DEFI_WALLET_ADDRESS || '';
+const DEFI_WALLET_CHAINS = (process.env.DEFI_WALLET_CHAINS || 'cronos,ethereum').split(',').map(s => s.trim());
 
 app.use(express.json());
 app.use(express.static(PUBLIC_DIR));
@@ -67,6 +79,61 @@ app.get('/api/trades', (req, res) => {
   }
 });
 
+// READ-ONLY wallet balance endpoint. Queries public block-explorer RPC
+// endpoints only — no API key, no private key, cannot send transactions.
+// Returns 404 if DEFI_WALLET_ADDRESS isn't set in .env yet.
+app.get('/api/wallet-balance', async (req, res) => {
+  if (!DEFI_WALLET_ADDRESS) {
+    return res.status(404).json({
+      success: false,
+      error: 'DEFI_WALLET_ADDRESS not set in .env — this is a read-only display feature, add your public wallet address to enable it.',
+    });
+  }
+  try {
+    const balances = await fetchMultiChainBalances(DEFI_WALLET_ADDRESS, DEFI_WALLET_CHAINS);
+    res.json({
+      success: true,
+      address: DEFI_WALLET_ADDRESS,
+      readOnly: true,
+      note: 'Public address balance lookup only — no private key is stored or used, no transactions can be sent.',
+      balances,
+      fetchedAt: new Date().toISOString(),
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ── Kill switch endpoints — added 2026-09-03 ──────────────────────────────
+// Real stop mechanism: halts NEW trade opening in both the main
+// orchestrator cycle and the autonomous meme-coin scalper, and persists
+// across PM2 restarts. Already-open paper positions still resolve normally
+// against real price. Does not cancel live exchange orders (none are
+// placed with protective stop-loss orders today — see readiness report).
+app.get('/api/kill-switch', (req, res) => {
+  const state = isKillSwitchEngaged();
+  res.json({ success: true, engaged: !!state, details: state || null });
+});
+
+app.post('/api/kill-switch/engage', (req, res) => {
+  const reason = req.body?.reason || 'Manual stop via dashboard';
+  const result = engageKillSwitch(reason);
+  logger.warn(`🛑 KILL SWITCH ENGAGED via dashboard: ${reason}`);
+  if (global.broadcastDashboardEvent) {
+    global.broadcastDashboardEvent({ type: 'kill_switch_changed', engaged: true, reason });
+  }
+  res.json({ success: true, ...result });
+});
+
+app.post('/api/kill-switch/release', (req, res) => {
+  const result = releaseKillSwitch();
+  logger.info(`✅ Kill switch released via dashboard — trading may resume next cycle.`);
+  if (global.broadcastDashboardEvent) {
+    global.broadcastDashboardEvent({ type: 'kill_switch_changed', engaged: false });
+  }
+  res.json({ success: true, ...result });
+});
+
 app.get('/api/arbitrage', (req, res) => {
   try {
     const opportunities = detectArbitrageOpportunities();
@@ -92,7 +159,7 @@ app.get('/api/portfolio', (req, res) => {
 app.get('/api/vault', (req, res) => {
   try {
     const vault = getVaultSummary();
-    res.json({ success: true, vault, timestamp: new Date().toISOString() });
+    res.json({ success: true, vault, nexo_wallet: NEXO_WALLET, timestamp: new Date().toISOString() });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -121,7 +188,7 @@ app.post(['/api/reset', '/api/portfolio/reset'], (req, res) => {
       available_margin_usdt: 250.0,
       active_positions_margin_usdt: 0.0,
       daily_profit_split_ratio: { nexo_btc_bank_pct: 50.0, agent_account_reinvest_pct: 50.0 },
-      nexo_btc_wallet: 'bc1qsmokey79nexoautoreserve',
+      nexo_btc_wallet: NEXO_WALLET,
       total_nexo_btc_banked_usd: 0.0,
       total_nexo_btc_accumulated: 0.0,
       total_realized_profit_usd: 0.0,
@@ -134,7 +201,7 @@ app.post(['/api/reset', '/api/portfolio/reset'], (req, res) => {
     const nexoLedger = {
       total_swept_usd: 0.0,
       total_btc_accumulated: 0.0,
-      sweep_address: 'bc1qsmokey79nexoautoreserve',
+      sweep_address: NEXO_WALLET,
       sweep_ratio_pct: 50.0,
       sweeps_count: 0,
       history: [],
@@ -987,10 +1054,13 @@ function startServer() {
 
 if (require.main === module) {
   startServer().then(() => {
-    // Make ready for demo: fully automated trading 24/7 by default
-    const { startAutoTrading } = require('../orchestrator/autoTrader');
-    logger.info('🚀 Starting fully automated 24/7 trading engine for demo...');
-    startAutoTrading();
+    if (process.env.DASHBOARD_ONLY !== 'true') {
+      const { startAutoTrading } = require('../orchestrator/autoTrader');
+      logger.info('🚀 Starting fully automated 24/7 trading engine for demo...');
+      startAutoTrading();
+    } else {
+      logger.info('📊 Live Dashboard operating in dashboard-only mode (Orchestrator runs in dedicated process)');
+    }
   });
 }
 

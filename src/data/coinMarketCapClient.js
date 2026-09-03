@@ -1,9 +1,9 @@
-import axios from "axios";
-import { logger } from "../utils/logger.js";
+const axios = require("axios");
+const logger = require("../utils/logger.js");
 
 const BASE_URL = "https://pro-api.coinmarketcap.com/v1";
 
-export class CoinMarketCapClient {
+class CoinMarketCapClient {
   constructor(apiKey = process.env.COINMARKETCAP_API_KEY) {
     if (!apiKey) {
       throw new Error("COINMARKETCAP_API_KEY missing from environment");
@@ -24,3 +24,5 @@ export class CoinMarketCapClient {
     }
   }
 }
+
+module.exports = { CoinMarketCapClient };

@@ -70,7 +70,13 @@ function recordTrade(trade) {
 
 function getPerformanceStats(lastN = 20) {
   const ledger = loadLedger();
-  const recent = ledger.slice(-lastN);
+  // Exclude PENDING trades (outcome not yet resolved, e.g. meme-coin scalps
+  // awaiting real price resolution) from win-rate math entirely — they are
+  // neither a win nor a loss yet, and including them in `total` would just
+  // dilute the win rate with unresolved noise. Added 2026-09-03 alongside
+  // the autoTrader.js fix that stopped fabricating WIN outcomes for these.
+  const resolved = ledger.filter(t => t.outcome !== 'PENDING');
+  const recent = resolved.slice(-lastN);
   const total = recent.length;
 
   if (total === 0) {

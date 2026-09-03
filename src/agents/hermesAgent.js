@@ -83,7 +83,7 @@ Output strictly valid JSON with keys: signal, confidence, reason, constraints, r
         num_ctx: 4096,
       },
     },
-    { timeout: 30000, proxy: false }
+    { timeout: 2500, proxy: false }
   );
 
   const text = res.data?.response?.trim();
@@ -100,6 +100,56 @@ Output strictly valid JSON with keys: signal, confidence, reason, constraints, r
     risk_score: parsed.risk_score || 3.0,
     source: 'ollama_local',
     model: HERMES_MODEL,
+  };
+}
+
+async function callOllamaCloud(symbol, marketData, skillPrompt) {
+  const apiKey = (process.env.OLLAMA_API_KEY || '').trim();
+  if (!apiKey || apiKey.startsWith('your_')) {
+    throw new Error('No Ollama Cloud API key configured');
+  }
+
+  const cloudUrl = (process.env.OLLAMA_CLOUD_URL || 'https://ollama.com/api').replace(/\/+$/, '') + '/chat';
+  const model = process.env.OLLAMA_CLOUD_MODEL || 'gpt-oss:20b';
+
+  const price = marketData?.price;
+  const ind = marketData?.indicators || {};
+  const userContent = `Analyze ${symbol}: Price=$${price?.price || 0}, RSI=${ind.rsi14 || 50}, EMA50=$${ind.ema50 || 0}, MACD hist=${ind.macd?.histogram || 0}. Output strictly JSON with keys: signal, confidence, reason, constraints, risk_score.`;
+
+  const res = await axios.post(
+    cloudUrl,
+    {
+      model,
+      messages: [
+        { role: 'system', content: skillPrompt },
+        { role: 'user', content: userContent },
+      ],
+      format: 'json',
+      stream: false,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      timeout: 15000,
+    }
+  );
+
+  const text = res.data?.message?.content;
+  const parsed = cleanJson(text);
+  if (!parsed || !parsed.signal) throw new Error('Invalid JSON response from Ollama Cloud');
+
+  return {
+    agent: 'hermes',
+    symbol,
+    signal: parsed.signal.toUpperCase(),
+    confidence: Math.max(0, Math.min(1, parseFloat(parsed.confidence) || 0.80)),
+    reason: parsed.reason || 'Ollama Cloud validation completed',
+    constraints: parsed.constraints || { max_position_size_pct: 5.0, stop_loss_pct: 2.0, take_profit_pct: 4.5 },
+    risk_score: parsed.risk_score || 3.0,
+    source: 'ollama_cloud',
+    model,
   };
 }
 
@@ -156,7 +206,16 @@ async function getSignal(symbol, marketData) {
   try {
     return await callLocalOllama(symbol, marketData, skillPrompt);
   } catch (ollamaErr) {
-    // Tier 2: Try Cloud OpenRouter Hermes 3 if key is present
+    // Tier 2: Try Ollama Cloud
+    try {
+      if (process.env.OLLAMA_API_KEY && !process.env.OLLAMA_API_KEY.startsWith('your_')) {
+        return await callOllamaCloud(symbol, marketData, skillPrompt);
+      }
+    } catch (cloudErr) {
+      logger.warn(`Ollama Cloud call failed: ${cloudErr.message} — trying fallbacks`);
+    }
+
+    // Tier 3: Try Cloud OpenRouter Hermes 3 if key is present
     try {
       if (process.env.OPENROUTER_API_KEY && !process.env.OPENROUTER_API_KEY.startsWith('your_')) {
         return await callOpenRouterHermes(symbol, marketData, skillPrompt);
@@ -165,7 +224,7 @@ async function getSignal(symbol, marketData) {
       // Cloud also unavailable
     }
 
-    // Tier 3: Heuristic local rule validator (fast, resilient, guaranteed)
+    // Tier 4: Heuristic local rule validator (fast, resilient, guaranteed)
     return simulateHermesValidation(symbol, marketData);
   }
 }
@@ -214,6 +273,7 @@ function simulateHermesValidation(symbol, marketData) {
 
 module.exports = {
   getSignal,
+  getHermesRuling: getSignal,
   callLocalOllama,
   callOpenRouterHermes,
   simulateHermesValidation,

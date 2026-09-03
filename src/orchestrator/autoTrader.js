@@ -14,6 +14,7 @@ const { executeFlashLoanArbitrage } = require('../flashloan/flashloanExecutor');
 const { scanTrendingMemeCoins } = require('../data/dexScreenerFeed');
 const { recordTrade } = require('../risk/tradeLedger');
 const { getPortfolioState } = require('../risk/riskGate');
+const { isKillSwitchEngaged } = require('../utils/killSwitch');
 const { getVaultSummary } = require('../utils/profitAllocator');
 const { startHealthChecks, updateHeartbeat } = require('../health/systemHealthCheck');
 const { startContinuousArb, stopContinuousArb, getStatus: getArbStatus } = require('../arbitrage/continuousArbEngine');
@@ -123,6 +124,16 @@ function toggleAutoTrading(seconds = 15, runImmediate = true) {
  */
 async function executeAutonomousCycle() {
   if (!isAutoTradingActive) return;
+
+  // Kill switch check — added 2026-09-03, same flag runTradingCycle() checks
+  // in orchestrator/index.js. Keeps the meme-coin scalper (Phase 3, runs
+  // independently of runTradingCycle) from opening new positions too.
+  const killSwitch = isKillSwitchEngaged();
+  if (killSwitch) {
+    logger.warn(`🛑 [AutoTrader] Kill switch engaged (${killSwitch.reason}) — skipping autonomous cycle #${totalAutoCycles + 1}.`);
+    return;
+  }
+
   try {
     lastRunTimestamp = new Date().toISOString();
     totalAutoCycles++;
@@ -164,8 +175,17 @@ async function executeAutonomousCycle() {
         logger.info(`🐸 [AutoTrader] DexScreener Breakout Token Detected: ${topBreakout.name} (${topBreakout.symbol}) on ${topBreakout.chain} | 5m: +${topBreakout.change5m}% | Safety: ${topBreakout.safetyScore}/100`);
         const isPaper = process.env.PAPER_TRADING !== 'false';
         const positionSizeUsd = 25.0; // Controlled micro-allocation
-        const mockPnl = parseFloat((positionSizeUsd * (0.04 + Math.random() * 0.08)).toFixed(2));
-        
+
+        // Fixed 2026-09-03: this used to fabricate outcome:'WIN' with a random
+        // profit (Math.random() * 0.08) on every detection, regardless of what
+        // the price actually did afterward — that was silently inflating the
+        // recorded win rate. There is no real price-resolution mechanism for
+        // meme-coin scalps yet, so we log it honestly as PENDING (excluded
+        // from win/loss stats in tradeLedger's getPerformanceStats, which only
+        // counts WIN/LOSS/BREAKEVEN) instead of inventing a result.
+        // TODO: wire up real resolution (re-check topBreakout's price after a
+        // hold window, like riskGate.js's openPositions TTL does) before this
+        // should count toward win-rate numbers.
         recordTrade({
           symbol: `${topBreakout.symbol}/USD`,
           side: 'BUY',
@@ -173,16 +193,15 @@ async function executeAutonomousCycle() {
           size: (positionSizeUsd / (topBreakout.priceUsd || 0.01)),
           positionSizeUsd,
           leverage: 1,
-          pnlUsd: mockPnl,
-          outcome: 'WIN',
+          pnlUsd: 0,
+          outcome: 'PENDING',
           confidence: topBreakout.safetyScore / 100,
-          reason: `DexScreener Breakout Scalp on ${topBreakout.chain} (+${topBreakout.change1h}% 1h vol surge)`,
+          reason: `DexScreener Breakout Scalp on ${topBreakout.chain} (+${topBreakout.change1h}% 1h vol surge) — outcome not yet resolved`,
           paper: isPaper,
         });
 
         totalMemeTrades++;
-        totalAutoProfitUsd += mockPnl;
-        logger.info(`✅ [AutoTrader] Meme Coin Breakout Scalp Executed! Profit: +$${mockPnl} USD`);
+        logger.info(`📝 [AutoTrader] Meme Coin Breakout Scalp logged as PENDING (no fabricated P&L — real outcome resolution not yet implemented).`);
       }
     } catch (memeErr) {
       logger.warn(`[AutoTrader] Meme scan notice: ${memeErr.message}`);

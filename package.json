@@ -34,6 +34,8 @@
     "serve:waitress": "waitress-serve --port=5000 wsgi:app",
     "pm2:start": "pm2 start ecosystem.config.cjs",
     "pm2:stop": "pm2 stop ecosystem.config.cjs",
+    "telegram:setup": "node src/notifications/setupTelegram.js",
+    "telegram:listen": "node src/notifications/telegramListener.js",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "lint:report": "eslint . --ext .js,.jsx,.ts,.tsx --format json > eslint-report.json || true",

@@ -1,10 +1,17 @@
 {
   "version": 1,
-  "lastUpdated": "2026-09-02T06:07:24.057768+00:00",
+  "lastUpdated": "2026-09-02T17:20:08.893767+00:00",
   "tradeHistory": [],
   "channelCredibility": {},
   "notes": "This file is the persistent strategy brain \u2014 the orchestrator reads and appends to it every cycle via strategyMemoryLoader.js. Do not hand-edit tradeHistory.",
   "learnedStrategies": [
+    {
+      "id": "STRAT_LUX_BTC_USDT_1788369608",
+      "title": "LuxAlgo Enhanced: LuxAlgo Smart Money Concepts \u2014 Order Block & Liquidity Sweep 5X",
+      "channel": "LuxAlgo",
+      "winRate": 76.5,
+      "leverage": "5X Futures"
+    },
     {
       "id": "STRAT_LUX_BTC_USDT_1788329243",
       "title": "LuxAlgo Enhanced: LuxAlgo Smart Money Concepts \u2014 Order Block & Liquidity Sweep 5X",

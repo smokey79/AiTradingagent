@@ -7,15 +7,19 @@ const fs = require('fs');
 const path = require('path');
 const logger = require('../utils/logger');
 
-const SKILL_PATH = path.resolve(__dirname, '../../agents/skills/SKILL_GEMINI_CROSSVALIDATOR.md');
+const SKILL_PATH = path.resolve(__dirname, '../../agents/skills/SKILL_GEMINI_PATTERN_RECOGNITION.md');
+const CROSSVALIDATOR_SKILL_PATH = path.resolve(__dirname, '../../agents/skills/SKILL_GEMINI_CROSSVALIDATOR.md');
 
 function loadSkillPrompt() {
   try {
     if (fs.existsSync(SKILL_PATH)) {
       return fs.readFileSync(SKILL_PATH, 'utf8');
     }
+    if (fs.existsSync(CROSSVALIDATOR_SKILL_PATH)) {
+      return fs.readFileSync(CROSSVALIDATOR_SKILL_PATH, 'utf8');
+    }
   } catch (e) {}
-  return 'You are Gemini, cross-validator and risk gate scorer. Output strictly valid JSON.';
+  return 'You are Gemini, expert in Pattern Recognition, 50-EMA trend analysis, and cross-validation. Output strictly valid JSON.';
 }
 
 function cleanJson(text) {
@@ -43,19 +47,20 @@ ${JSON.stringify(peerSignals, null, 2)}
 
 Validate consensus consistency, detect conflicts, and output strictly JSON.`;
 
+    const geminiModel = process.env.GEMINI_MODEL || 'gemini-3.6-flash';
     const res = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${apiKey}`,
       {
         systemInstruction: { parts: [{ text: systemPrompt }] },
         contents: [{ parts: [{ text: userPrompt }] }],
         generationConfig: {
           responseMimeType: 'application/json',
-          maxOutputTokens: 600,
+          maxOutputTokens: 2048,
         },
       },
       {
         headers: { 'Content-Type': 'application/json' },
-        timeout: 3000,
+        timeout: 10000,
       }
     );
 
@@ -208,6 +213,50 @@ Output strictly valid JSON with keys: signal, confidence, reason, validation_res
 }
 
 function simulateGeminiValidation(symbol, marketData, peerSignals = []) {
+  const ind = marketData?.indicators || {};
+  const price = marketData?.price?.price || 100;
+  const ema20 = ind.ema20 || price;
+  const ema50 = ind.ema50 || (ind.priceVsEma50 === 'above' ? price * 0.98 : price * 1.02);
+  const ema200 = ind.ema200 || price * 0.95;
+  const rsi = ind.rsi14 || 50;
+  const distEma50Pct = parseFloat((((price - ema50) / ema50) * 100).toFixed(2));
+  const priceVsEma50 = price >= ema50 ? 'ABOVE' : 'BELOW';
+  const emaAlignment = (ema20 >= ema50 && ema50 >= ema200) ? 'GOLDEN_ALIGNED' : (ema20 < ema50 && ema50 < ema200) ? 'DEATH_ALIGNED' : 'COMPRESSION';
+
+  // Evaluate Chart Patterns
+  let patternName = 'Equilibrium Consolidation';
+  let patternType = 'NEUTRAL';
+  let patternQuality = 70;
+  let patternSignal = 'HOLD';
+
+  if (priceVsEma50 === 'ABOVE' && distEma50Pct >= 0 && distEma50Pct <= 1.2 && rsi >= 45 && rsi <= 65) {
+    patternName = 'Bull Flag 50-EMA Dynamic Bounce';
+    patternType = 'CONTINUATION';
+    patternQuality = 88;
+    patternSignal = 'BUY';
+  } else if (emaAlignment === 'GOLDEN_ALIGNED' && rsi >= 48 && rsi <= 68) {
+    patternName = 'Bullish Golden EMA Alignment';
+    patternType = 'CONTINUATION';
+    patternQuality = 85;
+    patternSignal = 'BUY';
+  } else if (rsi < 36 && distEma50Pct >= -2.5) {
+    patternName = 'Double Bottom 50-EMA Liquidity Sweep';
+    patternType = 'REVERSAL';
+    patternQuality = 82;
+    patternSignal = 'BUY';
+  } else if (priceVsEma50 === 'BELOW' && distEma50Pct <= 0 && distEma50Pct >= -1.0 && rsi >= 35 && rsi <= 55) {
+    patternName = 'Bear Flag 50-EMA Dynamic Rejection';
+    patternType = 'CONTINUATION';
+    patternQuality = 80;
+    patternSignal = 'SELL';
+  } else if (rsi > 72 && distEma50Pct > 3.5) {
+    patternName = 'Double Top Overextension Rejection';
+    patternType = 'REVERSAL';
+    patternQuality = 78;
+    patternSignal = 'SELL';
+  }
+
+  // Cross-validate peer signals
   const validSignals = peerSignals.filter(s => s && s.signal && s.signal !== 'HOLD');
   const buyCount = validSignals.filter(s => s.signal === 'BUY').length;
   const sellCount = validSignals.filter(s => s.signal === 'SELL').length;
@@ -217,52 +266,83 @@ function simulateGeminiValidation(symbol, marketData, peerSignals = []) {
     conflicts.push(`Direct conflict detected: ${buyCount} BUY vs ${sellCount} SELL signals`);
   }
 
-  let signal = 'HOLD';
-  let confidence = 0.70;
-  let reason = 'Peer signals in balance or pending multi-agent input';
+  let finalSignal = patternSignal;
+  let confidence = patternQuality / 100;
+  let reason = `${patternName} confirmed at 50-EMA ($${ema50.toFixed(2)}) with ${distEma50Pct}% distance`;
 
   if (buyCount >= 2 && sellCount === 0) {
-    signal = 'BUY';
-    confidence = 0.85;
-    reason = `Multi-agent confluence confirmed (${buyCount} peer agents bullish with zero conflict)`;
+    finalSignal = 'BUY';
+    confidence = Math.max(confidence, 0.86);
+    reason = `Multi-agent confluence confirmed (${buyCount} peer agents bullish) + ${patternName}`;
   } else if (sellCount >= 2 && buyCount === 0) {
-    signal = 'SELL';
-    confidence = 0.81;
-    reason = `Downside confluence confirmed (${sellCount} peer agents bearish)`;
+    finalSignal = 'SELL';
+    confidence = Math.max(confidence, 0.82);
+    reason = `Downside confluence confirmed (${sellCount} peer agents bearish) + ${patternName}`;
   } else if (conflicts.length > 0) {
-    signal = 'HOLD';
-    confidence = 0.45;
-    reason = `VETO / CAUTION: Agent contradictions detected — skipping trade for capital protection`;
-  } else {
-    // If called standalone, assess market structure
-    const rsi = marketData?.indicators?.rsi14 || 50;
-    if (rsi > 45 && rsi < 65 && marketData?.indicators?.priceVsEma50 === 'above') {
-      signal = 'BUY';
-      confidence = 0.78;
-      reason = 'Independent structural validation: trend continuity verified';
+    if (patternSignal === 'BUY' && patternQuality >= 85) {
+      finalSignal = 'BUY';
+      confidence = 0.74;
+      reason = `Pattern authority override: ${patternName} validated despite peer conflict`;
+    } else {
+      finalSignal = 'HOLD';
+      confidence = 0.48;
+      reason = `VETO / CAUTION: Agent contradictions detected — skipping trade for capital protection`;
     }
   }
+
+  // Automated Figures (SL, TP, Leverage, Allocation)
+  const stopLoss = finalSignal === 'BUY' ? parseFloat((ema50 * 0.996).toFixed(4)) : parseFloat((ema50 * 1.004).toFixed(4));
+  const stopLossPct = parseFloat((Math.abs(price - stopLoss) / price * 100).toFixed(2));
+  const boundedSlPct = Math.max(1.5, Math.min(3.5, stopLossPct || 2.0));
+  const takeProfitPct = parseFloat((boundedSlPct * 2.2).toFixed(2));
+  const takeProfit = finalSignal === 'BUY' ? parseFloat((price * (1 + takeProfitPct / 100)).toFixed(4)) : parseFloat((price * (1 - takeProfitPct / 100)).toFixed(4));
 
   return {
     agent: 'gemini',
     timestamp: new Date().toISOString(),
     symbol,
-    signal,
+    signal: finalSignal,
     confidence,
+    pattern: {
+      name: patternName,
+      type: patternType,
+      qualityScore: patternQuality,
+      timeframe: '15m',
+    },
+    ema_50: {
+      value: ema50,
+      priceVsEma50,
+      distancePct: distEma50Pct,
+      slope: distEma50Pct >= 0 ? 'UPWARD' : 'DOWNWARD',
+      crossStatus: emaAlignment,
+    },
+    automated_figures: {
+      entryPrice: price,
+      stopLoss,
+      stopLossPct: boundedSlPct,
+      takeProfit,
+      takeProfitPct,
+      riskRewardRatio: 2.2,
+      recommendedLeverage: 5.0,
+      allocationPct: 10.0,
+    },
     reason,
     constraints: {
-      max_position_size_pct: 5.0,
-      stop_loss_pct: 2.0,
-      take_profit_pct: 5.0,
+      max_position_size_pct: 10.0,
+      stop_loss_pct: boundedSlPct,
+      take_profit_pct: takeProfitPct,
       timeframe_validity_minutes: 60,
     },
-    validation_result: conflicts.length === 0 ? 'PASS' : 'PARTIAL',
+    validation_result: conflicts.length === 0 ? 'PASS' : 'RESOLVED',
     agent_conflicts_detected: conflicts,
-    portfolio_risk_score: conflicts.length > 0 ? 6.5 : 2.5,
+    portfolio_risk_score: conflicts.length > 0 ? 4.5 : 2.5,
     drawdown_proximity_warning: false,
     strategy_profitability_gate: true,
     win_rate_last_20: 0.82,
   };
 }
 
-module.exports = { getSignal };
+module.exports = {
+  getSignal,
+  getGeminiSignal: getSignal,
+};

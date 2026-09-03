@@ -1,3 +1,9 @@
-export { executeTrade } from "./tradeExecutor.js";
-export { BitgetExecutor } from "./bitgetExecutor.js";
-export { CryptoComExecutor } from "./cryptoComExecutor.js";
+const { executeTrade } = require("./tradeExecutor.js");
+const { BitgetExecutor } = require("./bitgetExecutor.js");
+const { CryptoComExecutor } = require("./cryptoComExecutor.js");
+
+module.exports = {
+  executeTrade,
+  BitgetExecutor,
+  CryptoComExecutor,
+};

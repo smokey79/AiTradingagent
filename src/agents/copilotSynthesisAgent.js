@@ -1,4 +1,4 @@
-import { logger } from "../utils/logger.js";
+const logger = require("../utils/logger.js");
 
 /**
  * NOTE on Copilot: GitHub Copilot does not expose a public chat-completions
@@ -11,7 +11,7 @@ import { logger } from "../utils/logger.js";
  * call. If you get `gh` CLI access to Copilot in the future, swap the body
  * of `synthesize()` for a real call — the interface stays the same.
  */
-export function synthesize(agentSignals, hermesRuling) {
+function synthesize(agentSignals, hermesRuling) {
   const signals = Object.values(agentSignals);
   const buys = signals.filter((s) => s.signal === "buy").length;
   const sells = signals.filter((s) => s.signal === "sell").length;
@@ -42,7 +42,7 @@ export function synthesize(agentSignals, hermesRuling) {
  * @param {object} agentResponses - Dictionary containing agent responses e.g. { claude, gemini, hermes }
  * @returns {Promise<{approved: boolean, action?: string, allocation?: string, aggregateScore?: number, reason?: string}>}
  */
-export async function evaluateConsensus(agentResponses) {
+async function evaluateConsensus(agentResponses) {
   const { claude, gemini, hermes } = agentResponses || {};
 
   const claudeConf = claude?.confidence ?? 0;
@@ -67,4 +67,9 @@ export async function evaluateConsensus(agentResponses) {
     aggregateScore: parseFloat(aggregateScore.toFixed(3)),
   };
 }
+
+module.exports = {
+  synthesize,
+  evaluateConsensus,
+};
 

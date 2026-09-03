@@ -52,7 +52,7 @@ Analyze current real-time social sentiment, whale transaction flow, and breaking
   // 1. Try Direct xAI API
   if (directKey) {
     try {
-      const model = process.env.XAI_MODEL || 'grok-2-latest';
+      const model = process.env.XAI_MODEL || 'grok-3-mini';
       const res = await axios.post(
         'https://api.x.ai/v1/chat/completions',
         {
@@ -201,5 +201,6 @@ function simulateGrokAnalysis(symbol, marketData) {
 
 module.exports = {
   getSignal,
+  getGrokSignal: getSignal,
   getGrokKeys,
 };

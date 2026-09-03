@@ -123,4 +123,7 @@ function simulatePerplexityAnalysis(symbol, marketData) {
   };
 }
 
-module.exports = { getSignal };
+module.exports = {
+  getSignal,
+  getPerplexitySignal: getSignal,
+};

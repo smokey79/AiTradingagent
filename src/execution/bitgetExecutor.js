@@ -1,14 +1,14 @@
-import axios from "axios";
-import crypto from "crypto";
-import { logger } from "../utils/logger.js";
+const axios = require("axios");
+const crypto = require("crypto");
+const logger = require("../utils/logger.js");
 
 const BASE_URL = "https://api.bitget.com";
 
 /**
  * Minimal Bitget spot order executor. Signing per Bitget's HMAC-SHA256 spec.
- * Only fires real orders when process.env.TRADING_MODE === "live".
+ * Only fires real orders when process.env.TRADING_MODE === "live" and NO_TRADES !== "true".
  */
-export class BitgetExecutor {
+class BitgetExecutor {
   constructor() {
     this.apiKey = process.env.BITGET_API_KEY;
     this.apiSecret = process.env.BITGET_API_SECRET;
@@ -21,7 +21,7 @@ export class BitgetExecutor {
   }
 
   async placeOrder({ symbol, side, size, orderType = "market" }) {
-    const isLive = process.env.TRADING_MODE === "live";
+    const isLive = process.env.TRADING_MODE === "live" && process.env.NO_TRADES !== "true";
     if (!isLive) {
       logger.info("[PAPER MODE] Simulated Bitget order", { symbol, side, size, orderType });
       return { simulated: true, symbol, side, size, orderType };
@@ -50,3 +50,5 @@ export class BitgetExecutor {
     }
   }
 }
+
+module.exports = { BitgetExecutor };

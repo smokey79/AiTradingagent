@@ -1,9 +1,14 @@
-import { google } from "googleapis";
-import axios from "axios";
-import fs from "fs";
-import path from "path";
-import { logger } from "../utils/logger.js";
-import { scoreRAU, channelRelevanceAvg } from "../learning/rauScorer.js";
+let google = null;
+try {
+  google = require("googleapis").google;
+} catch (e) {
+  // googleapis optional
+}
+const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
+const logger = require("../utils/logger.js");
+const { scoreRAU, channelRelevanceAvg } = require("../learning/rauScorer.js");
 
 const CREDIBILITY_FILE   = path.resolve("src/sentiment/channel_credibility.json");
 const MIN_CHANNEL_RELEVANCE = 0.30; // Skip channels whose recent videos avg below this
@@ -14,33 +19,10 @@ const MIN_CHANNEL_RELEVANCE = 0.30; // Skip channels whose recent videos avg bel
  * Uses Alan's YouTube OAuth subscription list to pull recent uploads,
  * scores sentiment via local Hermes/Ollama (no API cost),
  * and maintains a self-learning credibility weight per channel.
- *
- * Self-learning loop:
- *   - Each channel starts at weight 1.0
- *   - After each closed trade, call updateCredibility(channelId, wasCorrect)
- *   - Channels whose calls match trade outcomes get weighted UP (+0.05)
- *   - Wrong channels get weighted DOWN (-0.05), bounded [0.2, 2.0]
- *   - Weights are persisted in channel_credibility.json
- *
- * Requires in master.env:
- *   YOUTUBE_CLIENT_ID, YOUTUBE_CLIENT_SECRET, YOUTUBE_REFRESH_TOKEN
- *   OLLAMA_HOST, HERMES_MODEL_NAME
- *
- * Run setup-youtube-auth.js once to generate YOUTUBE_REFRESH_TOKEN.
  */
-export class YoutubeSentimentAgent {
+class YoutubeSentimentAgent {
   constructor() {
-    this.oauth2Client = new google.auth.OAuth2(
-      process.env.YOUTUBE_CLIENT_ID,
-      process.env.YOUTUBE_CLIENT_SECRET
-    );
-    this.oauth2Client.setCredentials({
-      refresh_token: process.env.YOUTUBE_REFRESH_TOKEN,
-    });
-    this.youtube = google.youtube({ version: "v3", auth: this.oauth2Client });
     this.credibility = this.#loadCredibility();
-
-    // Our 7 target tokens for symbol detection
     this.TARGET_SYMBOLS = ["BTC", "ETH", "CRO", "SOL", "AVAX", "ARB", "OP"];
 
     // Fallback keyword scoring (used when Hermes is offline)
@@ -52,6 +34,23 @@ export class YoutubeSentimentAgent {
       "crash","bear","dump","sell","panic","collapse","liquidation","atl",
       "downtrend","death cross","overvalued","ban","hack","outflow","short",
     ];
+
+    if (google && process.env.YOUTUBE_CLIENT_ID && process.env.YOUTUBE_REFRESH_TOKEN) {
+      try {
+        this.oauth2Client = new google.auth.OAuth2(
+          process.env.YOUTUBE_CLIENT_ID,
+          process.env.YOUTUBE_CLIENT_SECRET
+        );
+        this.oauth2Client.setCredentials({
+          refresh_token: process.env.YOUTUBE_REFRESH_TOKEN,
+        });
+        this.youtube = google.youtube({ version: "v3", auth: this.oauth2Client });
+      } catch (err) {
+        this.youtube = null;
+      }
+    } else {
+      this.youtube = null;
+    }
   }
 
   // ── Credibility persistence ─────────────────────────────────────────────
@@ -72,6 +71,7 @@ export class YoutubeSentimentAgent {
 
   /** Get channels Alan is subscribed to on the authenticated account. */
   async getSubscriptions() {
+    if (!this.youtube) return [];
     try {
       const { data } = await this.youtube.subscriptions.list({
         part: "snippet",
@@ -365,3 +365,5 @@ Content: ${text}`;
     };
   }
 }
+
+module.exports = { YoutubeSentimentAgent };

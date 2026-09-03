@@ -1,6 +1,12 @@
-import { google } from "googleapis";
-import readline from "readline";
-import "dotenv/config";
+let google;
+try {
+  google = require("googleapis").google;
+} catch (e) {
+  console.error("Please install googleapis first: npm install googleapis");
+  process.exit(1);
+}
+const readline = require("readline");
+require("dotenv").config();
 
 // Run once with `node src/sentiment/setup-youtube-auth.js` to generate a
 // refresh token. Paste the resulting value into YOUTUBE_REFRESH_TOKEN in .env.
