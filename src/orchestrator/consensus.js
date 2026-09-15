@@ -1,13 +1,18 @@
 /**
  * Multi-Agent Consensus Engine
- * Coordinates 8 specialized AI agents (Claude, GPT-4o, DeepSeek R1/V3, Gemini,
+ * Coordinates specialized AI agents (Claude, GPT-4o, DeepSeek R1/V3, Gemini,
  * Grok, OpenRouter Free Tier, Perplexity, Hermes, and YouTube Sentiment),
  * applies dynamic weighting, resolves conflicts, detects hard vetoes, and produces master trading decisions.
- * 
+ *
  * v2: providerRotator added as 13th parallel agent — runs 5 free/subscription
  * models (DeepSeek R1, Llama 3.3, Gemini Flash, Qwen, Mistral + Gemini Pro + Ollama)
  * and synthesises a rotated consensus. This ensures 24/7 uptime even when
  * primary paid API keys are rate-limited.
+ *
+ * v3 (2026-09-06): volatilityRegimeAgent added as 14th agent. It never votes
+ * BUY/SELL (ATR/BB-width tell you magnitude of movement, not direction), so
+ * it can't force a trade or count toward agentsAgreeing — it's a low-weight
+ * advisory signal only. See src/agents/volatilityRegimeAgent.js.
  */
 const logger = require('../utils/logger');
 const claudeAgent = require('../agents/claudeAgent');
@@ -23,12 +28,16 @@ const defiAgent = require('../agents/defiAgent');
 const intelligentSignalsAgent = require('../agents/intelligentSignalsAgent');
 const smcAgent = require('../agents/smcAgent');
 const strategyLearningAgent = require('../agents/strategyLearningAgent');
+const expertTraderAgent = require('../agents/expertTraderAgent');
 const providerRotator = require('../agents/providerRotator');
+const volatilityRegimeAgent = require('../agents/volatilityRegimeAgent');
 const healthMonitor = require('../health/agentHealthMonitor');
 const { isExcluded } = require('../health/selfHealer');
+const { evaluateNegativePatterns } = require('../learning/lossLearner');
 
 // Credibility weights
 const AGENT_WEIGHTS = {
+  expert_trader: 0.20,   // Chief Crypto Strategy: 50-EMA, LuxAlgo SMC & RS vs BTC
   deepseek: 0.20,        // Quantitative SMC & reasoning
   claude: 0.20,          // Technical analysis & chart patterns
   smc_agent: 0.20,       // Casper SMC & LuxAlgo Order Blocks
@@ -43,6 +52,7 @@ const AGENT_WEIGHTS = {
   hermes: 0.20,          // Local Ollama consensus validator (free, private)
   sentiment: 0.05,       // Media alpha & YouTube intelligence
   provider_rotator: 0.15,// 24/7 rotation: free OpenRouter + Gemini Pro + Ollama fallback
+  volatility_regime: 0.08, // Advisory only — always HOLD, never counts toward agentsAgreeing (see below)
 };
 
 const SIGNAL_VALUES = {
@@ -108,9 +118,12 @@ async function runConsensus(pair, marketData) {
     intelligentSignalsRes,
     smcRes,
     strategyLearnerRes,
+    expertTraderRes,
     providerRotatorRes,
+    volatilityRegimeRes,
   ] = await Promise.allSettled([
     // Tiered timeouts: local and cloud agents with automated quantitative fallbacks
+    timedAgent('expert_trader',       withTimeout(expertTraderAgent.getSignal(symbol, marketData),        5000,  'ExpertTrader')),
     timedAgent('deepseek',            withTimeout(deepseekAgent.getSignal(symbol, marketData),            10000, 'DeepSeek')),
     timedAgent('claude',              withTimeout(claudeAgent.getSignal(symbol, marketData),              10000, 'Claude')),
     timedAgent('gpt4o',               withTimeout(gpt4oAgent.getSignal(symbol, marketData),               10000, 'GPT-4o')),
@@ -124,15 +137,18 @@ async function runConsensus(pair, marketData) {
     timedAgent('smc_agent',           withTimeout(smcAgent.getSignal(symbol, marketData),                   5000,  'SMCAgent')),
     timedAgent('strategy_learner',    withTimeout(strategyLearningAgent.getSignal(symbol, marketData),      5000,  'StrategyLearner')),
     timedAgent('provider_rotator',    withTimeout(runRotatorAsAgent(),                                     35000,  'ProviderRotator')), // 5 agents in parallel internally
+    timedAgent('volatility_regime',   withTimeout(volatilityRegimeAgent.getSignal(symbol, marketData),      3000,  'VolatilityRegime')), // pure in-memory calc, no network
   ]);
 
   // Record health outcomes for every agent
   const agentResults = {
+    expert_trader: expertTraderRes,
     deepseek: deepseekRes, claude: claudeRes, gpt4o: gpt4oRes,
     grok: grokRes, openrouter_free: openrouterFreeRes,
     perplexity: perplexityRes, hermes: hermesRes, sentiment: sentimentRes,
     defi: defiRes, intelligent_signals: intelligentSignalsRes, smc_agent: smcRes,
     strategy_learner: strategyLearnerRes, provider_rotator: providerRotatorRes,
+    volatility_regime: volatilityRegimeRes,
   };
   for (const [name, res] of Object.entries(agentResults)) {
     const latency = agentTimers[name] ? Date.now() - agentTimers[name] : 0;
@@ -171,6 +187,7 @@ async function runConsensus(pair, marketData) {
     }
   }
 
+  processResult('expert_trader', expertTraderRes);
   processResult('deepseek', deepseekRes);
   processResult('claude', claudeRes);
   processResult('gpt4o', gpt4oRes);
@@ -184,6 +201,7 @@ async function runConsensus(pair, marketData) {
   processResult('smc_agent', smcRes);
   processResult('strategy_learner', strategyLearnerRes);
   processResult('provider_rotator', providerRotatorRes);
+  processResult('volatility_regime', volatilityRegimeRes);
 
   // ── Fast-track: skip Gemini if consensus is already crystal clear ──────────
   // If 6+ agents agree with avg confidence ≥ 0.80 we don't need cross-validation.
@@ -198,7 +216,7 @@ async function runConsensus(pair, marketData) {
 
   let geminiOutput = null;
   if (fastTrack) {
-    logger.info(`  [${'gemini'.padEnd(16)}] -> ⚡ FAST-TRACK (${dominantAgree.length}/8 agents @ ${(avgFastConf*100).toFixed(0)}% avg — Gemini skipped)`);
+    logger.info(`  [${'gemini'.padEnd(16)}] -> ⚡ FAST-TRACK (${dominantAgree.length}/${preFastTrack.length} directional agents @ ${(avgFastConf*100).toFixed(0)}% avg — Gemini skipped)`);
   } else {
     // Step 2: Gemini Cross-Validator receives all peer signals
     try {
@@ -275,17 +293,34 @@ async function runConsensus(pair, marketData) {
   const rawConfidence = Math.abs(avgScore);
   const directionalTotal = agentOutputs.filter(a => a.signal !== 'HOLD').length;
   const agreementRatio = directionalTotal > 0 ? agentsAgreeing / directionalTotal : (totalAgents > 0 ? agentsAgreeing / totalAgents : 0);
-  const consensusConfidence = Math.min(
+  let consensusConfidence = Math.min(
     0.98,
     parseFloat((rawConfidence * 0.6 + agreementRatio * 0.4).toFixed(3))
   );
 
+  // Check Self-Learning Negative Pattern Memory (learned from lost trades)
+  let patternVeto = false;
+  let patternVetoReason = null;
+  if (finalSignal !== 'HOLD') {
+    try {
+      const negCheck = evaluateNegativePatterns(symbol, finalSignal, marketData);
+      if (negCheck.hasNegativePatternMatch) {
+        if (negCheck.vetoRecommended) {
+          patternVeto = true;
+          patternVetoReason = `Self-Learning Negative Pattern Veto: ${negCheck.reason}`;
+          logger.warn(`[${pair}] 🛑 ${patternVetoReason}`);
+        } else {
+          consensusConfidence = Math.max(0.35, parseFloat((consensusConfidence - negCheck.confidencePenalty).toFixed(3)));
+          logger.info(`[${pair}] 🧠 Self-Learning Penalty: -${(negCheck.confidencePenalty * 100).toFixed(0)}% -> ${(consensusConfidence * 100).toFixed(0)}% (${negCheck.reason})`);
+        }
+      }
+    } catch (_) {}
+  }
+
   // Require a real majority, not just 2 stragglers agreeing at a low bar.
-  // Tightened 2026-09-03: was agentsAgreeing >= 2 && consensusConfidence >= 0.28
-  // (out of 13 agents, that let 2 agree at 28% confidence trigger a trade).
   const MIN_AGENTS_AGREEING = parseInt(process.env.CONSENSUS_MIN_AGENTS_AGREEING || '5', 10);
   const MIN_CONSENSUS_CONFIDENCE = parseFloat(process.env.CONSENSUS_MIN_CONFIDENCE || '0.45');
-  const consensusReached = agentsAgreeing >= MIN_AGENTS_AGREEING && consensusConfidence >= MIN_CONSENSUS_CONFIDENCE;
+  const consensusReached = !patternVeto && agentsAgreeing >= MIN_AGENTS_AGREEING && consensusConfidence >= MIN_CONSENSUS_CONFIDENCE;
   const approvedForExecution = consensusReached && finalSignal !== 'HOLD';
 
   const synthesis = {
@@ -297,12 +332,14 @@ async function runConsensus(pair, marketData) {
     weightedScore: parseFloat(avgScore.toFixed(3)),
     consensus_reached: consensusReached,
     approved_for_execution: approvedForExecution,
-    veto_triggered: false,
-    veto_reason: null,
+    veto_triggered: patternVeto,
+    veto_reason: patternVetoReason,
     agentsAgreeing,
     totalAgents,
     breakdown: agentOutputs,
-    reasoning: generateConsensusReasoning(finalSignal, consensusConfidence, agentsAgreeing, totalAgents, agentOutputs),
+    reasoning: patternVeto
+      ? patternVetoReason
+      : generateConsensusReasoning(finalSignal, consensusConfidence, agentsAgreeing, totalAgents, agentOutputs),
   };
 
   logger.info(
