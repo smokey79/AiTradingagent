@@ -13,18 +13,20 @@ const { loadStrategyMemory, appendTradeRecord } = require("../strategy/strategyM
  *   3. channel_credibility   — YouTube channel weights updated ONLY on outcome
  *   4. Kelly position sizing — recalculated from rolling win/loss data
  *   5. Learning memory decay — entries > 30 days halved, > 60 days pruned
- *   6. Win rate gate check   — alerts when 80%/20-trade gate is met
+ *   6. Win rate gate check   — alerts when the live-funds gate (default 68% over 250 trades) is met
  *   7. Telegram notification — sends outcome + gate status
  *
  * RAU fix: channel credibility is NEVER updated at ingest time.
  * It is updated here, and ONLY here, once a real trade outcome is known.
  */
 
-const MEMORY_PATH         = path.resolve("src/strategy/strategy_memory.json");
-const CREDIBILITY_PATH    = path.resolve("src/sentiment/channel_credibility.json");
-const LEARNING_MEMORY_PATH = path.resolve("data/learning_memory.json");
-const WIN_RATE_GATE       = parseFloat(process.env.WIN_RATE_GATE   || "0.80");
-const MIN_TRADES_GATE     = 20;
+const MEMORY_PATH         = path.resolve(__dirname, "../strategy/strategy_memory.json");
+const CREDIBILITY_PATH    = path.resolve(__dirname, "../sentiment/channel_credibility.json");
+const LEARNING_MEMORY_PATH = path.resolve(__dirname, "../../data/learning_memory.json");
+// Live-funds gate. 2026-09-24: changed from 80% over 20 trades to 70% over 50, then to 68% over 250 trades at Alan's instruction.
+// Uses its own env names so the separate 68% probability gate (WIN_RATE_GATE in Python) cannot override it.
+const WIN_RATE_GATE       = parseFloat(process.env.LIVE_GATE_WIN_RATE   || "0.68");
+const MIN_TRADES_GATE     = parseInt(process.env.LIVE_GATE_MIN_TRADES || "250", 10);
 const TELEGRAM_TOKEN      = process.env.TELEGRAM_BOT_TOKEN         || "";
 const TELEGRAM_CHAT       = process.env.TELEGRAM_CHAT_ID            || "";
 const TELEGRAM_ON         = (process.env.TELEGRAM_ALERTS_ENABLED   || "false").toLowerCase() === "true";
@@ -42,9 +44,10 @@ class StrategyLearner {
   // ── Main entry — call after every trade closes ──────────────────────────
 
   async recordOutcome({
-    symbol, side, entryPrice, exitPrice,
+    symbol, side = "BUY", entryPrice, exitPrice,
     sizeUsdt, pnlUsdt, pnlPct,
     agentVotes = {}, youtubeChannels = [], exchange = "bitget",
+    marketData = {},
   }) {
     const isWin = pnlUsdt > 0;
     logger.info(`Recording: ${symbol} ${side} | ${isWin ? "WIN" : "LOSS"} | $${pnlUsdt.toFixed(2)} (${(pnlPct*100).toFixed(2)}%)`);
@@ -53,9 +56,28 @@ class StrategyLearner {
     this.memory = appendTradeRecord(this.memory, record);
 
     this.#updateStats(pnlUsdt, pnlPct, symbol, isWin);
-    this.#updateAgentAccuracy(agentVotes, isWin);
+    this.#updateAgentAccuracy(agentVotes, isWin, side);
     this.#updateChannelCredibility(youtubeChannels, isWin); // outcome-only, never at ingest
     this.#decayLearningMemory();                            // prune/decay stale learned content
+
+    // Self-Learning from Lost Trades Post-Mortem Analysis
+    if (!isWin) {
+      try {
+        const { recordLossPostMortem } = require("./lossLearner.js");
+        recordLossPostMortem({
+          symbol,
+          side,
+          entryPrice,
+          exitPrice,
+          pnlUsd: pnlUsdt,
+          pnlPct,
+          marketData,
+          reason: `Closed with loss $${pnlUsdt.toFixed(2)} (${(pnlPct * 100).toFixed(2)}%)`,
+        });
+      } catch (lossErr) {
+        logger.warn(`Loss post-mortem notice: ${lossErr.message}`);
+      }
+    }
 
     const kelly      = this.#recalcKelly();
     const gateStatus = this.#checkGate();
@@ -103,20 +125,39 @@ class StrategyLearner {
 
   // ── Agent accuracy ───────────────────────────────────────────────────────
 
-  #updateAgentAccuracy(agentVotes, isWin) {
+  #updateAgentAccuracy(agentVotes, isWin, side = "BUY") {
     if (!agentVotes || !Object.keys(agentVotes).length) return;
     if (!this.memory.agentAccuracy) this.memory.agentAccuracy = {};
 
+    const isLong = String(side).toUpperCase() !== "SELL" && String(side).toUpperCase() !== "SHORT";
+
     for (const [agent, vote] of Object.entries(agentVotes)) {
-      const correct = (["BUY","LONG"].includes(vote) && isWin) || (["SELL","SHORT"].includes(vote) && !isWin);
-      if (!this.memory.agentAccuracy[agent]) this.memory.agentAccuracy[agent] = { correct:0, total:0 };
+      const voteUpper = String(vote).toUpperCase();
+      const votedLong = ["BUY", "LONG", "BULLISH"].includes(voteUpper);
+      const votedShort = ["SELL", "SHORT", "BEARISH"].includes(voteUpper);
+
+      // Attribution:
+      // If position was LONG:
+      //   - Win: votedLong was correct
+      //   - Loss: votedShort was correct
+      // If position was SHORT:
+      //   - Win: votedShort was correct
+      //   - Loss: votedLong was correct
+      let correct = false;
+      if (isLong) {
+        correct = (votedLong && isWin) || (votedShort && !isWin);
+      } else {
+        correct = (votedShort && isWin) || (votedLong && !isWin);
+      }
+
+      if (!this.memory.agentAccuracy[agent]) this.memory.agentAccuracy[agent] = { correct: 0, total: 0 };
       this.memory.agentAccuracy[agent].total   += 1;
       this.memory.agentAccuracy[agent].correct += correct ? 1 : 0;
       this.memory.agentAccuracy[agent].accuracy = parseFloat(
         (this.memory.agentAccuracy[agent].correct / this.memory.agentAccuracy[agent].total).toFixed(4)
       );
     }
-    logger.info("Agent accuracy:", JSON.stringify(this.memory.agentAccuracy));
+    logger.info("Agent accuracy updated:", JSON.stringify(this.memory.agentAccuracy));
   }
 
   // ── YouTube channel credibility (outcome-only — never at ingest) ─────────
@@ -312,6 +353,12 @@ ${gateStatus.message}`;
       symbolStats:     s.symbolStats || {},
       rauLearningStats: rauSummary,         // RAU quality breakdown
       feedWeights,                          // weighted data sources
+      lostTradeLessons: (() => {
+        try {
+          const { getLostTradeLessons } = require("./lossLearner.js");
+          return getLostTradeLessons(5);
+        } catch (_) { return []; }
+      })(),
     };
   }
 }

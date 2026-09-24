@@ -102,26 +102,40 @@ function checkMemory() {
   const totalMb  = Math.round(os.totalmem() / 1024 / 1024);
   const freeMb   = Math.round(os.freemem()  / 1024 / 1024);
   const usedPct  = parseFloat(((1 - freeMb / totalMb) * 100).toFixed(1));
-  const ok       = usedPct < 90;
+  const memUsage = process.memoryUsage();
+  const heapUsedMb = Math.round(memUsage.heapUsed / 1024 / 1024);
+  const heapTotalMb = Math.round(memUsage.heapTotal / 1024 / 1024);
+  const heapPct = heapTotalMb > 0 ? parseFloat(((heapUsedMb / heapTotalMb) * 100).toFixed(1)) : 0;
+  // Healthy if system has at least 400MB free RAM and process heap is not exhausted
+  const ok = freeMb >= 400 && heapPct < 95;
   return {
     ok,
-    detail:  `RAM: ${freeMb} MB free / ${totalMb} MB total (${usedPct}% used)`,
+    detail:  `RAM: ${freeMb} MB free / ${totalMb} MB total (${usedPct}% used) | Heap: ${heapUsedMb}/${heapTotalMb} MB`,
     usedPct,
     freeMb,
     totalMb,
+    heapUsedMb,
+    heapTotalMb,
   };
 }
 
 function checkWinRateGate() {
   try {
-    const stats = getPerformanceStats(20);
-    const gate72 = stats.sampleSize < 20 || stats.winRate >= 0.72;
+    // 2026-09-24: aligned with riskGate.js, 68% over the last 250 real trades (was 72%/20).
+    const GATE = parseFloat(process.env.RISK_MIN_WIN_RATE_GATE || '0.68');
+    const N = parseInt(process.env.RISK_GATE_MIN_TRADES || '250', 10);
+    const stats = getPerformanceStats(N);
+    const collecting = stats.sampleSize < N;
+    const met = !collecting && stats.winRate >= GATE;
     return {
-      ok:          gate72,
-      detail:      `${stats.winRatePct} hit rate over ${stats.sampleSize} recent trades`,
+      ok:          collecting || met,   // health stays green while the sample builds
+      detail:      collecting
+        ? `Collecting sample: ${stats.sampleSize}/${N} real trades (gate ${(GATE * 100).toFixed(0)}% not assessed yet)`
+        : `${stats.winRatePct} hit rate over ${stats.sampleSize} recent trades (gate ${(GATE * 100).toFixed(0)}%)`,
       hitRate:     stats.winRate * 100,
       totalTrades: stats.totalTradesEver,
-      gate72Met:   stats.winRate >= 0.72 && stats.sampleSize >= 20,
+      gate68Met:   met,
+      gate72Met:   met,  // legacy key name, now means the 68% gate
     };
   } catch (e) {
     return { ok: true, detail: `Trade ledger status check: ${e.message}` };

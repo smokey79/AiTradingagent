@@ -24,8 +24,10 @@ MEMORY_PATH = ROOT / "src" / "strategy" / "strategy_memory.json"
 CRED_PATH = ROOT / "src" / "sentiment" / "channel_credibility.json"
 PINESCRIPT_PATH = ROOT / "strategy" / "pinescript_strategy_v1.pine"
 
-WIN_RATE_GATE = float(os.getenv("WIN_RATE_GATE", "0.68"))
-MIN_TRADES = 20
+WIN_RATE_GATE = float(os.getenv("WIN_RATE_GATE", "0.68"))          # probability gate (per-signal)
+# Live-funds gate: 68% over 250 paper trades (80%/20 -> 70%/50 -> 68%/250 on 2026-09-24).
+LIVE_WIN_RATE_GATE = float(os.getenv("LIVE_GATE_WIN_RATE", "0.68"))
+MIN_TRADES = int(os.getenv("LIVE_GATE_MIN_TRADES", "250"))
 
 
 def _load_json(path: Path) -> dict:
@@ -56,7 +58,7 @@ def _get_learning() -> dict:
     wins = s.get("wins", 0)
     losses = s.get("losses", 0)
     total = wins + losses
-    win_rate = s.get("winRate", (wins / total) if total > 0 else 1.0)
+    win_rate = s.get("winRate", (wins / total) if total > 0 else 0.0)  # was 1.0: showed 100% with no trades
 
     return {
         "totalTrades": total,
@@ -68,7 +70,7 @@ def _get_learning() -> dict:
         "avgLoss": s.get("avgLoss", 0.0),
         "kelly": s.get("kelly", 0.168),
         "recommendedPct": s.get("recommendedPct", 0.05),
-        "gateMet": win_rate >= WIN_RATE_GATE,
+        "gateMet": total >= MIN_TRADES and win_rate >= LIVE_WIN_RATE_GATE,
         "tradesNeeded": max(0, MIN_TRADES - total),
         "agentAccuracy": m.get("agentAccuracy", {
             "DataSourcerAgent": {"accuracy": 0.865},
@@ -261,23 +263,17 @@ def _get_sourcer_scores() -> dict:
         sourcer = DataSourcerAgent()
         return sourcer.evaluate_feeds()
     except Exception as e:
+        # No invented numbers on failure (was a fixed 88.5 score / 78.3% win rate / gate MET).
         return {
-            "sourcer_verdict": "PROCEED",
-            "composite_score": 88.5,
-            "rolling_win_rate_pct": "78.3%",
+            "sourcer_verdict": "HOLD",
+            "composite_score": 0.0,
+            "rolling_win_rate_pct": "unavailable",
             "target_gate": "68%",
-            "gate_68_met": True,
-            "gate_72_met": True,
-            "feed_scores": {
-                "arbitrage_flashloans": {"name": "Cross-DEX Arbitrage & Flash Loans", "score": 94.0, "accuracy_pct": 91.5, "profit_weight": 0.20, "status": "ZERO_CAPITAL_OPTIMAL", "contribution_to_pnl": "+32.4%"},
-                "luxalgo_learning": {"name": "LuxAlgo SMC & YouTube Alpha", "score": 92.0, "accuracy_pct": 79.5, "profit_weight": 0.15, "status": "BULLISH_EXPANSION (+0.93)", "contribution_to_pnl": "+21.4%"},
-                "ccxt_orderbook": {"name": "CCXT Order Book & Liquidity", "score": 92.0, "accuracy_pct": 86.5, "profit_weight": 0.25, "status": "OPTIMAL", "contribution_to_pnl": "+28.2%"},
-                "sosovalue_etf": {"name": "SoSoValue Institutional ETF Flows", "score": 88.0, "accuracy_pct": 78.0, "profit_weight": 0.15, "status": "STRONG_INFLOW", "contribution_to_pnl": "+18.6%"},
-                "sopr_mvrv_onchain": {"name": "SOPR / MVRV Cycle Valuation", "score": 85.0, "accuracy_pct": 82.4, "profit_weight": 0.10, "status": "FAIR_VALUE", "contribution_to_pnl": "+12.1%"},
-                "relative_strength": {"name": "Cross-Asset Relative Strength", "score": 83.0, "accuracy_pct": 76.0, "profit_weight": 0.08, "status": "LEADER", "contribution_to_pnl": "+8.4%"},
-                "volatility_regime": {"name": "ATR Volatility & Breakout Squeeze", "score": 80.0, "accuracy_pct": 74.5, "profit_weight": 0.07, "status": "BREAKOUT_READY", "contribution_to_pnl": "+4.2%"},
-            },
+            "gate_status": f"UNAVAILABLE ({e.__class__.__name__})",
+            "gate_68_met": False,
+            "gate_72_met": False,
             "error": str(e),
+            "feed_scores": {},
         }
 
 
@@ -889,7 +885,8 @@ def api_trades_all():
             "avg_loss_usd":        round(avg_loss, 4),
             "profit_factor":       round(profit_factor, 3) if profit_factor else None,
             "gate_72_met":         hit_rate >= 72.0 and n >= 20,
-            "gate_80_met":         hit_rate >= 80.0 and n >= 20,
+            "gate_80_met":         hit_rate >= 80.0 and n >= 20,  # legacy
+            "gate_live_met":       hit_rate >= LIVE_WIN_RATE_GATE * 100 and n >= MIN_TRADES,
         },
         "symbol_breakdown": symbol_stats,
         "filters_applied": {
@@ -1263,7 +1260,7 @@ def api_terminal_execute():
                 f"=== LUXALGO SMART MONEY CONCEPTS & 5X FUTURES STRATEGY ===",
                 f"Strategy: {strat['title']}",
                 f"Target Symbol: {strat['symbol']} | Leverage: {strat['leverage']}",
-                f"Target Win-Rate: {strat['target_win_rate_pct']}% (Gate 68%: {'PASSED' if strat['gate_68_met'] else 'HOLD'})",
+                f"Measured Win-Rate: {(str(strat['target_win_rate_pct']) + '%') if strat['target_win_rate_pct'] is not None else 'not measured'} (Evidence gate: {strat.get('status')})",
                 f"Concepts Used: {', '.join(strat['concepts'])}",
                 "Entry Conditions:",
             ]
@@ -1289,7 +1286,7 @@ def api_terminal_execute():
                 f"Source Title: {strat['title']}\n"
                 f"Channel     : {strat['channel_source']}\n"
                 f"Synthesized : {strat['title']}\n"
-                f"Win-Rate    : {strat['target_win_rate_pct']}% | Leverage: {strat['leverage']}\n"
+                f"Win-Rate    : {(str(strat['target_win_rate_pct']) + '%') if strat['target_win_rate_pct'] is not None else 'not measured'} | Status: {strat.get('status')} | Leverage: {strat['leverage']}\n"
                 f"Risk/Reward : 1:{strat['risk_management']['risk_reward_ratio']} | Liquidation Safe: {strat['risk_management']['liquidation_safety_buffer_pct']}%\n"
                 f"Status      : Strategy memory updated & PineScript v5 deployed to Studio."
             )
@@ -1331,11 +1328,13 @@ def api_terminal_execute():
         lines = [
             f"=== AGENT DATA SOURCER & FEED AUDIT ===",
             f"Verdict: {s.get('sourcer_verdict')} | Composite Quality: {s.get('composite_score')}/100",
-            f"Rolling Win-Rate: {s.get('rolling_win_rate_pct')} (68% Gate: {'MET OK' if s.get('gate_68_met', s.get('gate_72_met')) else 'HOLD WARN'})",
+            f"Rolling Win-Rate: {s.get('rolling_win_rate_pct')} over {s.get('total_trades_analyzed', 0)} real trades (68% Gate: {s.get('gate_status', 'MET OK' if s.get('gate_68_met') else 'HOLD WARN')})",
             f"Data Source Rankings:",
         ]
         for k, f in s.get("feed_scores", {}).items():
-            lines.append(f"  * {f['name'][:32]:32s} | Score: {f['score']:4.1f} | Acc: {f['accuracy_pct']}% | Net: {f['contribution_to_pnl']}")
+            acc = f"{f['accuracy_pct']}%" if f.get('accuracy_pct') is not None else "not measured"
+            net = f.get('contribution_to_pnl') or "not measured"
+            lines.append(f"  * {f['name'][:32]:32s} | Quality: {f['score']:5.1f} | {f.get('status')} | Acc: {acc} | Net: {net}")
         return jsonify({"success": True, "output": "\n".join(lines)})
 
     elif base_cmd in ("/status", "status"):
@@ -1345,7 +1344,7 @@ def api_terminal_execute():
         output = (
             f"=== AITRADINGAGENT RUNTIME STATUS ===\n"
             f"Mode: {p['mode'].upper()} | Equity: ${p['balance_usdt']} USDT | Realized PnL: ${p['total_pnl']} USDT\n"
-            f"Win Rate: {l['winRate']*100:.1f}% (Gate: {WIN_RATE_GATE*100:.0f}% -- {'UNLOCKED' if l['gateMet'] else 'GATED'})\n"
+            f"Win Rate: {l['winRate']*100:.1f}% (Live gate: {LIVE_WIN_RATE_GATE*100:.0f}% over {MIN_TRADES} trades -- {'UNLOCKED' if l['gateMet'] else 'GATED'})\n"
             f"Futures Leverage: 5.0X Isolated | Liquidation Safety Buffer: 17.5%\n"
             f"Arbitrage Pairs Active: {arbs['total_arbs']} | Flash Loans Ready: {arbs['total_flashloans']}\n"
             f"Waitress Multi-Threaded WSGI Server: ACTIVE"
@@ -1374,6 +1373,7 @@ def api_terminal_execute():
                 errors="replace",
                 timeout=45,
                 cwd=str(ROOT),
+                creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0x08000000),
             )
             out = p.stdout if p.stdout else p.stderr
             return jsonify({"success": p.returncode == 0, "output": out[-1500:] if len(out) > 1500 else out})
@@ -1390,6 +1390,7 @@ def api_terminal_execute():
                 errors="replace",
                 timeout=30,
                 cwd=str(ROOT),
+                creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0x08000000),
             )
             out = p.stdout if p.stdout else p.stderr
             return jsonify({"success": p.returncode == 0, "output": out[-1500:] if len(out) > 1500 else out})
@@ -1406,6 +1407,7 @@ def api_terminal_execute():
                 errors="replace",
                 timeout=30,
                 cwd=str(ROOT),
+                creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0x08000000),
             )
             out = p.stdout if p.stdout else p.stderr
             return jsonify({"success": p.returncode == 0, "output": out[-1500:] if len(out) > 1500 else out})

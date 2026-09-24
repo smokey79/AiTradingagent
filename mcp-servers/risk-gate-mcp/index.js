@@ -32,8 +32,9 @@ const RISK_LIMITS = {
   min_consensus_confidence: 0.72,
   min_agents_agreeing: 3,
   max_risk_score: 7.5,
-  min_win_rate_gate: 0.80,
-  min_sample_size_for_gate: 20,
+  // Live-funds gate: 68% over 250 trades (80%/20 -> 70%/50 -> 68%/250 on 2026-09-24).
+  min_win_rate_gate: parseFloat(process.env.LIVE_GATE_WIN_RATE || '0.68'),
+  min_sample_size_for_gate: parseInt(process.env.LIVE_GATE_MIN_TRADES || '250', 10),
 };
 
 // ─── Server Setup ──────────────────────────────────────────────────────────────

@@ -1,3 +1,10 @@
+# DEPRECATED 2026-09-13 — this launches only the old Flask "Developments
+# Studio" dashboard (port 3002), not the real trading stack, and its
+# "keys still needed" list below is stale (those keys are filled in .env
+# now). Use LAUNCH-AGENT.ps1 instead to start the full, current system
+# (Node dashboard on 3001, 13-agent consensus orchestrator, arb scanner,
+# debate engine, Telegram listener, freqtrade dry-run bridge). Kept here
+# unmodified in case the Developments Studio UI itself is still wanted.
 $ROOT = "F:\aitradingagent"
 Set-Location $ROOT
 Write-Host ""
@@ -71,6 +78,6 @@ Write-Host "    XAI_API_KEY         -> console.x.ai (Grok agent)" -ForegroundCol
 Write-Host "    YOUTUBE_API_KEY     -> console.cloud.google.com (live video data)" -ForegroundColor Yellow
 Write-Host "    BITGET_PASSPHRASE   -> Bitget website -> API Management" -ForegroundColor Yellow
 Write-Host ""
-Write-Host "  WIN RATE GATE: Need 80% over 20 paper trades before live funds" -ForegroundColor Magenta
+Write-Host "  WIN RATE GATE: Need 68% over 250 paper trades before live funds" -ForegroundColor Magenta
 Write-Host "  CRO wallet:   0xB1f64d57370c4965cBEd6319ECD058544B3Ef227" -ForegroundColor Magenta
 Write-Host ""

@@ -1,0 +1,31 @@
+{
+  "_doc": "What the agent may consider, by asset class, and where each class can actually be executed. Any instrument must still pass the risk gate, evidence gate and live gate. 2026-09-24.",
+  "classes": {
+    "crypto": {
+      "venue": "existing crypto exchanges (Crypto.com / Bitget, paper by default)",
+      "symbols": ["BTC/USDT", "ETH/USDT", "SOL/USDT", "AVAX/USDT", "ARB/USDT", "OP/USDT", "CRO/USDT", "LTC/USDT", "TRX/USDT", "ZEC/USDT", "SUI/USDT", "OKB/USDT", "ICP/USDT", "AAVE/USDT", "POL/USDT", "ATOM/USDT", "FLR/USDT"],
+      "execution": "enabled"
+    },
+    "crypto_equities": {
+      "venue": "trading212 (Invest account via API; shares, no leverage. T212 CFDs are NOT available through the API)",
+      "symbols": ["MSTR", "COIN", "MARA", "RIOT", "CLSK", "HUT", "HOOD"],
+      "notes": "Crypto-linked US stocks. Availability on your T212 account is confirmed by scripts/t212_check.js; unavailable tickers are skipped.",
+      "execution": "demo_only_until_live_gate"
+    },
+    "forex": {
+      "venue": "none connected (candidates: IG, OANDA, Capital.com - FCA regulated with APIs and demo accounts)",
+      "symbols": ["EUR/USD", "GBP/USD", "USD/JPY", "AUD/USD", "USD/CHF"],
+      "execution": "paper_signals_only"
+    },
+    "commodities": {
+      "venue": "none connected (same candidates as forex)",
+      "symbols": ["XAU/USD", "XAG/USD", "WTI", "BRENT", "NATGAS"],
+      "execution": "paper_signals_only"
+    },
+    "indices": {
+      "venue": "none connected",
+      "symbols": ["US500", "US100", "UK100", "GER40"],
+      "execution": "paper_signals_only"
+    }
+  }
+}
