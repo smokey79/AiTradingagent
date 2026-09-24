@@ -13,19 +13,20 @@
       "execution": "demo_only_until_live_gate"
     },
     "forex": {
-      "venue": "none connected (candidates: IG, OANDA, Capital.com - FCA regulated with APIs and demo accounts)",
+      "venue": "oanda (src/brokers/oandaBroker.js, v20 API, CFDs; practice account by default)",
       "symbols": ["EUR/USD", "GBP/USD", "USD/JPY", "AUD/USD", "USD/CHF"],
-      "execution": "paper_signals_only"
+      "execution": "practice_only_until_live_gate",
+      "notes": "Every order needs a stop loss; total position value capped at 5x NAV. Availability: node scripts/oanda_check.js"
     },
     "commodities": {
-      "venue": "none connected (same candidates as forex)",
+      "venue": "oanda (XAU_USD, XAG_USD, WTICO_USD, BCO_USD, NATGAS_USD)",
       "symbols": ["XAU/USD", "XAG/USD", "WTI", "BRENT", "NATGAS"],
-      "execution": "paper_signals_only"
+      "execution": "practice_only_until_live_gate"
     },
     "indices": {
-      "venue": "none connected",
+      "venue": "oanda (SPX500_USD, NAS100_USD, UK100_GBP, DE30_EUR)",
       "symbols": ["US500", "US100", "UK100", "GER40"],
-      "execution": "paper_signals_only"
+      "execution": "practice_only_until_live_gate"
     }
   }
 }
