@@ -82,8 +82,34 @@ Validate consensus consistency, detect conflicts, and output strictly JSON.`;
       raw: parsed,
     };
   } catch (err) {
-    logger.warn(`Gemini direct API call failed: ${err.message} — trying OpenRouter fallback`);
-    circuitBreakerUntil = Date.now() + 60000;
+    // 2026-09-26: the free Gemini tier is capped at 20 requests/day per
+    // model. This orchestrator loop calls getSignal() every
+    // AUTO_TRADE_INTERVAL_SEC (default 30s) whenever the consensus isn't
+    // already fast-tracked, so once that daily quota is used up (often
+    // within the first 10-20 minutes of the day), a flat 60s circuit
+    // breaker meant this kept re-attempting the Gemini API — and getting
+    // rejected — every 60-90 seconds for the rest of the day. Every one of
+    // those attempts is a real HTTP call to Google that was guaranteed to
+    // fail (the fallback chain below already produces the exact same
+    // outcome without it), so detect the specific "RESOURCE_EXHAUSTED /
+    // daily quota" signature and back off for a full hour instead of 60s.
+    // Any other error (timeout, network blip, bad response, etc.) keeps
+    // the original short 60s breaker since those genuinely can clear up
+    // quickly and are worth retrying sooner.
+    const status = err.response?.status;
+    const bodyText = JSON.stringify(err.response?.data || '');
+    const isQuotaExhausted =
+      status === 429 &&
+      (bodyText.includes('RESOURCE_EXHAUSTED') ||
+        bodyText.includes('quotaId') ||
+        bodyText.includes('generate_content_free_tier_requests'));
+    const breakerMs = isQuotaExhausted ? 60 * 60 * 1000 : 60 * 1000;
+    logger.warn(
+      `Gemini direct API call failed: ${err.message}${
+        isQuotaExhausted ? ' (daily free-tier quota exhausted - backing off 1h)' : ''
+      } — trying OpenRouter fallback`
+    );
+    circuitBreakerUntil = Date.now() + breakerMs;
     try {
       const openRouterKey = process.env.OPENROUTER_API_KEY;
       if (openRouterKey && !openRouterKey.startsWith('your_') && openRouterKey.trim() !== '') {

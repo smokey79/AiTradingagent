@@ -37,6 +37,10 @@ _PERMANENT_MESSAGE_MARKERS = (
     "invalid_api_key",
     "authentication_error",
     "permission_denied",
+    "resource_exhausted",   # Gemini's free-tier daily quota error code, e.g.
+                             # "429 RESOURCE_EXHAUSTED... You exceeded your
+                             # current quota... GenerateRequestsPerDay
+                             # PerProjectPerModel-FreeTier... quotaValue: 20"
 )
 
 
@@ -252,6 +256,23 @@ class GeminiClient(LLMClient):
                     )
                     return response.text
                 except Exception as sdk_err:
+                    if _is_permanent_llm_error(sdk_err):
+                        # FIX 2026-09-26: the free tier's daily quota error
+                        # (RESOURCE_EXHAUSTED) was being swallowed here in
+                        # favour of falling through to _call_http_rest() -
+                        # which hits the exact same API key/quota and is
+                        # therefore guaranteed to also fail, just with a
+                        # terse "429 Client Error: Too Many Requests" that
+                        # carries none of the SDK error's informative text.
+                        # That meant _retry() below never saw a message it
+                        # could recognise as permanent, so it retried 3x
+                        # with 1s/2s/4s backoff - and each retry paid for
+                        # BOTH a wasted SDK call and a wasted REST call, 6
+                        # real HTTP requests to Google for a single already-
+                        # doomed generate_text() call. Re-raise immediately
+                        # instead so the informative SDK error (not the
+                        # REST fallback's terse one) is what _retry() sees.
+                        raise
                     logger.warning("Gemini SDK call failed (%s), using HTTP REST fallback.", sdk_err)
             return self._call_http_rest(prompt, max_tokens, temperature)
 
