@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-09-15T00:42:53.946019+00:00",
+  "symbol": "BTCUSDT",
+  "price": 78023.4,
+  "features": {
+    "price": 78023.4,
+    "change_pct": -0.219,
+    "volatility": 0.37,
+    "is_bullish": false
+  },
+  "analysis": "Independent Read: The bearish candle and negative 1-hour change suggest a near-term bearish bias for BTCUSDT. The low volatility level indicates a potentially coiled market ready to make a strong move, which could either be to the upside or downside. The risk to watch is a potential break below the $77,500 support level, which could trigger a more significant sell-off. This candle supports the naive momentum read, as the bearish momentum is likely to persist in the near term, but a breakout either way could shift the overall momentum.",
+  "model": "hermes3",
+  "elapsed_s": 62.3,
+  "note": "Supplementary commentary only \u2014 not part of the live trade-decision path."
+}

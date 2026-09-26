@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const logger = require("../utils/logger.js");
 
-const MEMORY_PATH = path.resolve("src/strategy/strategy_memory.json");
+const MEMORY_PATH = path.join(__dirname, "strategy_memory.json");
 
 function loadStrategyMemory() {
   try {

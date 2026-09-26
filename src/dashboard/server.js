@@ -36,15 +36,87 @@ const DEFI_WALLET_CHAINS = (process.env.DEFI_WALLET_CHAINS || 'cronos,ethereum')
 app.use(express.json());
 app.use(express.static(PUBLIC_DIR));
 
+// Python engine bridge — receives signals & arb opportunities
+const pythonBridge = require('../bridge/pythonBridge');
+app.use('/api', pythonBridge);
+
+// ─── Live AI agent votes (added 2026-09-15) ───────────────────────────────────
+// Serves the per-agent vote breakdown written by orchestrator/consensus.js,
+// merged with agent_health.json so silent agents are visibly silent rather
+// than just absent. Read-only; never touches trading state.
+app.get('/api/agent-votes', (req, res) => {
+  const fsx = require('fs');
+  const px = require('path');
+  const read = (name, fallback) => {
+    try { return JSON.parse(fsx.readFileSync(px.join(__dirname, '..', '..', 'data', name), 'utf8')); }
+    catch (_) { return fallback; }
+  };
+  const votes = read('latest_agent_votes.json', { pairs: {}, updatedAt: null });
+  const health = read('agent_health.json', {});
+
+  const healthByName = {};
+  for (const [k, v] of Object.entries(health)) {
+    if (v && typeof v === 'object') {
+      healthByName[k.toLowerCase()] = {
+        status: v.status || v.state || 'UNKNOWN',
+        lastError: String(v.lastError || v.error || '').slice(0, 160),
+      };
+    }
+  }
+
+  res.json({
+    _SAMPLE: votes._SAMPLE === true,   // so the page can say so loudly
+    updatedAt: votes.updatedAt,
+    pairs: votes.pairs || {},
+    health: healthByName,
+    thresholds: {
+      minConfidence: parseFloat(process.env.MIN_CONFIDENCE || '0.68'),
+      minWinRateGate: parseFloat(process.env.RISK_MIN_WIN_RATE_GATE || '0.68'),
+    },
+    serverTime: new Date().toISOString(),
+  });
+});
+
 // ─── REST Endpoints ────────────────────────────────────────────────────────────
 
-app.get('/api/health', (req, res) => {
+app.get('/api/health', async (req, res) => {
+  let tradingKit = { enabled: false };
+  try {
+    const tk = require('../data/tradingKitFeed');
+    if (tk.ENABLED) tradingKit = await tk.checkHealth();
+  } catch (_) {}
   res.json({
-    status: 'ok',
+    status:        'ok',
     uptimeSeconds: Math.floor(process.uptime()),
-    timestamp: new Date().toISOString(),
-    mode: process.env.PAPER_TRADING !== 'false' ? 'paper' : 'live',
+    timestamp:     new Date().toISOString(),
+    mode:          process.env.PAPER_TRADING !== 'false' ? 'paper' : 'live',
+    tradingKit,
   });
+});
+
+// TradingKit proxy endpoints
+app.get('/api/tradingkit/candles', async (req, res) => {
+  try {
+    const { fetchCandles } = require('../data/tradingKitFeed');
+    const data = await fetchCandles(req.query.symbol||'BTC/USDT', req.query.tf||'15m', parseInt(req.query.limit||100));
+    res.json({ success: true, data });
+  } catch (e) { res.status(500).json({ success: false, error: e.message }); }
+});
+
+app.get('/api/tradingkit/signal', async (req, res) => {
+  try {
+    const { fetchSignal } = require('../data/tradingKitFeed');
+    const data = await fetchSignal(req.query.symbol||'BTC/USDT');
+    res.json({ success: true, data });
+  } catch (e) { res.status(500).json({ success: false, error: e.message }); }
+});
+
+app.get('/api/tradingkit/indicators', async (req, res) => {
+  try {
+    const { fetchIndicators } = require('../data/tradingKitFeed');
+    const data = await fetchIndicators(req.query.symbol||'BTC/USDT', req.query.tf||'15m');
+    res.json({ success: true, data });
+  } catch (e) { res.status(500).json({ success: false, error: e.message }); }
 });
 
 app.get('/api/status', (req, res) => {
@@ -655,24 +727,52 @@ app.get('/api/full-stack', async (req, res) => {
 // ==============================================================================
 // YouTube Continuous Learning API Routes
 // ==============================================================================
-app.post('/api/learning/youtube', async (req, res) => {
+app.post(['/api/youtube/learn', '/api/learning/youtube'], async (req, res) => {
   try {
-    const { url, channel } = req.body || {};
+    const { url, channel, tag, channelId } = req.body || {};
     if (!url) return res.status(400).json({ success: false, error: 'YouTube URL required' });
     const { learnFromYouTubeUrl } = require('../learning/youtubeLearner');
-    const insight = await learnFromYouTubeUrl(url, channel);
+    const insight = await learnFromYouTubeUrl(url, channel, tag, channelId);
+    if (typeof broadcast === 'function') {
+      broadcast({ type: 'youtube_insight_learned', insight });
+    }
     res.json({ success: true, insight });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
-app.get('/api/learning/memory', (req, res) => {
+app.get(['/api/youtube/learned', '/api/learning/memory'], (req, res) => {
   try {
-    const { getLearnedAlpha } = require('../learning/youtubeLearner');
+    const { getLearnedAlpha, getLearningMemoryStats } = require('../learning/youtubeLearner');
     const limit = parseInt(req.query.limit || '20', 10);
-    const memory = getLearnedAlpha(limit);
-    res.json({ success: true, count: memory.length, memory });
+    const minRau = parseFloat(req.query.minRau || '0');
+    const memory = getLearnedAlpha(limit, minRau);
+    const stats = getLearningMemoryStats();
+    res.json({ success: true, count: memory.length, stats, memory });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/youtube/channels', (req, res) => {
+  try {
+    const { getTrackedChannels } = require('../learning/youtubeChannelScanner');
+    const channels = getTrackedChannels();
+    res.json({ success: true, count: channels.length, channels });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/youtube/scan-channels', async (req, res) => {
+  try {
+    const { scanAllChannels } = require('../learning/youtubeChannelScanner');
+    const result = await scanAllChannels(req.body || {});
+    if (typeof broadcast === 'function') {
+      broadcast({ type: 'youtube_channels_scanned', result });
+    }
+    res.json({ success: true, result });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -817,13 +917,71 @@ app.post('/api/settings/allocation', (req, res) => {
 });
 
 // ==============================================================================
-// DexScreener Live Meme Coin Breakout Scanner Route
+// DexScreener Live Meme Coin & DeFi Trade Opportunity Scanner Routes
 // ==============================================================================
 app.get('/api/dex/memecoins', async (req, res) => {
   try {
     const { scanTrendingMemeCoins } = require('../data/dexScreenerFeed');
     const memeCoins = await scanTrendingMemeCoins();
     res.json({ success: true, count: memeCoins.length, memeCoins, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/defi/opportunities', async (req, res) => {
+  try {
+    const { scanDeFiOpportunities, getCachedDeFiOpportunities } = require('../data/dexScreenerDeFiScanner');
+    const forceRefresh = req.query.refresh === 'true';
+    const opportunities = forceRefresh
+      ? await scanDeFiOpportunities({ forceRefresh: true })
+      : getCachedDeFiOpportunities();
+    res.json({
+      success: true,
+      count: opportunities.length,
+      opportunities,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/defi/scan', async (req, res) => {
+  try {
+    const { scanDeFiOpportunities } = require('../data/dexScreenerDeFiScanner');
+    const opportunities = await scanDeFiOpportunities({ forceRefresh: true });
+    if (typeof broadcast === 'function') {
+      broadcast({ type: 'defi_opportunities_updated', count: opportunities.length, opportunities });
+    }
+    res.json({
+      success: true,
+      message: 'DexScreener multi-chain DeFi opportunity scan completed',
+      count: opportunities.length,
+      opportunities,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/defi/chains', (req, res) => {
+  try {
+    const { SUPPORTED_CHAINS } = require('../data/dexScreenerDeFiScanner');
+    res.json({
+      success: true,
+      chains: SUPPORTED_CHAINS,
+      criteria: {
+        minLiquidityUsd: parseFloat(process.env.DEXSCREENER_MIN_LIQUIDITY_USD || '50000'),
+        minVolume24hUsd: parseFloat(process.env.DEXSCREENER_MIN_VOLUME_24H_USD || '100000'),
+        breakoutWindow: '+5.0% to +45.0%',
+        minBuyRatio: '48%',
+        stopLossFloor: '4.5%',
+        takeProfitTarget: '9.0% (TP1) - 15.0% (TP2)',
+      },
+      timestamp: new Date().toISOString(),
+    });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -840,6 +998,44 @@ app.get('/api/expert-allocator/:symbol?', async (req, res) => {
     const marketData = await fetchMarketData(symbol);
     const assessment = await assessAllocation(symbol.split('/')[0], marketData, { signal: 'BUY', confidence: 0.85 }, req.query);
     res.json({ success: true, assessment });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/benchmark/btc', async (req, res) => {
+  try {
+    const { getBtcBenchmark, calculatePortfolioBenchmarkVsBtc } = require('../data/btcBenchmark');
+    const { getPortfolioState, INITIAL_DEPOSIT } = require('../risk/riskGate');
+    const btc = await getBtcBenchmark();
+    const portfolio = getPortfolioState();
+    const summary = calculatePortfolioBenchmarkVsBtc({
+      currentPortfolioBalance: portfolio.currentBalance,
+      initialDeposit: INITIAL_DEPOSIT,
+      currentBtcPrice: btc?.price || 68000,
+    });
+    res.json({ success: true, btc, summary, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/learning/losses', (req, res) => {
+  try {
+    const { getLostTradeLessons } = require('../learning/lossLearner');
+    const limit = parseInt(req.query.limit || '20', 10);
+    const lessons = getLostTradeLessons(limit);
+    res.json({ success: true, count: lessons.length, lessons, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/expert/opportunities', async (req, res) => {
+  try {
+    const { scanAndCreateTrades } = require('../agents/expertTraderAgent');
+    const opps = await scanAndCreateTrades();
+    res.json({ success: true, count: opps.length, opportunities: opps, timestamp: new Date().toISOString() });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -1039,9 +1235,10 @@ wss.on('connection', (ws) => {
   });
 });
 
-// Expose broadcast hooks globally for orchestrator
+// Expose broadcast hooks globally for orchestrator & Python bridge
 global.broadcastDashboardEvent = broadcast;
 global.dashboardBroadcast = broadcast;
+global.broadcastToClients = broadcast;
 
 function startServer() {
   return new Promise((resolve) => {

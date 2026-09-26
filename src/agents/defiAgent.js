@@ -41,15 +41,34 @@ async function getSignal(symbol, marketData) {
     await throttleRequest();
 
     const { data } = await axios.get(`https://api.dexscreener.com/latest/dex/search?q=${cleanSymbol}%20USDT`, { timeout: 6000 });
+    const supportedChains = ['ethereum', 'arbitrum', 'optimism', 'solana', 'avalanche', 'base', 'cronos', 'bsc', 'polygon'];
     const pairs = (data?.pairs || []).filter(p => 
       p.priceUsd && parseFloat(p.priceUsd) > 0 &&
-      ['ethereum', 'arbitrum', 'optimism', 'solana', 'avalanche'].includes(p.chainId)
+      supportedChains.includes(p.chainId)
     );
 
     let result;
 
     if (pairs.length === 0) {
-      result = { signal: 'HOLD', confidence: 0.70, weight: 1.0, reason: '[HEALTHY] No valid DEX liquidity found on supported chains', rawResponse: 'No pairs' };
+      // Check cached DeFi opportunity scanner for match
+      try {
+        const { getCachedDeFiOpportunities } = require('../data/dexScreenerDeFiScanner');
+        const cachedDeFi = getCachedDeFiOpportunities();
+        const match = cachedDeFi.find(c => c.symbol === cleanSymbol);
+        if (match && match.signal === 'BUY') {
+          result = {
+            signal: 'BUY',
+            confidence: match.confidence,
+            weight: 1.5,
+            reason: `[HEALTHY] DeFi DexScreener Scanner: Verified Breakout on ${match.chain} (${match.dexId}) | Quality: ${match.qualityScore}/100 | Liq: $${(match.liquidityUsd/1e6).toFixed(2)}M | Vol: $${(match.volume24hUsd/1e6).toFixed(2)}M | Chg: +${match.change24h}%`,
+            rawResponse: match,
+          };
+        } else {
+          result = { signal: 'HOLD', confidence: 0.70, weight: 1.0, reason: '[HEALTHY] No valid DEX liquidity found on supported chains', rawResponse: 'No pairs' };
+        }
+      } catch (_) {
+        result = { signal: 'HOLD', confidence: 0.70, weight: 1.0, reason: '[HEALTHY] No valid DEX liquidity found on supported chains', rawResponse: 'No pairs' };
+      }
     } else {
       // Find the pair with the most liquidity
       pairs.sort((a, b) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0));
@@ -98,4 +117,15 @@ async function getSignal(symbol, marketData) {
   }
 }
 
-module.exports = { getSignal };
+/**
+ * Discovers and scans top DeFi breakout trade setups across all supported DEX chains.
+ */
+async function scanDeFiUniverse(options = {}) {
+  const { scanDeFiOpportunities } = require('../data/dexScreenerDeFiScanner');
+  return scanDeFiOpportunities(options);
+}
+
+module.exports = {
+  getSignal,
+  scanDeFiUniverse,
+};

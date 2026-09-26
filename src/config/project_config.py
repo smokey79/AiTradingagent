@@ -72,7 +72,7 @@ class CapitalAndRiskConfig:
     max_trade_size_usdt: float = float(os.getenv("MAX_TRADE_SIZE_USDT", "50.0"))
     max_open_trades: int = int(os.getenv("MAX_OPEN_TRADES", "5"))
     max_daily_loss_usdt: float = float(os.getenv("MAX_DAILY_LOSS_USDT", "50.0"))
-    max_portfolio_risk: float = float(os.getenv("MAX_PORTFOLIO_RISK", "0.02"))
+    max_portfolio_risk: float = 0.02 if "dynamic" in str(os.getenv("MAX_PORTFOLIO_RISK", "dynamic")).lower() else float(os.getenv("MAX_PORTFOLIO_RISK", "0.02"))
     max_drawdown_limit: float = float(os.getenv("MAX_DRAWDOWN_LIMIT", "0.12"))
     ruin_probability_limit: float = float(os.getenv("RUIN_PROBABILITY_LIMIT", "0.01"))
 

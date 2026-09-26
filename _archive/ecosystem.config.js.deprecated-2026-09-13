@@ -1,0 +1,175 @@
+// ecosystem.config.js
+//
+// ⚠ DEPRECATED 2026-09-13 — superseded by ecosystem.config.cjs.
+// This file still includes trading-api.py / would re-enable the legacy
+// Python engines that ecosystem.config.cjs deliberately disabled on
+// 2026-09-03 (they wrote to the same trade_ledger.json / portfolio_state.json
+// as the Node consensus loop, corrupting win-rate numbers). Kept here
+// unmodified for reference only — do not `pm2 start` this file. Use
+// `pm2 start ecosystem.config.cjs` (LAUNCH-AGENT.ps1 does this automatically).
+//
+// Master PM2 Process Stack for AiTradingAgent
+// Start : pm2 start ecosystem.config.js --env paper
+// Reload: pm2 reload ecosystem.config.js --env paper
+// Stop  : pm2 stop all
+// Logs  : pm2 logs
+// Status: pm2 status
+
+module.exports = {
+  apps: [
+    // ── 1. Live Dashboard & WebSocket Server (port 3001) ────────────────────
+    {
+      name:          "dashboard",
+      script:        "src/dashboard/server.js",
+      cwd:           "F:/aitradingagent",
+      interpreter:   "node",
+      watch:         false,
+      autorestart:   true,
+      max_restarts:  15,
+      restart_delay: 5000,
+      error_file:    "logs/dashboard-err.log",
+      out_file:      "logs/dashboard-out.log",
+      env: {
+        NODE_ENV:      "production",
+        PORT:          "3001",
+        DASHBOARD_PORT:"3001",
+      },
+    },
+
+    // ── 2. Master 13-Agent Consensus Trading Orchestrator ──────────────────
+    {
+      name:          "trading-orchestrator",
+      script:        "src/orchestrator/index.js",
+      cwd:           "F:/aitradingagent",
+      interpreter:   "node",
+      watch:         false,
+      autorestart:   true,
+      max_restarts:  30,
+      restart_delay: 10000,
+      error_file:    "logs/orchestrator-err.log",
+      out_file:      "logs/orchestrator-out.log",
+      env_paper: {
+        NODE_ENV:         "development",
+        PAPER_TRADING:    "true",
+        PAPER_TRADE_MODE: "true",
+      },
+      env_live: {
+        NODE_ENV:         "production",
+        PAPER_TRADING:    "false",
+        PAPER_TRADE_MODE: "false",
+      },
+    },
+
+    // ── 3. Telegram Signal & Alpha Listener ─────────────────────────────────
+    {
+      name:          "telegram-listener",
+      script:        "src/notifications/telegramListener.js",
+      cwd:           "F:/aitradingagent",
+      interpreter:   "node",
+      watch:         false,
+      autorestart:   true,
+      max_restarts:  20,
+      restart_delay: 20000,
+      error_file:    "logs/telegram-err.log",
+      out_file:      "logs/telegram-out.log",
+    },
+
+    // ── 4. Python Multi-Chain Arbitrage Scanner ─────────────────────────────
+    {
+      name:          "arb-scanner",
+      script:        "src/flashloan/arbitrage_scanner.py",
+      cwd:           "F:/aitradingagent",
+      interpreter:   "F:/aitradingagent/venv/Scripts/python.exe",
+      watch:         false,
+      autorestart:   true,
+      max_restarts:  15,
+      restart_delay: 10000,
+      error_file:    "logs/arb-scanner-err.log",
+      out_file:      "logs/arb-scanner-out.log",
+      env_paper: {
+        PAPER_TRADE_MODE:   "true",
+        SCAN_INTERVAL_S:    "60",
+        MIN_NET_PROFIT_USD: "1.50",
+        TRADE_AMOUNT_USD:   "1000",
+      },
+      env_live: {
+        PAPER_TRADE_MODE:   "false",
+        SCAN_INTERVAL_S:    "30",
+        MIN_NET_PROFIT_USD: "5.00",
+        TRADE_AMOUNT_USD:   "5000",
+      },
+    },
+
+    // ── 5. Python Multi-LLM Debate Engine ───────────────────────────────────
+    {
+      name:          "python-debate",
+      script:        "scripts/debate_runner.py",
+      cwd:           "F:/aitradingagent",
+      interpreter:   "F:/aitradingagent/venv/Scripts/python.exe",
+      watch:         false,
+      autorestart:   true,
+      max_restarts:  15,
+      restart_delay: 10000,
+      error_file:    "logs/debate-err.log",
+      out_file:      "logs/debate-out.log",
+      env_paper: {
+        PAPER_TRADE_MODE:  "true",
+        DEBATE_INTERVAL_S: "120",
+        DEBATE_SYMBOL:     "BTCUSDT",
+      },
+      env_live: {
+        PAPER_TRADE_MODE:  "false",
+        DEBATE_INTERVAL_S: "60",
+        DEBATE_SYMBOL:     "BTCUSDT",
+      },
+    },
+
+    // ── 6. FastAPI Webhook & Backtest Server (port 8000) ────────────────────
+    {
+      name:          "fastapi",
+      script:        "main.py",
+      cwd:           "F:/aitradingagent",
+      interpreter:   "F:/aitradingagent/venv/Scripts/python.exe",
+      watch:         false,
+      autorestart:   true,
+      max_restarts:  10,
+      restart_delay: 5000,
+      error_file:    "logs/fastapi-err.log",
+      out_file:      "logs/fastapi-out.log",
+      env_paper: {
+        HOST:             "127.0.0.1",
+        PORT:             "8000",
+        PAPER_TRADE_MODE: "true",
+      },
+      env_live: {
+        HOST:             "0.0.0.0",
+        PORT:             "8000",
+        PAPER_TRADE_MODE: "false",
+      },
+    },
+
+    // ── 7. MCP Risk Gate Server ─────────────────────────────────────────────
+    {
+      name:          "risk-gate",
+      script:        "index.js",
+      cwd:           "F:/aitradingagent/mcp-servers/risk-gate-mcp",
+      interpreter:   "node",
+      watch:         false,
+      autorestart:   true,
+      max_restarts:  10,
+      restart_delay: 10000,
+    },
+
+    // ── 8. MCP Trading Data Server ──────────────────────────────────────────
+    {
+      name:          "trading-data",
+      script:        "index.js",
+      cwd:           "F:/aitradingagent/mcp-servers/trading-data-mcp",
+      interpreter:   "node",
+      watch:         false,
+      autorestart:   true,
+      max_restarts:  10,
+      restart_delay: 10000,
+    },
+  ],
+};

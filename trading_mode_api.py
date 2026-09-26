@@ -154,7 +154,7 @@ def risk_gates_status():
         'risk_gate_active': True,
         'config': {
             'max_position_size': float(os.getenv('MAX_POSITION_SIZE', 10000)),
-            'max_portfolio_risk': float(os.getenv('MAX_PORTFOLIO_RISK', 0.02)),
+            'max_portfolio_risk': 'dynamic' if 'dynamic' in str(os.getenv('MAX_PORTFOLIO_RISK', 'dynamic')).lower() else float(os.getenv('MAX_PORTFOLIO_RISK', 0.02)),
             'max_leverage': int(os.getenv('MAX_LEVERAGE', 5)),
             'max_open_trades': int(os.getenv('MAX_OPEN_TRADES', 5)),
             'stop_loss_pct': float(os.getenv('STOP_LOSS_PERCENT', 5)),

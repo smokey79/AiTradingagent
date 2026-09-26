@@ -31,10 +31,24 @@ function getBinanceClient() {
   if (!_binanceClient) {
     _binanceClient = new ccxt.binance({
       enableRateLimit: true,
-      timeout: 5000,  // tightened: Binance p99 latency is <2s, 8s was too generous
+      timeout: 4000,
     });
   }
   return _binanceClient;
+}
+
+let _bitgetClient = null;
+function getBitgetClient() {
+  if (!_bitgetClient) {
+    _bitgetClient = new ccxt.bitget({
+      apiKey: process.env.BITGET_API_KEY,
+      secret: process.env.BITGET_API_SECRET || process.env.BITGET_SECRET || process.env.BITGET_SECRET_KEY,
+      password: process.env.BITGET_API_PASSPHRASE || process.env.BITGET_PASSPHRASE,
+      enableRateLimit: true,
+      timeout: 4000,
+    });
+  }
+  return _bitgetClient;
 }
 
 // ── Cache layer to respect rate limits ──────────────────────────────────────
@@ -82,39 +96,51 @@ async function fetchCandlesAndOrderBook(pair) {
     return cache.candles[symbol].data;
   }
 
+  let candles = null;
+  let ob = null;
+  let ticker = null;
+
+  // 1. Primary Attempt: Binance CCXT
   try {
     const exchange = getBinanceClient();
-    const [ohlcv, ob, ticker] = await Promise.all([
+    const [ohlcv, orderBook, tick] = await Promise.all([
       exchange.fetchOHLCV(formattedSymbol, '1h', undefined, 100).catch(() => null),
       exchange.fetchOrderBook(formattedSymbol, 10).catch(() => null),
       exchange.fetchTicker(formattedSymbol).catch(() => null),
     ]);
+    if (ohlcv && ohlcv.length > 0) candles = ohlcv;
+    if (orderBook) ob = orderBook;
+    if (tick) ticker = tick;
+  } catch (_) {}
 
-    let candles = ohlcv;
-    if (!candles || candles.length === 0) {
-      const basePrice = SEED_PRICES[symbol] || 100;
-      candles = generateSyntheticCandles(basePrice, 100);
-    }
-
-    const result = {
-      candles,
-      orderBook: ob || { bids: [[ticker?.bid || SEED_PRICES[symbol] || 100, 5]], asks: [[ticker?.ask || (SEED_PRICES[symbol] || 100) * 1.001, 5]] },
-      ticker: ticker || { last: SEED_PRICES[symbol] || 100, percentage: 1.2, quoteVolume: 50000000 },
-    };
-    cache.candles[symbol] = { data: result, ts: now };
-    return result;
-  } catch (err) {
-    const basePrice = SEED_PRICES[symbol] || 100;
-    const candles = generateSyntheticCandles(basePrice, 100);
-    return {
-      candles,
-      orderBook: {
-        bids: [[basePrice * 0.9995, 12.5], [basePrice * 0.9990, 20.0]],
-        asks: [[basePrice * 1.0005, 14.0], [basePrice * 1.0010, 18.2]],
-      },
-      ticker: { last: basePrice, percentage: 1.45, quoteVolume: 45000000 },
-    };
+  // 2. Secondary Failover: Bitget CCXT (fully configured & working with live order book & candles)
+  if (!candles || candles.length === 0 || !ticker) {
+    try {
+      const bitget = getBitgetClient();
+      const [bgOhlcv, bgOb, bgTick] = await Promise.all([
+        (!candles || candles.length === 0) ? bitget.fetchOHLCV(formattedSymbol, '1h', undefined, 100).catch(() => null) : null,
+        !ob ? bitget.fetchOrderBook(formattedSymbol, 10).catch(() => null) : null,
+        !ticker ? bitget.fetchTicker(formattedSymbol).catch(() => null) : null,
+      ]);
+      if (bgOhlcv && bgOhlcv.length > 0) candles = bgOhlcv;
+      if (bgOb) ob = bgOb;
+      if (bgTick) ticker = bgTick;
+    } catch (_) {}
   }
+
+  // 3. Fallback: If exchange candles are still missing, use synthetic only as last resort
+  if (!candles || candles.length === 0) {
+    const basePrice = ticker?.last || SEED_PRICES[symbol] || 100;
+    candles = generateSyntheticCandles(basePrice, 100);
+  }
+
+  const result = {
+    candles,
+    orderBook: ob || { bids: [[ticker?.bid || SEED_PRICES[symbol] || 100, 5]], asks: [[ticker?.ask || (SEED_PRICES[symbol] || 100) * 1.001, 5]] },
+    ticker: ticker || { last: SEED_PRICES[symbol] || 100, percentage: 1.2, quoteVolume: 50000000 },
+  };
+  cache.candles[symbol] = { data: result, ts: now };
+  return result;
 }
 
 function generateSyntheticCandles(currentPrice, count = 100) {

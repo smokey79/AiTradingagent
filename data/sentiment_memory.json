@@ -1,128 +1,12 @@
 [
   {
-    "symbol": "SPCXB",
+    "symbol": "BNB",
     "signal": "HOLD",
     "score": 0.05,
     "confidence": 0.6,
     "mentions": 1,
-    "timestamp": 1788465023673,
-    "evaluated": false
-  },
-  {
-    "symbol": "BCH",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465023697,
-    "evaluated": false
-  },
-  {
-    "symbol": "AAVE",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465023726,
-    "evaluated": false
-  },
-  {
-    "symbol": "CRCLB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465023746,
-    "evaluated": false
-  },
-  {
-    "symbol": "WBETH",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465023769,
-    "evaluated": false
-  },
-  {
-    "symbol": "QQQB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465023793,
-    "evaluated": false
-  },
-  {
-    "symbol": "MSTRB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465023822,
-    "evaluated": false
-  },
-  {
-    "symbol": "AVGOB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465023847,
-    "evaluated": false
-  },
-  {
-    "symbol": "BETH",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465023869,
-    "evaluated": false
-  },
-  {
-    "symbol": "LTC",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465023897,
-    "evaluated": false
-  },
-  {
-    "symbol": "TSLAB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465023921,
-    "evaluated": false
-  },
-  {
-    "symbol": "GOOGLB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465023943,
-    "evaluated": false
-  },
-  {
-    "symbol": "SKHYB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465023966,
-    "evaluated": false
-  },
-  {
-    "symbol": "CRO",
-    "signal": "BUY",
-    "score": 0.48,
-    "confidence": 0.74,
-    "mentions": 3,
-    "timestamp": 1788465024050,
+    "source": "calibrated_base",
+    "timestamp": 1789131512348,
     "evaluated": false
   },
   {
@@ -131,7 +15,138 @@
     "score": 0.1,
     "confidence": 0.65,
     "mentions": 2,
-    "timestamp": 1788465024078,
+    "source": "calibrated_base",
+    "timestamp": 1789131520543,
+    "evaluated": false
+  },
+  {
+    "symbol": "AVAX",
+    "signal": "HOLD",
+    "score": 0.1,
+    "confidence": 0.65,
+    "mentions": 2,
+    "source": "calibrated_base",
+    "timestamp": 1789131521531,
+    "evaluated": false
+  },
+  {
+    "symbol": "LINK",
+    "signal": "BUY",
+    "score": 0.5,
+    "confidence": 0.75,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131527558,
+    "evaluated": false
+  },
+  {
+    "symbol": "LINK",
+    "signal": "BUY",
+    "score": 0.5,
+    "confidence": 0.75,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131530670,
+    "evaluated": false
+  },
+  {
+    "symbol": "AVAX",
+    "signal": "HOLD",
+    "score": 0.1,
+    "confidence": 0.65,
+    "mentions": 2,
+    "source": "calibrated_base",
+    "timestamp": 1789131530806,
+    "evaluated": false
+  },
+  {
+    "symbol": "AVAX",
+    "signal": "HOLD",
+    "score": 0.1,
+    "confidence": 0.65,
+    "mentions": 2,
+    "source": "calibrated_base",
+    "timestamp": 1789131530938,
+    "evaluated": false
+  },
+  {
+    "symbol": "AVAX",
+    "signal": "HOLD",
+    "score": 0.1,
+    "confidence": 0.65,
+    "mentions": 2,
+    "source": "calibrated_base",
+    "timestamp": 1789131532584,
+    "evaluated": false
+  },
+  {
+    "symbol": "LINK",
+    "signal": "BUY",
+    "score": 0.5,
+    "confidence": 0.75,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131535441,
+    "evaluated": false
+  },
+  {
+    "symbol": "AVAX",
+    "signal": "HOLD",
+    "score": 0.1,
+    "confidence": 0.65,
+    "mentions": 2,
+    "source": "calibrated_base",
+    "timestamp": 1789131535576,
+    "evaluated": false
+  },
+  {
+    "symbol": "AVAX",
+    "signal": "HOLD",
+    "score": 0.1,
+    "confidence": 0.65,
+    "mentions": 2,
+    "source": "calibrated_base",
+    "timestamp": 1789131535681,
+    "evaluated": false
+  },
+  {
+    "symbol": "AVAX",
+    "signal": "HOLD",
+    "score": 0.1,
+    "confidence": 0.65,
+    "mentions": 2,
+    "source": "calibrated_base",
+    "timestamp": 1789131535762,
+    "evaluated": false
+  },
+  {
+    "symbol": "LINK",
+    "signal": "BUY",
+    "score": 0.5,
+    "confidence": 0.75,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131535882,
+    "evaluated": false
+  },
+  {
+    "symbol": "LINK",
+    "signal": "BUY",
+    "score": 0.5,
+    "confidence": 0.75,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131536683,
+    "evaluated": false
+  },
+  {
+    "symbol": "LINK",
+    "signal": "BUY",
+    "score": 0.5,
+    "confidence": 0.75,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131540363,
     "evaluated": false
   },
   {
@@ -140,52 +155,418 @@
     "score": 0.52,
     "confidence": 0.76,
     "mentions": 3,
-    "timestamp": 1788465024103,
+    "source": "calibrated_base",
+    "timestamp": 1789131547082,
     "evaluated": false
   },
   {
-    "symbol": "BTC",
+    "symbol": "ARB",
     "signal": "BUY",
-    "score": 0.65,
-    "confidence": 0.82,
-    "mentions": 6,
-    "timestamp": 1788465025008,
+    "score": 0.52,
+    "confidence": 0.76,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131549563,
     "evaluated": false
   },
   {
-    "symbol": "ETH",
+    "symbol": "AAVE",
     "signal": "BUY",
     "score": 0.55,
-    "confidence": 0.78,
-    "mentions": 4,
-    "timestamp": 1788465025067,
+    "confidence": 0.77,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131554312,
     "evaluated": false
   },
   {
-    "symbol": "WBTC",
+    "symbol": "AAVE",
+    "signal": "BUY",
+    "score": 0.55,
+    "confidence": 0.77,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131558629,
+    "evaluated": false
+  },
+  {
+    "symbol": "ARB",
+    "signal": "BUY",
+    "score": 0.52,
+    "confidence": 0.76,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131559475,
+    "evaluated": false
+  },
+  {
+    "symbol": "ARB",
+    "signal": "BUY",
+    "score": 0.52,
+    "confidence": 0.76,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131559743,
+    "evaluated": false
+  },
+  {
+    "symbol": "ARB",
+    "signal": "BUY",
+    "score": 0.52,
+    "confidence": 0.76,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131561180,
+    "evaluated": false
+  },
+  {
+    "symbol": "AAVE",
+    "signal": "BUY",
+    "score": 0.55,
+    "confidence": 0.77,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131564579,
+    "evaluated": false
+  },
+  {
+    "symbol": "ARB",
+    "signal": "BUY",
+    "score": 0.52,
+    "confidence": 0.76,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131564679,
+    "evaluated": false
+  },
+  {
+    "symbol": "ARB",
+    "signal": "BUY",
+    "score": 0.52,
+    "confidence": 0.76,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131564765,
+    "evaluated": false
+  },
+  {
+    "symbol": "AAVE",
+    "signal": "BUY",
+    "score": 0.55,
+    "confidence": 0.77,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131564871,
+    "evaluated": false
+  },
+  {
+    "symbol": "ARB",
+    "signal": "BUY",
+    "score": 0.52,
+    "confidence": 0.76,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131564997,
+    "evaluated": false
+  },
+  {
+    "symbol": "AAVE",
+    "signal": "BUY",
+    "score": 0.55,
+    "confidence": 0.77,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131565348,
+    "evaluated": false
+  },
+  {
+    "symbol": "AAVE",
+    "signal": "BUY",
+    "score": 0.55,
+    "confidence": 0.77,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131568921,
+    "evaluated": false
+  },
+  {
+    "symbol": "OP",
+    "signal": "HOLD",
+    "score": 0.15,
+    "confidence": 0.68,
+    "mentions": 2,
+    "source": "calibrated_base",
+    "timestamp": 1789131574153,
+    "evaluated": false
+  },
+  {
+    "symbol": "OP",
+    "signal": "HOLD",
+    "score": 0.15,
+    "confidence": 0.68,
+    "mentions": 2,
+    "source": "calibrated_base",
+    "timestamp": 1789131575974,
+    "evaluated": false
+  },
+  {
+    "symbol": "SUI",
     "signal": "HOLD",
     "score": 0.05,
     "confidence": 0.6,
     "mentions": 1,
-    "timestamp": 1788465025191,
+    "source": "calibrated_base",
+    "timestamp": 1789131580999,
     "evaluated": false
   },
   {
-    "symbol": "ZEC",
+    "symbol": "SUI",
     "signal": "HOLD",
     "score": 0.05,
     "confidence": 0.6,
     "mentions": 1,
-    "timestamp": 1788465025255,
+    "source": "calibrated_base",
+    "timestamp": 1789131585669,
     "evaluated": false
   },
   {
-    "symbol": "XAUT",
+    "symbol": "OP",
+    "signal": "HOLD",
+    "score": 0.15,
+    "confidence": 0.68,
+    "mentions": 2,
+    "source": "calibrated_base",
+    "timestamp": 1789131588148,
+    "evaluated": false
+  },
+  {
+    "symbol": "OP",
+    "signal": "HOLD",
+    "score": 0.15,
+    "confidence": 0.68,
+    "mentions": 2,
+    "source": "calibrated_base",
+    "timestamp": 1789131588655,
+    "evaluated": false
+  },
+  {
+    "symbol": "OP",
+    "signal": "HOLD",
+    "score": 0.15,
+    "confidence": 0.68,
+    "mentions": 2,
+    "source": "calibrated_base",
+    "timestamp": 1789131589753,
+    "evaluated": false
+  },
+  {
+    "symbol": "OP",
+    "signal": "HOLD",
+    "score": 0.15,
+    "confidence": 0.68,
+    "mentions": 2,
+    "source": "calibrated_base",
+    "timestamp": 1789131594163,
+    "evaluated": false
+  },
+  {
+    "symbol": "SUI",
     "signal": "HOLD",
     "score": 0.05,
     "confidence": 0.6,
     "mentions": 1,
-    "timestamp": 1788465025313,
+    "source": "calibrated_base",
+    "timestamp": 1789131594236,
+    "evaluated": false
+  },
+  {
+    "symbol": "SUI",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131594350,
+    "evaluated": false
+  },
+  {
+    "symbol": "SUI",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131594457,
+    "evaluated": false
+  },
+  {
+    "symbol": "OP",
+    "signal": "HOLD",
+    "score": 0.15,
+    "confidence": 0.68,
+    "mentions": 2,
+    "source": "calibrated_base",
+    "timestamp": 1789131594542,
+    "evaluated": false
+  },
+  {
+    "symbol": "OP",
+    "signal": "HOLD",
+    "score": 0.15,
+    "confidence": 0.68,
+    "mentions": 2,
+    "source": "calibrated_base",
+    "timestamp": 1789131594647,
+    "evaluated": false
+  },
+  {
+    "symbol": "SUI",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131597615,
+    "evaluated": false
+  },
+  {
+    "symbol": "MATIC",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131602875,
+    "evaluated": false
+  },
+  {
+    "symbol": "MATIC",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131604592,
+    "evaluated": false
+  },
+  {
+    "symbol": "NEAR",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131609753,
+    "evaluated": false
+  },
+  {
+    "symbol": "NEAR",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131613612,
+    "evaluated": false
+  },
+  {
+    "symbol": "MATIC",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131616690,
+    "evaluated": false
+  },
+  {
+    "symbol": "MATIC",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131617365,
+    "evaluated": false
+  },
+  {
+    "symbol": "MATIC",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131618365,
+    "evaluated": false
+  },
+  {
+    "symbol": "MATIC",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131623438,
+    "evaluated": false
+  },
+  {
+    "symbol": "NEAR",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131623724,
+    "evaluated": false
+  },
+  {
+    "symbol": "NEAR",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131624001,
+    "evaluated": false
+  },
+  {
+    "symbol": "NEAR",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131624073,
+    "evaluated": false
+  },
+  {
+    "symbol": "MATIC",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131624200,
+    "evaluated": false
+  },
+  {
+    "symbol": "MATIC",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131624280,
+    "evaluated": false
+  },
+  {
+    "symbol": "NEAR",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131626200,
     "evaluated": false
   },
   {
@@ -194,250 +575,8 @@
     "score": 0.05,
     "confidence": 0.6,
     "mentions": 1,
-    "timestamp": 1788465025377,
-    "evaluated": false
-  },
-  {
-    "symbol": "PAXG",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465025442,
-    "evaluated": false
-  },
-  {
-    "symbol": "SOL",
-    "signal": "BUY",
-    "score": 0.6,
-    "confidence": 0.8,
-    "mentions": 5,
-    "timestamp": 1788465025561,
-    "evaluated": false
-  },
-  {
-    "symbol": "SNDKB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465025625,
-    "evaluated": false
-  },
-  {
-    "symbol": "TAO",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465025694,
-    "evaluated": false
-  },
-  {
-    "symbol": "MUB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465025759,
-    "evaluated": false
-  },
-  {
-    "symbol": "USDC",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465025835,
-    "evaluated": false
-  },
-  {
-    "symbol": "SPCXB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465025899,
-    "evaluated": false
-  },
-  {
-    "symbol": "BCH",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465025959,
-    "evaluated": false
-  },
-  {
-    "symbol": "AAVE",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465026010,
-    "evaluated": false
-  },
-  {
-    "symbol": "CRCLB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465026068,
-    "evaluated": false
-  },
-  {
-    "symbol": "WBETH",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465026141,
-    "evaluated": false
-  },
-  {
-    "symbol": "QQQB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465026206,
-    "evaluated": false
-  },
-  {
-    "symbol": "MSTRB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465026264,
-    "evaluated": false
-  },
-  {
-    "symbol": "AVGOB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465026324,
-    "evaluated": false
-  },
-  {
-    "symbol": "BETH",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465026384,
-    "evaluated": false
-  },
-  {
-    "symbol": "LTC",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465026498,
-    "evaluated": false
-  },
-  {
-    "symbol": "TSLAB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465026551,
-    "evaluated": false
-  },
-  {
-    "symbol": "GOOGLB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465026605,
-    "evaluated": false
-  },
-  {
-    "symbol": "SKHYB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465026666,
-    "evaluated": false
-  },
-  {
-    "symbol": "CRO",
-    "signal": "BUY",
-    "score": 0.48,
-    "confidence": 0.74,
-    "mentions": 3,
-    "timestamp": 1788465026724,
-    "evaluated": false
-  },
-  {
-    "symbol": "AVAX",
-    "signal": "HOLD",
-    "score": 0.1,
-    "confidence": 0.65,
-    "mentions": 2,
-    "timestamp": 1788465026791,
-    "evaluated": false
-  },
-  {
-    "symbol": "ARB",
-    "signal": "BUY",
-    "score": 0.52,
-    "confidence": 0.76,
-    "mentions": 3,
-    "timestamp": 1788465026870,
-    "evaluated": false
-  },
-  {
-    "symbol": "BTC",
-    "signal": "BUY",
-    "score": 0.65,
-    "confidence": 0.82,
-    "mentions": 6,
-    "timestamp": 1788465088231,
-    "evaluated": false
-  },
-  {
-    "symbol": "ETH",
-    "signal": "BUY",
-    "score": 0.55,
-    "confidence": 0.78,
-    "mentions": 4,
-    "timestamp": 1788465088266,
-    "evaluated": false
-  },
-  {
-    "symbol": "WBTC",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465088303,
-    "evaluated": false
-  },
-  {
-    "symbol": "ZEC",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465088341,
-    "evaluated": false
-  },
-  {
-    "symbol": "XAUT",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465088379,
+    "source": "calibrated_base",
+    "timestamp": 1789131630567,
     "evaluated": false
   },
   {
@@ -446,250 +585,8 @@
     "score": 0.05,
     "confidence": 0.6,
     "mentions": 1,
-    "timestamp": 1788465088419,
-    "evaluated": false
-  },
-  {
-    "symbol": "PAXG",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465088460,
-    "evaluated": false
-  },
-  {
-    "symbol": "SOL",
-    "signal": "BUY",
-    "score": 0.6,
-    "confidence": 0.8,
-    "mentions": 5,
-    "timestamp": 1788465088502,
-    "evaluated": false
-  },
-  {
-    "symbol": "SNDKB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465088539,
-    "evaluated": false
-  },
-  {
-    "symbol": "TAO",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465088575,
-    "evaluated": false
-  },
-  {
-    "symbol": "MUB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465088614,
-    "evaluated": false
-  },
-  {
-    "symbol": "USDC",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465088655,
-    "evaluated": false
-  },
-  {
-    "symbol": "SPCXB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465088695,
-    "evaluated": false
-  },
-  {
-    "symbol": "BCH",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465088735,
-    "evaluated": false
-  },
-  {
-    "symbol": "AAVE",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465088826,
-    "evaluated": false
-  },
-  {
-    "symbol": "CRCLB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465088859,
-    "evaluated": false
-  },
-  {
-    "symbol": "WBETH",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465088918,
-    "evaluated": false
-  },
-  {
-    "symbol": "QQQB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465088966,
-    "evaluated": false
-  },
-  {
-    "symbol": "MSTRB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465089012,
-    "evaluated": false
-  },
-  {
-    "symbol": "AVGOB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465089050,
-    "evaluated": false
-  },
-  {
-    "symbol": "BETH",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465089089,
-    "evaluated": false
-  },
-  {
-    "symbol": "LTC",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465089129,
-    "evaluated": false
-  },
-  {
-    "symbol": "TSLAB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465089168,
-    "evaluated": false
-  },
-  {
-    "symbol": "GOOGLB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465089206,
-    "evaluated": false
-  },
-  {
-    "symbol": "SKHYB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465089250,
-    "evaluated": false
-  },
-  {
-    "symbol": "CRO",
-    "signal": "BUY",
-    "score": 0.48,
-    "confidence": 0.74,
-    "mentions": 3,
-    "timestamp": 1788465089289,
-    "evaluated": false
-  },
-  {
-    "symbol": "AVAX",
-    "signal": "HOLD",
-    "score": 0.1,
-    "confidence": 0.65,
-    "mentions": 2,
-    "timestamp": 1788465089326,
-    "evaluated": false
-  },
-  {
-    "symbol": "ARB",
-    "signal": "BUY",
-    "score": 0.52,
-    "confidence": 0.76,
-    "mentions": 3,
-    "timestamp": 1788465089360,
-    "evaluated": false
-  },
-  {
-    "symbol": "BTC",
-    "signal": "BUY",
-    "score": 0.65,
-    "confidence": 0.82,
-    "mentions": 6,
-    "timestamp": 1788465091136,
-    "evaluated": false
-  },
-  {
-    "symbol": "ETH",
-    "signal": "BUY",
-    "score": 0.55,
-    "confidence": 0.78,
-    "mentions": 4,
-    "timestamp": 1788465091183,
-    "evaluated": false
-  },
-  {
-    "symbol": "WBTC",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465091219,
-    "evaluated": false
-  },
-  {
-    "symbol": "ZEC",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465091260,
-    "evaluated": false
-  },
-  {
-    "symbol": "XAUT",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465091355,
+    "source": "calibrated_base",
+    "timestamp": 1789131633211,
     "evaluated": false
   },
   {
@@ -698,205 +595,408 @@
     "score": 0.05,
     "confidence": 0.6,
     "mentions": 1,
-    "timestamp": 1788465091395,
+    "source": "calibrated_base",
+    "timestamp": 1789131645198,
     "evaluated": false
   },
   {
-    "symbol": "PAXG",
+    "symbol": "BNB",
     "signal": "HOLD",
     "score": 0.05,
     "confidence": 0.6,
     "mentions": 1,
-    "timestamp": 1788465091439,
+    "source": "calibrated_base",
+    "timestamp": 1789131646216,
     "evaluated": false
   },
   {
-    "symbol": "SOL",
+    "symbol": "BNB",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131647177,
+    "evaluated": false
+  },
+  {
+    "symbol": "BNB",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131651219,
+    "evaluated": false
+  },
+  {
+    "symbol": "BNB",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131653133,
+    "evaluated": false
+  },
+  {
+    "symbol": "BNB",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131653482,
+    "evaluated": false
+  },
+  {
+    "symbol": "LINK",
     "signal": "BUY",
-    "score": 0.6,
-    "confidence": 0.8,
-    "mentions": 5,
-    "timestamp": 1788465091481,
+    "score": 0.5,
+    "confidence": 0.75,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131659826,
     "evaluated": false
   },
   {
-    "symbol": "SNDKB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465091562,
+    "symbol": "LINK",
+    "signal": "BUY",
+    "score": 0.5,
+    "confidence": 0.75,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131661712,
     "evaluated": false
   },
   {
-    "symbol": "TAO",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465091603,
+    "symbol": "LINK",
+    "signal": "BUY",
+    "score": 0.5,
+    "confidence": 0.75,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131669188,
     "evaluated": false
   },
   {
-    "symbol": "MUB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465091642,
+    "symbol": "LINK",
+    "signal": "BUY",
+    "score": 0.5,
+    "confidence": 0.75,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131671391,
     "evaluated": false
   },
   {
-    "symbol": "USDC",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465091735,
+    "symbol": "LINK",
+    "signal": "BUY",
+    "score": 0.5,
+    "confidence": 0.75,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131672471,
     "evaluated": false
   },
   {
-    "symbol": "SPCXB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465091773,
+    "symbol": "LINK",
+    "signal": "BUY",
+    "score": 0.5,
+    "confidence": 0.75,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131677428,
     "evaluated": false
   },
   {
-    "symbol": "BCH",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465091865,
+    "symbol": "LINK",
+    "signal": "BUY",
+    "score": 0.5,
+    "confidence": 0.75,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131679690,
+    "evaluated": false
+  },
+  {
+    "symbol": "LINK",
+    "signal": "BUY",
+    "score": 0.5,
+    "confidence": 0.75,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131682005,
     "evaluated": false
   },
   {
     "symbol": "AAVE",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465091920,
-    "evaluated": false
-  },
-  {
-    "symbol": "CRCLB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465092000,
-    "evaluated": false
-  },
-  {
-    "symbol": "WBETH",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465092103,
-    "evaluated": false
-  },
-  {
-    "symbol": "QQQB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465092206,
-    "evaluated": false
-  },
-  {
-    "symbol": "MSTRB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465092248,
-    "evaluated": false
-  },
-  {
-    "symbol": "AVGOB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465092297,
-    "evaluated": false
-  },
-  {
-    "symbol": "BETH",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465092374,
-    "evaluated": false
-  },
-  {
-    "symbol": "LTC",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465092426,
-    "evaluated": false
-  },
-  {
-    "symbol": "TSLAB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465092471,
-    "evaluated": false
-  },
-  {
-    "symbol": "GOOGLB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465092569,
-    "evaluated": false
-  },
-  {
-    "symbol": "SKHYB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "timestamp": 1788465092608,
-    "evaluated": false
-  },
-  {
-    "symbol": "CRO",
     "signal": "BUY",
-    "score": 0.48,
-    "confidence": 0.74,
+    "score": 0.55,
+    "confidence": 0.77,
     "mentions": 3,
-    "timestamp": 1788465092653,
+    "source": "calibrated_base",
+    "timestamp": 1789131686373,
     "evaluated": false
   },
   {
-    "symbol": "AVAX",
-    "signal": "HOLD",
-    "score": 0.1,
-    "confidence": 0.65,
-    "mentions": 2,
-    "timestamp": 1788465092700,
-    "evaluated": false
-  },
-  {
-    "symbol": "ARB",
+    "symbol": "AAVE",
     "signal": "BUY",
-    "score": 0.52,
-    "confidence": 0.76,
+    "score": 0.55,
+    "confidence": 0.77,
     "mentions": 3,
-    "timestamp": 1788465092797,
+    "source": "calibrated_base",
+    "timestamp": 1789131689259,
+    "evaluated": false
+  },
+  {
+    "symbol": "AAVE",
+    "signal": "BUY",
+    "score": 0.55,
+    "confidence": 0.77,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131695426,
+    "evaluated": false
+  },
+  {
+    "symbol": "AAVE",
+    "signal": "BUY",
+    "score": 0.55,
+    "confidence": 0.77,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131696244,
+    "evaluated": false
+  },
+  {
+    "symbol": "AAVE",
+    "signal": "BUY",
+    "score": 0.55,
+    "confidence": 0.77,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131699268,
+    "evaluated": false
+  },
+  {
+    "symbol": "AAVE",
+    "signal": "BUY",
+    "score": 0.55,
+    "confidence": 0.77,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131703671,
+    "evaluated": false
+  },
+  {
+    "symbol": "AAVE",
+    "signal": "BUY",
+    "score": 0.55,
+    "confidence": 0.77,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131706824,
+    "evaluated": false
+  },
+  {
+    "symbol": "AAVE",
+    "signal": "BUY",
+    "score": 0.55,
+    "confidence": 0.77,
+    "mentions": 3,
+    "source": "calibrated_base",
+    "timestamp": 1789131710668,
+    "evaluated": false
+  },
+  {
+    "symbol": "SUI",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131714758,
+    "evaluated": false
+  },
+  {
+    "symbol": "SUI",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131717826,
+    "evaluated": false
+  },
+  {
+    "symbol": "SUI",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131722048,
+    "evaluated": false
+  },
+  {
+    "symbol": "SUI",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131724897,
+    "evaluated": false
+  },
+  {
+    "symbol": "SUI",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131727882,
+    "evaluated": false
+  },
+  {
+    "symbol": "SUI",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131732319,
+    "evaluated": false
+  },
+  {
+    "symbol": "SUI",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131735422,
+    "evaluated": false
+  },
+  {
+    "symbol": "SUI",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131739128,
+    "evaluated": false
+  },
+  {
+    "symbol": "NEAR",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131743691,
+    "evaluated": false
+  },
+  {
+    "symbol": "NEAR",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131746623,
+    "evaluated": false
+  },
+  {
+    "symbol": "NEAR",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131750452,
+    "evaluated": false
+  },
+  {
+    "symbol": "NEAR",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131753523,
+    "evaluated": false
+  },
+  {
+    "symbol": "NEAR",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131756393,
+    "evaluated": false
+  },
+  {
+    "symbol": "NEAR",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131760063,
+    "evaluated": false
+  },
+  {
+    "symbol": "NEAR",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131763492,
+    "evaluated": false
+  },
+  {
+    "symbol": "NEAR",
+    "signal": "HOLD",
+    "score": 0.05,
+    "confidence": 0.6,
+    "mentions": 1,
+    "source": "calibrated_base",
+    "timestamp": 1789131766553,
+    "evaluated": false
+  },
+  {
+    "symbol": "BTC",
+    "signal": "BUY",
+    "score": 0.65,
+    "confidence": 0.82,
+    "mentions": 6,
+    "source": "calibrated_base",
+    "timestamp": 1789439011165,
+    "evaluated": false
+  },
+  {
+    "symbol": "BTC",
+    "signal": "BUY",
+    "score": 0.65,
+    "confidence": 0.82,
+    "mentions": 6,
+    "source": "calibrated_base",
+    "timestamp": 1789439163624,
+    "evaluated": false
+  },
+  {
+    "symbol": "BTC",
+    "signal": "BUY",
+    "score": 0.65,
+    "confidence": 0.82,
+    "mentions": 6,
+    "source": "calibrated_base",
+    "timestamp": 1789439624966,
     "evaluated": false
   }
 ]

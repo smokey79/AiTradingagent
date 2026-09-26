@@ -26,15 +26,40 @@ function setCooldown(key, ms = 60_000) {
   logger.warn(`[Rotator] ${key} on cooldown for ${ms / 1000}s`);
 }
 
-// ─── OpenRouter free models pool ─────────────────────────────────────────────
+// ─── OpenRouter 7-Model Free Rotation Pool ──────────────────────────────────
 const FREE_MODELS = [
-  'deepseek/deepseek-r1:free',
-  'meta-llama/llama-3.3-70b-instruct:free',
-  'google/gemini-2.0-flash-exp:free',
-  'qwen/qwen-2.5-coder-32b-instruct:free',
-  'mistralai/mistral-7b-instruct:free',
-  'deepseek/deepseek-chat:free',
+  'inclusionai/ling-3.0-flash-fin:free',                     // 1. Financial & algorithmic analysis
+  'inclusionai/ling-3.0-flash-vl:free',                      // 2. High-speed visual/token analysis
+  'inclusionai/ling-3.0-flash-sante:free',                   // 3. Compact low-latency inference
+  'google/gemma-4-31b-it:free',                             // 4. Google Gemma 4 31B Instruct
+  'google/gemma-4-26b-a4b-it:free',                         // 5. Google Gemma 4 26B A4B Instruct
+  'nvidia/nemotron-3-super-120b-a12b:free',                  // 6. NVIDIA Nemotron 3 Super 120B
+  'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free',      // 7. NVIDIA Nemotron 3 Reasoning
 ];
+
+// Backup free models on OpenRouter
+const BACKUP_MODELS = [
+  'nvidia/nemotron-3.5-lightning:free',
+  'nex-agi/nex-n2.5-pro:free',
+  'cohere/north-mini-code:free',
+  'poolside/laguna-s-2.1:free',
+];
+
+let _freeModelIndex = 0;
+function getNextFreeModel() {
+  const allPool = [...FREE_MODELS, ...BACKUP_MODELS];
+  // Find next non-cooled-down model
+  for (let attempt = 0; attempt < allPool.length; attempt++) {
+    const candidate = allPool[(_freeModelIndex + attempt) % allPool.length];
+    if (isCooledDown(`or_free_${candidate}`)) {
+      _freeModelIndex = (_freeModelIndex + attempt + 1) % allPool.length;
+      return candidate;
+    }
+  }
+  const fallback = FREE_MODELS[_freeModelIndex % FREE_MODELS.length];
+  _freeModelIndex = (_freeModelIndex + 1) % FREE_MODELS.length;
+  return fallback;
+}
 
 // ─── OpenRouter key rotation ──────────────────────────────────────────────────
 let _orKeyIdx = 0;
@@ -98,9 +123,10 @@ function localHeuristic(symbol, marketData, modelName = 'local-heuristic') {
 async function callOpenRouterFree(symbol, marketData, modelOverride) {
   const key = getORKey();
   if (!key) return null;
-  if (!isCooledDown(`or_free_${modelOverride}`)) return null;
 
-  const model = modelOverride || FREE_MODELS[Math.floor(Math.random() * FREE_MODELS.length)];
+  const model = modelOverride || getNextFreeModel();
+  if (!isCooledDown(`or_free_${model}`)) return null;
+
   const payload = {
     symbol,
     price: marketData?.price?.price,
@@ -136,17 +162,20 @@ async function callOpenRouterFree(symbol, marketData, modelOverride) {
     const raw = data.choices?.[0]?.message?.content ?? '';
     return parseSignal(raw, model);
   } catch (err) {
-    if (err.response?.status === 429) setCooldown(`or_free_${model}`, 120_000);
+    if (err.response?.status === 429 || err.response?.status === 404) {
+      setCooldown(`or_free_${model}`, 120_000);
+    }
     logger.warn(`[Rotator] OpenRouter free (${model}) failed: ${err.message}`);
     return null;
   }
 }
 
-// ─── TIER 2: Gemini Pro (your existing subscription key) ─────────────────────
+// ─── TIER 2: Gemini (your existing subscription key) ─────────────────────
 async function callGeminiPro(symbol, marketData) {
   if (!process.env.GEMINI_API_KEY) return null;
   if (!isCooledDown('gemini_pro')) return null;
 
+  const geminiModel = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
   const payload = {
     symbol,
     price: marketData?.price?.price,
@@ -158,7 +187,7 @@ async function callGeminiPro(symbol, marketData) {
 
   try {
     const { data } = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         contents: [
           {
@@ -172,10 +201,10 @@ async function callGeminiPro(symbol, marketData) {
       { timeout: 10000 }
     );
     const raw = data.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
-    return parseSignal(raw, 'gemini-1.5-pro');
+    return parseSignal(raw, geminiModel);
   } catch (err) {
     if (err.response?.status === 429) setCooldown('gemini_pro', 60_000);
-    logger.warn(`[Rotator] Gemini Pro failed: ${err.message}`);
+    logger.warn(`[Rotator] Gemini (${geminiModel}) failed: ${err.message}`);
     return null;
   }
 }

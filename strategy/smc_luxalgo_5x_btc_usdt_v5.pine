@@ -4,28 +4,28 @@ strategy("AiTradingAgent — LuxAlgo SMC & 5X Futures Strategy (BTC/USDT)", over
 // ==============================================================================
 // AiTradingAgent v4 — Autonomous PineScript v5 Strategy
 // Symbol: BTC/USDT | Leverage: 5X Isolated Margin
-// Target Win Rate: >68.0% | Risk-Reward Ratio: 2.33:1
+// Target Win Rate: >68.0% | Risk-Reward Ratio: 2.67:1
 // Concepts: LuxAlgo Order Blocks (OB), Liquidity Sweeps, Fair Value Gaps (FVG)
 // ==============================================================================
 
 // ─── Input Configuration ──────────────────────────────────────────────────────
 grp_smc = "LuxAlgo Smart Money Concepts (SMC)"
-ob_len       = input.int(8, "Order Block Lookback Period", minval=3, maxval=50, group=grp_smc)
+ob_len       = input.int(10, "Order Block Lookback Period", minval=3, maxval=50, group=grp_smc)
 use_fvg      = input.bool(true, "Enable Fair Value Gap (FVG) Confirmation", group=grp_smc)
 sweep_sens   = input.float(1.2, "Liquidity Sweep Sensitivity Multiplier", minval=0.5, step=0.1, group=grp_smc)
 
 grp_momentum = "Oscillators & Volume Regime"
 rsi_len      = input.int(14, "RSI Calculation Length", minval=2, group=grp_momentum)
 rsi_long_min = input.int(45, "RSI Long Minimum (Expansion Gate)", minval=30, maxval=70, group=grp_momentum)
-rsi_long_max = input.int(65, "RSI Long Maximum (Overbought Gate)", minval=50, maxval=90, group=grp_momentum)
+rsi_long_max = input.int(68, "RSI Long Maximum (Overbought Gate)", minval=50, maxval=90, group=grp_momentum)
 rsi_short_min= input.int(32, "RSI Short Minimum (Oversold Gate)", minval=10, maxval=50, group=grp_momentum)
 rsi_short_max= input.int(55, "RSI Short Maximum (Compression Gate)", minval=30, maxval=70, group=grp_momentum)
 mfi_len      = input.int(14, "Money Flow Index (MFI) Length", minval=5, group=grp_momentum)
-vol_mult     = input.float(1.35, "Institutional Volume Multiplier", minval=1.0, step=0.05, group=grp_momentum)
+vol_mult     = input.float(1.45, "Institutional Volume Multiplier", minval=1.0, step=0.05, group=grp_momentum)
 
 grp_futures  = "5X Futures Risk & ATR Management"
 leverage_val = input.float(5, "Futures Leverage Multiplier (Isolated)", minval=1.0, maxval=20.0, step=0.5, group=grp_futures)
-tp_pct_raw   = input.float(3.5, "Underlying Take-Profit %", minval=0.5, step=0.1, group=grp_futures)
+tp_pct_raw   = input.float(4, "Underlying Take-Profit %", minval=0.5, step=0.1, group=grp_futures)
 sl_pct_raw   = input.float(1.5, "Underlying Stop-Loss %", minval=0.5, step=0.1, group=grp_futures)
 atr_len      = input.int(14, "ATR Volatility Period", minval=5, group=grp_futures)
 atr_sl_mult  = input.float(1.5, "ATR Trailing Stop Multiplier", minval=0.5, step=0.1, group=grp_futures)

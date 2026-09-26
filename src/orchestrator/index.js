@@ -15,9 +15,13 @@ const { fetchMarketData } = require('../data/marketData');
 const { runConsensus } = require('./consensus');
 const { checkRiskGate, getPortfolioState, resolveAllOpenPositions } = require('../risk/riskGate');
 const { isKillSwitchEngaged } = require('../utils/killSwitch');
+const { recordSignal, flushSignals } = require('./signalBridge');
+const { enrichMarketData, fetchMarketOverview } = require('../data/tradingKitFeed');
+const { getLatestSignals } = require('../notifications/telegramListener');
 const { executeTrade } = require('../utils/exchangeRouter');
 const { allocateProfits, getVaultSummary } = require('../utils/profitAllocator');
 const { getPerformanceStats } = require('../risk/tradeLedger');
+const { startContinuousLearning } = require('../agents/learningAgent');
 
 const PAPER = process.env.PAPER_TRADING !== 'false';
 // Note: removed unused local MIN_CONFIDENCE (2026-09-03) — it was declared
@@ -122,14 +126,26 @@ async function runTradingCycle() {
   await Promise.allSettled(
     pairs.map(async (pair) => {
       try {
-        marketDataMap[pair] = await fetchMarketData(pair, cmcQuotes);
+        const base = await fetchMarketData(pair, cmcQuotes);
+        // Enrich with TradingKit real-time data (indicators + signal)
+        marketDataMap[pair] = await enrichMarketData(pair, base);
       } catch (err) {
         logger.warn(`[${pair}] Market data fetch failed: ${err.message}`);
         marketDataMap[pair] = null;
       }
     })
   );
-  logger.info(`⚡ [Parallel] Market data ready in ${Date.now() - cycleStart}ms`);
+  logger.info(`⚡ [Parallel] Market data ready (+ TradingKit) in ${Date.now() - cycleStart}ms`);
+
+  // ── Inject live Telegram signals into market data ───────────────────────
+  const tgSignals = getLatestSignals(20);
+  if (tgSignals.length > 0) {
+    logger.info(`📡 [Telegram] Injecting ${tgSignals.length} live channel signal(s) into consensus`);
+    for (const sig of tgSignals) {
+      if (!sig.symbol || !marketDataMap[sig.symbol]) continue;
+      marketDataMap[sig.symbol].telegramSignal = sig;
+    }
+  }
 
   // ── Step 2a: Resolve any open paper positions against REAL current prices ──
   // Added 2026-09-03 alongside the exchangeRouter.js fix that stopped
@@ -152,6 +168,48 @@ async function runTradingCycle() {
     }
   }
 
+  // ── Step 2b: BTC Benchmark Analysis & Bull / Bear Market Discovery ────────
+  let btcBenchmark = null;
+  let topBullPick = null;
+  let topBearPick = null;
+  try {
+    const { getBtcBenchmark } = require('../data/btcBenchmark');
+    btcBenchmark = await getBtcBenchmark(marketDataMap);
+    logger.info(
+      `📊 [Benchmark] Live BTC: $${btcBenchmark.price.toFixed(2)} (${btcBenchmark.change24h >= 0 ? '+' : ''}${btcBenchmark.change24h}%) | Trend: ${btcBenchmark.trend}`
+    );
+
+    const bullAgent = require('../agents/bullAgent');
+    const bearAgent = require('../agents/bearAgent');
+
+    for (const [p, md] of Object.entries(marketDataMap)) {
+      if (!md || !md.price || md.price.price <= 0) continue;
+      try {
+        const bSig = await bullAgent.getSignal(p, md, btcBenchmark);
+        if (bSig.signal === 'BUY' && (!topBullPick || bSig.confidence > topBullPick.confidence)) {
+          topBullPick = bSig;
+        }
+        const sSig = await bearAgent.getSignal(p, md, btcBenchmark);
+        if (sSig.signal === 'SELL' && (!topBearPick || sSig.confidence > topBearPick.confidence)) {
+          topBearPick = sSig;
+        }
+      } catch (_) {}
+    }
+
+    if (topBullPick) {
+      logger.info(
+        `🐂 [Bull Agent Alpha] Top Long: ${topBullPick.pair} (${(topBullPick.confidence * 100).toFixed(0)}% conf) | ${topBullPick.setup_type} | ${topBullPick.reason}`
+      );
+    }
+    if (topBearPick) {
+      logger.info(
+        `🐻 [Bear Agent Alpha] Top Short: ${topBearPick.pair} (${(topBearPick.confidence * 100).toFixed(0)}% conf) | ${topBearPick.setup_type} | ${topBearPick.reason}`
+      );
+    }
+  } catch (benchErr) {
+    logger.debug(`BTC benchmark/scanner notice: ${benchErr.message}`);
+  }
+
   // ── Step 2: Run consensus + execution for ALL pairs in parallel ────────────
   const pairResults = await Promise.allSettled(
     pairs.map(async (pair) => {
@@ -171,6 +229,11 @@ async function runTradingCycle() {
       // Consensus
       const consensus = await runConsensus(pair, marketData);
 
+      // Freqtrade signal bridge — mirror this pair's decision out to
+      // data/freqtrade_signals.json so ConsensusBridgeStrategy can act on
+      // it. Purely additive: doesn't affect the Node execution path below.
+      recordSignal(pair, consensus);
+
       if (global.broadcastDashboardEvent) {
         global.broadcastDashboardEvent({
           type: 'agent_consensus',
@@ -188,6 +251,7 @@ async function runTradingCycle() {
       // Risk Gate
       const riskCheck = await checkRiskGate(pair, consensus, marketData);
       riskCheck.consensusConfidence = consensus.confidence;
+      riskCheck.consensus = consensus;
 
       if (!riskCheck.approved) {
         logger.info(`[${pair}] 🛑 Risk Gate: ${riskCheck.reason}`);
@@ -218,6 +282,9 @@ async function runTradingCycle() {
     r.status === 'fulfilled' ? r.value : { pair: pairs[i], executed: false, reason: r.reason?.message }
   );
 
+  // Flush this cycle's signals for Freqtrade to pick up on its next candle.
+  flushSignals();
+
   isCycleRunning = false;
   const totalMs = Date.now() - cycleStart;
   logger.info(`\n══════════════════════════════════════════════════════════════════════`);
@@ -244,6 +311,7 @@ if (require.main === module) {
   } else {
     const intervalSec = parseInt(process.env.AUTO_TRADE_INTERVAL_SEC || '30', 10);
     logger.info(`🚀 Starting Full-Stack Continuous Auto-Trading Engine (${intervalSec}s loop)...`);
+    startContinuousLearning();
     startAutoTrading(intervalSec, true);
   }
 }

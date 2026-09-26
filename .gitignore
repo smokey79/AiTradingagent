@@ -156,3 +156,16 @@ data/copilot-activity-history*.csv
 *.ENVtxt
 *ENVtxt
 *.env-txt
+
+
+# --- Added 2026-09-26: AI coding tool state/config, not project code ---
+# --- (typo fix: was ".kilo/" above, which never matched ".kiro/") ---
+.claude/
+.cursor/
+.kiro/
+*.pre-*.bak
+*.pre-*.json.bak
+
+# --- Added 2026-09-26: bulky, regenerable historical OHLCV downloads ---
+# --- (re-fetched by scripts/fetch_multitimeframe_ohlcv.py / pybacktest) ---
+data/ohlcv/

@@ -2,6 +2,39 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "🚀 Run Trading Cycle Once (Node)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/orchestrator/index.js",
+      "args": ["--once"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "🤖 Run Continuous AutoTrader (Node)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/orchestrator/index.js",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "📊 Live Web Dashboard (Node Port 3001)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/dashboard/server.js",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "🧪 Run Master Test Suite",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/tests/runAllTests.js",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}"
+    },
+    {
       "name": "⚡ Preview Build 1 (Live Dashboard — Port 3002)",
       "type": "debugpy",
       "request": "launch",

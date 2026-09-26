@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-09-15T01:10:10.608558+00:00",
+  "symbol": "BTCUSDT",
+  "action": "LONG",
+  "size": 0.1,
+  "reason": "Recent bounce from double bottom support level and bullish momentum favoring long position",
+  "source": "debate",
+  "confidence": 0.75,
+  "paper_mode": true,
+  "engine": "python"
+}

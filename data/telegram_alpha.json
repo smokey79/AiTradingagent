@@ -1,5 +1,600 @@
 [
   {
+    "id": "TG_1789439651018",
+    "timestamp": "2026-09-15T02:34:11.018Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1789439191458",
+    "timestamp": "2026-09-15T02:26:31.458Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1789439038881",
+    "timestamp": "2026-09-15T02:23:58.881Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1789434484909",
+    "timestamp": "2026-09-15T01:08:04.909Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 77,816 Indicator: +0.31 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789434184940",
+    "timestamp": "2026-09-15T01:03:04.940Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 77,868 Indicator: +0.34 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1789433165470",
+    "timestamp": "2026-09-15T00:46:05.470Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 78,007 Indicator: +0.30 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789433105719",
+    "timestamp": "2026-09-15T00:45:05.719Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 77,965 Indicator: +0.32 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1789432025079",
+    "timestamp": "2026-09-15T00:27:05.079Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 78,059 Indicator: +0.30 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789431845015",
+    "timestamp": "2026-09-15T00:24:05.015Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 78,066 Indicator: +0.44 ↓   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1789431664983",
+    "timestamp": "2026-09-15T00:21:04.983Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉〉 ₿ 78,041 Indicator: +0.50 ↑   BUY 1min",
+    "length": 41
+  },
+  {
+    "id": "TG_1789431606074",
+    "timestamp": "2026-09-15T00:20:06.074Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 78,055 Indicator: +0.39 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1789431485166",
+    "timestamp": "2026-09-15T00:18:05.166Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 78,100 Indicator: +0.31 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789431425056",
+    "timestamp": "2026-09-15T00:17:05.056Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 78,107 Indicator: +0.32 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1789431305668",
+    "timestamp": "2026-09-15T00:15:05.668Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 78,121 Indicator: +0.32 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789431185266",
+    "timestamp": "2026-09-15T00:13:05.266Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 78,150 Indicator: +0.34 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1789431065122",
+    "timestamp": "2026-09-15T00:11:05.122Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 78,209 Indicator: +0.29 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789430826365",
+    "timestamp": "2026-09-15T00:07:06.365Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 78,141 Indicator: +0.34 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1789430345162",
+    "timestamp": "2026-09-14T23:59:05.162Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 78,184 Indicator: +0.32 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789430167133",
+    "timestamp": "2026-09-14T23:56:07.133Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 78,167 Indicator: +0.44 ↓   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1789430105401",
+    "timestamp": "2026-09-14T23:55:05.401Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉〉 ₿ 78,180 Indicator: +0.52 ↑   BUY 1min",
+    "length": 41
+  },
+  {
+    "id": "TG_1789429985237",
+    "timestamp": "2026-09-14T23:53:05.237Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 78,157 Indicator: +0.37 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1789341421001",
+    "timestamp": "2026-09-13T23:17:01.001Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 76,666 Indicator: -0.29 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789341121443",
+    "timestamp": "2026-09-13T23:12:01.443Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈 ₿ 76,738 Indicator: -0.32 ↑   weak sell 1min",
+    "length": 46
+  },
+  {
+    "id": "TG_1789340881653",
+    "timestamp": "2026-09-13T23:08:01.653Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 76,674 Indicator: -0.31 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789340761723",
+    "timestamp": "2026-09-13T23:06:01.723Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈 ₿ 76,724 Indicator: -0.33 ↑   weak sell 1min",
+    "length": 46
+  },
+  {
+    "id": "TG_1789338601881",
+    "timestamp": "2026-09-13T22:30:01.881Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 76,836 Indicator: +0.30 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789338541077",
+    "timestamp": "2026-09-13T22:29:01.077Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 76,782 Indicator: +0.33 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1789338421048",
+    "timestamp": "2026-09-13T22:27:01.048Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 76,820 Indicator: +0.28 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789338241466",
+    "timestamp": "2026-09-13T22:24:01.466Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 76,777 Indicator: +0.33 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1789133703977",
+    "timestamp": "2026-09-11T13:35:03.977Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 77,533 Indicator: +0.32 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789133585704",
+    "timestamp": "2026-09-11T13:33:05.704Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 77,452 Indicator: +0.34 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1789131424279",
+    "timestamp": "2026-09-11T12:57:04.288Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 77,916 Indicator: -0.26 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789131364785",
+    "timestamp": "2026-09-11T12:56:04.785Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈〈 ₿ 77,979 Indicator: -0.62 ↓   SELL 1min",
+    "length": 42
+  },
+  {
+    "id": "TG_1789131123863",
+    "timestamp": "2026-09-11T12:52:03.864Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈〈〈📉 ₿ 77,961 Indicator: -0.68 ↑   STRONG SELL 1min",
+    "length": 52
+  },
+  {
+    "id": "TG_1789130943498",
+    "timestamp": "2026-09-11T12:49:03.499Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈〈 ₿ 77,936 Indicator: -0.56 ↑   SELL 1min",
+    "length": 42
+  },
+  {
+    "id": "TG_1789130643269",
+    "timestamp": "2026-09-11T12:44:03.278Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈 ₿ 77,611 Indicator: -0.44 ↓   weak sell 1min",
+    "length": 46
+  },
+  {
+    "id": "TG_1789130583916",
+    "timestamp": "2026-09-11T12:43:03.917Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈〈 ₿ 77,557 Indicator: -0.53 ↓   SELL 1min",
+    "length": 42
+  },
+  {
+    "id": "TG_1789130343751",
+    "timestamp": "2026-09-11T12:39:03.751Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈〈〈📉 ₿ 77,406 Indicator: -0.68 ↑   STRONG SELL 1min",
+    "length": 52
+  },
+  {
+    "id": "TG_1789130163495",
+    "timestamp": "2026-09-11T12:36:03.495Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 77,149 Indicator: +0.20 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789130104120",
+    "timestamp": "2026-09-11T12:35:04.120Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 77,147 Indicator: +0.39 ↓   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1789129863689",
+    "timestamp": "2026-09-11T12:31:03.690Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉〉 ₿ 76,436 Indicator: +0.52 ↑   BUY 1min",
+    "length": 41
+  },
+  {
+    "id": "TG_1789119904911",
+    "timestamp": "2026-09-11T09:45:04.911Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 76,964 Indicator: +0.30 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789119604440",
+    "timestamp": "2026-09-11T09:40:04.440Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 76,931 Indicator: +0.46 ↓   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1789119543773",
+    "timestamp": "2026-09-11T09:39:03.773Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉〉 ₿ 76,955 Indicator: +0.48 ↑   BUY 1min",
+    "length": 41
+  },
+  {
+    "id": "TG_1789119364252",
+    "timestamp": "2026-09-11T09:36:04.252Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 77,014 Indicator: +0.34 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1789111624078",
+    "timestamp": "2026-09-11T07:27:04.078Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 77,324 Indicator: -0.23 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789111324164",
+    "timestamp": "2026-09-11T07:22:04.165Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈 ₿ 77,354 Indicator: -0.39 ↑   weak sell 1min",
+    "length": 46
+  },
+  {
+    "id": "TG_1789110904556",
+    "timestamp": "2026-09-11T07:15:04.557Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 77,323 Indicator: -0.31 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789110727012",
+    "timestamp": "2026-09-11T07:12:07.012Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈 ₿ 77,364 Indicator: -0.40 ↑   weak sell 1min",
+    "length": 46
+  },
+  {
+    "id": "TG_1789108727443",
+    "timestamp": "2026-09-11T06:38:47.443Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1789108332236",
+    "timestamp": "2026-09-11T06:32:12.236Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1789107949939",
+    "timestamp": "2026-09-11T06:25:49.939Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1789107604425",
+    "timestamp": "2026-09-11T06:20:04.425Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 77,314 Indicator: -0.28 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789107544022",
+    "timestamp": "2026-09-11T06:19:04.022Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈 ₿ 77,329 Indicator: -0.38 ↓   weak sell 1min",
+    "length": 46
+  },
+  {
+    "id": "TG_1789107184769",
+    "timestamp": "2026-09-11T06:13:04.769Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈〈 ₿ 77,306 Indicator: -0.61 ↓   SELL 1min",
+    "length": 42
+  },
+  {
+    "id": "TG_1789107004684",
+    "timestamp": "2026-09-11T06:10:04.685Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈〈〈📉 ₿ 77,274 Indicator: -0.67 ↑   STRONG SELL 1min",
+    "length": 52
+  },
+  {
+    "id": "TG_1789106944017",
+    "timestamp": "2026-09-11T06:09:04.017Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈〈 ₿ 77,279 Indicator: -0.64 ↓   SELL 1min",
+    "length": 42
+  },
+  {
+    "id": "TG_1789106884063",
+    "timestamp": "2026-09-11T06:08:04.064Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈〈〈📉 ₿ 77,278 Indicator: -0.65 ↑   STRONG SELL 1min",
+    "length": 52
+  },
+  {
+    "id": "TG_1789106824147",
+    "timestamp": "2026-09-11T06:07:04.147Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈〈 ₿ 77,256 Indicator: -0.63 ↓   SELL 1min",
+    "length": 42
+  },
+  {
+    "id": "TG_1789106764492",
+    "timestamp": "2026-09-11T06:06:04.492Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈〈〈📉 ₿ 77,249 Indicator: -0.65 ↑   STRONG SELL 1min",
+    "length": 52
+  },
+  {
+    "id": "TG_1789106345431",
+    "timestamp": "2026-09-11T05:59:05.433Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈〈 ₿ 77,243 Indicator: -0.64 ↓   SELL 1min",
+    "length": 42
+  },
+  {
+    "id": "TG_1789106284434",
+    "timestamp": "2026-09-11T05:58:04.434Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈〈〈📉 ₿ 77,228 Indicator: -0.65 ↑   STRONG SELL 1min",
+    "length": 52
+  },
+  {
+    "id": "TG_1789106233281",
+    "timestamp": "2026-09-11T05:57:13.281Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1789106114813",
+    "timestamp": "2026-09-11T05:55:14.813Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1789105984049",
+    "timestamp": "2026-09-11T05:53:04.049Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈〈 ₿ 77,181 Indicator: -0.52 ↑   SELL 1min",
+    "length": 42
+  },
+  {
+    "id": "TG_1789105786067",
+    "timestamp": "2026-09-11T05:49:46.067Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1789105564343",
+    "timestamp": "2026-09-11T05:46:04.344Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈 ₿ 77,163 Indicator: -0.46 ↓   weak sell 1min",
+    "length": 46
+  },
+  {
+    "id": "TG_1789105264524",
+    "timestamp": "2026-09-11T05:41:04.524Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈〈 ₿ 77,174 Indicator: -0.49 ↑   SELL 1min",
+    "length": 42
+  },
+  {
+    "id": "TG_1789105204724",
+    "timestamp": "2026-09-11T05:40:04.724Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈 ₿ 77,179 Indicator: -0.38 ↑   weak sell 1min",
+    "length": 46
+  },
+  {
+    "id": "TG_1789104915260",
+    "timestamp": "2026-09-11T05:35:15.260Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1789104063976",
+    "timestamp": "2026-09-11T05:21:03.976Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 77,130 Indicator: -0.28 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789103883989",
+    "timestamp": "2026-09-11T05:18:03.989Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈 ₿ 77,136 Indicator: -0.32 ↑   weak sell 1min",
+    "length": 46
+  },
+  {
+    "id": "TG_1789101304881",
+    "timestamp": "2026-09-11T04:35:04.881Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 77,150 Indicator: -0.31 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789101004407",
+    "timestamp": "2026-09-11T04:30:04.407Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈 ₿ 77,183 Indicator: -0.33 ↑   weak sell 1min",
+    "length": 46
+  },
+  {
+    "id": "TG_1789100824105",
+    "timestamp": "2026-09-11T04:27:04.105Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 77,135 Indicator: -0.32 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1789100584015",
+    "timestamp": "2026-09-11T04:23:04.015Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈 ₿ 77,022 Indicator: -0.37 ↑   weak sell 1min",
+    "length": 46
+  },
+  {
+    "id": "TG_1789099833099",
+    "timestamp": "2026-09-11T04:10:33.099Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "^gspc: S&P 500 Index\nIntelligent indicator (lower part) in -1, +1. Positive - price will go up. Negative - price will go down. 3 MA lines and 2 threshold lines for significance interval.",
+    "length": 186
+  },
+  {
+    "id": "TG_1788825456660",
+    "timestamp": "2026-09-07T23:57:36.660Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1788825315124",
+    "timestamp": "2026-09-07T23:55:15.124Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1788825271803",
+    "timestamp": "2026-09-07T23:54:31.803Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1788655434895",
+    "timestamp": "2026-09-06T00:43:54.895Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1788655366285",
+    "timestamp": "2026-09-06T00:42:46.285Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1788655306080",
+    "timestamp": "2026-09-06T00:41:46.080Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1788654907708",
+    "timestamp": "2026-09-06T00:35:07.708Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
+    "id": "TG_1788653976581",
+    "timestamp": "2026-09-06T00:19:36.581Z",
+    "sender": "Whale Alert",
+    "text": "🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage",
+    "length": 67
+  },
+  {
     "id": "TG_1788194200659",
     "timestamp": "2026-08-31T16:36:40.659Z",
     "sender": "Whale Alert",

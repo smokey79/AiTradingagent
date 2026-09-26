@@ -384,6 +384,63 @@ server.tool(
   }
 );
 
+// ─── TOOL: get_sosovalue_macro ────────────────────────────────────────────────
+server.tool(
+  "get_sosovalue_macro",
+  "Get macro crypto data from SoSoValue including BTC/ETH ETF flows",
+  {},
+  async () => {
+    try {
+      const BASE_URL = "https://sosovalue.com";
+      const HEADERS = {
+        "User-Agent": "Mozilla/5.0 (compatible; AiTradingAgent/1.0)",
+        "Accept": "application/json",
+        "Referer": BASE_URL,
+      };
+
+      const btcRes = await axios.get(`${BASE_URL}/api/index/spot-btc-etf/flow/list`, { headers: HEADERS });
+      const btcPayload = btcRes.data?.data || btcRes.data;
+      let btcTotalFlow = 0;
+      if (Array.isArray(btcPayload)) {
+        btcTotalFlow = btcPayload.reduce((sum, item) => sum + (parseFloat(item.netFlow || item.net_flow || 0)), 0);
+      } else if (btcPayload) {
+        btcTotalFlow = parseFloat(btcPayload.netFlow || btcPayload.totalNetFlow || 0);
+      }
+      
+      const ethRes = await axios.get(`${BASE_URL}/api/index/spot-eth-etf/flow/list`, { headers: HEADERS });
+      const ethPayload = ethRes.data?.data || ethRes.data;
+      let ethTotalFlow = 0;
+      if (Array.isArray(ethPayload)) {
+        ethTotalFlow = ethPayload.reduce((sum, item) => sum + (parseFloat(item.netFlow || item.net_flow || 0)), 0);
+      } else if (ethPayload) {
+        ethTotalFlow = parseFloat(ethPayload.netFlow || ethPayload.totalNetFlow || 0);
+      }
+
+      const totalFlow = (btcTotalFlow + ethTotalFlow) / 1e6; // in millions
+      let signal = "neutral";
+      if (totalFlow > 200) signal = "bullish_strong_inflow";
+      else if (totalFlow > 50) signal = "bullish_moderate_inflow";
+      else if (totalFlow < -200) signal = "bearish_strong_outflow";
+      else if (totalFlow < -50) signal = "bearish_moderate_outflow";
+
+      return {
+        content: [{
+          type: "text",
+          text: JSON.stringify({
+            btc_etf_net_flow_usd_m: parseFloat((btcTotalFlow / 1e6).toFixed(2)),
+            eth_etf_net_flow_usd_m: parseFloat((ethTotalFlow / 1e6).toFixed(2)),
+            total_etf_flow_usd_m: parseFloat(totalFlow.toFixed(2)),
+            macro_signal: signal,
+            fetched_at: new Date().toISOString(),
+          }),
+        }],
+      };
+    } catch (err) {
+      return { content: [{ type: "text", text: JSON.stringify({ error: err.message }) }] };
+    }
+  }
+);
+
 // ─── Start server ─────────────────────────────────────────────────────────────
 const transport = new StdioServerTransport();
 await server.connect(transport);

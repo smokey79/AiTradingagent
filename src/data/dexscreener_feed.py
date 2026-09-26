@@ -12,10 +12,17 @@
 #   → Covers every chain in our registry without separate RPCs
 # ─────────────────────────────────────────────────────────────────────────────
 
+import sys
 import time
 import requests
 from typing import Optional
 from dotenv import load_dotenv
+
+if hasattr(sys.stdout, 'reconfigure'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
 
 load_dotenv()
 
@@ -252,34 +259,112 @@ def get_multi_token_chain_prices(token_symbols: list) -> dict:
     return all_prices
 
 
+def scan_defi_opportunities(min_liquidity: float = 50_000, min_volume: float = 100_000, chains: Optional[list] = None) -> list:
+    """
+    Scans DexScreener across major chains for breakout DeFi trading opportunities.
+    Filters by liquidity, 24h volume, momentum (+5% to +45%), and buy pressure.
+    Returns list of scored trade setup dicts.
+    """
+    target_chains = chains or ["base", "arbitrum", "solana", "cronos", "bsc", "ethereum", "avalanche"]
+    search_queries = ["AERO", "PENDLE", "RAY", "VVS", "GMX", "CAKE", "UNI", "AAVE"]
+    discovered = []
+
+    for query in search_queries:
+        pairs = search_pairs(query)
+        for p in pairs:
+            chain = p.get("chainId")
+            if chain not in target_chains:
+                continue
+
+            liq = p.get("liquidity", {}).get("usd", 0) or 0
+            vol = p.get("volume", {}).get("h24", 0) or 0
+            chg24h = p.get("priceChange", {}).get("h24", 0) or 0
+            chg1h = p.get("priceChange", {}).get("h1", 0) or 0
+            price = float(p.get("priceUsd") or 0)
+
+            if liq >= min_liquidity and vol >= min_volume and 4.0 <= chg24h <= 50.0 and price > 0:
+                txns = p.get("txns", {}).get("h24", {})
+                buys = txns.get("buys", 0) or 0
+                sells = txns.get("sells", 0) or 0
+                total_txns = buys + sells
+                buy_ratio = buys / total_txns if total_txns > 0 else 0.5
+
+                if buy_ratio >= 0.48:
+                    sl_price = float(f"{price * 0.955:.6g}")
+                    tp_price = float(f"{price * 1.090:.6g}")
+                    quality = int(min(100, 65 + (15 if liq >= 500000 else 5) + (10 if vol >= 1000000 else 5) + (10 if buy_ratio >= 0.52 else 0)))
+
+                    discovered.append({
+                        "symbol": p.get("baseToken", {}).get("symbol", "UNKNOWN"),
+                        "name": p.get("baseToken", {}).get("name", "DeFi Token"),
+                        "chain": chain,
+                        "dex": p.get("dexId", "unknown"),
+                        "pair_address": p.get("pairAddress", ""),
+                        "price_usd": price,
+                        "change_1h": chg1h,
+                        "change_24h": chg24h,
+                        "liquidity_usd": liq,
+                        "volume_24h_usd": vol,
+                        "buy_ratio": round(buy_ratio, 2),
+                        "quality_score": quality,
+                        "signal": "BUY",
+                        "stop_loss": sl_price,
+                        "take_profit": tp_price,
+                        "risk_reward": 2.0,
+                    })
+
+        time.sleep(0.3)
+
+    # Deduplicate by symbol + chain
+    unique = {}
+    for d in discovered:
+        key = f"{d['symbol']}_{d['chain']}"
+        if key not in unique or unique[key]["quality_score"] < d["quality_score"]:
+            unique[key] = d
+
+    setups = list(unique.values())
+    setups.sort(key=lambda x: x["quality_score"], reverse=True)
+    return setups
+
+
 # ── Run directly for testing ──────────────────────────────────────────────────
 if __name__ == "__main__":
+    import sys
     print("\n" + "="*65)
     print("DEXSCREENER FEED TEST")
     print("="*65)
 
-    # Test 1: Single token across all chains
-    print("\n── ETH price across all chains ─────────────────────────────")
-    eth_prices = get_token_prices_by_chain("ETH")
+    if "--scan-defi" in sys.argv:
+        print("\n-- Scanning DeFi Breakout Opportunities Across Chains ---------")
+        opps = scan_defi_opportunities()
+        print(f"Found {len(opps)} opportunities:")
+        for o in opps[:5]:
+            print(f"  [{o['signal']}] {o['symbol']:8} on {o['chain']:10} (${o['price_usd']:.4f}) | "
+                  f"24h: +{o['change_24h']}% | Liq: ${o['liquidity_usd']:,.0f} | Quality: {o['quality_score']}/100 | "
+                  f"SL: ${o['stop_loss']} | TP: ${o['take_profit']}")
+    else:
+        # Test 1: Single token across all chains
+        print("\n-- ETH price across all chains -----------------------------")
+        eth_prices = get_token_prices_by_chain("ETH")
 
-    print(f"\n── Summary ({len(eth_prices)} chains responded) ─────────────────")
-    for chain, data in sorted(eth_prices.items(), key=lambda x: -x[1]["price_usd"]):
-        print(
-            f"  {chain:12}  ${data['price_usd']:>10,.2f}  "
-            f"liq=${data['liquidity']:>10,.0f}  "
-            f"vol24h=${data['volume_24h']:>10,.0f}  "
-            f"{data['dex']}"
-        )
+        print(f"\n-- Summary ({len(eth_prices)} chains responded) -----------------")
+        for chain, data in sorted(eth_prices.items(), key=lambda x: -x[1]["price_usd"]):
+            print(
+                f"  {chain:12}  ${data['price_usd']:>10,.2f}  "
+                f"liq=${data['liquidity']:>10,.0f}  "
+                f"vol24h=${data['volume_24h']:>10,.0f}  "
+                f"{data['dex']}"
+            )
 
-    # Test 2: Search for Cronos-specific pairs
-    print("\n── Top Cronos pairs (search) ────────────────────────────────")
-    cronos_pairs = search_pairs("WCRO", chain_filter="cronos")
-    for p in cronos_pairs[:3]:
-        print(
-            f"  {p.get('baseToken',{}).get('symbol','?')}/{p.get('quoteToken',{}).get('symbol','?')}"
-            f"  ${float(p.get('priceUsd',0) or 0):>10,.4f}"
-            f"  liq=${p.get('liquidity',{}).get('usd',0):>10,.0f}"
-            f"  {p.get('dexId','?')}"
-        )
+        # Test 2: Search for Cronos-specific pairs
+        print("\n── Top Cronos pairs (search) ────────────────────────────────")
+        cronos_pairs = search_pairs("WCRO", chain_filter="cronos")
+        for p in cronos_pairs[:3]:
+            print(
+                f"  {p.get('baseToken',{}).get('symbol','?')}/{p.get('quoteToken',{}).get('symbol','?')}"
+                f"  ${float(p.get('priceUsd',0) or 0):>10,.4f}"
+                f"  liq=${p.get('liquidity',{}).get('usd',0):>10,.0f}"
+                f"  {p.get('dexId','?')}"
+            )
 
     print("="*65 + "\n")

@@ -1,10 +1,30 @@
 {
   "mcpServers": {
-    "adsum": {
+    "tradingkit": {
+      "type":    "url",
+      "url":     "https://mcp.trader.dev/mcp?key=pk_OUN_iLVFJCGKR5ZEPWH9pQCnUSaUQnHM",
+      "name":    "TradingKit",
+      "comment": "Live market data, indicators, signals — pk_OUN_iLVFJCGKR5ZEPWH9pQCnUSaUQnHM"
+    },
+    "trading-data": {
       "command": "node",
-      "args": [
-        "c:\\Users\\barcl\\.antigravity-ide\\extensions\\adsumnetwork.nrf-ai-debugger-0.3.1-universal\\mcp\\adsum-mcp.mjs"
-      ]
+      "args":    ["mcp-servers/trading-data-mcp/index.js"],
+      "name":    "TradingData"
+    },
+    "risk-gate": {
+      "command": "node",
+      "args":    ["mcp-servers/risk-gate-mcp/index.js"],
+      "name":    "RiskGate"
+    },
+    "signal-engine": {
+      "command": "node",
+      "args":    ["mcp-servers/signal-engine-mcp/index.js"],
+      "name":    "SignalEngine"
+    },
+    "portfolio": {
+      "command": "node",
+      "args":    ["mcp-servers/portfolio-mcp/index.js"],
+      "name":    "Portfolio"
     }
   }
 }

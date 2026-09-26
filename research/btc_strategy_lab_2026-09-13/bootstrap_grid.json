@@ -1,0 +1,642 @@
+{
+  "R4h": {
+    "BTC": {
+      "tradeCount": 218,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -3.2646833964821265,
+        "median": 28.594664627105825,
+        "p95": 116.91991066592591
+      },
+      "maxDrawdownPct": {
+        "p5": 6.67622277455113,
+        "median": 10.838602939636061,
+        "p95": 18.317885060894117
+      },
+      "pctIterationsProfitable": 0.93,
+      "rawPF": 1.69111544,
+      "rawTrades": 218
+    },
+    "ETH": {
+      "tradeCount": 193,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -17.341912859482555,
+        "median": 12.783334055097416,
+        "p95": 45.479175505029914
+      },
+      "maxDrawdownPct": {
+        "p5": 7.902320180444589,
+        "median": 12.795001829057032,
+        "p95": 23.99097043317403
+      },
+      "pctIterationsProfitable": 0.73,
+      "rawPF": 1.45097128,
+      "rawTrades": 193
+    },
+    "SOL": {
+      "tradeCount": 157,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -18.323546432829406,
+        "median": 14.717751719897421,
+        "p95": 93.67731418680863
+      },
+      "maxDrawdownPct": {
+        "p5": 9.636675341248651,
+        "median": 15.794783975164975,
+        "p95": 27.14688487755883
+      },
+      "pctIterationsProfitable": 0.7,
+      "rawPF": 1.44842373,
+      "rawTrades": 157
+    },
+    "AVAX": {
+      "tradeCount": 143,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -35.495602022510255,
+        "median": -0.3905958997294512,
+        "p95": 133.04484269826506
+      },
+      "maxDrawdownPct": {
+        "p5": 12.40715756080373,
+        "median": 24.355205093315124,
+        "p95": 37.96119484954854
+      },
+      "pctIterationsProfitable": 0.5,
+      "rawPF": 1.11240872,
+      "rawTrades": 143
+    },
+    "ARB": {
+      "tradeCount": 92,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -17.829549310087277,
+        "median": 4.7476869720672665,
+        "p95": 40.91901138939846
+      },
+      "maxDrawdownPct": {
+        "p5": 5.790664887151453,
+        "median": 11.862565930048136,
+        "p95": 21.932528228538313
+      },
+      "pctIterationsProfitable": 0.62,
+      "rawPF": 1.49777804,
+      "rawTrades": 92
+    },
+    "OP": {
+      "tradeCount": 145,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -35.95238180178563,
+        "median": -7.542440637669934,
+        "p95": 43.78634115816011
+      },
+      "maxDrawdownPct": {
+        "p5": 13.730631008798941,
+        "median": 23.436155023199078,
+        "p95": 39.510136527032074
+      },
+      "pctIterationsProfitable": 0.44,
+      "rawPF": 0.98121449,
+      "rawTrades": 145
+    },
+    "CRO": {
+      "tradeCount": 164,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -26.963195439403442,
+        "median": -5.571574436067451,
+        "p95": 59.86942201424175
+      },
+      "maxDrawdownPct": {
+        "p5": 9.658314085412528,
+        "median": 18.070170181593916,
+        "p95": 30.21009538932702
+      },
+      "pctIterationsProfitable": 0.37,
+      "rawPF": 1.11631943,
+      "rawTrades": 164
+    }
+  },
+  "R4i": {
+    "BTC": {
+      "tradeCount": 241,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -5.2965968746434555,
+        "median": 32.6256457674661,
+        "p95": 103.10362788596383
+      },
+      "maxDrawdownPct": {
+        "p5": 6.288240214063018,
+        "median": 10.349333626824816,
+        "p95": 21.983997153795375
+      },
+      "pctIterationsProfitable": 0.9,
+      "rawPF": 1.63531029,
+      "rawTrades": 241
+    },
+    "ETH": {
+      "tradeCount": 232,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -15.913140991862795,
+        "median": 9.821052096570382,
+        "p95": 57.79622376782208
+      },
+      "maxDrawdownPct": {
+        "p5": 8.606513525041098,
+        "median": 15.017809653716613,
+        "p95": 26.76573180693739
+      },
+      "pctIterationsProfitable": 0.7,
+      "rawPF": 1.45785913,
+      "rawTrades": 232
+    },
+    "SOL": {
+      "tradeCount": 195,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -20.155384779585226,
+        "median": 29.320807804004033,
+        "p95": 104.04592815591162
+      },
+      "maxDrawdownPct": {
+        "p5": 7.667510860968379,
+        "median": 14.802019995555513,
+        "p95": 26.183519933578324
+      },
+      "pctIterationsProfitable": 0.81,
+      "rawPF": 1.72289378,
+      "rawTrades": 195
+    },
+    "AVAX": {
+      "tradeCount": 163,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -27.913075361434625,
+        "median": 18.854774422872666,
+        "p95": 141.9836686469302
+      },
+      "maxDrawdownPct": {
+        "p5": 10.739035137323174,
+        "median": 19.196130515172193,
+        "p95": 32.171293745021906
+      },
+      "pctIterationsProfitable": 0.67,
+      "rawPF": 1.24151788,
+      "rawTrades": 163
+    },
+    "ARB": {
+      "tradeCount": 126,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -26.818206778591534,
+        "median": -6.001741443026221,
+        "p95": 17.651013807711035
+      },
+      "maxDrawdownPct": {
+        "p5": 9.745895537080335,
+        "median": 17.428464195254453,
+        "p95": 29.269983944364814
+      },
+      "pctIterationsProfitable": 0.29,
+      "rawPF": 1.05028505,
+      "rawTrades": 126
+    },
+    "OP": {
+      "tradeCount": 178,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -38.23896626371743,
+        "median": -8.82544659346819,
+        "p95": 31.41742812591901
+      },
+      "maxDrawdownPct": {
+        "p5": 14.58983111686245,
+        "median": 25.296068878887613,
+        "p95": 41.402916626187654
+      },
+      "pctIterationsProfitable": 0.39,
+      "rawPF": 1.04731934,
+      "rawTrades": 178
+    },
+    "CRO": {
+      "tradeCount": 194,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -28.815789114444147,
+        "median": -10.148586715111252,
+        "p95": 22.294107337793424
+      },
+      "maxDrawdownPct": {
+        "p5": 11.263544350773845,
+        "median": 20.030644276479766,
+        "p95": 34.37117233756246
+      },
+      "pctIterationsProfitable": 0.28,
+      "rawPF": 1.01441823,
+      "rawTrades": 194
+    }
+  },
+  "R3a": {
+    "BTC": {
+      "tradeCount": 156,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -11.068513253821644,
+        "median": 6.706360656766908,
+        "p95": 34.1811780145701
+      },
+      "maxDrawdownPct": {
+        "p5": 5.469919654106371,
+        "median": 10.287384090971555,
+        "p95": 16.84824108546826
+      },
+      "pctIterationsProfitable": 0.71,
+      "rawPF": 1.54387167,
+      "rawTrades": 156
+    },
+    "ETH": {
+      "tradeCount": 121,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -26.816381248913622,
+        "median": -11.357259203843073,
+        "p95": 17.353336873781156
+      },
+      "maxDrawdownPct": {
+        "p5": 8.817564502550484,
+        "median": 18.655705382681322,
+        "p95": 30.51284420653044
+      },
+      "pctIterationsProfitable": 0.25,
+      "rawPF": 1.0577192,
+      "rawTrades": 121
+    },
+    "SOL": {
+      "tradeCount": 133,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -30.6291827100305,
+        "median": 21.179242743436987,
+        "p95": 262.81806588671463
+      },
+      "maxDrawdownPct": {
+        "p5": 10.737246580190234,
+        "median": 19.372583256591113,
+        "p95": 33.04177526727554
+      },
+      "pctIterationsProfitable": 0.7,
+      "rawPF": 1.26773839,
+      "rawTrades": 133
+    },
+    "AVAX": {
+      "tradeCount": 120,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -41.83944223961091,
+        "median": -29.399849876671922,
+        "p95": -4.776559005500392
+      },
+      "maxDrawdownPct": {
+        "p5": 15.924397437191393,
+        "median": 31.65999994501054,
+        "p95": 41.615366044857836
+      },
+      "pctIterationsProfitable": 0.03,
+      "rawPF": 0.53904085,
+      "rawTrades": 120
+    },
+    "ARB": {
+      "tradeCount": 89,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -22.80589761149383,
+        "median": 0.3008617064832242,
+        "p95": 29.73573392600595
+      },
+      "maxDrawdownPct": {
+        "p5": 8.223451326393652,
+        "median": 14.678599801959491,
+        "p95": 26.87166774945986
+      },
+      "pctIterationsProfitable": 0.51,
+      "rawPF": 1.17421132,
+      "rawTrades": 89
+    },
+    "OP": {
+      "tradeCount": 107,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -44.36161955779454,
+        "median": -26.230759953359474,
+        "p95": 15.448007623039416
+      },
+      "maxDrawdownPct": {
+        "p5": 16.906454355915145,
+        "median": 33.951638363352124,
+        "p95": 44.20681476752652
+      },
+      "pctIterationsProfitable": 0.14,
+      "rawPF": 0.42844849,
+      "rawTrades": 107
+    },
+    "CRO": {
+      "tradeCount": 82,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -17.343609706834496,
+        "median": 6.80843499320658,
+        "p95": 42.31154215702495
+      },
+      "maxDrawdownPct": {
+        "p5": 6.07235934372014,
+        "median": 11.778665974318368,
+        "p95": 20.88740788403512
+      },
+      "pctIterationsProfitable": 0.66,
+      "rawPF": 1.50512439,
+      "rawTrades": 82
+    }
+  },
+  "R4j": {
+    "BTC": {
+      "tradeCount": 256,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -9.543424246637766,
+        "median": 26.089541775276224,
+        "p95": 78.11725753030305
+      },
+      "maxDrawdownPct": {
+        "p5": 5.91201657148522,
+        "median": 11.715900292703187,
+        "p95": 22.44947786695742
+      },
+      "pctIterationsProfitable": 0.91,
+      "rawPF": 1.49867812,
+      "rawTrades": 256
+    },
+    "ETH": {
+      "tradeCount": 238,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -18.104234251021655,
+        "median": 17.997916511194067,
+        "p95": 68.38438033426118
+      },
+      "maxDrawdownPct": {
+        "p5": 7.629771315868447,
+        "median": 13.966523813203196,
+        "p95": 25.504232111273478
+      },
+      "pctIterationsProfitable": 0.78,
+      "rawPF": 1.46577075,
+      "rawTrades": 238
+    },
+    "SOL": {
+      "tradeCount": 211,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -17.958986390121336,
+        "median": 25.576391800168487,
+        "p95": 92.1720442606518
+      },
+      "maxDrawdownPct": {
+        "p5": 9.143272700623026,
+        "median": 16.55437512984201,
+        "p95": 30.00808618802812
+      },
+      "pctIterationsProfitable": 0.78,
+      "rawPF": 1.57949101,
+      "rawTrades": 211
+    },
+    "AVAX": {
+      "tradeCount": 176,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -28.99606513685169,
+        "median": 32.87087670818729,
+        "p95": 160.63846630615194
+      },
+      "maxDrawdownPct": {
+        "p5": 11.514762570596808,
+        "median": 18.953347576441736,
+        "p95": 32.49956757550411
+      },
+      "pctIterationsProfitable": 0.73,
+      "rawPF": 1.23730875,
+      "rawTrades": 176
+    },
+    "ARB": {
+      "tradeCount": 134,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -27.00689380150604,
+        "median": -7.871127717992088,
+        "p95": 23.864850362752186
+      },
+      "maxDrawdownPct": {
+        "p5": 9.584080478181258,
+        "median": 17.9834041315433,
+        "p95": 31.458277060444313
+      },
+      "pctIterationsProfitable": 0.32,
+      "rawPF": 0.95772208,
+      "rawTrades": 134
+    },
+    "OP": {
+      "tradeCount": 199,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -45.41495888111583,
+        "median": -20.604380286783396,
+        "p95": 32.975804350251536
+      },
+      "maxDrawdownPct": {
+        "p5": 14.588406860116299,
+        "median": 30.32738258878091,
+        "p95": 46.397688527749956
+      },
+      "pctIterationsProfitable": 0.25,
+      "rawPF": 0.98736251,
+      "rawTrades": 199
+    },
+    "CRO": {
+      "tradeCount": 232,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -30.54126135249714,
+        "median": -1.0081431035068422,
+        "p95": 47.60707612845376
+      },
+      "maxDrawdownPct": {
+        "p5": 9.33577307702817,
+        "median": 20.63111925959574,
+        "p95": 36.21272727688343
+      },
+      "pctIterationsProfitable": 0.47,
+      "rawPF": 1.0873313,
+      "rawTrades": 232
+    }
+  },
+  "R2_4h": {
+    "BTC": {
+      "tradeCount": 168,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -23.87263991809958,
+        "median": -1.6323200023038664,
+        "p95": 26.57003105789284
+      },
+      "maxDrawdownPct": {
+        "p5": 9.316896121256832,
+        "median": 15.434237945087837,
+        "p95": 27.40032931900116
+      },
+      "pctIterationsProfitable": 0.44,
+      "rawPF": 1.49844635,
+      "rawTrades": 168
+    },
+    "ETH": {
+      "tradeCount": 130,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -26.081288568869798,
+        "median": -5.809705395773723,
+        "p95": 29.86315813510099
+      },
+      "maxDrawdownPct": {
+        "p5": 9.663553787519168,
+        "median": 18.821108617572367,
+        "p95": 27.25723322072214
+      },
+      "pctIterationsProfitable": 0.4,
+      "rawPF": 1.1998722,
+      "rawTrades": 130
+    },
+    "SOL": {
+      "tradeCount": 142,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -37.65909142160212,
+        "median": 15.1212909557233,
+        "p95": 281.4987049511589
+      },
+      "maxDrawdownPct": {
+        "p5": 14.874470182867777,
+        "median": 26.42436027413515,
+        "p95": 42.773117775503465
+      },
+      "pctIterationsProfitable": 0.6,
+      "rawPF": 1.18580316,
+      "rawTrades": 142
+    },
+    "AVAX": {
+      "tradeCount": 132,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -49.05804589894114,
+        "median": -16.828207866552024,
+        "p95": 64.65716904847308
+      },
+      "maxDrawdownPct": {
+        "p5": 16.27441814992285,
+        "median": 36.83337382449552,
+        "p95": 50.20958866136921
+      },
+      "pctIterationsProfitable": 0.31,
+      "rawPF": 0.94835985,
+      "rawTrades": 132
+    },
+    "ARB": {
+      "tradeCount": 99,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -31.663430150314376,
+        "median": -12.992378777392155,
+        "p95": 19.27879338079126
+      },
+      "maxDrawdownPct": {
+        "p5": 11.304053863542832,
+        "median": 23.844348716963214,
+        "p95": 35.355172730999264
+      },
+      "pctIterationsProfitable": 0.27,
+      "rawPF": 1.0095293,
+      "rawTrades": 99
+    },
+    "OP": {
+      "tradeCount": 118,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -52.578661113718624,
+        "median": -18.853389193390548,
+        "p95": 51.42419708635097
+      },
+      "maxDrawdownPct": {
+        "p5": 16.463921360354128,
+        "median": 32.73240367306511,
+        "p95": 51.2891497583464
+      },
+      "pctIterationsProfitable": 0.28,
+      "rawPF": 0.93480144,
+      "rawTrades": 118
+    },
+    "CRO": {
+      "tradeCount": 89,
+      "iterations": 100,
+      "exposureFrac": 0.15,
+      "netProfitPct": {
+        "p5": -19.876361634139794,
+        "median": 17.24516312444191,
+        "p95": 62.81026857890155
+      },
+      "maxDrawdownPct": {
+        "p5": 7.740403183136807,
+        "median": 12.416866880055373,
+        "p95": 26.732964050237513
+      },
+      "pctIterationsProfitable": 0.78,
+      "rawPF": 1.53502111,
+      "rawTrades": 89
+    }
+  }
+}

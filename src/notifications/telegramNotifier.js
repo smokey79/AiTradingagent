@@ -32,7 +32,8 @@ async function sendTelegramMessage(text, options = {}) {
     return { success: false, reason: 'disabled' };
   }
 
-  if (!botToken || !chatId || chatId.includes('your_telegram')) {
+  const isValidToken = /^\d+:[\w-]+$/.test(botToken);
+  if (!botToken || !chatId || chatId.includes('your_telegram') || !isValidToken) {
     logger.info(`[Telegram Notification Simulated] ${text.replace(/<[^>]*>?/gm, '')}`);
     return { success: true, simulated: true, message: text };
   }
@@ -50,7 +51,8 @@ async function sendTelegramMessage(text, options = {}) {
     return { success: true, simulated: false, data: response.data };
   } catch (err) {
     logger.warn(`Telegram send failed: ${err.message}`);
-    return { success: false, error: err.message };
+    logger.info(`[Telegram Notification Simulated] ${text.replace(/<[^>]*>?/gm, '')}`);
+    return { success: true, simulated: true, fallback: true, error: err.message };
   }
 }
 
@@ -106,6 +108,20 @@ async function sendProfitHarvestAlert(profitUsd, btcAmount, vaultUsd) {
   return sendTelegramMessage(message);
 }
 
+async function sendAgentInteractiveRequest(agentName, requestContext) {
+  const message = `
+🤖 <b>AGENT ASSISTANCE REQUIRED: ${agentName}</b>
+━━━━━━━━━━━━━━━━━━
+<b>Context:</b> ${requestContext}
+
+⚡ <i>Please reply in the terminal or provide the requested MCP server/data source so I can proceed.</i>
+━━━━━━━━━━━━━━━━━━
+`.trim();
+
+  logger.warn(`🤖 [${agentName}] requesting user assistance: ${requestContext}`);
+  return sendTelegramMessage(message);
+}
+
 function ingestTelegramMessage(text, sender = 'Telegram Channel') {
   ensureDataDir();
   let entries = [];
@@ -147,6 +163,7 @@ module.exports = {
   sendTradeAlert,
   sendMarginAlert,
   sendProfitHarvestAlert,
+  sendAgentInteractiveRequest,
   ingestTelegramMessage,
   getIngestedTelegramMessages,
   getTelegramConfig,

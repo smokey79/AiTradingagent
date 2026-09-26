@@ -220,6 +220,29 @@ async function runSuite() {
 
   // ─── 5. Risk Gate & Kelly Sizing ───────────────────────────────────────────
   console.log('\n─── Module 5: Risk Gate & Kelly Sizing Engine ───');
+  it('Calculates dynamic portfolio risk scaling based on confidence, win rate, and BTC regime', () => {
+    const { calculateDynamicPortfolioRisk } = require('../src/risk/riskGate');
+
+    // 1. High conviction + high win rate + bullish expansion -> risk scales up
+    const bullishRisk = calculateDynamicPortfolioRisk({
+      confidence: 0.88,
+      winRate: 0.80,
+      btcTrend: 'STRONG_BULLISH_EXPANSION',
+    });
+    assert(bullishRisk.isDynamic, 'Should be dynamic');
+    assert(bullishRisk.dynamicRiskPct > 2.0, 'High conviction risk should exceed 2.0% baseline');
+    assert(bullishRisk.dynamicRiskPct <= 4.5, 'Must respect 4.5% upper safety ceiling');
+
+    // 2. Low confidence + poor win rate + bearish contraction -> risk compresses defensively
+    const defensiveRisk = calculateDynamicPortfolioRisk({
+      confidence: 0.70,
+      winRate: 0.60,
+      btcTrend: 'BEARISH_CONTRACTION',
+    });
+    assert(defensiveRisk.dynamicRiskPct < 2.0, 'Defensive risk should compress below 2.0%');
+    assert(defensiveRisk.dynamicRiskPct >= 0.8, 'Must respect 0.8% minimum risk floor');
+  });
+
   await asyncIt('Approves trade meeting minimum confidence & sizing bounds', async () => {
     updateBalance(250.00, 0, true); // Ensure healthy balance and reset peak for risk checks
     // Seed baseline trades to ensure positive rolling win rate for risk gate test
@@ -465,8 +488,8 @@ async function runSuite() {
     assert.strictEqual(simBalancer.isProfitable, true);
   });
 
-  // ─── 14. YouTube Continuous Learning Loop ──────────────────────────────────
-  console.log('\n─── Module 14: YouTube Agent Continuous Learning ───');
+  // ─── 14. YouTube Continuous Learning Loop & Dynamic Sentiment ─────────────
+  console.log('\n─── Module 14: YouTube Agent Continuous Learning & Dynamic Sentiment ───');
   await asyncIt('Extracts transcripts/alpha from YouTube URL and updates memory', async () => {
     const { extractVideoId, learnFromYouTubeUrl, getLearnedAlpha } = require('../src/learning/youtubeLearner');
     const videoId = extractVideoId('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
@@ -479,6 +502,31 @@ async function runSuite() {
 
     const memory = getLearnedAlpha(5);
     assert(memory.length >= 1, 'Memory must contain learned insights');
+  });
+
+  it('Parses YouTube RSS channel feeds and integrates with YouTubeSentimentAgent', () => {
+    const { parseYouTubeXmlFeed, getTrackedChannels } = require('../src/learning/youtubeChannelScanner');
+    const { getSentimentSignal } = require('../src/agents/youtubeSentimentAgent');
+
+    // Test XML RSS Parser
+    const sampleXml = `
+      <feed xmlns="http://www.w3.org/2005/Atom" xmlns:yt="http://www.youtube.com/xml/schemas/2015">
+        <entry>
+          <yt:videoId>abc12345678</yt:videoId>
+          <title>Bitcoin Massive Breakout Imminent</title>
+          <published>2026-09-11T00:00:00+00:00</published>
+          <author><name>Coin Bureau</name></author>
+        </entry>
+      </feed>
+    `;
+    const parsed = parseYouTubeXmlFeed(sampleXml);
+    assert.strictEqual(parsed.length, 1);
+    assert.strictEqual(parsed[0].videoId, 'abc12345678');
+    assert.strictEqual(parsed[0].title, 'Bitcoin Massive Breakout Imminent');
+
+    // Test Channel Registry
+    const channels = getTrackedChannels();
+    assert(channels.length >= 5, 'Must track at least 5 curated alpha channels');
   });
 
   // ─── 15. Telegram Live Ingestion & Notifications ───────────────────────────
@@ -577,8 +625,8 @@ async function runSuite() {
     assert(expertRes.allocatedPositionSizeUsd >= 10, 'Allocated USD size must be >= $10');
   });
 
-  // ─── 19. DexScreener Live Meme Coin Breakout Scanner ───────────────────────
-  console.log('\n─── Module 19: DexScreener Meme Coin Breakout Scanner & Safety Filter ───');
+  // ─── 19. DexScreener Live Meme Coin & DeFi Breakout Scanner ───────────────
+  console.log('\n─── Module 19: DexScreener Meme Coin & DeFi Breakout Scanner & Safety Filter ───');
   await asyncIt('Scans trending meme coins and enforces $50k+ liquidity & safety filters', async () => {
     const { scanTrendingMemeCoins } = require('../src/data/dexScreenerFeed');
     const memeList = await scanTrendingMemeCoins();
@@ -592,6 +640,31 @@ async function runSuite() {
       assert(m.safetyScore >= 70, 'Safety score must pass threshold');
       assert(typeof m.change24h === 'number', '24h change must be numeric');
     }
+  });
+
+  await asyncIt('Scans multi-chain DeFi opportunities with institutional filters and SL/TP setups', async () => {
+    const { scanDeFiOpportunities, getCachedDeFiOpportunities } = require('../src/data/dexScreenerDeFiScanner');
+    const { scanDeFiUniverse } = require('../src/agents/defiAgent');
+
+    const opps = await scanDeFiOpportunities();
+    assert(Array.isArray(opps), 'DeFi opportunities must be an array');
+    assert(opps.length >= 3, 'Must discover at least 3 high-probability DeFi setups');
+
+    for (const setup of opps) {
+      assert(setup.symbol, 'Setup must have token symbol');
+      assert(setup.chain, 'Setup must specify DEX chain');
+      assert(setup.priceUsd > 0, 'Price must be positive');
+      assert(setup.liquidityUsd >= 50000, 'Liquidity must meet $50k institutional floor');
+      assert(setup.volume24hUsd >= 100000, 'Volume must meet $100k floor');
+      assert(setup.safetyScore >= 70, 'Safety score must be >= 70');
+      assert(setup.qualityScore > 0, 'Quality score must be positive');
+      assert(setup.stopLoss < setup.entryPrice, 'Stop loss must be below entry');
+      assert(setup.takeProfit > setup.entryPrice, 'Take profit must exceed entry');
+      assert(setup.riskRewardRatio >= 1.5, 'Risk/reward must be favorable');
+    }
+
+    const agentOpps = await scanDeFiUniverse();
+    assert(Array.isArray(agentOpps) && agentOpps.length >= 3);
   });
 
   // ─── 20. Autonomous Auto-Trading Engine Controller ───────────────────────
@@ -652,6 +725,122 @@ async function runSuite() {
     assert.strictEqual(signal.agent, 'strategy_learner');
     assert(['BUY', 'SELL', 'HOLD'].includes(signal.signal));
     assert(signal.futures_5x && signal.futures_5x.leverage === 5.0);
+  });
+
+  // ─── Module 22: Bitcoin Benchmark & Relative Performance Engine ────────────
+  console.log('\n─── Module 22: Bitcoin Benchmark & Relative Performance Engine ───');
+  await asyncIt('Tracks live BTC benchmark, relative strength vs BTC, and trade Alpha', async () => {
+    const { getBtcBenchmark, calculateRelativeStrengthVsBtc, calculateAlphaVsBtc, calculatePortfolioBenchmarkVsBtc } = require('../src/data/btcBenchmark');
+
+    const btc = await getBtcBenchmark();
+    assert(btc && typeof btc.price === 'number' && btc.price > 0, 'BTC price must be positive number');
+    assert(typeof btc.change24h === 'number', 'BTC 24h change must be numeric');
+    assert(typeof btc.trend === 'string', 'BTC trend must be string');
+
+    // Relative strength test
+    const rsEth = calculateRelativeStrengthVsBtc('ETH', 4.5, { change24h: 1.5 });
+    assert.strictEqual(rsEth.symbol, 'ETH');
+    assert.strictEqual(rsEth.relativeStrengthPct, 3.0);
+    assert.strictEqual(rsEth.isOutperformingBtc, true);
+
+    const rsSol = calculateRelativeStrengthVsBtc('SOL', -2.0, { change24h: 2.0 });
+    assert.strictEqual(rsSol.isUnderperformingBtc, true);
+
+    // Alpha vs BTC test: Trade made +10%, BTC made +4% -> Alpha = +6%
+    const alphaRes = calculateAlphaVsBtc(60000, 62400, 10.0);
+    assert.strictEqual(alphaRes.btcReturnPct, 4.0);
+    assert.strictEqual(alphaRes.alphaVsBtcPct, 6.0);
+    assert.strictEqual(alphaRes.outperformedBtc, true);
+
+    // Portfolio Benchmark Summary
+    const portSummary = calculatePortfolioBenchmarkVsBtc({
+      currentPortfolioBalance: 300,
+      initialDeposit: 250,
+      currentBtcPrice: 70000,
+      initialBtcPrice: 65000,
+    });
+    assert(portSummary.portfolioRoiPct === 20.0, 'Portfolio ROI should be 20%');
+    assert(typeof portSummary.cumulativeAlphaPct === 'number');
+  });
+
+  // ─── Module 23: Self-Learning from Lost Trades Engine ──────────────────────
+  console.log('\n─── Module 23: Self-Learning from Lost Trades Engine ───');
+  it('Performs automated post-mortem root cause analysis and maintains negative pattern filters', () => {
+    const { recordLossPostMortem, evaluateNegativePatterns, getLostTradeLessons } = require('../src/learning/lossLearner');
+
+    // 1. Record a post-mortem on an overextended bull trap loss
+    const postMortem = recordLossPostMortem({
+      symbol: 'SOL/USDT',
+      side: 'BUY',
+      entryPrice: 200,
+      exitPrice: 190,
+      pnlUsd: -10.0,
+      pnlPct: -5.0,
+      marketData: {
+        price: { price: 190 },
+        indicators: { rsi14: 74, ema50: 170 }, // >4.5% above 50-EMA and overbought
+      },
+      btcBenchmark: { change24h: -3.5, trend: 'BEARISH_CONTRACTION' },
+    });
+
+    assert(postMortem.id.startsWith('LOSS-'), 'Post-mortem must have LOSS ID');
+    assert(postMortem.trapType, 'Must identify failure trap type');
+    assert(postMortem.ruleFilter, 'Must synthesize negative pattern rule filter');
+
+    // 2. Evaluate negative pattern filter against matching setup
+    const trapCheck = evaluateNegativePatterns('AVAX', 'BUY', {
+      price: { price: 40 },
+      indicators: { rsi14: 72, ema50: 30 }, // overextended
+    }, { change24h: -3.0, trend: 'BEARISH_CONTRACTION' });
+
+    assert.strictEqual(trapCheck.hasNegativePatternMatch, true, 'Must detect matching negative trap');
+    assert(trapCheck.confidencePenalty > 0, 'Penalty must be applied');
+
+    // 3. Query active lessons
+    const lessons = getLostTradeLessons(5);
+    assert(Array.isArray(lessons) && lessons.length >= 1, 'Lessons list must be populated');
+  });
+
+  // ─── Module 24: Institutional Crypto Expert Trader Agent ───────────────────
+  console.log('\n─── Module 24: Institutional Crypto Expert Trader Agent ───');
+  await asyncIt('Generates expert technical signals and scans universe to create trades', async () => {
+    const { getSignal, scanAndCreateTrades, automateFigure } = require('../src/agents/expertTraderAgent');
+
+    const testMarket = {
+      price: { price: 68000, change24h: 3.5 },
+      indicators: {
+        ema20: 67800,
+        ema50: 67000,
+        rsi14: 56,
+        atr14: 900,
+        volumeRatio: 1.45,
+        orderBook: { imbalanceRatio: 0.62, bias: 'bid_heavy_bullish' },
+      },
+    };
+
+    const signal = await getSignal('BTC/USDT', testMarket);
+    assert.strictEqual(signal.agent, 'expert_trader');
+    assert(['BUY', 'SELL', 'HOLD'].includes(signal.signal));
+    assert(signal.confidence >= 0 && signal.confidence <= 1);
+    assert(signal.futures5x && signal.futures5x.leverage === 5.0);
+    assert(signal.benchmarkVsBtc, 'Must contain benchmark vs BTC metrics');
+
+    // Opportunity Scanner test
+    const marketMap = {
+      'BTC/USDT': testMarket,
+      'ETH/USDT': {
+        price: { price: 3500, change24h: 5.0 },
+        indicators: { ema20: 3450, ema50: 3400, rsi14: 58, volumeRatio: 1.6, orderBook: { imbalanceRatio: 0.65 } },
+      },
+    };
+
+    const opportunities = await scanAndCreateTrades(marketMap);
+    assert(Array.isArray(opportunities), 'Opportunities must be array');
+    if (opportunities.length > 0) {
+      const top = opportunities[0];
+      assert(top.qualityScore > 0, 'Quality score must be positive');
+      assert(top.stopLoss && top.takeProfit, 'Must specify SL and TP figures');
+    }
   });
 
   // ─── Summary ───────────────────────────────────────────────────────────────

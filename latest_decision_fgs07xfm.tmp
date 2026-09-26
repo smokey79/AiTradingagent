@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-09-11T05:46:37.507013+00:00",
+  "symbol": "ETH",
+  "action": "LONG",
+  "size": 0.3,
+  "reason": "Arb: cronos\u2192optimism spread=323078379700.00%",
+  "source": "arb_scanner",
+  "confidence": 1.0,
+  "paper_mode": true,
+  "engine": "python"
+}

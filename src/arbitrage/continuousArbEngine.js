@@ -18,7 +18,7 @@ const logger = require('../utils/logger');
 const { detectArbitrageOpportunities, CHAINS } = require('./arbScanner');
 const { executeFlashLoanArbitrage, simulateFlashLoan } = require('../flashloan/flashloanExecutor');
 const { recordTrade } = require('../risk/tradeLedger');
-const { getPortfolioState } = require('../risk/riskGate');
+const { getPortfolioState, checkRiskGate } = require('../risk/riskGate');
 
 // ── Config ────────────────────────────────────────────────────────────────────
 const SCAN_INTERVAL_MS   = parseInt(process.env.ARB_SCAN_INTERVAL_MS  || '8000',  10);
@@ -30,7 +30,17 @@ const MAX_POSITION_FRAC  = parseFloat(process.env.ARB_MAX_POSITION_FRAC|| '0.40'
 const MAX_BORROW_USD     = parseFloat(process.env.ARB_MAX_BORROW_USD   || '50000');     // flash loan cap
 
 // Tokens to monitor across chains
-const WATCH_TOKENS = ['ETH', 'WBTC', 'BTC', 'LINK', 'AAVE', 'CRO', 'SOL', 'ARB', 'AVAX', 'UNI', 'MATIC'];
+// 2026-09-15: HYPE, HBAR and XRP added at Alan's request.
+// Liquidity measured the same day (24h volume / market cap — the fill-risk
+// proxy, not a price view): HYPE 4.36% (deep, rank #10), HBAR 2.14% (deep),
+// CRO 0.31% (THIN — roughly 7x thinner than peers of similar size, and it
+// showed the widest cross-venue gap of the group; treat CRO results as
+// execution-constrained before treating them as signal).
+// Chain caveat worth knowing: HBAR and Hyperliquid both have EVM-compatible
+// execution, but XRP Ledger's native DEX is not EVM and XRPL EVM-sidechain
+// DEX coverage on DexScreener is patchy — expect XRP routes to resolve less
+// often than the others rather than to fail loudly.
+const WATCH_TOKENS = ['ETH', 'WBTC', 'BTC', 'LINK', 'AAVE', 'CRO', 'SOL', 'ARB', 'AVAX', 'UNI', 'MATIC', 'HYPE', 'HBAR', 'XRP'];
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let scanInterval  = null;
@@ -38,6 +48,9 @@ let isRunning     = false;
 let scanCount     = 0;
 let totalArbTrades = 0;
 let totalArbProfitUsd = 0;
+// 2026-09-15: how many opportunities the real riskGate refused. Surfaced in
+// getStatus() so a blocked engine is visibly blocked, not silently idle.
+let blockedByRiskGate = 0;
 let lastScanAt    = null;
 let lastOpps      = [];
 let recentExecutions = []; // ring buffer last 20 executed arbs
@@ -140,13 +153,54 @@ async function buildLivePriceMap() {
 // ── Risk gate for arb ─────────────────────────────────────────────────────────
 
 function arbRiskGate(opp, portfolioBalance) {
-  // Discard phantom token mismatches (spread > 20% is impossible on liquid majors)
-  if (opp.netPct > 20.0 || (opp.grossPct && opp.grossPct > 20.0)) {
-    return { approved: false, reason: `spread ${opp.netPct}% > 20% (phantom contract mismatch guard)` };
+  // ───────────────────────────────────────────────────────────────────────
+  // HARDENED 2026-09-15 after an audit found this path booking $82.55 of
+  // profit into trade_ledger.json that never reached the portfolio (actual
+  // P&L that day: -$0.08). Three fabricated 100%-win records went into the
+  // history the learning layer reads. What went wrong, and what now stops it:
+  //
+  //  (a) This gate is NOT the real risk gate. It never called
+  //      src/risk/riskGate.js, so the 72% confidence floor, the majority
+  //      consensus rule and the win-rate gate were all bypassed. Alan's
+  //      instruction is that ANY sourced trade must pass riskGate — enforced
+  //      at the call site in executeArb(), below.
+  //  (b) The 20% "phantom guard" was far too loose. Measured the same day
+  //      across 85 real venues, BTC's entire cross-venue gap was 0.16% GROSS
+  //      and NEGATIVE net of costs. scan_log.jsonl meanwhile held entries
+  //      claiming 24-55% on ETH and LINK — broken pool prices, not trades.
+  //      A "spread" above ARB_PHANTOM_MAX_PCT is now treated as a data fault.
+  //  (c) MIN_NET_PCT of 0.30% sat right on top of real round-trip cost
+  //      (~0.27% for majors), so noise cleared it. There is now an explicit
+  //      margin-of-safety multiple over modelled cost.
+  // ───────────────────────────────────────────────────────────────────────
+  const PHANTOM_MAX_PCT = parseFloat(process.env.ARB_PHANTOM_MAX_PCT || '2.0');
+  const COST_SAFETY_MULT = parseFloat(process.env.ARB_COST_SAFETY_MULT || '2.0');
+
+  if (!Number.isFinite(opp.netPct)) {
+    return { approved: false, reason: 'netPct missing/NaN — refusing to act on an unparsed opportunity' };
   }
 
-  // Must clear minimum profit thresholds
-  if (opp.netPct < MIN_NET_PCT) return { approved: false, reason: `netPct ${opp.netPct}% < ${MIN_NET_PCT}%` };
+  // Phantom / bad-data guard. A genuine dislocation on a liquid pair does not
+  // sit at multiple percent waiting to be taken; that is a pricing fault.
+  if (opp.netPct > PHANTOM_MAX_PCT || (opp.grossPct && opp.grossPct > PHANTOM_MAX_PCT)) {
+    return {
+      approved: false,
+      reason: `spread ${opp.netPct}% exceeds ${PHANTOM_MAX_PCT}% — treated as a DATA FAULT (stale/mismatched pool), not an opportunity`,
+      dataFault: true,
+    };
+  }
+
+  // Margin of safety over modelled round-trip cost, not just a flat floor.
+  const modelledCostPct = Number.isFinite(opp.costPct)
+    ? opp.costPct
+    : ((opp.grossPct != null && opp.netPct != null) ? Math.max(0, opp.grossPct - opp.netPct) : 0.27);
+  const requiredPct = Math.max(MIN_NET_PCT, modelledCostPct * COST_SAFETY_MULT);
+  if (opp.netPct < requiredPct) {
+    return {
+      approved: false,
+      reason: `netPct ${opp.netPct}% < required ${requiredPct.toFixed(3)}% (${COST_SAFETY_MULT}x modelled cost ${modelledCostPct.toFixed(3)}%)`,
+    };
+  }
 
   // Liquidity check
   if (opp.minLiquidity && opp.minLiquidity < MIN_LIQUIDITY_USD) {
@@ -193,6 +247,49 @@ async function executeArb(opp, borrowAmountUsd) {
 
   if (result.success) {
     const pnl = sim.netProfitUsd;
+
+    // ───────────────────────────────────────────────────────────────────────
+    // MANDATORY RISK GATE — added 2026-09-15 on Alan's instruction:
+    // "our trade seeking agent can source any trade possible, given it must
+    // pass riskgate."
+    //
+    // Until now this path called its own local arbRiskGate() and NEVER the
+    // real one, so the 72% confidence floor, the majority-consensus rule and
+    // the rolling win-rate gate were all bypassed. That is how three
+    // simulated flash-loan "wins" worth $82.55 reached a ledger whose real
+    // P&L was -$0.08.
+    //
+    // The consensus object below is HONEST: an arbitrage opportunity has no
+    // LLM agent votes behind it, so agentsAgreeing is 0 and it will be
+    // rejected by the majority rule. That is the correct default. If you want
+    // arbitrage to run again, it has to be a deliberate decision:
+    // set ARB_ALLOW_WITHOUT_CONSENSUS=true, which permits it under the
+    // hardened arbRiskGate() above INSTEAD of agent consensus — never with a
+    // faked vote count.
+    // ───────────────────────────────────────────────────────────────────────
+    const ALLOW_WITHOUT_CONSENSUS = String(process.env.ARB_ALLOW_WITHOUT_CONSENSUS || 'false').toLowerCase() === 'true';
+    if (!ALLOW_WITHOUT_CONSENSUS) {
+      let gateResult = { approved: false, reason: 'risk gate not reached' };
+      try {
+        gateResult = await checkRiskGate(`${opp.token}/USDT`, {
+          signal: 'BUY',
+          confidence: Math.min(0.95, opp.netPct / 5),
+          agentsAgreeing: 0,          // no agent voted on this — do not pretend otherwise
+          totalAgents: 0,
+          veto_triggered: false,
+        }, { price: { price: opp.buyPrice } });
+      } catch (err) {
+        gateResult = { approved: false, reason: `risk gate threw: ${err.message}` };
+      }
+      if (!gateResult.approved) {
+        logger.warn(
+          `[ArbEngine] 🛑 BLOCKED by riskGate (${opp.token} ${opp.buyChain}→${opp.sellChain}, +${opp.netPct}%): ${gateResult.reason}`
+        );
+        blockedByRiskGate++;
+        return null;
+      }
+    }
+
     totalArbTrades++;
     totalArbProfitUsd += pnl;
     hourlyArbCount++;
@@ -214,6 +311,15 @@ async function executeArb(opp, borrowAmountUsd) {
       paper:         PAPER,
       arbRoute:      `${opp.buyChain.toUpperCase()} [${opp.buyDex}] → ${opp.sellChain.toUpperCase()} [${opp.sellDex}]`,
       flashLoan:     true,
+      // 2026-09-15: explicit provenance so these records can never again be
+      // mistaken for realised directional performance. `simulated` means the
+      // P&L came out of simulateFlashLoan(), NOT out of the portfolio — the
+      // audit that prompted this found $82.55 of such "profit" sitting in the
+      // ledger against an actual portfolio move of -$0.08.
+      simulated:     true,
+      excludeFromLearning: true,
+      agentsAgreeing: 0,
+      totalAgents:   0,
     };
 
     recordTrade(tradeRecord);

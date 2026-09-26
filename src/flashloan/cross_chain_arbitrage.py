@@ -96,7 +96,13 @@ def find_best_arb_pair(chain_prices: dict, token: str = "ETH") -> list:
             buy_price  = buy_data.get("price_usd", 0)
             sell_price = sell_data.get("price_usd", 0)
 
-            if buy_price <= 0 or sell_price <= 0:
+            # FIX 2026-09-13: `<= 0` does not catch a near-zero float
+            # (e.g. 1e-300) coming back from a bad/partial price feed —
+            # dividing by that produced "opportunities" like 328,111,344,437%
+            # net profit in vault_summary.json. Require a sane minimum price
+            # instead of just a positive one.
+            MIN_SANE_PRICE_USD = 0.000001
+            if buy_price < MIN_SANE_PRICE_USD or sell_price < MIN_SANE_PRICE_USD:
                 continue
 
             # Gross spread
@@ -104,6 +110,14 @@ def find_best_arb_pair(chain_prices: dict, token: str = "ETH") -> list:
 
             if gross_pct <= 0:
                 continue   # No positive spread in this direction
+
+            # Phantom token/contract-mismatch guard — mirrors the same cap
+            # already used in the Node.js arb engine (src/arbitrage/arbScanner.js).
+            # No real same-token cross-chain spread on liquid majors exceeds
+            # ~20%; anything bigger means the two sides aren't really the
+            # same asset (or a price feed glitch), not a real opportunity.
+            if gross_pct > 20.0:
+                continue
 
             # Estimate gas cost as % of trade value
             # Use chain registry gas estimates

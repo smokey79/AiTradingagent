@@ -1,0 +1,229 @@
+{
+  "updatedAt": "2026-09-15T15:53:20.074Z",
+  "signals": {
+    "ZEC/USDT": {
+      "signal": "HOLD",
+      "confidence": 0.048,
+      "approved": false,
+      "agentsAgreeing": 0,
+      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/11 agreeing. Capital preserved.",
+      "ts": "2026-09-15T15:53:17.207Z"
+    },
+    "BNB/USDT": {
+      "signal": "SELL",
+      "confidence": 0.791,
+      "approved": true,
+      "agentsAgreeing": 3,
+      "reasoning": "3/11 specialist AI agents aligned on SELL (79% confidence). bear_agent: Strong bearish rejection confirmed below 50-EMA ($721.77) with 1.19x volume. | claude: Overbought RSI (47.2) and order book selling pressure below EMA50",
+      "ts": "2026-09-15T15:53:17.288Z"
+    },
+    "SNDKB/USDT": {
+      "signal": "SELL",
+      "confidence": 0.35,
+      "approved": false,
+      "agentsAgreeing": 2,
+      "reasoning": "2/11 specialist AI agents aligned on SELL (35% confidence). bear_agent: Strong bearish rejection confirmed below 50-EMA ($1568.02) with 1.12x volume. [LossLearner Alert: Adjusted -12%] | claude: Overbought RSI (37.5) and order book selling pressure below EMA50",
+      "ts": "2026-09-15T15:53:17.409Z"
+    },
+    "WBTC/USDT": {
+      "signal": "HOLD",
+      "confidence": 0.064,
+      "approved": false,
+      "agentsAgreeing": 0,
+      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/11 agreeing. Capital preserved.",
+      "ts": "2026-09-15T15:53:17.495Z"
+    },
+    "XAUT/USDT": {
+      "signal": "SELL",
+      "confidence": 0.571,
+      "approved": true,
+      "agentsAgreeing": 2,
+      "reasoning": "2/11 specialist AI agents aligned on SELL (57% confidence). bear_agent: Strong bearish rejection confirmed below 50-EMA ($4306.98) with 0.69x volume. [LossLearner Alert: Adjusted -12%] | gemini: Bear Flag 50-EMA Dynamic Rejection confirmed at 50-EMA ($4306.98) with -0.35% distance",
+      "ts": "2026-09-15T15:53:17.633Z"
+    },
+    "CRO/USDT": {
+      "signal": "SELL",
+      "confidence": 0.604,
+      "approved": true,
+      "agentsAgreeing": 2,
+      "reasoning": "2/11 specialist AI agents aligned on SELL (60% confidence). claude: Overbought RSI (100.0) and order book selling pressure below EMA50 | gemini: Double Top Overextension Rejection confirmed at 50-EMA ($0.05) with 13.78% distance",
+      "ts": "2026-09-15T15:53:17.775Z"
+    },
+    "PAXG/USDT": {
+      "signal": "SELL",
+      "confidence": 0.7,
+      "approved": true,
+      "agentsAgreeing": 2,
+      "reasoning": "2/11 specialist AI agents aligned on SELL (70% confidence). bear_agent: Strong bearish rejection confirmed below 50-EMA ($4310.41) with 1.28x volume. | gemini: Bear Flag 50-EMA Dynamic Rejection confirmed at 50-EMA ($4310.41) with -0.51% distance",
+      "ts": "2026-09-15T15:53:17.859Z"
+    },
+    "MUB/USDT": {
+      "signal": "SELL",
+      "confidence": 0.573,
+      "approved": true,
+      "agentsAgreeing": 2,
+      "reasoning": "2/11 specialist AI agents aligned on SELL (57% confidence). bear_agent: Strong bearish rejection confirmed below 50-EMA ($935.75) with 0.34x volume. [LossLearner Alert: Adjusted -12%] | gemini: Bear Flag 50-EMA Dynamic Rejection confirmed at 50-EMA ($935.75) with -0.85% distance",
+      "ts": "2026-09-15T15:53:18.002Z"
+    },
+    "TAO/USDT": {
+      "signal": "BUY",
+      "confidence": 0.435,
+      "approved": false,
+      "agentsAgreeing": 1,
+      "reasoning": "1/11 specialist AI agents aligned on BUY (44% confidence). traderdev_strategy: TraderDev crowd BUY: 5/5 profitable, median Sharpe 5.3, WR 79.4%, PF 2.5, 4913 total trades",
+      "ts": "2026-09-15T15:53:18.066Z"
+    },
+    "CRCLB/USDT": {
+      "signal": "HOLD",
+      "confidence": 0,
+      "approved": false,
+      "agentsAgreeing": 0,
+      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/11 agreeing. Capital preserved.",
+      "ts": "2026-09-15T15:53:18.191Z"
+    },
+    "WBETH/USDT": {
+      "signal": "HOLD",
+      "confidence": 0,
+      "approved": false,
+      "agentsAgreeing": 0,
+      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/11 agreeing. Capital preserved.",
+      "ts": "2026-09-15T15:53:18.270Z"
+    },
+    "USDC/USDT": {
+      "signal": "HOLD",
+      "confidence": 0,
+      "approved": false,
+      "agentsAgreeing": 0,
+      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/11 agreeing. Capital preserved.",
+      "ts": "2026-09-15T15:53:18.398Z"
+    },
+    "QQQB/USDT": {
+      "signal": "SELL",
+      "confidence": 0.794,
+      "approved": true,
+      "agentsAgreeing": 3,
+      "reasoning": "3/11 specialist AI agents aligned on SELL (79% confidence). bear_agent: Strong bearish rejection confirmed below 50-EMA ($708.72) with 1.87x volume. | claude: Overbought RSI (43.6) and order book selling pressure below EMA50",
+      "ts": "2026-09-15T15:53:18.528Z"
+    },
+    "GOOGLB/USDT": {
+      "signal": "BUY",
+      "confidence": 0.418,
+      "approved": false,
+      "agentsAgreeing": 1,
+      "reasoning": "1/11 specialist AI agents aligned on BUY (42% confidence). bull_agent: Strong bullish bounce confirmed above 50-EMA ($343.71) with 0.84x volume. Outperforming BTC by +2% RS. [LossLearner Alert: Adjusted -24%]",
+      "ts": "2026-09-15T15:53:18.607Z"
+    },
+    "BCH/USDT": {
+      "signal": "HOLD",
+      "confidence": 0.002,
+      "approved": false,
+      "agentsAgreeing": 0,
+      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/11 agreeing. Capital preserved.",
+      "ts": "2026-09-15T15:53:18.732Z"
+    },
+    "AAVE/USDT": {
+      "signal": "BUY",
+      "confidence": 0.434,
+      "approved": false,
+      "agentsAgreeing": 1,
+      "reasoning": "1/11 specialist AI agents aligned on BUY (43% confidence). traderdev_strategy: TraderDev crowd BUY: 5/5 profitable, median Sharpe 5.2, WR 61.4%, PF 1.6, 2053 total trades",
+      "ts": "2026-09-15T15:53:18.799Z"
+    },
+    "BETH/USDT": {
+      "signal": "BUY",
+      "confidence": 0.518,
+      "approved": false,
+      "agentsAgreeing": 1,
+      "reasoning": "1/11 specialist AI agents aligned on BUY (52% confidence). openrouter_free: OpenRouter (inclusionai/ling-3.0-flash-fin:free) detected oversold accumulation with low downside variance.",
+      "ts": "2026-09-15T15:53:18.925Z"
+    },
+    "SPCXB/USDT": {
+      "signal": "HOLD",
+      "confidence": 0,
+      "approved": false,
+      "agentsAgreeing": 0,
+      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/11 agreeing. Capital preserved.",
+      "ts": "2026-09-15T15:53:19.002Z"
+    },
+    "NVDAB/USDT": {
+      "signal": "SELL",
+      "confidence": 0.668,
+      "approved": true,
+      "agentsAgreeing": 3,
+      "reasoning": "3/11 specialist AI agents aligned on SELL (67% confidence). bear_agent: Strong bearish rejection confirmed below 50-EMA ($213.53) with 0.89x volume. [LossLearner Alert: Adjusted -12%] | claude: Overbought RSI (45.8) and order book selling pressure below EMA50",
+      "ts": "2026-09-15T15:53:19.133Z"
+    },
+    "BTC/USDT": {
+      "signal": "HOLD",
+      "confidence": 0.059,
+      "approved": false,
+      "agentsAgreeing": 0,
+      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/11 agreeing. Capital preserved.",
+      "ts": "2026-09-15T15:53:19.265Z"
+    },
+    "METAB/USDT": {
+      "signal": "BUY",
+      "confidence": 0.799,
+      "approved": true,
+      "agentsAgreeing": 3,
+      "reasoning": "3/11 specialist AI agents aligned on BUY (80% confidence). bull_agent: Strong bullish bounce confirmed above 50-EMA ($657.17) with 1.57x volume. Outperforming BTC by +3.57% RS. [LossLearner Alert: Adjusted -12%] | claude: Strong bullish alignment: Price above EMA50/200 with RSI at 61.3 and positive MACD",
+      "ts": "2026-09-15T15:53:19.337Z"
+    },
+    "LITEB/USDT": {
+      "signal": "HOLD",
+      "confidence": 0,
+      "approved": false,
+      "agentsAgreeing": 0,
+      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/11 agreeing. Capital preserved.",
+      "ts": "2026-09-15T15:53:19.468Z"
+    },
+    "ETH/USDT": {
+      "signal": "SELL",
+      "confidence": 0.41,
+      "approved": false,
+      "agentsAgreeing": 2,
+      "reasoning": "2/11 specialist AI agents aligned on SELL (41% confidence). bear_agent: Strong bearish rejection confirmed below 50-EMA ($2498.65) with 1.2x volume. Lagging BTC by -0.5% RS. | claude: Overbought RSI (31.5) and order book selling pressure below EMA50",
+      "ts": "2026-09-15T15:53:19.564Z"
+    },
+    "LTC/USDT": {
+      "signal": "BUY",
+      "confidence": 0.697,
+      "approved": true,
+      "agentsAgreeing": 2,
+      "reasoning": "2/11 specialist AI agents aligned on BUY (70% confidence). traderdev_strategy: TraderDev crowd BUY: 5/5 profitable, median Sharpe 4.6, WR 60.7%, PF 4.7, 3488 total trades | gemini: Double Bottom 50-EMA Liquidity Sweep confirmed at 50-EMA ($53.25) with -2.5% distance",
+      "ts": "2026-09-15T15:53:19.683Z"
+    },
+    "AVAX/USDT": {
+      "signal": "HOLD",
+      "confidence": 0.045,
+      "approved": false,
+      "agentsAgreeing": 0,
+      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/11 agreeing. Capital preserved.",
+      "ts": "2026-09-15T15:53:19.760Z"
+    },
+    "ARB/USDT": {
+      "signal": "HOLD",
+      "confidence": 0.045,
+      "approved": false,
+      "agentsAgreeing": 0,
+      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/11 agreeing. Capital preserved.",
+      "ts": "2026-09-15T15:53:19.877Z"
+    },
+    "MKR/USDT": {
+      "signal": "HOLD",
+      "confidence": 0,
+      "approved": false,
+      "agentsAgreeing": 0,
+      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/11 agreeing. Capital preserved.",
+      "ts": "2026-09-15T15:53:19.993Z"
+    },
+    "SOL/USDT": {
+      "signal": "HOLD",
+      "confidence": 0.085,
+      "approved": false,
+      "agentsAgreeing": 0,
+      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/11 agreeing. Capital preserved.",
+      "ts": "2026-09-15T15:53:20.073Z"
+    }
+  }
+}

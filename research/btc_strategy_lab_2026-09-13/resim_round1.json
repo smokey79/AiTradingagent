@@ -1,0 +1,366 @@
+[
+  {
+    "id": "R1_Donchian20_ATRstop",
+    "engineNetProfitPct": -97.68187975,
+    "engineProfitFactor": 0.81900388,
+    "engineMaxDD": 98.42692952,
+    "tradeCount": 1960,
+    "pctBasedProfitFactor": 0.7045495505537729,
+    "maxConsecutiveLosses": 27,
+    "largestSingleLossPct": -9.84534993698613,
+    "largestSingleWinPct": 21.26197190432385,
+    "byExposure": {
+      "0.05": {
+        "netProfitPct": -25.096694038076926,
+        "maxDrawdownPct": 26.357625208620917,
+        "finalEquityMultiple": 0.7490330596192307
+      },
+      "0.1": {
+        "netProfitPct": -44.07367034951576,
+        "maxDrawdownPct": 45.92335363119124,
+        "finalEquityMultiple": 0.5592632965048424
+      },
+      "0.2": {
+        "netProfitPct": -69.1170008575283,
+        "maxDrawdownPct": 71.08928463190183,
+        "finalEquityMultiple": 0.30882999142471695
+      }
+    }
+  },
+  {
+    "id": "R1_SuperTrend_ADX",
+    "engineNetProfitPct": -82.01755535,
+    "engineProfitFactor": 0.86391498,
+    "engineMaxDD": 88.04226122,
+    "tradeCount": 964,
+    "pctBasedProfitFactor": 0.7332923990604221,
+    "maxConsecutiveLosses": 21,
+    "largestSingleLossPct": -10.347472157183384,
+    "largestSingleWinPct": 43.051301571709224,
+    "byExposure": {
+      "0.05": {
+        "netProfitPct": -14.710353541198785,
+        "maxDrawdownPct": 16.106981572840287,
+        "finalEquityMultiple": 0.8528964645880122
+      },
+      "0.1": {
+        "netProfitPct": -27.524922217071456,
+        "maxDrawdownPct": 29.859121682089484,
+        "finalEquityMultiple": 0.7247507778292854
+      },
+      "0.2": {
+        "netProfitPct": -48.23078572079478,
+        "maxDrawdownPct": 51.4576916328407,
+        "finalEquityMultiple": 0.5176921427920522
+      }
+    }
+  },
+  {
+    "id": "R1_VWAP_MeanReversion",
+    "engineNetProfitPct": -99.27025078,
+    "engineProfitFactor": 0.68215602,
+    "engineMaxDD": 99.27186596,
+    "tradeCount": 2577,
+    "pctBasedProfitFactor": 0.672312183427222,
+    "maxConsecutiveLosses": 16,
+    "largestSingleLossPct": -9.375043637915207,
+    "largestSingleWinPct": 9.57072054291223,
+    "byExposure": {
+      "0.05": {
+        "netProfitPct": -31.778356852235834,
+        "maxDrawdownPct": 31.778356852235834,
+        "finalEquityMultiple": 0.6822164314776417
+      },
+      "0.1": {
+        "netProfitPct": -53.55848085042234,
+        "maxDrawdownPct": 53.55848085042234,
+        "finalEquityMultiple": 0.46441519149577654
+      },
+      "0.2": {
+        "netProfitPct": -78.61730083403972,
+        "maxDrawdownPct": 78.61730083403972,
+        "finalEquityMultiple": 0.2138269916596027
+      }
+    }
+  },
+  {
+    "id": "R1_LiquiditySweep_Pivot",
+    "engineNetProfitPct": -98.80914393,
+    "engineProfitFactor": 0.81627163,
+    "engineMaxDD": 98.88748719,
+    "tradeCount": 3533,
+    "pctBasedProfitFactor": 0.6907364898000846,
+    "maxConsecutiveLosses": 24,
+    "largestSingleLossPct": -6.092556602710911,
+    "largestSingleWinPct": 10.325242977350948,
+    "byExposure": {
+      "0.05": {
+        "netProfitPct": -29.713346880437776,
+        "maxDrawdownPct": 29.943323699543274,
+        "finalEquityMultiple": 0.7028665311956223
+      },
+      "0.1": {
+        "netProfitPct": -50.6810550131183,
+        "maxDrawdownPct": 51.00295004306376,
+        "finalEquityMultiple": 0.49318944986881696
+      },
+      "0.2": {
+        "netProfitPct": -75.83974454820772,
+        "maxDrawdownPct": 76.1534750667242,
+        "finalEquityMultiple": 0.24160255451792273
+      }
+    }
+  },
+  {
+    "id": "R1_RSI_Divergence",
+    "engineNetProfitPct": -67.57336466,
+    "engineProfitFactor": 0.86378077,
+    "engineMaxDD": 77.7134842,
+    "tradeCount": 1109,
+    "pctBasedProfitFactor": 0.6863681273025618,
+    "maxConsecutiveLosses": 25,
+    "largestSingleLossPct": -5.309378376031244,
+    "largestSingleWinPct": 8.474279461474023,
+    "byExposure": {
+      "0.05": {
+        "netProfitPct": -12.545037192422825,
+        "maxDrawdownPct": 13.06391054612516,
+        "finalEquityMultiple": 0.8745496280757717
+      },
+      "0.1": {
+        "netProfitPct": -23.57587085411552,
+        "maxDrawdownPct": 24.475892496224432,
+        "finalEquityMultiple": 0.7642412914588448
+      },
+      "0.2": {
+        "netProfitPct": -41.775051173949464,
+        "maxDrawdownPct": 43.12592619090737,
+        "finalEquityMultiple": 0.5822494882605054
+      }
+    }
+  },
+  {
+    "id": "R1_BB_KC_Squeeze",
+    "engineNetProfitPct": -91.21757044,
+    "engineProfitFactor": 0.8053043,
+    "engineMaxDD": 94.2204014,
+    "tradeCount": 1461,
+    "pctBasedProfitFactor": 0.7165536035876443,
+    "maxConsecutiveLosses": 30,
+    "largestSingleLossPct": -6.932025316455685,
+    "largestSingleWinPct": 24.61913175932978,
+    "byExposure": {
+      "0.05": {
+        "netProfitPct": -17.532990308199516,
+        "maxDrawdownPct": 17.76964561533745,
+        "finalEquityMultiple": 0.8246700969180049
+      },
+      "0.1": {
+        "netProfitPct": -32.173121624915915,
+        "maxDrawdownPct": 32.51983703374203,
+        "finalEquityMultiple": 0.6782687837508409
+      },
+      "0.2": {
+        "netProfitPct": -54.47895430875419,
+        "maxDrawdownPct": 54.8385248387006,
+        "finalEquityMultiple": 0.4552104569124581
+      }
+    }
+  },
+  {
+    "id": "R1_ZScore_VolFiltered",
+    "engineNetProfitPct": -98.73496339,
+    "engineProfitFactor": 0.63974115,
+    "engineMaxDD": 98.80778948,
+    "tradeCount": 1974,
+    "pctBasedProfitFactor": 0.645670376601949,
+    "maxConsecutiveLosses": 19,
+    "largestSingleLossPct": -8.900332600041901,
+    "largestSingleWinPct": 11.566264555193294,
+    "byExposure": {
+      "0.05": {
+        "netProfitPct": -27.215224327823396,
+        "maxDrawdownPct": 27.397599763968433,
+        "finalEquityMultiple": 0.727847756721766
+      },
+      "0.1": {
+        "netProfitPct": -47.111031901385815,
+        "maxDrawdownPct": 47.37530761513224,
+        "finalEquityMultiple": 0.5288896809861419
+      },
+      "0.2": {
+        "netProfitPct": -72.21157487846853,
+        "maxDrawdownPct": 72.48767187816219,
+        "finalEquityMultiple": 0.27788425121531474
+      }
+    }
+  },
+  {
+    "id": "R1_HMA_CMO_Trend",
+    "engineNetProfitPct": -98.88947666,
+    "engineProfitFactor": 0.88581935,
+    "engineMaxDD": 99.41488449,
+    "tradeCount": 3542,
+    "pctBasedProfitFactor": 0.683595388308617,
+    "maxConsecutiveLosses": 40,
+    "largestSingleLossPct": -9.027790673858128,
+    "largestSingleWinPct": 26.42229716276755,
+    "byExposure": {
+      "0.05": {
+        "netProfitPct": -34.46302436684523,
+        "maxDrawdownPct": 34.5682652036329,
+        "finalEquityMultiple": 0.6553697563315477
+      },
+      "0.1": {
+        "netProfitPct": -57.225871181735265,
+        "maxDrawdownPct": 57.36226428325293,
+        "finalEquityMultiple": 0.42774128818264734
+      },
+      "0.2": {
+        "netProfitPct": -82.00107856787542,
+        "maxDrawdownPct": 82.1142253088313,
+        "finalEquityMultiple": 0.17998921432124584
+      }
+    }
+  },
+  {
+    "id": "R1_OBV_DonchianBreakout",
+    "engineNetProfitPct": -97.66759258,
+    "engineProfitFactor": 0.80046343,
+    "engineMaxDD": 98.34371956,
+    "tradeCount": 1834,
+    "pctBasedProfitFactor": 0.7006339418884857,
+    "maxConsecutiveLosses": 21,
+    "largestSingleLossPct": -9.84534993698613,
+    "largestSingleWinPct": 21.26197190432385,
+    "byExposure": {
+      "0.05": {
+        "netProfitPct": -24.03344371639493,
+        "maxDrawdownPct": 25.102552237598896,
+        "finalEquityMultiple": 0.7596655628360507
+      },
+      "0.1": {
+        "netProfitPct": -42.46122862624194,
+        "maxDrawdownPct": 44.055288386855516,
+        "finalEquityMultiple": 0.5753877137375806
+      },
+      "0.2": {
+        "netProfitPct": -67.28007153086976,
+        "maxDrawdownPct": 69.03718250493536,
+        "finalEquityMultiple": 0.32719928469130233
+      }
+    }
+  },
+  {
+    "id": "R1_CCI_RangeReversion",
+    "engineNetProfitPct": -85.02235431,
+    "engineProfitFactor": 0.72171723,
+    "engineMaxDD": 86.33328177,
+    "tradeCount": 1541,
+    "pctBasedProfitFactor": 0.6286090863333085,
+    "maxConsecutiveLosses": 19,
+    "largestSingleLossPct": -4.17471940432761,
+    "largestSingleWinPct": 6.952436896130474,
+    "byExposure": {
+      "0.05": {
+        "netProfitPct": -15.302455149162498,
+        "maxDrawdownPct": 15.737552974947938,
+        "finalEquityMultiple": 0.846975448508375
+      },
+      "0.1": {
+        "netProfitPct": -28.30161262126486,
+        "maxDrawdownPct": 29.032682856658436,
+        "finalEquityMultiple": 0.7169838737873514
+      },
+      "0.2": {
+        "netProfitPct": -48.703240106699596,
+        "maxDrawdownPct": 49.7335848494276,
+        "finalEquityMultiple": 0.512967598933004
+      }
+    }
+  },
+  {
+    "id": "R1_EMA200_Pullback",
+    "engineNetProfitPct": -61.48059932,
+    "engineProfitFactor": 0.93877454,
+    "engineMaxDD": 87.88204837,
+    "tradeCount": 1216,
+    "pctBasedProfitFactor": 0.7395395604174589,
+    "maxConsecutiveLosses": 36,
+    "largestSingleLossPct": -9.215264785408051,
+    "largestSingleWinPct": 37.00745505701172,
+    "byExposure": {
+      "0.05": {
+        "netProfitPct": -15.306500102766185,
+        "maxDrawdownPct": 18.39757550831686,
+        "finalEquityMultiple": 0.8469349989723381
+      },
+      "0.1": {
+        "netProfitPct": -28.522671486390472,
+        "maxDrawdownPct": 33.595398151950675,
+        "finalEquityMultiple": 0.7147732851360953
+      },
+      "0.2": {
+        "netProfitPct": -49.61564467384015,
+        "maxDrawdownPct": 56.38535724859729,
+        "finalEquityMultiple": 0.5038435532615985
+      }
+    }
+  },
+  {
+    "id": "R1_ParabolicSAR",
+    "engineNetProfitPct": -99.41811575,
+    "engineProfitFactor": 0.85273266,
+    "engineMaxDD": 99.50908417,
+    "tradeCount": 3604,
+    "pctBasedProfitFactor": 0.7149730341147663,
+    "maxConsecutiveLosses": 17,
+    "largestSingleLossPct": -9.027790673858128,
+    "largestSingleWinPct": 16.035506392354794,
+    "byExposure": {
+      "0.05": {
+        "netProfitPct": -36.154846049840415,
+        "maxDrawdownPct": 36.30252959219584,
+        "finalEquityMultiple": 0.6384515395015958
+      },
+      "0.1": {
+        "netProfitPct": -59.413706599084804,
+        "maxDrawdownPct": 59.60087974457559,
+        "finalEquityMultiple": 0.40586293400915197
+      },
+      "0.2": {
+        "netProfitPct": -83.80889557058175,
+        "maxDrawdownPct": 83.95729832994853,
+        "finalEquityMultiple": 0.16191104429418252
+      }
+    }
+  },
+  {
+    "id": "R1_WPR_TrendFiltered",
+    "engineNetProfitPct": -91.58843449,
+    "engineProfitFactor": 0.84952415,
+    "engineMaxDD": 93.1314191,
+    "tradeCount": 1808,
+    "pctBasedProfitFactor": 0.6413546105239566,
+    "maxConsecutiveLosses": 33,
+    "largestSingleLossPct": -7.890786850748611,
+    "largestSingleWinPct": 12.393750000000011,
+    "byExposure": {
+      "0.05": {
+        "netProfitPct": -23.637885486723064,
+        "maxDrawdownPct": 23.637885486723064,
+        "finalEquityMultiple": 0.7636211451327694
+      },
+      "0.1": {
+        "netProfitPct": -41.765945216371215,
+        "maxDrawdownPct": 41.765945216371215,
+        "finalEquityMultiple": 0.5823405478362879
+      },
+      "0.2": {
+        "netProfitPct": -66.26824435632886,
+        "maxDrawdownPct": 66.26824435632886,
+        "finalEquityMultiple": 0.33731755643671135
+      }
+    }
+  }
+]

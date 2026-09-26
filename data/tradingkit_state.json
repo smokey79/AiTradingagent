@@ -1,0 +1,23 @@
+{
+  "BTC": {
+    "strategyId": "01M2CHVXNY1NFNGFCP1SNTBXFE"
+  },
+  "ETH": {
+    "strategyId": "01M2CHVZCHCZTVMGS7NTY5T9C7"
+  },
+  "CRO": {
+    "strategyId": "01M2CHW0W896XC6HK3VMPTT6G1"
+  },
+  "SOL": {
+    "strategyId": "01M2CHW2N7YY1ZQNRD1MB5HYQV"
+  },
+  "AVAX": {
+    "strategyId": "01M2CHW43JK5HGJQZN207ZPW3Y"
+  },
+  "ARB": {
+    "strategyId": "01M2CHW5P5536V5C6TJ1VSRNST"
+  },
+  "OP": {
+    "strategyId": "01M2CHW79FJPHQ1BNV19C5E5FP"
+  }
+}

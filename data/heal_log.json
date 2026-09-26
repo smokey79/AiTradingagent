@@ -1,628 +1,5 @@
 [
   {
-    "timestamp": "2026-08-31T20:58:44.486Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-08-31T20:59:44.023Z",
-    "agent": "smc_agent",
-    "action": "SOFT_RESET",
-    "success": false,
-    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\smc_agentAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js"
-  },
-  {
-    "timestamp": "2026-08-31T20:59:44.031Z",
-    "agent": "smc_agent",
-    "action": "RULE_FALLBACK",
-    "success": true,
-    "detail": "Operating on quantitative rule engine"
-  },
-  {
-    "timestamp": "2026-08-31T20:59:44.040Z",
-    "agent": "strategy_learner",
-    "action": "SOFT_RESET",
-    "success": false,
-    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\strategy_learnerAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js"
-  },
-  {
-    "timestamp": "2026-08-31T20:59:44.045Z",
-    "agent": "strategy_learner",
-    "action": "RULE_FALLBACK",
-    "success": true,
-    "detail": "Operating on quantitative rule engine"
-  },
-  {
-    "timestamp": "2026-08-31T21:05:47.896Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-08-31T21:09:48.058Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-08-31T21:14:53.370Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-08-31T21:30:55.918Z",
-    "agent": "smc_agent",
-    "action": "SOFT_RESET",
-    "success": false,
-    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\smc_agentAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js"
-  },
-  {
-    "timestamp": "2026-08-31T21:30:55.935Z",
-    "agent": "smc_agent",
-    "action": "RULE_FALLBACK",
-    "success": true,
-    "detail": "Operating on quantitative rule engine"
-  },
-  {
-    "timestamp": "2026-08-31T21:30:55.948Z",
-    "agent": "strategy_learner",
-    "action": "SOFT_RESET",
-    "success": false,
-    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\strategy_learnerAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js"
-  },
-  {
-    "timestamp": "2026-08-31T21:30:55.965Z",
-    "agent": "strategy_learner",
-    "action": "RULE_FALLBACK",
-    "success": true,
-    "detail": "Operating on quantitative rule engine"
-  },
-  {
-    "timestamp": "2026-08-31T21:37:57.816Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-08-31T21:42:57.872Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-08-31T22:05:59.894Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-08-31T22:38:03.138Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-08-31T22:43:07.278Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-08-31T22:44:07.264Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-08-31T22:55:08.551Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-08-31T23:01:12.396Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-08-31T23:01:12.405Z",
-    "agent": "smc_agent",
-    "action": "SOFT_RESET",
-    "success": false,
-    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\smc_agentAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
-  },
-  {
-    "timestamp": "2026-08-31T23:01:12.413Z",
-    "agent": "smc_agent",
-    "action": "KEY_ROTATION",
-    "success": false,
-    "detail": "No alternate keys configured"
-  },
-  {
-    "timestamp": "2026-08-31T23:01:12.422Z",
-    "agent": "smc_agent",
-    "action": "MODEL_FALLBACK",
-    "success": false,
-    "detail": "No fallback chain defined"
-  },
-  {
-    "timestamp": "2026-08-31T23:01:12.428Z",
-    "agent": "strategy_learner",
-    "action": "SOFT_RESET",
-    "success": false,
-    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\strategy_learnerAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
-  },
-  {
-    "timestamp": "2026-08-31T23:01:12.433Z",
-    "agent": "strategy_learner",
-    "action": "KEY_ROTATION",
-    "success": false,
-    "detail": "No alternate keys configured"
-  },
-  {
-    "timestamp": "2026-08-31T23:01:12.440Z",
-    "agent": "strategy_learner",
-    "action": "MODEL_FALLBACK",
-    "success": false,
-    "detail": "No fallback chain defined"
-  },
-  {
-    "timestamp": "2026-08-31T23:06:13.557Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-08-31T23:38:16.454Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-08-31T23:43:16.619Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-01T23:54:47.434Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-01T23:55:46.053Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T00:00:46.048Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T00:01:45.991Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T00:06:46.027Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T00:24:49.293Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T00:54:51.292Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T00:57:51.243Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T01:00:52.301Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T01:03:52.311Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T01:06:52.308Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T06:00:12.021Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T06:01:10.722Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T06:01:10.748Z",
-    "agent": "smc_agent",
-    "action": "SOFT_RESET",
-    "success": false,
-    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\smc_agentAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js"
-  },
-  {
-    "timestamp": "2026-09-02T06:01:10.757Z",
-    "agent": "smc_agent",
-    "action": "KEY_ROTATION",
-    "success": false,
-    "detail": "No alternate keys configured"
-  },
-  {
-    "timestamp": "2026-09-02T06:01:10.768Z",
-    "agent": "smc_agent",
-    "action": "MODEL_FALLBACK",
-    "success": false,
-    "detail": "No fallback chain defined"
-  },
-  {
-    "timestamp": "2026-09-02T06:01:10.780Z",
-    "agent": "strategy_learner",
-    "action": "SOFT_RESET",
-    "success": false,
-    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\strategy_learnerAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js"
-  },
-  {
-    "timestamp": "2026-09-02T06:01:10.787Z",
-    "agent": "strategy_learner",
-    "action": "KEY_ROTATION",
-    "success": false,
-    "detail": "No alternate keys configured"
-  },
-  {
-    "timestamp": "2026-09-02T06:01:10.794Z",
-    "agent": "strategy_learner",
-    "action": "MODEL_FALLBACK",
-    "success": false,
-    "detail": "No fallback chain defined"
-  },
-  {
-    "timestamp": "2026-09-02T06:06:12.659Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T06:07:12.688Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T06:11:49.580Z",
-    "agent": "hermes",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T11:49:10.181Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T12:04:17.253Z",
-    "agent": "claude",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T12:04:17.320Z",
-    "agent": "gpt4o",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T12:04:17.343Z",
-    "agent": "grok",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T12:04:17.377Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T12:04:17.386Z",
-    "agent": "smc_agent",
-    "action": "SOFT_RESET",
-    "success": false,
-    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\smc_agentAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
-  },
-  {
-    "timestamp": "2026-09-02T12:04:17.394Z",
-    "agent": "smc_agent",
-    "action": "RULE_FALLBACK",
-    "success": true,
-    "detail": "Operating on quantitative rule engine"
-  },
-  {
-    "timestamp": "2026-09-02T12:04:17.405Z",
-    "agent": "strategy_learner",
-    "action": "SOFT_RESET",
-    "success": false,
-    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\strategy_learnerAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
-  },
-  {
-    "timestamp": "2026-09-02T12:04:17.415Z",
-    "agent": "strategy_learner",
-    "action": "RULE_FALLBACK",
-    "success": true,
-    "detail": "Operating on quantitative rule engine"
-  },
-  {
-    "timestamp": "2026-09-02T12:26:36.001Z",
-    "agent": "gpt4o",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T12:31:36.138Z",
-    "agent": "claude",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T17:17:21.053Z",
-    "agent": "gpt4o",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T17:17:21.077Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T17:18:21.118Z",
-    "agent": "claude",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T17:23:25.004Z",
-    "agent": "claude",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T17:23:25.020Z",
-    "agent": "gpt4o",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T17:23:25.038Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T17:23:25.055Z",
-    "agent": "smc_agent",
-    "action": "SOFT_RESET",
-    "success": false,
-    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\smc_agentAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
-  },
-  {
-    "timestamp": "2026-09-02T17:23:25.067Z",
-    "agent": "smc_agent",
-    "action": "KEY_ROTATION",
-    "success": false,
-    "detail": "No alternate keys configured"
-  },
-  {
-    "timestamp": "2026-09-02T17:23:25.074Z",
-    "agent": "smc_agent",
-    "action": "MODEL_FALLBACK",
-    "success": false,
-    "detail": "No fallback chain defined"
-  },
-  {
-    "timestamp": "2026-09-02T17:23:25.084Z",
-    "agent": "strategy_learner",
-    "action": "SOFT_RESET",
-    "success": false,
-    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\strategy_learnerAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
-  },
-  {
-    "timestamp": "2026-09-02T17:23:25.095Z",
-    "agent": "strategy_learner",
-    "action": "KEY_ROTATION",
-    "success": false,
-    "detail": "No alternate keys configured"
-  },
-  {
-    "timestamp": "2026-09-02T17:23:25.101Z",
-    "agent": "strategy_learner",
-    "action": "MODEL_FALLBACK",
-    "success": false,
-    "detail": "No fallback chain defined"
-  },
-  {
-    "timestamp": "2026-09-02T17:29:25.447Z",
-    "agent": "claude",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T17:29:25.466Z",
-    "agent": "gpt4o",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T17:29:25.487Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T18:18:30.180Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T18:24:30.900Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T18:30:32.067Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T19:18:36.236Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T19:25:36.266Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T19:31:37.146Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T20:19:41.742Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T20:25:43.022Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T20:32:43.040Z",
-    "agent": "defi",
-    "action": "SOFT_RESET",
-    "success": true,
-    "detail": "Module cache cleared and agent marked RECOVERED"
-  },
-  {
-    "timestamp": "2026-09-02T20:32:43.048Z",
-    "agent": "smc_agent",
-    "action": "SOFT_RESET",
-    "success": false,
-    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\smc_agentAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
-  },
-  {
-    "timestamp": "2026-09-02T20:32:43.056Z",
-    "agent": "smc_agent",
-    "action": "KEY_ROTATION",
-    "success": false,
-    "detail": "No alternate keys configured"
-  },
-  {
-    "timestamp": "2026-09-02T20:32:43.066Z",
-    "agent": "smc_agent",
-    "action": "MODEL_FALLBACK",
-    "success": false,
-    "detail": "No fallback chain defined"
-  },
-  {
     "timestamp": "2026-09-02T20:32:43.074Z",
     "agent": "strategy_learner",
     "action": "SOFT_RESET",
@@ -894,5 +271,1132 @@
     "action": "SOFT_RESET",
     "success": true,
     "detail": "Module cache cleared and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-03T20:49:15.727Z",
+    "agent": "smc_agent",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\smc_agentAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
+  },
+  {
+    "timestamp": "2026-09-03T20:49:15.736Z",
+    "agent": "smc_agent",
+    "action": "KEY_ROTATION",
+    "success": false,
+    "detail": "No alternate keys configured"
+  },
+  {
+    "timestamp": "2026-09-03T20:49:15.747Z",
+    "agent": "smc_agent",
+    "action": "MODEL_FALLBACK",
+    "success": false,
+    "detail": "No fallback chain defined"
+  },
+  {
+    "timestamp": "2026-09-03T20:49:15.759Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\strategy_learnerAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
+  },
+  {
+    "timestamp": "2026-09-03T20:49:15.767Z",
+    "agent": "strategy_learner",
+    "action": "KEY_ROTATION",
+    "success": false,
+    "detail": "No alternate keys configured"
+  },
+  {
+    "timestamp": "2026-09-03T20:49:15.778Z",
+    "agent": "strategy_learner",
+    "action": "MODEL_FALLBACK",
+    "success": false,
+    "detail": "No fallback chain defined"
+  },
+  {
+    "timestamp": "2026-09-07T00:27:52.503Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\intelligent_signalsAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
+  },
+  {
+    "timestamp": "2026-09-07T00:27:52.611Z",
+    "agent": "intelligent_signals",
+    "action": "RULE_FALLBACK",
+    "success": true,
+    "detail": "Operating on quantitative rule engine"
+  },
+  {
+    "timestamp": "2026-09-07T00:28:50.984Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\strategy_learnerAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
+  },
+  {
+    "timestamp": "2026-09-07T00:28:50.996Z",
+    "agent": "strategy_learner",
+    "action": "KEY_ROTATION",
+    "success": false,
+    "detail": "No alternate keys configured"
+  },
+  {
+    "timestamp": "2026-09-07T00:28:51.009Z",
+    "agent": "strategy_learner",
+    "action": "MODEL_FALLBACK",
+    "success": false,
+    "detail": "No fallback chain defined"
+  },
+  {
+    "timestamp": "2026-09-07T00:28:51.028Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\expert_traderAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
+  },
+  {
+    "timestamp": "2026-09-07T00:28:51.040Z",
+    "agent": "expert_trader",
+    "action": "RULE_FALLBACK",
+    "success": true,
+    "detail": "Operating on quantitative rule engine"
+  },
+  {
+    "timestamp": "2026-09-07T00:33:51.124Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\intelligent_signalsAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
+  },
+  {
+    "timestamp": "2026-09-07T00:33:51.186Z",
+    "agent": "intelligent_signals",
+    "action": "RULE_FALLBACK",
+    "success": true,
+    "detail": "Operating on quantitative rule engine"
+  },
+  {
+    "timestamp": "2026-09-08T00:05:16.255Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\expert_traderAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
+  },
+  {
+    "timestamp": "2026-09-08T00:05:16.276Z",
+    "agent": "expert_trader",
+    "action": "KEY_ROTATION",
+    "success": false,
+    "detail": "No alternate keys configured"
+  },
+  {
+    "timestamp": "2026-09-08T00:05:16.291Z",
+    "agent": "expert_trader",
+    "action": "MODEL_FALLBACK",
+    "success": false,
+    "detail": "No fallback chain defined"
+  },
+  {
+    "timestamp": "2026-09-08T00:06:34.717Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\intelligent_signalsAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
+  },
+  {
+    "timestamp": "2026-09-08T00:06:34.728Z",
+    "agent": "intelligent_signals",
+    "action": "RULE_FALLBACK",
+    "success": true,
+    "detail": "Operating on quantitative rule engine"
+  },
+  {
+    "timestamp": "2026-09-08T00:06:34.758Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\strategy_learnerAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
+  },
+  {
+    "timestamp": "2026-09-08T00:06:34.779Z",
+    "agent": "strategy_learner",
+    "action": "KEY_ROTATION",
+    "success": false,
+    "detail": "No alternate keys configured"
+  },
+  {
+    "timestamp": "2026-09-08T00:06:34.807Z",
+    "agent": "strategy_learner",
+    "action": "MODEL_FALLBACK",
+    "success": false,
+    "detail": "No fallback chain defined"
+  },
+  {
+    "timestamp": "2026-09-08T00:07:34.741Z",
+    "agent": "gpt4o",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-08T00:07:34.766Z",
+    "agent": "grok",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-08T00:07:34.790Z",
+    "agent": "openrouter_free",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\openrouter_freeAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
+  },
+  {
+    "timestamp": "2026-09-08T00:07:34.801Z",
+    "agent": "openrouter_free",
+    "action": "RULE_FALLBACK",
+    "success": true,
+    "detail": "Operating on quantitative rule engine"
+  },
+  {
+    "timestamp": "2026-09-08T00:14:21.682Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\intelligent_signalsAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js"
+  },
+  {
+    "timestamp": "2026-09-08T00:14:21.699Z",
+    "agent": "intelligent_signals",
+    "action": "RULE_FALLBACK",
+    "success": true,
+    "detail": "Operating on quantitative rule engine"
+  },
+  {
+    "timestamp": "2026-09-08T00:57:25.705Z",
+    "agent": "defi",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-08T01:07:55.425Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\intelligent_signalsAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js"
+  },
+  {
+    "timestamp": "2026-09-08T01:07:55.438Z",
+    "agent": "intelligent_signals",
+    "action": "RULE_FALLBACK",
+    "success": true,
+    "detail": "Operating on quantitative rule engine"
+  },
+  {
+    "timestamp": "2026-09-08T01:14:54.992Z",
+    "agent": "defi",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-08T01:14:55.020Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\intelligent_signalsAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js"
+  },
+  {
+    "timestamp": "2026-09-08T01:14:55.028Z",
+    "agent": "intelligent_signals",
+    "action": "RULE_FALLBACK",
+    "success": true,
+    "detail": "Operating on quantitative rule engine"
+  },
+  {
+    "timestamp": "2026-09-09T02:55:20.828Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\intelligent_signalsAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js"
+  },
+  {
+    "timestamp": "2026-09-09T02:55:20.838Z",
+    "agent": "intelligent_signals",
+    "action": "RULE_FALLBACK",
+    "success": true,
+    "detail": "Operating on quantitative rule engine"
+  },
+  {
+    "timestamp": "2026-09-09T02:55:21.149Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\strategy_learnerAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js"
+  },
+  {
+    "timestamp": "2026-09-09T02:55:21.174Z",
+    "agent": "strategy_learner",
+    "action": "KEY_ROTATION",
+    "success": false,
+    "detail": "No alternate keys configured"
+  },
+  {
+    "timestamp": "2026-09-09T02:55:21.195Z",
+    "agent": "strategy_learner",
+    "action": "MODEL_FALLBACK",
+    "success": false,
+    "detail": "No fallback chain defined"
+  },
+  {
+    "timestamp": "2026-09-09T02:55:21.217Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\expert_traderAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js"
+  },
+  {
+    "timestamp": "2026-09-09T02:55:21.235Z",
+    "agent": "expert_trader",
+    "action": "KEY_ROTATION",
+    "success": false,
+    "detail": "No alternate keys configured"
+  },
+  {
+    "timestamp": "2026-09-09T02:55:21.253Z",
+    "agent": "expert_trader",
+    "action": "MODEL_FALLBACK",
+    "success": false,
+    "detail": "No fallback chain defined"
+  },
+  {
+    "timestamp": "2026-09-09T03:00:36.223Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\intelligent_signalsAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js"
+  },
+  {
+    "timestamp": "2026-09-09T03:00:36.234Z",
+    "agent": "intelligent_signals",
+    "action": "RULE_FALLBACK",
+    "success": true,
+    "detail": "Operating on quantitative rule engine"
+  },
+  {
+    "timestamp": "2026-09-09T03:07:59.877Z",
+    "agent": "gpt4o",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-09T03:07:59.977Z",
+    "agent": "grok",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-09T03:08:00.007Z",
+    "agent": "openrouter_free",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\openrouter_freeAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js"
+  },
+  {
+    "timestamp": "2026-09-09T03:08:00.013Z",
+    "agent": "openrouter_free",
+    "action": "RULE_FALLBACK",
+    "success": true,
+    "detail": "Operating on quantitative rule engine"
+  },
+  {
+    "timestamp": "2026-09-09T05:12:42.281Z",
+    "agent": "defi",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T03:48:32.893Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\intelligent_signalsAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
+  },
+  {
+    "timestamp": "2026-09-11T03:48:32.904Z",
+    "agent": "intelligent_signals",
+    "action": "RULE_FALLBACK",
+    "success": true,
+    "detail": "Operating on quantitative rule engine"
+  },
+  {
+    "timestamp": "2026-09-11T05:35:16.886Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\intelligent_signalsAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\tests\\runAllTests.js"
+  },
+  {
+    "timestamp": "2026-09-11T05:35:16.896Z",
+    "agent": "intelligent_signals",
+    "action": "KEY_ROTATION",
+    "success": false,
+    "detail": "No alternate keys configured"
+  },
+  {
+    "timestamp": "2026-09-11T05:35:16.906Z",
+    "agent": "intelligent_signals",
+    "action": "MODEL_FALLBACK",
+    "success": false,
+    "detail": "No fallback chain defined"
+  },
+  {
+    "timestamp": "2026-09-11T05:35:16.915Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\strategy_learnerAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\tests\\runAllTests.js"
+  },
+  {
+    "timestamp": "2026-09-11T05:35:16.925Z",
+    "agent": "strategy_learner",
+    "action": "KEY_ROTATION",
+    "success": false,
+    "detail": "No alternate keys configured"
+  },
+  {
+    "timestamp": "2026-09-11T05:35:16.934Z",
+    "agent": "strategy_learner",
+    "action": "MODEL_FALLBACK",
+    "success": false,
+    "detail": "No fallback chain defined"
+  },
+  {
+    "timestamp": "2026-09-11T05:35:17.009Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\expert_traderAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\tests\\runAllTests.js"
+  },
+  {
+    "timestamp": "2026-09-11T05:35:17.021Z",
+    "agent": "expert_trader",
+    "action": "KEY_ROTATION",
+    "success": false,
+    "detail": "No alternate keys configured"
+  },
+  {
+    "timestamp": "2026-09-11T05:35:17.031Z",
+    "agent": "expert_trader",
+    "action": "MODEL_FALLBACK",
+    "success": false,
+    "detail": "No fallback chain defined"
+  },
+  {
+    "timestamp": "2026-09-11T05:42:06.286Z",
+    "agent": "openrouter_free",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for openrouterFreeAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T05:46:06.578Z",
+    "agent": "gpt4o",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for gpt4oAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T05:46:06.609Z",
+    "agent": "grok",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for grokAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T05:59:11.554Z",
+    "agent": "claude",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for claudeAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T05:59:11.581Z",
+    "agent": "gpt4o",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for gpt4oAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T05:59:11.603Z",
+    "agent": "grok",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for grokAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T05:59:11.625Z",
+    "agent": "openrouter_free",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for openrouterFreeAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T05:59:11.703Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T05:59:11.730Z",
+    "agent": "sentiment",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for youtubeSentimentAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T06:04:17.561Z",
+    "agent": "gpt4o",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for gpt4oAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T06:04:17.738Z",
+    "agent": "grok",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for grokAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T06:04:17.865Z",
+    "agent": "openrouter_free",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for openrouterFreeAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T06:05:45.440Z",
+    "agent": "claude",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for claudeAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T06:05:45.463Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T06:38:55.751Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for intelligentSignalsAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T06:40:57.083Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T06:40:57.117Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T06:40:57.199Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T06:44:11.243Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for intelligentSignalsAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T06:46:16.923Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T06:46:16.948Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T06:52:17.098Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for intelligentSignalsAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T07:01:21.452Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T07:07:21.557Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T07:22:21.998Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T07:43:22.306Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T07:45:22.424Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for intelligentSignalsAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T07:50:24.255Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for intelligentSignalsAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T08:06:52.938Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T08:11:55.606Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T08:13:55.630Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for intelligentSignalsAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T08:47:06.568Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T09:07:24.320Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T09:16:29.499Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T09:48:42.913Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T10:11:52.143Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T10:16:55.678Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T10:37:02.320Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T10:37:02.343Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T10:50:06.742Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T11:14:12.136Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T11:19:15.045Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T11:26:18.227Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T11:26:18.252Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T12:09:01.644Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T12:10:07.705Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for intelligentSignalsAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T12:10:07.731Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T12:10:07.761Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T12:17:06.080Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T12:21:09.521Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for intelligentSignalsAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T12:28:15.997Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T12:31:15.540Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for intelligentSignalsAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T12:34:16.455Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T12:34:16.481Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T12:41:20.579Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T12:41:20.605Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T13:09:41.715Z",
+    "agent": "perplexity",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for perplexityAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-11T13:10:41.616Z",
+    "agent": "intelligent_signals",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for intelligentSignalsAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-13T03:49:37.577Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-13T03:49:37.714Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-13T03:57:36.451Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-13T03:57:36.477Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-13T06:29:02.812Z",
+    "agent": "openrouter_free",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for openrouterFreeAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-13T06:29:02.856Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-13T06:29:02.894Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-13T07:01:04.773Z",
+    "agent": "openrouter_free",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for openrouterFreeAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-13T07:01:04.806Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-13T07:01:04.860Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-13T22:20:48.560Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-13T22:20:48.606Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-13T22:54:50.098Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-14T23:44:48.597Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T00:01:47.131Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T00:11:48.501Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T00:32:51.951Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T00:39:57.602Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T00:40:57.748Z",
+    "agent": "technical_lab",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\technical_labAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js"
+  },
+  {
+    "timestamp": "2026-09-15T00:40:57.769Z",
+    "agent": "technical_lab",
+    "action": "KEY_ROTATION",
+    "success": false,
+    "detail": "No alternate keys configured"
+  },
+  {
+    "timestamp": "2026-09-15T00:40:57.786Z",
+    "agent": "technical_lab",
+    "action": "MODEL_FALLBACK",
+    "success": false,
+    "detail": "No fallback chain defined"
+  },
+  {
+    "timestamp": "2026-09-15T00:44:57.889Z",
+    "agent": "openrouter_free",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for openrouterFreeAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T00:44:57.936Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T00:44:58.050Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T01:14:46.766Z",
+    "agent": "claude",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for claudeAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T01:14:47.045Z",
+    "agent": "openrouter_free",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for openrouterFreeAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T01:14:47.201Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T01:36:57.432Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T01:40:03.150Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T01:57:04.853Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T02:19:16.573Z",
+    "agent": "technical_lab",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\technical_labAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
+  },
+  {
+    "timestamp": "2026-09-15T02:19:16.599Z",
+    "agent": "technical_lab",
+    "action": "KEY_ROTATION",
+    "success": false,
+    "detail": "No alternate keys configured"
+  },
+  {
+    "timestamp": "2026-09-15T02:19:16.672Z",
+    "agent": "technical_lab",
+    "action": "MODEL_FALLBACK",
+    "success": false,
+    "detail": "No fallback chain defined"
+  },
+  {
+    "timestamp": "2026-09-15T02:19:16.771Z",
+    "agent": "technical_daily",
+    "action": "SOFT_RESET",
+    "success": false,
+    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\technical_dailyAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
+  },
+  {
+    "timestamp": "2026-09-15T02:19:16.856Z",
+    "agent": "technical_daily",
+    "action": "KEY_ROTATION",
+    "success": false,
+    "detail": "No alternate keys configured"
+  },
+  {
+    "timestamp": "2026-09-15T02:19:16.928Z",
+    "agent": "technical_daily",
+    "action": "MODEL_FALLBACK",
+    "success": false,
+    "detail": "No fallback chain defined"
+  },
+  {
+    "timestamp": "2026-09-15T02:32:20.599Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T02:36:22.331Z",
+    "agent": "openrouter_free",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for openrouterFreeAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T02:47:29.482Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T02:47:29.506Z",
+    "agent": "expert_trader",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for expertTraderAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T02:56:28.843Z",
+    "agent": "openrouter_free",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for openrouterFreeAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-15T03:33:32.121Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
   }
 ]

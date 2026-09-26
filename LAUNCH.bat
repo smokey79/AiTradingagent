@@ -1,36 +1,26 @@
-@echo off
-title AiTradingAgent v4
-color 0A
-echo.
-echo  ============================================
-echo   AiTradingAgent v4  -  PAPER TRADE MODE
-echo  ============================================
-echo.
-cd /d F:\aitradingagent
-
-:: Init DB if not exists
-if not exist data\trading.db (
-    echo  [1/4] Creating database...
-    python data\init_db.py
-) else (
-    echo  [1/4] Database exists - OK
-)
-
-:: Install deps silently
-echo  [2/4] Checking Python dependencies...
-pip install ccxt flask python-dotenv requests --quiet --exists-action i
-
-:: Start dashboard in new window
-echo  [3/4] Starting dashboard...
-start "AiTradingAgent Dashboard" cmd /k "cd /d F:\aitradingagent && python web-dashboard\app.py"
-
-:: Wait 3 seconds then open browser
-echo  [4/4] Opening browser...
-timeout /t 3 /nobreak >nul
-start http://localhost:3002
-
-echo.
-echo  Dashboard running at http://localhost:3002
-echo  Close this window to stop watching logs.
-echo.
-pause
+@echo off
+cd /d F:\aitradingagent
+
+:: Check Node
+where node >nul 2>&1
+if errorlevel 1 (
+  echo ERROR: Node.js not found - download from https://nodejs.org
+  pause & exit /b 1
+)
+
+:: Install deps silently if missing
+if not exist node_modules (
+  echo Installing packages - one moment...
+  npm install --silent
+)
+
+:: Launch Dashboard
+start "AiTradingAgent Dashboard" /min cmd /c "cd /d F:\aitradingagent && node src/dashboard/server.js"
+timeout /t 4 /nobreak >nul
+
+:: Launch Telegram Listener
+start "Telegram Listener" /min cmd /c "cd /d F:\aitradingagent && node src/notifications/telegramListener.js"
+timeout /t 2 /nobreak >nul
+
+:: Open browser
+start http://localhost:3001

@@ -1,0 +1,12 @@
+# FastAPI backend (main.py) — dependencies
+# Install into the project venv:  venv\Scripts\python -m pip install -r requirements-api.txt
+# Run:                            venv\Scripts\python main.py
+#                        (or)     venv\Scripts\python -m uvicorn main:app --port 8000
+
+fastapi>=0.141
+uvicorn>=0.52
+pydantic>=2.13
+pydantic-settings>=2.15
+anthropic>=1.2
+httpx>=0.28
+python-dotenv>=1.2

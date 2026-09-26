@@ -30,5 +30,13 @@
   "ocaml.sandbox": {
     "kind": "global"
   },
-  "claudeCodeChat.permissions.yoloMode": true
+  "claudeCodeChat.permissions.yoloMode": true,
+  "claudegate.fileWatcher.enabled": true,
+  "workbench.editor.alwaysShowEditorActions": true,
+  "workbench.editor.autoLockGroups": {
+    "default": true
+  },
+  "workbench.editor.defaultBinaryEditor": "antigravity.ruleEditor",
+  "workbench.editor.limit.perEditorGroup": true,
+  "workbench.editor.limit.excludeDirty": true
 }

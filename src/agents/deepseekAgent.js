@@ -101,10 +101,11 @@ Indicators: RSI(14)=${ind.rsi14 || 50}, EMA20=$${ind.ema20 || 0}, EMA50=$${ind.e
 MACD Hist=${ind.macd?.histogram || 0}, Bias=${ind.orderBook?.bias || 'neutral'}
 Respond strictly in valid JSON.`;
 
+      const freeModel = process.env.OPENROUTER_FREE_MODEL || 'inclusionai/ling-3.0-flash-fin:free';
       const res = await axios.post(
         'https://openrouter.ai/api/v1/chat/completions',
         {
-          model: 'deepseek/deepseek-r1:free',
+          model: freeModel,
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: userPrompt }

@@ -1,7 +1,10 @@
 {
-  "btcSavingsUsd": 107.59499999999998,
-  "longtermHoldUsd": 21.519000000000013,
-  "totalProfitsHarvested": 215.18999999999997,
-  "milestoneReached": true,
-  "updatedAt": "2026-09-03T02:37:29.330Z"
+  "mainAccountUsdt": 0,
+  "btcSavingsUsd": 0,
+  "longtermHoldUsd": 0,
+  "unrealizedDailyPnl": 0,
+  "totalProfitsHarvested": 0,
+  "milestoneReached": false,
+  "lastSweepDate": null,
+  "updatedAt": "2026-09-15T15:31:14.880Z"
 }

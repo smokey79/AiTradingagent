@@ -182,6 +182,7 @@ def api_heal_agent(agent_name: str):
             encoding="utf-8", errors="replace",
             timeout=15,
             cwd=_ROOT,
+            creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0x08000000),
         )
         return jsonify({
             "success": result.returncode == 0,

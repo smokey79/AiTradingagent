@@ -31,10 +31,12 @@ function cleanJson(text) {
   return JSON.parse(text.replace(/```json|```/g, '').trim());
 }
 
+let circuitBreakerUntil = 0;
+
 async function getSignal(symbol, marketData, peerSignals = []) {
   const apiKey = process.env.GEMINI_API_KEY;
 
-  if (!apiKey || apiKey.startsWith('your_') || apiKey.trim() === '') {
+  if (!apiKey || apiKey.startsWith('your_') || apiKey.trim() === '' || Date.now() < circuitBreakerUntil) {
     return simulateGeminiValidation(symbol, marketData, peerSignals);
   }
 
@@ -81,6 +83,7 @@ Validate consensus consistency, detect conflicts, and output strictly JSON.`;
     };
   } catch (err) {
     logger.warn(`Gemini direct API call failed: ${err.message} — trying OpenRouter fallback`);
+    circuitBreakerUntil = Date.now() + 60000;
     try {
       const openRouterKey = process.env.OPENROUTER_API_KEY;
       if (openRouterKey && !openRouterKey.startsWith('your_') && openRouterKey.trim() !== '') {
@@ -92,10 +95,11 @@ ${JSON.stringify(peerSignals, null, 2)}
 
 Validate consensus consistency, detect conflicts, and output strictly JSON.`;
 
+        const orModel = process.env.OPENROUTER_GEMINI_FALLBACK || 'inclusionai/ling-3.0-flash-fin:free';
         const res = await axios.post(
           'https://openrouter.ai/api/v1/chat/completions',
           {
-            model: 'google/gemini-2.0-flash-exp:free',
+            model: orModel,
             messages: [
               { role: 'system', content: systemPrompt },
               { role: 'user', content: userPrompt }
@@ -116,7 +120,7 @@ Validate consensus consistency, detect conflicts, and output strictly JSON.`;
         const rawText = res.data?.choices?.[0]?.message?.content;
         const parsed = cleanJson(rawText);
 
-        logger.info(`[Gemini Agent] Successfully validated via OpenRouter fallback model (google/gemini-2.0-flash-exp:free)`);
+        logger.info(`[Gemini Agent] Successfully validated via OpenRouter fallback model (${orModel})`);
         return {
           agent: 'gemini',
           symbol,
@@ -137,13 +141,19 @@ Validate consensus consistency, detect conflicts, and output strictly JSON.`;
     try {
       return await callLocalOllama(symbol, marketData, peerSignals);
     } catch (ollamaErr) {
+      circuitBreakerUntil = Date.now() + 60000;
       logger.warn(`Ollama local fallback failed — using cross-validator rule simulation engine`);
       return simulateGeminiValidation(symbol, marketData, peerSignals);
     }
   }
 }
 
+let geminiOllamaCooldownUntil = 0;
+
 async function callLocalOllama(symbol, marketData, peerSignals = []) {
+  if (Date.now() < geminiOllamaCooldownUntil) {
+    return simulateGeminiValidation(symbol, marketData, peerSignals);
+  }
   try {
     const host = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
     const model = process.env.OLLAMA_MODEL || 'llama3.2';
@@ -187,7 +197,7 @@ Output strictly valid JSON with keys: signal, confidence, reason, validation_res
           num_ctx: 4096,
         },
       },
-      { timeout: 30000, proxy: false }
+      { timeout: 2500, proxy: false }
     );
 
     const rawText = res.data?.response?.trim();
@@ -207,6 +217,7 @@ Output strictly valid JSON with keys: signal, confidence, reason, validation_res
       raw: parsed,
     };
   } catch (err) {
+    geminiOllamaCooldownUntil = Date.now() + 60000;
     logger.warn(`Ollama local fallback also failed: ${err.message}`);
     throw err;
   }

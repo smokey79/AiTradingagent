@@ -7,6 +7,7 @@
  *   4. DexScreener High-Momentum Meme Coin Breakout Scalper
  * With instant Master ON/OFF toggle controls, dynamic intervals, and WebSocket broadcasting.
  */
+const axios = require('axios');
 const logger = require('../utils/logger');
 const { runTradingCycle } = require('./index');
 const { detectArbitrageOpportunities } = require('../arbitrage/arbScanner');
@@ -18,6 +19,9 @@ const { isKillSwitchEngaged } = require('../utils/killSwitch');
 const { getVaultSummary } = require('../utils/profitAllocator');
 const { startHealthChecks, updateHeartbeat } = require('../health/systemHealthCheck');
 const { startContinuousArb, stopContinuousArb, getStatus: getArbStatus } = require('../arbitrage/continuousArbEngine');
+
+// ── Open breakout scalp positions for live price tick resolution ─────────────
+const openBreakoutPositions = new Map();
 
 let autoTradingInterval = null;
 let isAutoTradingActive = false;
@@ -125,9 +129,6 @@ function toggleAutoTrading(seconds = 15, runImmediate = true) {
 async function executeAutonomousCycle() {
   if (!isAutoTradingActive) return;
 
-  // Kill switch check — added 2026-09-03, same flag runTradingCycle() checks
-  // in orchestrator/index.js. Keeps the meme-coin scalper (Phase 3, runs
-  // independently of runTradingCycle) from opening new positions too.
   const killSwitch = isKillSwitchEngaged();
   if (killSwitch) {
     logger.warn(`🛑 [AutoTrader] Kill switch engaged (${killSwitch.reason}) — skipping autonomous cycle #${totalAutoCycles + 1}.`);
@@ -137,7 +138,7 @@ async function executeAutonomousCycle() {
   try {
     lastRunTimestamp = new Date().toISOString();
     totalAutoCycles++;
-    updateHeartbeat(); // 🩺 notify health monitor the loop is alive
+    updateHeartbeat();
 
     logger.info(`\n══════════════════════════════════════════════════════════════════════`);
     logger.info(`🤖 [AutoTrader] MULTI-PLATFORM AUTONOMOUS CYCLE #${totalAutoCycles} START`);
@@ -159,49 +160,106 @@ async function executeAutonomousCycle() {
     }
 
     // ─── 2. Zero-Capital DeFi Flash Loan Arbitrage Engine ────────────────────
-    // Arbitrage is now handled continuously in the background by continuousArbEngine.js
-    // It runs its own 8s tight loop, checking the live arbStatus here to include in dashboard stats.
     const arbStatus = getArbStatus();
     totalFlashLoanTrades = arbStatus.totalArbTrades;
     logger.info(`[AutoTrader] Phase 2: Arbitrage Engine is running in background. Total Arb Trades: ${arbStatus.totalArbTrades} | Profit: $${arbStatus.totalArbProfitUsd}`);
 
-    // ─── 3. DexScreener Trending Meme Coin Breakout Scalper ──────────────────
+    // ─── 3. DexScreener Trending Breakout Scalper (Live Ingestion & Tick Resolution) ───
     logger.info(`[AutoTrader] Phase 3: Scanning DexScreener Breakout Liquidity...`);
     try {
+      // Step A: Resolve existing open breakout positions against live DexScreener prices
+      if (openBreakoutPositions.size > 0) {
+        for (const [symbol, pos] of openBreakoutPositions.entries()) {
+          try {
+            const pairUrl = pos.pairAddress
+              ? `https://api.dexscreener.com/latest/dex/pairs/${pos.chain}/${pos.pairAddress}`
+              : `https://api.dexscreener.com/latest/dex/search?q=${symbol}`;
+            const { data } = await axios.get(pairUrl, { timeout: 3000 });
+            const pairData = data.pair || data.pairs?.[0];
+            const currentPrice = parseFloat(pairData?.priceUsd || 0);
+
+            if (currentPrice > 0 && pos.entryPrice > 0) {
+              const rawMovePct = ((currentPrice - pos.entryPrice) / pos.entryPrice) * 100;
+              const ageMs = Date.now() - pos.entryTimestamp;
+              const hitTP = rawMovePct >= (pos.tpPct || 8.0);
+              const hitSL = rawMovePct <= -(pos.slPct || 4.0);
+              const timedOut = ageMs > (pos.ttlMs || 10 * 60 * 1000);
+
+              if (hitTP || hitSL || timedOut) {
+                const cappedMovePct = hitTP ? (pos.tpPct || 8.0) : hitSL ? -(pos.slPct || 4.0) : rawMovePct;
+                const pnlUsd = parseFloat(((pos.positionSizeUsd * cappedMovePct) / 100).toFixed(2));
+                const outcome = pnlUsd > 0.01 ? 'WIN' : pnlUsd < -0.01 ? 'LOSS' : 'BREAKEVEN';
+                recordTrade({
+                  symbol: `${symbol}/USD`,
+                  side: 'BUY',
+                  price: currentPrice,
+                  positionSizeUsd: pos.positionSizeUsd,
+                  leverage: 1,
+                  pnlUsd,
+                  pnlPct: parseFloat(cappedMovePct.toFixed(2)),
+                  outcome,
+                  confidence: pos.confidence || 0.85,
+                  reason: hitTP
+                    ? `DexScreener TP hit: +${cappedMovePct.toFixed(2)}% real price gain`
+                    : hitSL
+                      ? `DexScreener SL hit: ${cappedMovePct.toFixed(2)}% real price move`
+                      : `DexScreener scalp closed at market after ${Math.round(ageMs / 60000)}m (${rawMovePct.toFixed(2)}%)`,
+                  paper: pos.paper !== false,
+                  venue: 'DexScreener-RealResolution',
+                });
+                openBreakoutPositions.delete(symbol);
+                totalAutoProfitUsd += pnlUsd;
+                logger.info(`🎯 [AutoTrader] DexScreener Scalp RESOLVED (live price): ${outcome} ${pnlUsd >= 0 ? '+' : ''}$${pnlUsd} on ${symbol} (${rawMovePct.toFixed(2)}%)`);
+              }
+            }
+          } catch (resErr) {
+            logger.debug(`[AutoTrader] Breakout resolution check error for ${symbol}: ${resErr.message}`);
+          }
+        }
+      }
+
+      // Step B: Scan for new high-conviction breakout opportunities
       const memeCoins = await scanTrendingMemeCoins();
       const topBreakout = memeCoins.find(m => m.isBreakout && m.safetyScore >= 88 && (m.change5m > 3.0 || m.change1h > 8.0));
 
-      if (topBreakout) {
+      if (topBreakout && !openBreakoutPositions.has(topBreakout.symbol)) {
         logger.info(`🐸 [AutoTrader] DexScreener Breakout Token Detected: ${topBreakout.name} (${topBreakout.symbol}) on ${topBreakout.chain} | 5m: +${topBreakout.change5m}% | Safety: ${topBreakout.safetyScore}/100`);
         const isPaper = process.env.PAPER_TRADING !== 'false';
         const positionSizeUsd = 25.0; // Controlled micro-allocation
+        const entryPrice = topBreakout.priceUsd || 0.01;
 
-        // Fixed 2026-09-03: this used to fabricate outcome:'WIN' with a random
-        // profit (Math.random() * 0.08) on every detection, regardless of what
-        // the price actually did afterward — that was silently inflating the
-        // recorded win rate. There is no real price-resolution mechanism for
-        // meme-coin scalps yet, so we log it honestly as PENDING (excluded
-        // from win/loss stats in tradeLedger's getPerformanceStats, which only
-        // counts WIN/LOSS/BREAKEVEN) instead of inventing a result.
-        // TODO: wire up real resolution (re-check topBreakout's price after a
-        // hold window, like riskGate.js's openPositions TTL does) before this
-        // should count toward win-rate numbers.
+        openBreakoutPositions.set(topBreakout.symbol, {
+          symbol: topBreakout.symbol,
+          name: topBreakout.name,
+          chain: topBreakout.chain,
+          pairAddress: topBreakout.pairAddress,
+          entryPrice,
+          positionSizeUsd,
+          entryTimestamp: Date.now(),
+          tpPct: 8.0,
+          slPct: 4.0,
+          ttlMs: 10 * 60 * 1000,
+          confidence: topBreakout.safetyScore / 100,
+          paper: isPaper,
+        });
+
         recordTrade({
           symbol: `${topBreakout.symbol}/USD`,
           side: 'BUY',
-          price: topBreakout.priceUsd || 0.01,
-          size: (positionSizeUsd / (topBreakout.priceUsd || 0.01)),
+          price: entryPrice,
+          size: (positionSizeUsd / entryPrice),
           positionSizeUsd,
           leverage: 1,
           pnlUsd: 0,
           outcome: 'PENDING',
           confidence: topBreakout.safetyScore / 100,
-          reason: `DexScreener Breakout Scalp on ${topBreakout.chain} (+${topBreakout.change1h}% 1h vol surge) — outcome not yet resolved`,
+          reason: `DexScreener Breakout Scalp OPENED on ${topBreakout.chain} (+${topBreakout.change1h}% 1h surge) — tracking live ticks for TP(+8%)/SL(-4%)`,
           paper: isPaper,
+          venue: 'DexScreener-PendingTick',
         });
 
         totalMemeTrades++;
-        logger.info(`📝 [AutoTrader] Meme Coin Breakout Scalp logged as PENDING (no fabricated P&L — real outcome resolution not yet implemented).`);
+        logger.info(`📝 [AutoTrader] Breakout Scalp OPENED: ${topBreakout.symbol} @ $${entryPrice} — awaiting real live price resolution.`);
       }
     } catch (memeErr) {
       logger.warn(`[AutoTrader] Meme scan notice: ${memeErr.message}`);

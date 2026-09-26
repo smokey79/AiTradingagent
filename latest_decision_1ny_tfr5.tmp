@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-09-11T07:59:05.100144+00:00",
+  "symbol": "BTCUSDT",
+  "action": "FLAT",
+  "size": 0.0,
+  "reason": "Paper baseline momentum check (-0.072% 1h change)",
+  "source": "debate",
+  "confidence": 0.72,
+  "paper_mode": true,
+  "engine": "python"
+}

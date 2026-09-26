@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Votes — Live</title>
+<style>
+:root{
+  --ground:#12161B; --surface:#1A2028; --surface2:#222A34; --line:#2E3842;
+  --ink:#E4E9ED; --dim:#94A3B0; --faint:#6B7885;
+  --buy:#4E9E86; --sell:#C4564B; --hold:#7A8794; --accent:#E0A030;
+  --mono:ui-monospace,"IBM Plex Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 18px 64px}
+header{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;
+  border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:22px}
+h1{font-size:20px;margin:0;letter-spacing:-.01em}
+.live{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 9px;border-radius:2px;border:1px solid var(--line);color:var(--faint)}
+.live.on{color:var(--buy);border-color:color-mix(in srgb,var(--buy) 45%,transparent)}
+.live.off{color:var(--sell);border-color:color-mix(in srgb,var(--sell) 45%,transparent)}
+.stamp{margin-left:auto;font-family:var(--mono);font-size:11.5px;color:var(--faint)}
+
+.pair{background:var(--surface);border:1px solid var(--line);margin-bottom:22px}
+.pairhead{display:grid;grid-template-columns:minmax(120px,1fr) auto auto auto;
+  gap:14px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}
+.sym{font-family:var(--mono);font-weight:600;font-size:16px}
+.sig{font-family:var(--mono);font-size:13px;font-weight:600;padding:4px 11px;border-radius:2px;
+  letter-spacing:.06em}
+.sig.BUY{background:color-mix(in srgb,var(--buy) 16%,transparent);color:var(--buy);
+  border:1px solid color-mix(in srgb,var(--buy) 40%,transparent)}
+.sig.SELL{background:color-mix(in srgb,var(--sell) 16%,transparent);color:var(--sell);
+  border:1px solid color-mix(in srgb,var(--sell) 40%,transparent)}
+.sig.HOLD{background:var(--surface2);color:var(--hold);border:1px solid var(--line)}
+.metric{font-family:var(--mono);font-size:12px;color:var(--dim);text-align:right;
+  font-variant-numeric:tabular-nums}
+.metric b{display:block;font-size:16px;color:var(--ink);font-weight:600}
+.metric.fail b{color:var(--sell)} .metric.ok b{color:var(--buy)}
+
+.bar{height:5px;background:var(--surface2);margin:0 16px;position:relative}
+.bar i{display:block;height:100%;background:var(--accent)}
+.bar .thr{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.barlbl{display:flex;justify-content:space-between;padding:5px 16px 12px;
+  font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:.05em}
+
+table{width:100%;border-collapse:collapse}
+th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--faint);text-align:right;padding:9px 14px;font-weight:500;
+  border-bottom:1px solid var(--line)}
+th:first-child{text-align:left}
+td{padding:9px 14px;text-align:right;font-family:var(--mono);font-size:12.5px;
+  border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;color:var(--dim)}
+td:first-child{text-align:left;color:var(--ink)}
+tr:last-child td{border-bottom:none}
+tr.silent td{opacity:.5}
+tr.agreed td:first-child{box-shadow:inset 3px 0 0 var(--buy)}
+.tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.07em;padding:2px 6px;
+  border-radius:2px;text-transform:uppercase;margin-left:7px}
+.tag.deg{background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent)}
+.tag.err{background:color-mix(in srgb,var(--sell) 15%,transparent);color:var(--sell)}
+.reason{color:var(--faint);font-size:11px;padding:0 14px 9px;text-align:left;
+  font-family:system-ui,sans-serif}
+.empty{padding:40px 16px;text-align:center;color:var(--faint)}
+.note{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);
+  padding:14px 16px;margin-bottom:22px;color:var(--dim);font-size:13px}
+@media(max-width:620px){
+  .pairhead{grid-template-columns:1fr 1fr;row-gap:10px}
+  th:nth-child(4),td:nth-child(4){display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Agent Votes</h1>
+    <span class="live" id="live">connecting</span>
+    <span class="stamp" id="stamp">—</span>
+  </header>
+  <div id="warn"></div>
+  <div id="out"><div class="empty">Waiting for the first consensus cycle…</div></div>
+</div>
+<script>
+const $ = (id) => document.getElementById(id);
+let thresholds = { minConfidence: 0.68 };
+let health = {};
+
+function pct(n){ return (n*100).toFixed(0) + '%'; }
+
+function renderPair(p){
+  const votes = p.votes || [];
+  const needed = Math.max(2, Math.floor((p.totalAgents||0)/2) + 1);
+  const conf = p.confidence || 0;
+  const confOk = conf >= thresholds.minConfidence;
+  const agreeOk = (p.agentsAgreeing||0) >= needed;
+
+  const rows = votes.map(v => {
+    const h = health[(v.name||'').toLowerCase()] || {};
+    const degraded = /DEGRADED|EXCLUDED|DOWN|FAIL/i.test(h.status||'');
+    const silent = (v.signal||'HOLD') === 'HOLD' && (v.confidence||0) === 0;
+    const tag = degraded ? '<span class="tag deg">'+h.status+'</span>'
+              : (h.lastError ? '<span class="tag err">errored</span>' : '');
+    return '<tr class="'+(v.agreed?'agreed':'')+' '+(silent?'silent':'')+'">'
+      + '<td>'+esc(v.name)+tag+'</td>'
+      + '<td><span class="sig '+(v.signal||'HOLD')+'" style="font-size:11px;padding:2px 7px">'+esc(v.signal||'HOLD')+'</span></td>'
+      + '<td>'+pct(v.confidence||0)+'</td>'
+      + '<td>'+(v.weight!=null?Number(v.weight).toFixed(2):'—')+'</td>'
+      + '<td>'+(v.agreed?'✓':'')+'</td></tr>';
+  }).join('');
+
+  return '<div class="pair">'
+    + '<div class="pairhead">'
+      + '<span class="sym">'+esc(p.pair)+'</span>'
+      + '<span class="sig '+(p.finalSignal||'HOLD')+'">'+esc(p.finalSignal||'HOLD')+'</span>'
+      + '<span class="metric '+(agreeOk?'ok':'fail')+'">agreeing<b>'+(p.agentsAgreeing||0)+'/'+(p.totalAgents||0)+'</b></span>'
+      + '<span class="metric '+(confOk?'ok':'fail')+'">confidence<b>'+pct(conf)+'</b></span>'
+    + '</div>'
+    + '<div class="bar"><i style="width:'+Math.min(100,conf*100).toFixed(1)+'%"></i>'
+      + '<span class="thr" style="left:'+(thresholds.minConfidence*100).toFixed(1)+'%"></span></div>'
+    + '<div class="barlbl"><span>CONFIDENCE</span><span>THRESHOLD '+pct(thresholds.minConfidence)+' · MAJORITY NEEDS '+needed+'</span></div>'
+    + (votes.length
+        ? '<table><thead><tr><th>Agent</th><th>Vote</th><th>Conf</th><th>Weight</th><th>Agreed</th></tr></thead><tbody>'+rows+'</tbody></table>'
+        : '<div class="empty">No agent votes in this cycle.</div>')
+    + '</div>';
+}
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function render(data){
+  thresholds = data.thresholds || thresholds;
+  health = data.health || {};
+  const pairs = Object.values(data.pairs || {});
+  $('stamp').textContent = data.updatedAt ? 'last cycle ' + new Date(data.updatedAt).toLocaleTimeString() : '—';
+
+  const degraded = Object.values(health).filter(h => /DEGRADED|EXCLUDED|DOWN|FAIL/i.test(h.status||'') || h.lastError).length;
+  const total = Object.keys(health).length;
+  let warn = '';
+  if (data._SAMPLE) {
+    warn += '<div class="note" style="border-left-color:var(--sell)"><b>Showing SAMPLE data, not real votes.</b> '
+      + 'The bot has not run a consensus cycle on the new code yet — restart it and this replaces itself on the first cycle.</div>';
+  }
+  if (total && degraded > total/3) {
+    warn += '<div class="note"><b>'+degraded+' of '+total+' agents are degraded or erroring.</b> '
+      + 'With a majority rule in force, a thinned roster means few or no trades will clear the gate. '
+      + 'That is the gate working — check capacity (API credits, RAM) rather than lowering the bar.</div>';
+  }
+  $('warn').innerHTML = warn;
+
+  if (!pairs.length){ $('out').innerHTML = '<div class="empty">Waiting for the first consensus cycle…</div>'; return; }
+  pairs.sort((a,b) => String(a.pair).localeCompare(String(b.pair)));
+  $('out').innerHTML = pairs.map(renderPair).join('');
+}
+
+async function poll(){
+  try{
+    const r = await fetch('/api/agent-votes', {cache:'no-store'});
+    if (r.ok) render(await r.json());
+  }catch(_){}
+}
+
+function connect(){
+  let ws;
+  try { ws = new WebSocket((location.protocol==='https:'?'wss://':'ws://') + location.host); }
+  catch(_) { $('live').className='live off'; $('live').textContent='no socket'; return; }
+  ws.onopen = () => { $('live').className='live on'; $('live').textContent='live'; };
+  ws.onclose = () => { $('live').className='live off'; $('live').textContent='reconnecting'; setTimeout(connect, 4000); };
+  ws.onerror = () => { $('live').className='live off'; $('live').textContent='socket error'; };
+  ws.onmessage = (ev) => {
+    try{
+      const msg = JSON.parse(ev.data);
+      if (msg && msg.type === 'agent_votes') poll();
+    }catch(_){}
+  };
+}
+
+poll();
+connect();
+setInterval(poll, 15000);   // fallback refresh even if the socket is quiet
+</script>
+</body>
+</html>

@@ -1,14 +1,28 @@
 
+import os
 import ccxt
 from dotenv import load_dotenv
 
 load_dotenv()
 
+# FIX 2026-09-13: this file is still dead_code / not wired into anything live
+# (paper-trading only — no order execution is called from the running bot).
+# Fixed two latent bugs while touching Bitget-related code this session:
+#   - missing `import os` (BITGET_API_KEY/SECRET_KEY lookups would NameError
+#     the moment this class was ever instantiated)
+#   - a hard-coded fallback passphrase, which violates this project's own
+#     "no hard-coded secrets or credentials in code" rule in CLAUDE.md.
+# BITGET_PASSPHRASE must now be set in .env; there is no default.
 class BitgetTrader:
     def __init__(self):
         self.api_key = os.getenv("BITGET_API_KEY")
         self.secret_key = os.getenv("BITGET_SECRET_KEY")
-        self.passphrase = os.getenv("BITGET_PASSPHRASE", "Allyb0611")
+        self.passphrase = os.getenv("BITGET_PASSPHRASE")
+        if not (self.api_key and self.secret_key and self.passphrase):
+            raise ValueError(
+                "BitgetTrader requires BITGET_API_KEY, BITGET_SECRET_KEY and "
+                "BITGET_PASSPHRASE to all be set in .env — none are hard-coded."
+            )
         
         self.client = ccxt.bitget({
             'apiKey': self.api_key,

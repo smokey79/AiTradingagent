@@ -27,15 +27,46 @@ const HEAL_COOLDOWN_MS = 5 * 60 * 1000; // 5 min between heals for same agent
 
 // Model fallback chains — when primary model is unavailable, use next in list
 const FALLBACK_CHAINS = {
-  deepseek:       ['deepseek/deepseek-r1:free', 'deepseek/deepseek-chat:free', 'meta-llama/llama-3.3-70b-instruct:free'],
+  deepseek:       ['inclusionai/ling-3.0-flash-fin:free', 'inclusionai/ling-3.0-flash-vl:free', 'google/gemma-4-31b-it:free'],
   claude:         ['claude-3-5-haiku-20241022', 'claude-3-haiku-20240307'],
   gpt4o:          ['gpt-4o-mini', 'gpt-3.5-turbo'],
-  gemini:         ['gemini-1.5-flash', 'gemini-1.5-flash-8b'],
-  openrouter_free:['meta-llama/llama-3.3-70b-instruct:free', 'qwen/qwen-2.5-72b-instruct:free'],
+  gemini:         ['gemini-2.5-flash', 'gemini-3.7-flash', 'google/gemma-4-31b-it:free'],
+  openrouter_free:[
+    'inclusionai/ling-3.0-flash-fin:free',
+    'inclusionai/ling-3.0-flash-vl:free',
+    'inclusionai/ling-3.0-flash-sante:free',
+    'google/gemma-4-31b-it:free',
+    'google/gemma-4-26b-a4b-it:free',
+    'nvidia/nemotron-3-super-120b-a12b:free',
+    'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free',
+  ],
   grok:           ['grok-2-1212', 'grok-beta'],
   perplexity:     ['llama-3.1-sonar-small-128k-online', 'llama-3.1-sonar-large-128k-online'],
   hermes:         ['hermes3', 'llama3.2'],
   sentiment:      [], // local Ollama — no fallback key, just retry
+};
+
+// Agent name to exact filename mapping in src/agents/
+const AGENT_FILE_MAP = {
+  claude:              'claudeAgent.js',
+  gpt4o:               'gpt4oAgent.js',
+  deepseek:            'deepseekAgent.js',
+  gemini:              'geminiAgent.js',
+  grok:                'grokAgent.js',
+  openrouter_free:     'openrouterFreeAgent.js',
+  perplexity:          'perplexityAgent.js',
+  hermes:              'hermesAgent.js',
+  sentiment:           'youtubeSentimentAgent.js',
+  defi:                'defiAgent.js',
+  intelligent_signals: 'intelligentSignalsAgent.js',
+  smc_agent:           'smcAgent.js',
+  strategy_learner:    'strategyLearningAgent.js',
+  expert_trader:       'expertTraderAgent.js',
+  bull_agent:          'bullAgent.js',
+  bear_agent:          'bearAgent.js',
+  learning_agent:      'learningAgent.js',
+  provider_rotator:    'providerRotator.js',
+  volatility_regime:   'volatilityRegimeAgent.js',
 };
 
 // Runtime state — excluded agents redistributed weight in consensus
@@ -95,13 +126,14 @@ function lastHealAge(agentName) {
  */
 async function softReset(agentName) {
   try {
-    const agentPath = path.resolve(__dirname, `../agents/${agentName}Agent.js`);
+    const filename = AGENT_FILE_MAP[agentName] || `${agentName}Agent.js`;
+    const agentPath = path.resolve(__dirname, `../agents/${filename}`);
     if (require.cache[require.resolve(agentPath)]) {
       delete require.cache[require.resolve(agentPath)];
-      logger.info(`[SelfHealer] Module cache cleared for ${agentName}`);
+      logger.info(`[SelfHealer] Module cache cleared for ${agentName} (${filename})`);
     }
     monitor.markHealed(agentName);
-    return logHealEvent(agentName, 'SOFT_RESET', true, 'Module cache cleared and agent marked RECOVERED');
+    return logHealEvent(agentName, 'SOFT_RESET', true, `Module cache cleared for ${filename} and agent marked RECOVERED`);
   } catch (e) {
     return logHealEvent(agentName, 'SOFT_RESET', false, e.message);
   }

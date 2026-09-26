@@ -1,0 +1,60 @@
+{
+  "R5_CRO_2h_VWAP_EMA_NoADX": {
+    "tradeCount": 232,
+    "pctBasedProfitFactor": 0.9966761696159163,
+    "maxConsecutiveLosses": 28,
+    "largestSingleLossPct": -8.775714200867139,
+    "largestSingleWinPct": 80.15139941690961,
+    "byExposure": {
+      "0.05": {
+        "netProfitPct": -0.37637886890199423,
+        "maxDrawdownPct": 5.324630916624738,
+        "finalEquityMultiple": 0.9962362113109801
+      },
+      "0.1": {
+        "netProfitPct": -1.3217745113110468,
+        "maxDrawdownPct": 10.430074902686277,
+        "finalEquityMultiple": 0.9867822548868895
+      },
+      "0.15": {
+        "netProfitPct": -2.7908832009303386,
+        "maxDrawdownPct": 15.326468390138437,
+        "finalEquityMultiple": 0.9720911679906966
+      },
+      "0.2": {
+        "netProfitPct": -4.734057923461621,
+        "maxDrawdownPct": 20.165983444435252,
+        "finalEquityMultiple": 0.9526594207653838
+      }
+    }
+  },
+  "R5_CRO_2h_VWAP_EMA_ADX20": {
+    "tradeCount": 164,
+    "pctBasedProfitFactor": 1.0316912445001898,
+    "maxConsecutiveLosses": 39,
+    "largestSingleLossPct": -8.775714200867139,
+    "largestSingleWinPct": 80.1513994169096,
+    "byExposure": {
+      "0.05": {
+        "netProfitPct": 0.31134118680820055,
+        "maxDrawdownPct": 6.7753070475333,
+        "finalEquityMultiple": 1.003113411868082
+      },
+      "0.1": {
+        "netProfitPct": 0.15826573968524826,
+        "maxDrawdownPct": 13.125643050933652,
+        "finalEquityMultiple": 1.0015826573968525
+      },
+      "0.15": {
+        "netProfitPct": -0.43148977376160635,
+        "maxDrawdownPct": 19.074839763114092,
+        "finalEquityMultiple": 0.9956851022623839
+      },
+      "0.2": {
+        "netProfitPct": -1.42725292402891,
+        "maxDrawdownPct": 24.645634604626334,
+        "finalEquityMultiple": 0.9857274707597109
+      }
+    }
+  }
+}

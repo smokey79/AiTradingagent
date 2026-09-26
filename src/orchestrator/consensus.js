@@ -13,6 +13,10 @@
  * BUY/SELL (ATR/BB-width tell you magnitude of movement, not direction), so
  * it can't force a trade or count toward agentsAgreeing — it's a low-weight
  * advisory signal only. See src/agents/volatilityRegimeAgent.js.
+ *
+ * v4 (2026-09-15): traderDevAgent added — queries TraderDev's public strategy
+ * leaderboard (240K+ strategies, 1M+ backtests) for crowd-consensus signals.
+ * Free, no API key required. Cached 5 min per symbol.
  */
 const logger = require('../utils/logger');
 const claudeAgent = require('../agents/claudeAgent');
@@ -28,31 +32,43 @@ const defiAgent = require('../agents/defiAgent');
 const intelligentSignalsAgent = require('../agents/intelligentSignalsAgent');
 const smcAgent = require('../agents/smcAgent');
 const strategyLearningAgent = require('../agents/strategyLearningAgent');
-const expertTraderAgent = require('../agents/expertTraderAgent');
+const bullAgent = require('../agents/bullAgent');
+const bearAgent = require('../agents/bearAgent');
 const providerRotator = require('../agents/providerRotator');
 const volatilityRegimeAgent = require('../agents/volatilityRegimeAgent');
+const technicalLabAgent = require('../agents/technicalLabAgent');
+const technicalDailyAgent = require('../agents/technicalDailyAgent');
+const traderDevAgent = require('../agents/traderDevAgent');
 const healthMonitor = require('../health/agentHealthMonitor');
 const { isExcluded } = require('../health/selfHealer');
 const { evaluateNegativePatterns } = require('../learning/lossLearner');
+const { loadStrategyMemory } = require('../strategy/strategyMemoryLoader');
+const { classifyRegime, REGIMES } = require('../risk/regimeClassifier');
 
 // Credibility weights
 const AGENT_WEIGHTS = {
-  expert_trader: 0.20,   // Chief Crypto Strategy: 50-EMA, LuxAlgo SMC & RS vs BTC
-  deepseek: 0.20,        // Quantitative SMC & reasoning
-  claude: 0.20,          // Technical analysis & chart patterns
-  smc_agent: 0.20,       // Casper SMC & LuxAlgo Order Blocks
-  strategy_learner: 0.15,// Backtested PineScript & Adaptive Technicals
-  gpt4o: 0.15,           // Macro & institutional sentiment
-  gemini: 0.20,          // Cross-validation & risk gate (Ollama-powered)
-  openrouter_free: 0.10, // Zero-cost multi-model free router
-  grok: 0.10,            // Real-time news & orderbook imbalance
-  defi: 0.15,            // Deterministic high-probability DeFi metrics
-  intelligent_signals: 0.15, // Machine learning & feature engineering feeds
-  perplexity: 0.05,      // Fundamentals & tokenomics
-  hermes: 0.20,          // Local Ollama consensus validator (free, private)
-  sentiment: 0.05,       // Media alpha & YouTube intelligence
-  provider_rotator: 0.15,// 24/7 rotation: free OpenRouter + Gemini Pro + Ollama fallback
-  volatility_regime: 0.08, // Advisory only — always HOLD, never counts toward agentsAgreeing (see below)
+  bull_agent: 0.15,
+  bear_agent: 0.15,
+  deepseek: 0.20,
+  claude: 0.20,
+  smc_agent: 0.20,
+  strategy_learner: 0.15,
+  gpt4o: 0.15,
+  gemini: 0.20,
+  openrouter_free: 0.10,
+  grok: 0.10,
+  defi: 0.15,
+  intelligent_signals: 0.15,
+  perplexity: 0.05,
+  hermes: 0.20,
+  sentiment: 0.05,
+  provider_rotator: 0.15,
+  volatility_regime: 0.08,
+  technical_lab: 0.20,  // 2026-09-14 merge: walk-forward-validated EMA50/100+VWAP strategy (ETH only) from F:\aitradingagent2 — see claude/session-2026-09-14-merge-report.md
+  technical_daily: 0.12,  // 2026-09-14: own-OHLCV (ccxt, no Alpha Vantage quota) 3-cycle-robust daily EMA/RSI/MACD/ATR strategy, BTC/ETH/SOL/AVAX/ARB (OP/CRO disabled, no real edge/insufficient sample) — lower weight than technical_lab because 3-cycle robustness is a real but slightly weaker validation than genuine out-of-sample walk-forward. See src/agents/technicalConsensusAgent.js.
+  tradingkit: 0.18,   // TradingKit strategy signals — real market data
+  telegram_channel: 0.12, // Live indicator channel signals
+  traderdev_strategy: 0.15, // TraderDev leaderboard crowd-consensus (240K+ backtested strategies)
 };
 
 const SIGNAL_VALUES = {
@@ -83,17 +99,29 @@ function withTimeout(promise, ms, name) {
 
 async function runConsensus(pair, marketData) {
   const symbol = pair.split('/')[0];
-  logger.info(`[${pair}] Initiating multi-agent parallel consensus pipeline (with DeepSeek R1 & OpenRouter Free Tier)...`);
+  const currentRegime = classifyRegime(marketData);
+  logger.info(`[${pair}] Initiating multi-agent parallel consensus pipeline (with DeepSeek R1 & OpenRouter Free Tier)... [Regime: ${currentRegime}]`);
 
-  // Step 1: Parallel calls to core specialist agents (with health timing)
+  // Load empirical agent accuracy track records for dynamic consensus weighting
+  const strategyMemory = loadStrategyMemory();
+  const agentAccuracy = strategyMemory?.agentAccuracy || {};
+
+  // Step 1: Parallel calls to core specialist agents (with per-agent health timing)
   const agentCallStart = Date.now();
-  const agentTimers = {};
-  function timedAgent(name, promise) {
-    agentTimers[name] = Date.now();
-    return promise;
+  const agentLatencies = {};
+  async function timedAgent(name, promise) {
+    const start = Date.now();
+    try {
+      const val = await promise;
+      agentLatencies[name] = Date.now() - start;
+      return val;
+    } catch (err) {
+      agentLatencies[name] = Date.now() - start;
+      throw err;
+    }
   }
 
-  // providerRotator wrapper — converts rotated consensus output to standard agent signal format
+  // providerRotator wrapper
   async function runRotatorAsAgent() {
     const result = await providerRotator.runRotatedConsensus(symbol, marketData);
     return {
@@ -105,53 +133,72 @@ async function runConsensus(pair, marketData) {
     };
   }
 
+  // TradingKit signal wrapper — real market data signals
+  async function runTradingKitAsAgent() {
+    const { fetchSignal } = require('../data/tradingKitFeed');
+    const tk = await fetchSignal(pair);
+    if (!tk) return { signal: 'HOLD', confidence: 0.5, reason: 'TradingKit unavailable' };
+    return {
+      signal:     normalizeSignal(tk.direction || tk.signal || 'HOLD'),
+      confidence: parseFloat(tk.confidence || 0.70),
+      reason:     tk.reasoning || tk.reason || `TradingKit ${tk.strategy || 'smart_money'} signal`,
+      model_used: 'tradingkit-api',
+      provider:   'tradingkit',
+    };
+  }
+
+  // Telegram channel signals wrapper
+  function runTelegramSignalAsAgent() {
+    const tgSig = marketData.telegramSignal;
+    if (!tgSig || !tgSig.action) return { signal: 'HOLD', confidence: 0.5, reason: 'No Telegram signal' };
+    return {
+      signal:     normalizeSignal(tgSig.action),
+      confidence: parseFloat(tgSig.confidence || 0.72),
+      reason:     `Channel: ${tgSig.channel || 'indicator'} — ${(tgSig.raw || '').slice(0, 60)}`,
+      model_used: 'telegram-channel',
+      provider:   'telegram_channel',
+    };
+  }
+
   const [
-    deepseekRes,
+    bullAgentRes,
+    bearAgentRes,
     claudeRes,
-    gpt4oRes,
-    grokRes,
     openrouterFreeRes,
-    perplexityRes,
-    hermesRes,
-    sentimentRes,
-    defiRes,
-    intelligentSignalsRes,
-    smcRes,
     strategyLearnerRes,
-    expertTraderRes,
-    providerRotatorRes,
-    volatilityRegimeRes,
+    tradingKitRes,
+    telegramRes,
+    technicalLabRes,
+    technicalDailyRes,
+    traderDevRes,
   ] = await Promise.allSettled([
-    // Tiered timeouts: local and cloud agents with automated quantitative fallbacks
-    timedAgent('expert_trader',       withTimeout(expertTraderAgent.getSignal(symbol, marketData),        5000,  'ExpertTrader')),
-    timedAgent('deepseek',            withTimeout(deepseekAgent.getSignal(symbol, marketData),            10000, 'DeepSeek')),
+    timedAgent('bull_agent',          withTimeout(bullAgent.getSignal(symbol, marketData),            5000,  'BullAgent')),
+    timedAgent('bear_agent',          withTimeout(bearAgent.getSignal(symbol, marketData),            5000,  'BearAgent')),
     timedAgent('claude',              withTimeout(claudeAgent.getSignal(symbol, marketData),              10000, 'Claude')),
-    timedAgent('gpt4o',               withTimeout(gpt4oAgent.getSignal(symbol, marketData),               10000, 'GPT-4o')),
-    timedAgent('grok',                withTimeout(grokAgent.getSignal(symbol, marketData),                10000, 'Grok')),
     timedAgent('openrouter_free',     withTimeout(openrouterFreeAgent.getSignal(symbol, marketData),      10000, 'OpenRouterFree')),
-    timedAgent('perplexity',          withTimeout(perplexityAgent.getSignal(symbol, marketData),           10000, 'Perplexity')),
-    timedAgent('hermes',              withTimeout(hermesAgent.getSignal(symbol, marketData),              30000,  'Hermes')),   // local Ollama ~18s inference
-    timedAgent('sentiment',           withTimeout(sentimentAgent.getSentimentSignal(symbol),               5000,  'Sentiment')), // cached — fast
-    timedAgent('defi',                withTimeout(defiAgent.getSignal(symbol, marketData),                 5000,  'DeFi')),
-    timedAgent('intelligent_signals', withTimeout(intelligentSignalsAgent.getSignal(symbol, marketData),     5000,  'IntelligentSignals')),
-    timedAgent('smc_agent',           withTimeout(smcAgent.getSignal(symbol, marketData),                   5000,  'SMCAgent')),
-    timedAgent('strategy_learner',    withTimeout(strategyLearningAgent.getSignal(symbol, marketData),      5000,  'StrategyLearner')),
-    timedAgent('provider_rotator',    withTimeout(runRotatorAsAgent(),                                     35000,  'ProviderRotator')), // 5 agents in parallel internally
-    timedAgent('volatility_regime',   withTimeout(volatilityRegimeAgent.getSignal(symbol, marketData),      3000,  'VolatilityRegime')), // pure in-memory calc, no network
+    timedAgent('strategy_learner',    withTimeout(strategyLearningAgent.getSignal(symbol, marketData),     5000, 'StrategyLearner')),
+    timedAgent('tradingkit',          withTimeout(runTradingKitAsAgent(),                                  8000, 'TradingKit')),
+    timedAgent('telegram_channel',    Promise.resolve(runTelegramSignalAsAgent())),
+    timedAgent('technical_lab',       withTimeout(technicalLabAgent.getSignal(symbol, marketData),         8000, 'TechnicalLab')),
+    timedAgent('technical_daily',     withTimeout(technicalDailyAgent.getSignal(symbol, marketData),       8000, 'TechnicalDaily')),
+    timedAgent('traderdev_strategy',  withTimeout(traderDevAgent.getSignal(symbol, marketData),            6000, 'TraderDev')),
   ]);
 
   // Record health outcomes for every agent
   const agentResults = {
-    expert_trader: expertTraderRes,
-    deepseek: deepseekRes, claude: claudeRes, gpt4o: gpt4oRes,
-    grok: grokRes, openrouter_free: openrouterFreeRes,
-    perplexity: perplexityRes, hermes: hermesRes, sentiment: sentimentRes,
-    defi: defiRes, intelligent_signals: intelligentSignalsRes, smc_agent: smcRes,
-    strategy_learner: strategyLearnerRes, provider_rotator: providerRotatorRes,
-    volatility_regime: volatilityRegimeRes,
+    bull_agent: bullAgentRes,
+    bear_agent: bearAgentRes,
+    claude: claudeRes,
+    openrouter_free: openrouterFreeRes,
+    strategy_learner: strategyLearnerRes,
+    tradingkit: tradingKitRes,
+    telegram_channel: telegramRes,
+    technical_lab: technicalLabRes,
+    technical_daily: technicalDailyRes,
+    traderdev_strategy: traderDevRes,
   };
   for (const [name, res] of Object.entries(agentResults)) {
-    const latency = agentTimers[name] ? Date.now() - agentTimers[name] : 0;
+    const latency = agentLatencies[name] || 0;
     healthMonitor.record(
       name,
       res.status === 'fulfilled',
@@ -167,12 +214,35 @@ async function runConsensus(pair, marketData) {
       const normSig = normalizeSignal(res.value.signal);
       const conf = Math.max(0, Math.min(1, parseFloat(res.value.confidence) || 0.70));
       const health = healthMonitor.getAgent(name);
+
+      // Self-Learning Dynamic Weight Scaling:
+      // When an agent has >= 3 recorded trades in strategy memory, scale its weight
+      // based on its empirical rolling accuracy relative to the 70% benchmark.
+      const baseWeight = AGENT_WEIGHTS[name] || 0.10;
+      let effectiveWeight = baseWeight;
+      const acc = agentAccuracy[name];
+      if (acc && acc.total >= 3) {
+        const hitRate = acc.accuracy;
+        const multiplier = Math.max(0.50, Math.min(1.60, hitRate / 0.70));
+        effectiveWeight = parseFloat((baseWeight * multiplier).toFixed(3));
+      }
+
+      // Regime-Aware Dynamic Arbitration:
+      // In strong directional trends, boost the aligned specialist and discount counter-trend specialist
+      if (currentRegime === REGIMES.STRONG_BULL_TREND) {
+        if (name === 'bull_agent') effectiveWeight = parseFloat((effectiveWeight * 1.40).toFixed(3));
+        if (name === 'bear_agent') effectiveWeight = parseFloat((effectiveWeight * 0.60).toFixed(3));
+      } else if (currentRegime === REGIMES.STRONG_BEAR_TREND) {
+        if (name === 'bear_agent') effectiveWeight = parseFloat((effectiveWeight * 1.40).toFixed(3));
+        if (name === 'bull_agent') effectiveWeight = parseFloat((effectiveWeight * 0.60).toFixed(3));
+      }
+
       agentOutputs.push({
         agent: name,
         signal: normSig,
         confidence: conf,
         reason: res.value.reason || '',
-        weight: AGENT_WEIGHTS[name] || 0.10,
+        weight: effectiveWeight,
         veto_flag: !!res.value.veto_flag,
         veto_reason: res.value.veto_reason || null,
         model_used: res.value.model_used || null,
@@ -180,28 +250,23 @@ async function runConsensus(pair, marketData) {
         details: res.value,
         health: { status: health.status, latencyMs: health.latencyMs, errorRate: health.errorRate },
       });
-      logger.info(`  [${name.padEnd(16)}] -> ${normSig.padEnd(4)} @ ${(conf * 100).toFixed(0)}% | [${health.status}] ${res.value.reason?.slice(0, 55)}`);
+      logger.info(`  [${name.padEnd(16)}] -> ${normSig.padEnd(4)} @ ${(conf * 100).toFixed(0)}% (wt: ${effectiveWeight}) | [${health.status}] ${res.value.reason?.slice(0, 50)}`);
     } else {
       const isExc = res.reason?.message === 'excluded';
       logger.warn(`  [${name.padEnd(16)}] -> ${isExc ? 'EXCLUDED' : 'FAILED'}: ${res.reason?.message || 'Unknown error'}`);
     }
   }
 
-  processResult('expert_trader', expertTraderRes);
-  processResult('deepseek', deepseekRes);
+  processResult('bull_agent', bullAgentRes);
+  processResult('bear_agent', bearAgentRes);
   processResult('claude', claudeRes);
-  processResult('gpt4o', gpt4oRes);
-  processResult('grok', grokRes);
   processResult('openrouter_free', openrouterFreeRes);
-  processResult('perplexity', perplexityRes);
-  processResult('hermes', hermesRes);
-  processResult('sentiment', sentimentRes);
-  processResult('defi', defiRes);
-  processResult('intelligent_signals', intelligentSignalsRes);
-  processResult('smc_agent', smcRes);
   processResult('strategy_learner', strategyLearnerRes);
-  processResult('provider_rotator', providerRotatorRes);
-  processResult('volatility_regime', volatilityRegimeRes);
+  processResult('tradingkit', tradingKitRes);
+  processResult('telegram_channel', telegramRes);
+  processResult('technical_lab', technicalLabRes);
+  processResult('technical_daily', technicalDailyRes);
+  processResult('traderdev_strategy', traderDevRes);
 
   // ── Fast-track: skip Gemini if consensus is already crystal clear ──────────
   // If 6+ agents agree with avg confidence ≥ 0.80 we don't need cross-validation.
@@ -228,19 +293,27 @@ async function runConsensus(pair, marketData) {
       const geminiNorm = normalizeSignal(geminiRaw.signal);
       const geminiConf = Math.max(0, Math.min(1, parseFloat(geminiRaw.confidence) || 0.80));
       const health = healthMonitor.getAgent('gemini');
+
+      let geminiWeight = AGENT_WEIGHTS.gemini;
+      const geminiAcc = agentAccuracy.gemini;
+      if (geminiAcc && geminiAcc.total >= 3) {
+        const mult = Math.max(0.50, Math.min(1.60, geminiAcc.accuracy / 0.70));
+        geminiWeight = parseFloat((geminiWeight * mult).toFixed(3));
+      }
+
       geminiOutput = {
         agent: 'gemini',
         signal: geminiNorm,
         confidence: geminiConf,
         reason: geminiRaw.reason || 'Cross-validation checks completed',
-        weight: AGENT_WEIGHTS.gemini,
+        weight: geminiWeight,
         validation_result: geminiRaw.validation_result || 'PASS',
         agent_conflicts_detected: geminiRaw.agent_conflicts_detected || [],
         details: geminiRaw,
         health: { status: health.status, latencyMs: health.latencyMs },
       };
       agentOutputs.push(geminiOutput);
-      logger.info(`  [${'gemini'.padEnd(16)}] -> ${geminiNorm.padEnd(4)} @ ${(geminiConf * 100).toFixed(0)}% [Cross-Validator: ${geminiOutput.validation_result}]`);
+      logger.info(`  [${'gemini'.padEnd(16)}] -> ${geminiNorm.padEnd(4)} @ ${(geminiConf * 100).toFixed(0)}% (wt: ${geminiWeight}) [Cross-Validator: ${geminiOutput.validation_result}]`);
     } catch (err) {
       logger.warn(`  [${'gemini'.padEnd(16)}] -> Cross-validation failed: ${err.message}`);
     }
@@ -303,7 +376,7 @@ async function runConsensus(pair, marketData) {
   let patternVetoReason = null;
   if (finalSignal !== 'HOLD') {
     try {
-      const negCheck = evaluateNegativePatterns(symbol, finalSignal, marketData);
+      const negCheck = evaluateNegativePatterns(symbol, finalSignal, marketData, marketData?.btcBenchmark);
       if (negCheck.hasNegativePatternMatch) {
         if (negCheck.vetoRecommended) {
           patternVeto = true;
@@ -317,8 +390,8 @@ async function runConsensus(pair, marketData) {
     } catch (_) {}
   }
 
-  // Require a real majority, not just 2 stragglers agreeing at a low bar.
-  const MIN_AGENTS_AGREEING = parseInt(process.env.CONSENSUS_MIN_AGENTS_AGREEING || '5', 10);
+  // Require minimum agent agreement (default aligned with MIN_AGENTS in .env)
+  const MIN_AGENTS_AGREEING = parseInt(process.env.CONSENSUS_MIN_AGENTS_AGREEING || process.env.MIN_AGENTS || '2', 10);
   const MIN_CONSENSUS_CONFIDENCE = parseFloat(process.env.CONSENSUS_MIN_CONFIDENCE || '0.45');
   const consensusReached = !patternVeto && agentsAgreeing >= MIN_AGENTS_AGREEING && consensusConfidence >= MIN_CONSENSUS_CONFIDENCE;
   const approvedForExecution = consensusReached && finalSignal !== 'HOLD';
@@ -328,6 +401,7 @@ async function runConsensus(pair, marketData) {
     pair,
     timestamp: new Date().toISOString(),
     signal: finalSignal,
+    regime: currentRegime,
     confidence: consensusConfidence,
     weightedScore: parseFloat(avgScore.toFixed(3)),
     consensus_reached: consensusReached,
@@ -346,7 +420,100 @@ async function runConsensus(pair, marketData) {
     `[${pair}] Master Consensus: ${finalSignal} @ ${(consensusConfidence * 100).toFixed(1)}% (${agentsAgreeing}/${totalAgents} agents agreeing) -> ${approvedForExecution ? '✅ APPROVED' : '⚠️ HOLD/SKIPPED'}`
   );
 
+  // ───────────────────────────────────────────────────────────────────────
+  // 2026-09-15: publish every agent's individual vote so the dashboard can
+  // show WHO voted and who stayed silent. Added because an audit found 18 of
+  // 23 agents timing out with no visible symptom — the only clue was a log
+  // line reading "1/11 agents agreeing". A per-agent view makes a degraded
+  // roster obvious at a glance instead of something you infer from a ratio.
+  //
+  // Purely additive: wrapped in try/catch and a guard, so a dashboard that
+  // isn't running, or a write that fails, can never affect a trading decision.
+  // ───────────────────────────────────────────────────────────────────────
+  try {
+    const votePayload = {
+      type: 'agent_votes',
+      pair,
+      timestamp: synthesis.timestamp,
+      finalSignal,
+      confidence: consensusConfidence,
+      agentsAgreeing,
+      totalAgents,
+      approvedForExecution,
+      vetoTriggered: patternVeto,
+      votes: (agentOutputs || []).map((a) => ({
+        name: a.name || a.agent || a.provider || 'unknown',
+        signal: a.signal || 'HOLD',
+        confidence: typeof a.confidence === 'number' ? a.confidence : 0,
+        weight: typeof a.weight === 'number' ? a.weight : 0,
+        agreed: a.signal === finalSignal && a.signal !== 'HOLD',
+        reason: String(a.reason || '').slice(0, 180),
+      })),
+    };
+
+    if (global.broadcastDashboardEvent) global.broadcastDashboardEvent(votePayload);
+
+    // Also persist, so a dashboard opened later shows the latest state rather
+    // than an empty panel until the next cycle fires.
+    const fs = require('fs');
+    const path = require('path');
+    const outPath = path.join(__dirname, '..', '..', 'data', 'latest_agent_votes.json');
+    const existing = (() => {
+      try { return JSON.parse(fs.readFileSync(outPath, 'utf8')); } catch (_) { return { pairs: {} }; }
+    })();
+    existing.pairs = existing.pairs || {};
+    existing.pairs[pair] = votePayload;
+    existing.updatedAt = new Date().toISOString();
+    fs.writeFileSync(outPath, JSON.stringify(existing, null, 2));
+  } catch (err) {
+    logger.warn(`[${pair}] agent-vote publish failed (non-fatal): ${err.message}`);
+  }
+
   return synthesis;
+}
+
+/**
+ * Lightweight consensus gate over a plain map of agent responses.
+ *
+ * Unlike runConsensus() — which fans out to every live LLM agent — this is a
+ * pure scorer: given already-collected `{ agentName: { confidence, recommendedAction? } }`
+ * responses, it averages the confidences and approves when the aggregate clears
+ * the 70% conviction bar. Used by the orchestrator's fast path and by tests.
+ *
+ * @param {Object<string, {confidence?: number, recommendedAction?: string}>} agentResponses
+ * @returns {{approved: boolean, aggregateScore: number, action?: string, allocation?: string, reason?: string}}
+ */
+function evaluateConsensus(agentResponses = {}) {
+  const APPROVAL_THRESHOLD = 0.70;
+
+  const responses = Object.values(agentResponses || {});
+  const scores = responses
+    .map(r => (r && typeof r.confidence === 'number' ? r.confidence : null))
+    .filter(n => n !== null);
+
+  const aggregateScore = scores.length
+    ? parseFloat((scores.reduce((sum, n) => sum + n, 0) / scores.length).toFixed(4))
+    : 0;
+
+  if (aggregateScore < APPROVAL_THRESHOLD) {
+    return {
+      approved: false,
+      aggregateScore,
+      reason: 'Consensus below 70% threshold',
+    };
+  }
+
+  const action =
+    responses.find(r => r && r.recommendedAction)?.recommendedAction || 'BUY_BTC';
+
+  return {
+    approved: true,
+    aggregateScore,
+    action,
+    // Mirrors the profit allocator's 40% reinvest tranche — the standard
+    // deployable slice for a cleared-threshold signal.
+    allocation: '40%',
+  };
 }
 
 function generateConsensusReasoning(signal, confidence, agreeing, total, agents) {
@@ -361,34 +528,4 @@ function generateConsensusReasoning(signal, confidence, agreeing, total, agents)
   return `${agreeing}/${total} specialist AI agents aligned on ${signal} (${(confidence * 100).toFixed(0)}% confidence). ${topReasons}`;
 }
 
-/**
- * Evaluates multi-agent consensus weighting across DeepSeek (30%), Claude (30%), Gemini (20%), and Hermes (20%).
- * Enforces a strict 70% confidence minimum gate and automated 40% reinvestment allocation.
- */
-async function evaluateConsensus(agentResponses) {
-  const { deepseek, claude, gemini, hermes } = agentResponses || {};
-
-  const deepseekConf = deepseek?.confidence ?? 0.75;
-  const claudeConf = claude?.confidence ?? 0;
-  const geminiConf = gemini?.confidence ?? 0;
-  const hermesConf = hermes?.confidence ?? 0;
-
-  const aggregateScore = (deepseekConf * 0.3) + (claudeConf * 0.3) + (geminiConf * 0.2) + (hermesConf * 0.2);
-
-  if (aggregateScore >= 0.70) {
-    return {
-      approved: true,
-      action: deepseek?.signal || claude?.recommendedAction || claude?.action || claude?.signal || 'BUY_BTC',
-      allocation: "40%",
-      aggregateScore: parseFloat(aggregateScore.toFixed(3)),
-    };
-  }
-
-  return {
-    approved: false,
-    reason: "Consensus below 70% threshold",
-    aggregateScore: parseFloat(aggregateScore.toFixed(3)),
-  };
-}
-
-module.exports = { runConsensus, AGENT_WEIGHTS, evaluateConsensus };
+module.exports = { runConsensus, evaluateConsensus, AGENT_WEIGHTS };

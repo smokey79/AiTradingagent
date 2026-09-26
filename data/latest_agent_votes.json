@@ -1,0 +1,24 @@
+{
+  "_SAMPLE": true,
+  "_note": "SAMPLE DATA, not real votes. Written 2026-09-15 so the votes page is not blank before the bot restarts. The first real consensus cycle overwrites this file entirely. If you still see _SAMPLE:true, the bot has not yet run a cycle on the new code.",
+  "updatedAt": "2026-09-15T16:45:00.000Z",
+  "pairs": {
+    "BTC/USDT": {
+      "type": "agent_votes",
+      "pair": "BTC/USDT (SAMPLE)",
+      "timestamp": "2026-09-15T16:45:00.000Z",
+      "finalSignal": "HOLD",
+      "confidence": 0.41,
+      "agentsAgreeing": 1,
+      "totalAgents": 11,
+      "approvedForExecution": false,
+      "vetoTriggered": false,
+      "votes": [
+        { "name": "gemini", "signal": "BUY", "confidence": 0.7, "weight": 0.2, "agreed": false, "reason": "sample row - replaced on first real cycle" },
+        { "name": "deepseek", "signal": "HOLD", "confidence": 0, "weight": 0.15, "agreed": false, "reason": "" },
+        { "name": "grok", "signal": "HOLD", "confidence": 0, "weight": 0.15, "agreed": false, "reason": "" },
+        { "name": "hermes", "signal": "HOLD", "confidence": 0, "weight": 0.1, "agreed": false, "reason": "" }
+      ]
+    }
+  }
+}

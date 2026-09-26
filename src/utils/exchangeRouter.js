@@ -16,8 +16,8 @@ function getBitget() {
   if (!_bitget && process.env.BITGET_API_KEY) {
     _bitget = new ccxt.bitget({
       apiKey: process.env.BITGET_API_KEY,
-      secret: process.env.BITGET_API_SECRET,
-      password: process.env.BITGET_API_PASSPHRASE,
+      secret: process.env.BITGET_API_SECRET || process.env.BITGET_SECRET || process.env.BITGET_SECRET_KEY,
+      password: process.env.BITGET_API_PASSPHRASE || process.env.BITGET_PASSPHRASE,
       options: { defaultType: 'spot' },
     });
   }
@@ -28,7 +28,7 @@ function getCryptoCom() {
   if (!_cryptocom && process.env.CRYPTOCOM_API_KEY) {
     _cryptocom = new ccxt.cryptocom({
       apiKey: process.env.CRYPTOCOM_API_KEY,
-      secret: process.env.CRYPTOCOM_API_SECRET,
+      secret: process.env.CRYPTOCOM_API_SECRET || process.env.CRYPTOCOM_SECRET,
     });
   }
   return _cryptocom;
@@ -38,7 +38,7 @@ function getBinance() {
   if (!_binance && process.env.BINANCE_API_KEY) {
     _binance = new ccxt.binance({
       apiKey: process.env.BINANCE_API_KEY,
-      secret: process.env.BINANCE_API_SECRET,
+      secret: process.env.BINANCE_API_SECRET || process.env.BINANCE_SECRET,
     });
   }
   return _binance;
@@ -60,45 +60,73 @@ async function getBestVenue(pair) {
   return configured[0];
 }
 
-async function executeTrade(pair, signal, riskCheck, marketData, isPaper = true) {
-  // Support consensusDecision single-object signature: executeTrade(consensusDecision)
-  if (typeof pair === 'object' && pair !== null && ('approved' in pair || 'action' in pair)) {
-    const consensusDecision = pair;
-    if (!consensusDecision.approved) {
-      logger.warn('Trade execution skipped: consensus not approved', { reason: consensusDecision.reason });
-      return { executed: false, approved: false, reason: consensusDecision.reason || 'Not approved' };
-    }
-    const actionStr = String(consensusDecision.action || 'BUY_BTC').toUpperCase();
-    const parsedSide = (actionStr.startsWith('SELL') || actionStr.startsWith('SHORT')) ? 'SELL' : 'BUY';
-    let asset = 'BTC';
-    if (actionStr.includes('_')) {
-      asset = actionStr.split('_')[1];
-    }
-    const parsedPair = consensusDecision.symbol || `${asset}/USDT`;
-    const parsedRiskCheck = {
-      approved: true,
-      positionSizeUsd: consensusDecision.sizeUsd || 25.0,
-      consensusConfidence: consensusDecision.confidence || consensusDecision.aggregateScore || 0.85,
-      stopLossPct: 1.5,
-      takeProfitPct: 3.3,
-      reason: consensusDecision.reason || 'Consensus execution validated',
-    };
-    const parsedMarketData = (typeof signal === 'object' && signal !== null) ? signal : { price: { price: 68000 } };
-    const parsedIsPaper = typeof riskCheck === 'boolean' ? riskCheck : (process.env.TRADING_MODE !== 'live');
+/**
+ * Normalize a consensus-decision object into the positional executeTrade args.
+ * Accepts shapes like { approved, action: 'BUY_BTC', sizeUsd, exchange, aggregateScore }.
+ * Returns null when the decision is not actionable (caller should short-circuit).
+ */
+function decisionToTradeArgs(decision) {
+  if (!decision || decision.approved !== true) return null;
 
-    return executeTrade(parsedPair, parsedSide, parsedRiskCheck, parsedMarketData, parsedIsPaper);
+  const rawAction = String(decision.action || decision.signal || '').toUpperCase();
+  const [sideToken, assetToken] = rawAction.split(/[_\s/-]+/);
+  const side = sideToken === 'BUY' || sideToken === 'LONG'
+    ? 'BUY'
+    : sideToken === 'SELL' || sideToken === 'SHORT'
+      ? 'SELL'
+      : null;
+  if (!side) return null;
+
+  const asset = (assetToken || decision.asset || decision.symbol || 'BTC')
+    .toUpperCase()
+    .replace(/USDT?$/, '') || 'BTC';
+  const pair = `${asset}/USDT`;
+
+  return {
+    pair,
+    signal: side,
+    riskCheck: {
+      approved: true,
+      positionSizeUsd: Number(decision.sizeUsd || decision.positionSizeUsd || 25.0),
+      leverage: Number(decision.leverage || 1),
+      stopLossPct: Number(decision.stopLossPct || 2.0),
+      takeProfitPct: Number(decision.takeProfitPct || 4.4),
+      consensusConfidence: Number(decision.aggregateScore || decision.confidence || 0.8),
+    },
+    marketData: decision.marketData || null,
+    isPaper: decision.isPaper !== undefined ? decision.isPaper : true,
+  };
+}
+
+async function executeTrade(pair, signal, riskCheck, marketData, isPaper = true) {
+  // Single-argument overload: executeTrade(consensusDecision)
+  if (pair && typeof pair === 'object' && signal === undefined) {
+    const decision = pair;
+    const args = decisionToTradeArgs(decision);
+    if (!args) {
+      return {
+        executed: false,
+        success: false,
+        approved: false,
+        reason: decision?.reason || 'Consensus decision not approved or not actionable',
+      };
+    }
+    return executeTrade(args.pair, args.signal, args.riskCheck, args.marketData, args.isPaper);
   }
 
+  const rc = riskCheck || {};
   const side = String(signal || 'BUY').toUpperCase() === 'BUY' ? 'BUY' : 'SELL';
   const price = marketData?.price?.price || 100.0;
-  const sizeUsd = riskCheck.positionSizeUsd || 25.0;
+  const sizeUsd = rc.positionSizeUsd || 25.0;
   const amount = parseFloat((sizeUsd / price).toFixed(6));
 
   if (isPaper) {
     // Realistic Paper Execution simulation
-    const slippagePct = 0.0008; // 0.08% simulated slippage
-    const fillPrice = side === 'BUY' ? price * (1 + slippagePct) : price * (1 - slippagePct);
-    const effectiveLeverage = riskCheck.leverage || 1.0;
+    const takerFeePct = 0.0010; // 0.10% typical exchange taker fee
+    const slippagePct = 0.0005; // 0.05% simulated market slippage
+    const totalPenaltyPct = takerFeePct + slippagePct;
+    const fillPrice = side === 'BUY' ? price * (1 + totalPenaltyPct) : price * (1 - totalPenaltyPct);
+    const effectiveLeverage = rc.leverage || 1.0;
 
     // Fixed 2026-09-03: this used to fabricate the outcome with
     // `Math.random() < riskCheck.consensusConfidence` — a coin-flip weighted
@@ -113,20 +141,45 @@ async function executeTrade(pair, signal, riskCheck, marketData, isPaper = true)
     // open until riskGate.resolveOpenPosition() (called each cycle from
     // orchestrator/index.js with the next real fetched price) sees the
     // price actually cross the take-profit or stop-loss level, or the
-    // position's TTL expires — at which point THAT function records the
-    // real WIN/LOSS/BREAKEVEN outcome based on genuine price movement.
+    let btcEntryPrice = null;
+    try {
+      // Synchronous snapshot: the trade path must not block on a network fetch,
+      // and the orchestrator has already warmed this cache earlier in the cycle.
+      const { getCachedBtcBenchmark } = require('../data/btcBenchmark');
+      const btc = getCachedBtcBenchmark();
+      btcEntryPrice = btc?.price || (pair.startsWith('BTC') ? fillPrice : null);
+    } catch (_) {}
+
+    // Extract agent votes from consensus breakdown for empirical accuracy learning
+    const agentVotes = {};
+    if (rc.consensus?.breakdown && Array.isArray(rc.consensus.breakdown)) {
+      for (const a of rc.consensus.breakdown) {
+        if (a.agent && a.signal) {
+          agentVotes[a.agent] = a.signal;
+        }
+      }
+    }
+
     recordOpenPosition(pair, {
       sizeUsd,
       entryPrice: fillPrice,
       side,
       leverage: effectiveLeverage,
-      stopLossPct: riskCheck.stopLossPct,
-      takeProfitPct: riskCheck.takeProfitPct,
-      confidence: riskCheck.consensusConfidence || 0.8,
+      stopLossPct: rc.stopLossPct,
+      takeProfitPct: rc.takeProfitPct,
+      confidence: rc.consensusConfidence || 0.8,
+      btcEntryPrice,
+      agentVotes,
+      regime: rc.consensus?.regime || null,
+      marketDataSnapshot: marketData ? {
+        price: marketData.price,
+        indicators: marketData.indicators,
+        fearGreed: marketData.fearGreed,
+      } : null,
     });
 
     logger.info(
-      `📄 PAPER POSITION OPENED: ${side} ${amount} ${pair} @ $${fillPrice.toFixed(2)} ($${sizeUsd} USD, ${effectiveLeverage}x) — SL ${riskCheck.stopLossPct}% / TP ${riskCheck.takeProfitPct}% — awaiting real price resolution`
+      `📄 PAPER POSITION OPENED: ${side} ${amount} ${pair} @ $${fillPrice.toFixed(2)} ($${sizeUsd} USD, ${effectiveLeverage}x) — SL ${rc.stopLossPct}% / TP ${rc.takeProfitPct}% — awaiting real price resolution`
     );
 
     return {
@@ -182,7 +235,7 @@ async function executeTrade(pair, signal, riskCheck, marketData, isPaper = true)
     price: order.price || ticker.last,
     amount: orderAmount,
     positionSizeUsd: sizeUsd,
-    leverage: riskCheck.leverage || 1,
+    leverage: rc.leverage || 1,
     pnlUsd: 0,
     paper: false,
     venue: venue.name,
@@ -201,4 +254,7 @@ async function executeTrade(pair, signal, riskCheck, marketData, isPaper = true)
 module.exports = {
   executeTrade,
   getBestVenue,
+  getBitget,
+  getCryptoCom,
+  getBinance,
 };

@@ -122,6 +122,21 @@ const COIN_MAP = {
   op: 'OP', optimism: 'OP',
   link: 'LINK', chainlink: 'LINK',
   aave: 'AAVE',
+  uni: 'UNI', uniswap: 'UNI',
+  crv: 'CRV', curve: 'CRV',
+  ldo: 'LDO', lido: 'LDO',
+  gmx: 'GMX',
+  pendle: 'PENDLE',
+  vvs: 'VVS',
+  jup: 'JUP', jupiter: 'JUP',
+  ray: 'RAY', raydium: 'RAY',
+  aero: 'AERO', aerodrome: 'AERO',
+  sui: 'SUI',
+  sei: 'SEI',
+  pepe: 'PEPE',
+  bonk: 'BONK',
+  wif: 'WIF',
+  doge: 'DOGE', dogecoin: 'DOGE',
 };
 
 function detectCoins(text) {
@@ -312,9 +327,93 @@ function _topChannels(memory, n) {
     .slice(0, n);
 }
 
+/**
+ * Computes aggregated learned sentiment for a specific coin from persistent memory.
+ * Evaluates RAU scores and dynamic channel credibility weights.
+ *
+ * @param {string} coin - e.g. 'BTC', 'ETH', 'SOL', 'ARB'
+ * @param {number} maxAgeHours - Only evaluate insights within maxAgeHours (default: 168h = 7 days)
+ * @returns {object} Aggregated sentiment or { hasLearnedData: false }
+ */
+function getLearnedSentimentForCoin(coin, maxAgeHours = 168) {
+  const cleanCoin = coin.toUpperCase().trim();
+  const memory = readLearningMemory();
+  const now = Date.now();
+  const maxAgeMs = maxAgeHours * 3600 * 1000;
+
+  const relevant = memory.filter(m => {
+    if (!m.mentionedCoins || !m.mentionedCoins.includes(cleanCoin)) return false;
+    if (m.timestamp) {
+      const age = now - new Date(m.timestamp).getTime();
+      if (!isNaN(age) && age > maxAgeMs) return false;
+    }
+    return true;
+  });
+
+  if (!relevant || relevant.length === 0) {
+    return { hasLearnedData: false };
+  }
+
+  let totalWeight = 0;
+  let weightedScoreSum = 0;
+  let weightedConfSum = 0;
+  let buyVotes = 0;
+  let sellVotes = 0;
+  let holdVotes = 0;
+  const channelSet = new Set();
+  const sampleTitles = [];
+
+  for (const item of relevant) {
+    const rauScore = item.rau?.score || 0.50;
+    const channelWeight = item.channelReliabilityAtIngest || 1.0;
+    const weight = Math.max(0.1, rauScore * channelWeight);
+
+    const score = typeof item.sentimentScore === 'number'
+      ? item.sentimentScore
+      : (item.signal === 'BUY' ? (item.confidence || 0.75) : item.signal === 'SELL' ? -(item.confidence || 0.75) : 0);
+
+    const conf = item.confidence || 0.70;
+
+    weightedScoreSum += score * weight;
+    weightedConfSum += conf * weight;
+    totalWeight += weight;
+
+    if (item.signal === 'BUY') buyVotes++;
+    else if (item.signal === 'SELL') sellVotes++;
+    else holdVotes++;
+
+    if (item.channel) channelSet.add(item.channel);
+    if (sampleTitles.length < 3 && item.title) sampleTitles.push(item.title);
+  }
+
+  const netScore = totalWeight > 0 ? (weightedScoreSum / totalWeight) : 0;
+  const avgConf = totalWeight > 0 ? (weightedConfSum / totalWeight) : 0.70;
+  const finalConf = Math.min(0.95, Math.max(0.60, avgConf));
+
+  let signal = 'HOLD';
+  if (netScore >= 0.15 && buyVotes >= sellVotes) {
+    signal = 'BUY';
+  } else if (netScore <= -0.15 && sellVotes >= buyVotes) {
+    signal = 'SELL';
+  }
+
+  return {
+    hasLearnedData: true,
+    coin: cleanCoin,
+    signal,
+    confidence: parseFloat(finalConf.toFixed(3)),
+    score: parseFloat(netScore.toFixed(3)),
+    count: relevant.length,
+    channels: Array.from(channelSet),
+    votes: { buy: buyVotes, sell: sellVotes, hold: holdVotes },
+    sampleTitles,
+  };
+}
+
 module.exports = {
   extractVideoId,
   learnFromYouTubeUrl,
   getLearnedAlpha,
   getLearningMemoryStats,
+  getLearnedSentimentForCoin,
 };

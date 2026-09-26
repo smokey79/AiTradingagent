@@ -71,7 +71,7 @@
       </div>
       <div class="d-flex gap-8 items-center">
         <span class="badge badge-live" id="margin-badge">🟢 Healthy (Margin &gt; $30)</span>
-        <button id="btn-kill-switch" class="btn" style="background:#dc2626;color:#fff;font-weight:bold;padding:8px 16px;border-radius:6px;border:none;cursor:pointer;" onclick="toggleKillSwitch()">
+        <button id="btn-kill-switch" class="btn btn-kill-switch" onclick="toggleKillSwitch()">
           🛑 STOP BOT
         </button>
       </div>
@@ -79,10 +79,15 @@
 
     <!-- Top KPI Matrix -->
     <div class="stats-grid">
+      <div class="stat-card stat-card-gold-border">
+        <div class="stat-label">Main Account Vault</div>
+        <div class="stat-val mono" id="kpi-main-account">$0.00</div>
+        <div class="stat-sub mono gold" id="kpi-main-btc">0.00000000 BTC</div>
+      </div>
       <div class="stat-card">
-        <div class="stat-label">Trading Portfolio Equity</div>
+        <div class="stat-label">Bot Trading Sub-Account</div>
         <div class="stat-val mono" id="kpi-portfolio">$250.00</div>
-        <div class="stat-sub"><span id="kpi-exposure" class="green">0.0% Exposure</span> · Initial $250.00</div>
+        <div class="stat-sub"><span id="kpi-exposure" class="green">0.0% Exposure</span> · Compounding</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Cumulative ROI (To Date)</div>
@@ -109,7 +114,7 @@
         <div class="stat-val mono blue" id="kpi-btc-dom">59.7%</div>
         <div class="stat-sub" id="kpi-total-mcap">Total MCAP: $2.66T</div>
       </div>
-      <div class="stat-card" style="border-left:2px solid #f59e0b;">
+      <div class="stat-card stat-card-gold-border">
         <div class="stat-label">🏦 Nexo BTC Savings Wallet</div>
         <div class="stat-val mono gold" id="nexo-wallet-bal">$0.00</div>
         <div class="stat-sub mono" id="nexo-btc-accum">0.00000000 BTC · 50% Profit Sweep</div>
@@ -654,7 +659,7 @@ plotshape(double_bottom_sweep, title="Double Bottom Sweep", location=location.be
         <div class="d-flex justify-between items-center flex-wrap gap-12 mb-14">
           <div class="d-flex items-center gap-10 flex-wrap">
             <span class="font-lg font-bold">👛 DeFi Wallet Balance</span>
-            <span class="badge" style="background:#1f2937;color:#9ca3af;">🔒 Read-Only — no private key, cannot send transactions</span>
+            <span class="badge badge-read-only">🔒 Read-Only — no private key, cannot send transactions</span>
           </div>
         </div>
         <div class="stats-grid" id="wallet-balance-grid">
@@ -843,6 +848,12 @@ plotshape(double_bottom_sweep, title="Double Bottom Sweep", location=location.be
       const profit = perf.totalProfitUsd !== undefined ? perf.totalProfitUsd : (currBalance - startingBalance);
       const roiPct = startingBalance > 0 ? ((currBalance - startingBalance) / startingBalance * 100) : 0;
 
+      document.getElementById('kpi-main-account').textContent = `$${(v.mainAccountUsdt || 0).toFixed(2)}`;
+      
+      const btcPrice = g.btcPrice || (typeof fullStackData !== 'undefined' && fullStackData.cmcQuotes && fullStackData.cmcQuotes['BTC'] ? fullStackData.cmcQuotes['BTC'].price : 60000);
+      const btcEquiv = (v.mainAccountUsdt || 0) / btcPrice;
+      document.getElementById('kpi-main-btc').textContent = `${btcEquiv.toFixed(8)} BTC`;
+
       document.getElementById('kpi-portfolio').textContent = `$${currBalance.toFixed(2)}`;
       document.getElementById('kpi-exposure').textContent = `${(p.activeExposurePct || 0).toFixed(1)}% Exposure`;
       
@@ -979,7 +990,9 @@ plotshape(double_bottom_sweep, title="Double Bottom Sweep", location=location.be
 
       trades.forEach(t => {
         const pnl = Number(t.pnlUsd) || 0;
-        const size = Number(t.positionSizeUsd) || 0;
+        const margin = Number(t.positionSizeUsd) || 0;
+        const leverage = Number(t.leverage) || 1;
+        const size = margin * leverage;
         totalVolume += size;
         if (t.side === 'FLASHLOAN' || (t.id && String(t.id).startsWith('FL_'))) {
           flashloanVolume += size;
@@ -1673,5 +1686,6 @@ plotshape(double_bottom_sweep, title="Double Bottom Sweep", location=location.be
     setInterval(loadMarginStatus, 10000);
     setInterval(loadAutoTradingStatus, 5000);
   </script>
+  <script src="roi-panel.js"></script>
 </body>
 </html>

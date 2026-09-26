@@ -1,1 +1,8 @@
-[]
+{
+  "total_swept_usd": 0,
+  "total_btc_accumulated": 0,
+  "sweep_address": "bc1qsm6drqgey8x25nunsayu6q0nmjhvfa8n6fz2lc",
+  "sweep_ratio_pct": 50,
+  "sweeps_count": 0,
+  "history": []
+}

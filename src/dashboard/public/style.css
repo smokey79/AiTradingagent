@@ -434,3 +434,8 @@ tr:hover td { background: rgba(31, 41, 55, 0.4); }
 
 .loading-placeholder { text-align: center; padding: 20px; color: var(--text-muted); }
 .loading-card-placeholder { text-align: center; padding: 40px; color: var(--text-muted); background: var(--bg-card); border-radius: 10px; }
+
+/* Inline Style Replacements */
+.btn-kill-switch { background: #dc2626; color: #fff; font-weight: bold; padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; }
+.stat-card-gold-border { border-left: 2px solid #f59e0b; }
+.badge-read-only { background: #1f2937; color: #9ca3af; }

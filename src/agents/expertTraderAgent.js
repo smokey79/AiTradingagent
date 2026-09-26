@@ -1,11 +1,221 @@
 /**
- * Skill Expert Trader Agent — Chief Allocation & Crypto Strategy Officer
- * Specializes in cryptocurrency trading (BTC, ETH, SOL, altcoins, meme breakouts, 5X futures).
- * Automatically calculates all figures: 50-EMA positioning, Half-Kelly sizing,
- * 5X leverage presets, liquidation buffers, stop-loss, and take-profit targets.
+ * Skill Expert Trader Agent — Chief Crypto Strategy, Technical Analysis & Allocation Officer
+ * =========================================================================================
+ * Integrates:
+ *   1. 50-EMA Institutional Trend & Dynamic Bounce/Rejection (gemini-pattern-recognition skill)
+ *   2. Smart Money Concepts (SMC): LuxAlgo Order Blocks, Casper 5-min ORB Retests, Liquidity Sweeps (technical-analysis skill)
+ *   3. Bitcoin Benchmark & Relative Strength (RS vs BTC) Alpha Filtering (btcBenchmark.js)
+ *   4. Self-Learning Negative Pattern Memory & Loss Avoidance (lossLearner.js)
+ *   5. Automated Figures: 5.0X Isolated Leverage Presets, 18.2% Liquidation Buffer, ATR Stops, Half-Kelly Sizing
+ *   6. Dynamic Universe Opportunity Scanner to create high-conviction trades for the Orchestrator
  */
+
+'use strict';
+
 const logger = require('../utils/logger');
 const { getPortfolioState, calculateProportionateAllocation, getAllocationSettings } = require('../risk/riskGate');
+const { calculateRelativeStrengthVsBtc, getBtcBenchmark } = require('../data/btcBenchmark');
+const { evaluateNegativePatterns } = require('../learning/lossLearner');
+
+/**
+ * Institutional Crypto Expert Trader Decision Engine
+ * @param {string} symbol - e.g. 'BTC' or 'ETH/USDT'
+ * @param {Object} marketData - Price, candles, indicators
+ * @param {Object} [btcContext] - Pre-fetched BTC benchmark
+ * @returns {Promise<Object>} Expert trade signal & figures
+ */
+async function getSignal(symbol, marketData = {}, btcContext = null) {
+  const cleanSymbol = symbol.split('/')[0].toUpperCase();
+  const pair = symbol.includes('/') ? symbol.toUpperCase() : `${cleanSymbol}/USDT`;
+
+  try {
+    const price = marketData?.price?.price || 100.0;
+    const change24h = marketData?.price?.change24h || 0.0;
+    const ind = marketData?.indicators || {};
+
+    const ema20 = ind.ema20 || price;
+    const ema50 = ind.ema50 || (ind.priceVsEma50 === 'above' ? price * 0.98 : price * 1.02);
+    const ema200 = ind.ema200 || price * 0.95;
+    const rsi = ind.rsi14 || 50.0;
+    const atr = ind.atr14 || (price * 0.02);
+    const volRatio = ind.volumeRatio || 1.0;
+    const orderBookImbalance = ind.orderBook?.imbalanceRatio || 0.5;
+
+    // 1. Fetch live BTC benchmark and evaluate Relative Strength vs BTC
+    const btc = btcContext || await getBtcBenchmark();
+    const rsVsBtc = calculateRelativeStrengthVsBtc(cleanSymbol, change24h, btc);
+
+    // 2. 50-EMA Trend & Alignment Analysis (gemini-pattern-recognition skill)
+    const distEma50Pct = parseFloat((((price - ema50) / ema50) * 100).toFixed(2));
+    const isEmaGolden = ema20 >= ema50;
+    const priceAboveEma50 = price >= ema50;
+
+    // 3. Smart Money Concepts (SMC) & Liquidity Sweep Detection (technical-analysis skill)
+    const isOrderBlockBounce = (priceAboveEma50 && distEma50Pct >= 0 && distEma50Pct <= 1.2 && rsi >= 45 && rsi <= 68);
+    const isLiquiditySweep = ind.orderBook?.bias === 'bid_heavy_bullish' || (orderBookImbalance >= 0.55 && rsi >= 42 && rsi <= 65);
+    const isCasperOrbRetest = volRatio >= 1.25 && Math.abs(change24h) >= 1.5;
+
+    // 4. Determine Directional Signal and Base Conviction
+    let signal = 'HOLD';
+    let baseConfidence = 0.50;
+    let setupType = 'Equilibrium Range Consolidation';
+    let reason = 'Market in consolidation mode near institutional baseline.';
+
+    if (isEmaGolden && priceAboveEma50 && (isOrderBlockBounce || isLiquiditySweep)) {
+      signal = 'BUY';
+      baseConfidence = 0.82;
+      setupType = 'LuxAlgo SMC Order Block 50-EMA Retest';
+      reason = `Bullish 50-EMA bounce ($${ema50.toFixed(2)}) with golden alignment and ${volRatio}x volume expansion.`;
+
+      // Bonus for high relative strength vs BTC
+      if (rsVsBtc.isOutperformingBtc) {
+        baseConfidence += 0.06;
+        reason += ` Leading BTC by +${rsVsBtc.relativeStrengthPct}% RS.`;
+      }
+    } else if (!isEmaGolden && !priceAboveEma50 && rsi <= 50 && distEma50Pct <= 0 && distEma50Pct >= -2.0) {
+      signal = 'SELL';
+      baseConfidence = 0.78;
+      setupType = '50-EMA Dynamic Rejection & Death Cross';
+      reason = `Price rejected at 50-EMA downward slope ($${ema50.toFixed(2)}) with death alignment.`;
+
+      if (rsVsBtc.isUnderperformingBtc) {
+        baseConfidence += 0.05;
+        reason += ` Lagging BTC by ${rsVsBtc.relativeStrengthPct}% RS.`;
+      }
+    } else if (priceAboveEma50 && rsi >= 50 && rsi <= 65 && volRatio >= 1.35) {
+      signal = 'BUY';
+      baseConfidence = 0.76;
+      setupType = 'Casper SMC 5-min ORB Breakout Retest';
+      reason = `Breakout retest confirmed above 50-EMA with ${volRatio}x institutional volume.`;
+    }
+
+    // 5. Check Self-Learning Negative Pattern Memory (lossLearner.js)
+    const negativePatternCheck = evaluateNegativePatterns(cleanSymbol, signal, marketData, btc);
+    let finalConfidence = baseConfidence;
+    let warningNote = '';
+
+    if (negativePatternCheck.hasNegativePatternMatch) {
+      finalConfidence = Math.max(0.40, baseConfidence - negativePatternCheck.confidencePenalty);
+      warningNote = ` [LossLearner Alert: Adjusted -${(negativePatternCheck.confidencePenalty * 100).toFixed(0)}% due to matching historical loss trap]`;
+      reason += warningNote;
+    }
+
+    finalConfidence = parseFloat(Math.min(0.96, Math.max(0.40, finalConfidence)).toFixed(3));
+
+    // 6. Automated Figures: 5X Futures, Half-Kelly Sizing, Stops & Targets
+    const automated = automateFigure(cleanSymbol, marketData, { signal, confidence: finalConfidence });
+
+    return {
+      agent: 'expert_trader',
+      symbol: cleanSymbol,
+      pair,
+      signal,
+      confidence: finalConfidence,
+      setup_type: setupType,
+      timeframe: '15m',
+      benchmarkVsBtc: {
+        relativeStrengthPct: rsVsBtc.relativeStrengthPct,
+        classification: rsVsBtc.classification,
+        isOutperformingBtc: rsVsBtc.isOutperformingBtc,
+        btcTrend: btc.trend,
+      },
+      negativePatternAnalysis: {
+        trapDetected: negativePatternCheck.hasNegativePatternMatch,
+        penaltyApplied: negativePatternCheck.confidencePenalty,
+        matches: negativePatternCheck.matches,
+      },
+      indicators: {
+        price,
+        ema20,
+        ema50,
+        distEma50Pct,
+        goldenAlignment: isEmaGolden,
+        rsi,
+        atr,
+        volumeRatio: volRatio,
+      },
+      futures5x: automated.futures5x,
+      sizing: automated.sizing,
+      qualityGatePassed: finalConfidence >= 0.68,
+      reason,
+      automatedFigures: automated,
+    };
+  } catch (err) {
+    logger.warn(`[ExpertTrader] getSignal notice for ${symbol}: ${err.message}`);
+    return {
+      agent: 'expert_trader',
+      symbol: cleanSymbol,
+      pair,
+      signal: 'HOLD',
+      confidence: 0.50,
+      qualityGatePassed: false,
+      reason: `Fallback signal due to technical evaluation error: ${err.message}`,
+    };
+  }
+}
+
+/**
+ * Scan All Active Market Pairs and Create High-Conviction Expert Trades
+ * Identifies the top risk/reward setups across the universe for the Orchestrator
+ *
+ * @param {Object} marketDataMap - Map of pair -> marketData
+ * @param {Object} [btcBenchmark] - Live BTC benchmark data
+ * @returns {Promise<Array>} Ranked list of expert trade opportunities
+ */
+async function scanAndCreateTrades(marketDataMap = {}, btcBenchmark = null) {
+  const btc = btcBenchmark || await getBtcBenchmark(marketDataMap);
+  const opportunities = [];
+
+  for (const [pair, md] of Object.entries(marketDataMap)) {
+    if (!md || !md.price || md.price.price <= 0) continue;
+    const cleanSymbol = pair.split('/')[0].toUpperCase();
+
+    try {
+      const expertSignal = await getSignal(pair, md, btc);
+
+      if (expertSignal.signal !== 'HOLD' && expertSignal.confidence >= 0.68) {
+        // Calculate an institutional quality score (0 - 100)
+        const confScore = expertSignal.confidence * 45;
+        const rsScore = Math.max(0, Math.min(25, (expertSignal.benchmarkVsBtc.relativeStrengthPct + 5) * 2.5));
+        const penaltyDeduction = expertSignal.negativePatternAnalysis.trapDetected ? 15 : 0;
+        const qualityScore = parseFloat((confScore + rsScore + 30 - penaltyDeduction).toFixed(1));
+
+        opportunities.push({
+          pair,
+          symbol: cleanSymbol,
+          signal: expertSignal.signal,
+          confidence: expertSignal.confidence,
+          qualityScore,
+          setupType: expertSignal.setup_type,
+          rsVsBtc: expertSignal.benchmarkVsBtc.relativeStrengthPct,
+          entryPrice: expertSignal.futures5x.entry_price || md.price.price,
+          stopLoss: expertSignal.futures5x.stopLossPrice,
+          takeProfit: expertSignal.futures5x.takeProfitPrice,
+          leverage: 5.0,
+          expectedProfitUsd: expertSignal.futures5x.expectedProfitUsd,
+          maxRiskUsd: expertSignal.futures5x.maxRiskUsd,
+          positionSizeUsd: expertSignal.sizing.positionSizeUsd,
+          reason: expertSignal.reason,
+          createdTimestamp: new Date().toISOString(),
+          details: expertSignal,
+        });
+      }
+    } catch (e) {
+      // ignore individual pair scan errors
+    }
+  }
+
+  // Sort by quality score descending
+  opportunities.sort((a, b) => b.qualityScore - a.qualityScore);
+
+  if (opportunities.length > 0) {
+    logger.info(
+      `🎯 [ExpertTrader] Opportunity Scanner discovered ${opportunities.length} high-conviction crypto setup(s)! Top pick: ${opportunities[0].signal} ${opportunities[0].pair} (Quality: ${opportunities[0].qualityScore}/100 | ${(opportunities[0].confidence * 100).toFixed(0)}% conf)`
+    );
+  }
+
+  return opportunities;
+}
 
 /**
  * Automate All Trading Figures for a Crypto Setup
@@ -73,6 +283,7 @@ function automateFigure(symbol, marketData = {}, consensus = {}, accountBalance 
     },
     futures5x: {
       leverage,
+      entry_price: price,
       effectiveExposureUsd,
       liquidationBufferPct,
       stopLossPct,
@@ -153,6 +364,8 @@ async function assessAllocation(symbol, marketData = {}, consensus = {}, options
 }
 
 module.exports = {
+  getSignal,
+  scanAndCreateTrades,
   assessAllocation,
   automateFigure,
 };
