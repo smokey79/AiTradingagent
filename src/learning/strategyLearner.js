@@ -60,7 +60,9 @@ class StrategyLearner {
     this.#updateChannelCredibility(youtubeChannels, isWin); // outcome-only, never at ingest
     this.#decayLearningMemory();                            // prune/decay stale learned content
 
-    // Self-Learning from Lost Trades Post-Mortem Analysis
+    // Self-Learning from Trade Post-Mortem Analysis (loss OR win - 2026-09-26:
+    // added the win side, modeled on Tauric Research's TradingAgents memory,
+    // which logs both outcomes rather than just losses. See tradeLearner.js.)
     if (!isWin) {
       try {
         const { recordLossPostMortem } = require("./lossLearner.js");
@@ -76,6 +78,22 @@ class StrategyLearner {
         });
       } catch (lossErr) {
         logger.warn(`Loss post-mortem notice: ${lossErr.message}`);
+      }
+    } else {
+      try {
+        const { recordWinPostMortem } = require("./tradeLearner.js");
+        recordWinPostMortem({
+          symbol,
+          side,
+          entryPrice,
+          exitPrice,
+          pnlUsd: pnlUsdt,
+          pnlPct,
+          marketData,
+          reason: `Closed with win $${pnlUsdt.toFixed(2)} (${(pnlPct * 100).toFixed(2)}%)`,
+        });
+      } catch (winErr) {
+        logger.warn(`Win post-mortem notice: ${winErr.message}`);
       }
     }
 
@@ -357,6 +375,15 @@ ${gateStatus.message}`;
         try {
           const { getLostTradeLessons } = require("./lossLearner.js");
           return getLostTradeLessons(5);
+        } catch (_) { return []; }
+      })(),
+      // 2026-09-26: added the win-side mirror (Tauric-Research-style memory
+      // - see tradeLearner.js). Purely additional context, does not change
+      // lostTradeLessons above or any gate/penalty logic.
+      wonTradeLessons: (() => {
+        try {
+          const { getWonTradeLessons } = require("./tradeLearner.js");
+          return getWonTradeLessons(5);
         } catch (_) { return []; }
       })(),
     };

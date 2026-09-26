@@ -194,7 +194,43 @@ class FacilitatorAgent:
                 # confusing "expected string ... got NoneType" message.
                 raise ValueError("LLM returned an empty response")
             cleaned = re.sub(r"```(?:json)?", "", raw).strip().strip("`").strip()
-            data    = json.loads(cleaned)
+            if not cleaned:
+                # FIX 2026-09-26: raw was non-empty (e.g. an empty ```json```
+                # fence or pure whitespace/backticks) but had nothing left
+                # after stripping markdown fences, so json.loads() would blow
+                # up with an opaque "Expecting value: line 1 column 1" error
+                # that hid what the model actually sent. Surface the original
+                # raw text (truncated) so this is diagnosable from the logs
+                # instead of a dead end every time it happens.
+                raise ValueError(
+                    f"LLM response had no JSON content after stripping markdown "
+                    f"fences (raw={raw[:200]!r})"
+                )
+            try:
+                data = json.loads(cleaned)
+            except json.JSONDecodeError:
+                # FIX 2026-09-26: free OpenRouter models routinely ignore the
+                # "reply with ONLY a JSON object" instruction and "think out
+                # loud" first (e.g. "Let me analyze the debate transcript...
+                # {"action": "LONG", ...}"). That made json.loads() fail on
+                # every single cycle where a free model answered the
+                # facilitator seat, silently defaulting every decision to
+                # FLAT regardless of what the bull/bear/neutral debate
+                # actually concluded. Recover by pulling out the {...} block
+                # embedded in the prose instead of requiring the whole reply
+                # to be pure JSON.
+                match = re.search(r"\{.*\}", cleaned, re.DOTALL)
+                if not match:
+                    raise ValueError(
+                        f"No JSON object found in LLM response "
+                        f"(cleaned={cleaned[:200]!r})"
+                    )
+                try:
+                    data = json.loads(match.group(0))
+                except json.JSONDecodeError as json_exc:
+                    raise ValueError(
+                        f"{json_exc} (extracted={match.group(0)[:200]!r})"
+                    ) from json_exc
 
             action = str(data.get("action", "FLAT")).upper()
             if action not in {"LONG", "SHORT", "FLAT"}:

@@ -23,6 +23,11 @@ const path = require('path');
 const logger = require('../utils/logger');
 const { loadLedger } = require('../risk/tradeLedger');
 const { recordLossPostMortem } = require('../learning/lossLearner');
+// 2026-09-26: also record wins in the same batch pass (Tauric-Research-style
+// win+loss memory - see src/learning/tradeLearner.js). This only adds a
+// second, symmetric branch below; the loss branch and its dedupe/decay are
+// untouched.
+const { recordWinPostMortem } = require('../learning/tradeLearner');
 const cron = require('node-cron');
 
 const STATE_FILE = path.resolve(__dirname, '../../data/learning_agent_state.json');
@@ -59,15 +64,24 @@ async function runBatchReview() {
       const tradeTime = new Date(trade.timestamp).getTime();
       return tradeTime > lastReviewTimestamp && (trade.outcome === 'LOSS' || trade.pnlUsd < 0);
     });
+    // 2026-09-26: symmetric win-side scan, same window/watermark. Trades
+    // already reviewed in real time by strategyLearner.js get skipped here
+    // via tradeLearner's content-based dedupe guard - this batch pass exists
+    // to catch anything closed while the process was down, same as the loss
+    // branch already did.
+    const newWins = ledger.filter(trade => {
+      const tradeTime = new Date(trade.timestamp).getTime();
+      return tradeTime > lastReviewTimestamp && (trade.outcome === 'WIN' || trade.pnlUsd > 0);
+    });
 
-    if (newLosses.length === 0) {
-      logger.info('🧠 [Learning Agent] No new losing trades found in this review window. Perfect execution.');
+    if (newLosses.length === 0 && newWins.length === 0) {
+      logger.info('🧠 [Learning Agent] No new closed trades found in this review window.');
       lastReviewTimestamp = Date.now();
       saveLastReviewTimestamp(lastReviewTimestamp);
       return;
     }
 
-    logger.info(`🧠 [Learning Agent] Analyzing ${newLosses.length} losing trade(s)...`);
+    logger.info(`🧠 [Learning Agent] Analyzing ${newLosses.length} losing trade(s) and ${newWins.length} winning trade(s)...`);
 
     for (const loss of newLosses) {
       // In a more advanced implementation, we would pass this to an LLM to generate the exact context.
@@ -95,6 +109,30 @@ async function runBatchReview() {
       logger.info(`📚 [Learning Agent] Learned from loss on ${loss.symbol} (${loss.side || loss.signal}). Mapped pattern to memory bank.`);
     }
 
+    for (const win of newWins) {
+      const marketData = {
+        price: { price: win.price },
+        indicators: win.indicators || {},
+      };
+      const btcBenchmark = {
+        change24h: win.btcChange24h,
+        trend: win.regime || 'UNKNOWN',
+      };
+
+      recordWinPostMortem({
+        symbol: win.symbol,
+        side: win.side || win.signal,
+        entryPrice: win.entryPrice,
+        exitPrice: win.exitPrice ?? win.price,
+        pnlUsd: win.pnlUsd,
+        pnlPct: win.pnlPct,
+        marketData,
+        btcBenchmark,
+        reason: win.reason || `Reviewed by batch learning agent (${win.outcome || 'WIN'})`,
+      });
+      logger.info(`📚 [Learning Agent] Learned from win on ${win.symbol} (${win.side || win.signal}). Mapped pattern to memory bank.`);
+    }
+
     lastReviewTimestamp = Date.now();
     saveLastReviewTimestamp(lastReviewTimestamp);
 
@@ -102,7 +140,7 @@ async function runBatchReview() {
     if (global.broadcastDashboardEvent) {
       global.broadcastDashboardEvent({
         type: 'learning_event',
-        message: `Learning Agent reviewed ${newLosses.length} losses and updated the negative pattern memory bank.`,
+        message: `Learning Agent reviewed ${newLosses.length} losses and ${newWins.length} wins, updating the trade memory bank.`,
       });
     }
 

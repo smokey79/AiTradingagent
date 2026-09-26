@@ -27,6 +27,51 @@ logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
+# Permanent-error detection (2026-09-26)
+# ---------------------------------------------------------------------------
+
+_PERMANENT_MESSAGE_MARKERS = (
+    "credit balance",       # Anthropic's actual wording, confirmed live on
+    "insufficient_quota",   # this account: "Your credit balance is too low
+    "exceeded your current quota",  # to access the Anthropic API."
+    "invalid_api_key",
+    "authentication_error",
+    "permission_denied",
+)
+
+
+def _is_permanent_llm_error(exc: Exception) -> bool:
+    """
+    True if `exc` represents a condition that will NEVER succeed on retry -
+    no credit/quota, or bad/revoked credentials - as opposed to a transient
+    one (rate limit, timeout, brief network blip) worth retrying.
+
+    Added after confirming live that AnthropicClient's real "no credit"
+    error (HTTP 400, error.type="invalid_request_error", message "Your
+    credit balance is too low...") was being retried 3 times with 1s/2s/4s
+    backoff by _retry() below before the router finally moved on to the
+    next provider - ~7 wasted seconds and 2 wasted API calls on EVERY
+    single occurrence, for a condition that cannot change between attempt 1
+    and attempt 3 four seconds later. This function lets _retry() recognise
+    that case (and the equivalent for other providers) and fail fast
+    instead, so LLMRouter's fallback chain moves to the next provider
+    immediately rather than after a pointless multi-second delay.
+    """
+    status_code = getattr(exc, "status_code", None)
+    if status_code in (401, 403):
+        return True  # bad/revoked credentials never fix themselves on retry
+
+    message = str(exc).lower()
+    if any(marker in message for marker in _PERMANENT_MESSAGE_MARKERS):
+        return True
+
+    if status_code == 400 and ("credit" in message or "quota" in message or "billing" in message):
+        return True
+
+    return False
+
+
+# ---------------------------------------------------------------------------
 # Abstract base
 # ---------------------------------------------------------------------------
 
@@ -72,6 +117,18 @@ class LLMClient(ABC):
                 return fn(*args, **kwargs)
             except Exception as exc:
                 last_exc = exc
+                if _is_permanent_llm_error(exc):
+                    # 2026-09-26: no credit/quota or bad credentials - never
+                    # succeeds on retry, so fail immediately instead of
+                    # burning 1s/2s/4s of backoff on a condition that cannot
+                    # change mid-retry. LLMRouter's fallback chain (the
+                    # caller one level up) moves on to the next provider
+                    # right away.
+                    logger.warning(
+                        "%s attempt %d/%d failed with a permanent error (no credit/quota or bad credentials): %s. Not retrying - failing fast.",
+                        type(self).__name__, attempt + 1, self.max_retries, exc,
+                    )
+                    break
                 wait = 2 ** attempt
                 logger.warning(
                     "%s attempt %d/%d failed: %s. Retrying in %ds.",
@@ -79,7 +136,7 @@ class LLMClient(ABC):
                 )
                 time.sleep(wait)
         raise RuntimeError(
-            f"{type(self).__name__}: all {self.max_retries} attempts failed."
+            f"{type(self).__name__}: all attempts failed."
         ) from last_exc
 
 
@@ -377,9 +434,15 @@ class OpenRouterClient(LLMClient):
 
     def generate_text(self, prompt: str, **kwargs) -> str:
         kwargs.pop("llm", None)
-        return self._retry(
-            self._chat, [{"role": "user", "content": prompt}], **kwargs
-        )
+        # 2026-09-26: do NOT wrap this in the base class's _retry(). _chat()
+        # already tries all 7 free models plus a local Ollama failover in
+        # one call - that's a complete retry/fallback strategy on its own.
+        # Wrapping it in _retry() (max_retries=3) meant a fully-exhausted
+        # OpenRouter outage silently re-ran that entire 7-model+Ollama
+        # rotation two MORE times before finally giving up - triple the
+        # wasted latency and API calls for a result that was already
+        # determined on the first pass.
+        return self._chat([{"role": "user", "content": prompt}], **kwargs)
 
 
 # ---------------------------------------------------------------------------

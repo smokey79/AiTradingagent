@@ -1044,6 +1044,35 @@ app.get('/api/learning/losses', (req, res) => {
   }
 });
 
+// 2026-09-26: win-side mirror of /api/learning/losses (Tauric-Research-style
+// win+loss memory - see src/learning/tradeLearner.js).
+app.get('/api/learning/wins', (req, res) => {
+  try {
+    const { getWonTradeLessons } = require('../learning/tradeLearner');
+    const limit = parseInt(req.query.limit || '20', 10);
+    const lessons = getWonTradeLessons(limit);
+    res.json({ success: true, count: lessons.length, lessons, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Combined recency-based retrieval for a symbol (or overall recent history
+// with no ?symbol= given) - the ready-to-read text block mirrors what gets
+// injected into an LLM prompt if/when this is wired into one.
+app.get('/api/learning/lessons', (req, res) => {
+  try {
+    const { getTradeLessons } = require('../learning/tradeLearner');
+    const symbol = req.query.symbol || '';
+    const symbolLimit = parseInt(req.query.symbolLimit || '5', 10);
+    const crossLimit = parseInt(req.query.crossLimit || '3', 10);
+    const result = getTradeLessons({ symbol, symbolLimit, crossLimit });
+    res.json({ success: true, ...result, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 app.get('/api/expert/opportunities', async (req, res) => {
   try {
     const { scanAndCreateTrades } = require('../agents/expertTraderAgent');
