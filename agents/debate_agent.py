@@ -186,6 +186,13 @@ class FacilitatorAgent:
                     self.llm_name, primary_exc,
                 )
                 raw = self.llm.generate_text(prompt, max_tokens=300)
+            if not raw:
+                # FIX 2026-09-26: a provider can return an empty/None result
+                # as a "successful" call (see the OpenRouter content=null fix
+                # in core/llm_router.py). Treat that the same as a raised
+                # error instead of letting it crash re.sub() below with a
+                # confusing "expected string ... got NoneType" message.
+                raise ValueError("LLM returned an empty response")
             cleaned = re.sub(r"```(?:json)?", "", raw).strip().strip("`").strip()
             data    = json.loads(cleaned)
 

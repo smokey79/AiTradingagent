@@ -174,8 +174,15 @@ data/ohlcv/
 # --- Added 2026-09-26: scratch/backup file clutter and vendored build tools ---
 _diag_*.ps1
 _diag_*.js
+_diag_*.py
+_diag_*.json
 *.bak
 *.pre-pm2-backup
 tools/apache-maven-*/
 tools/*/target/
 data/*_backup_*.json
+
+# MT5 feed's own runtime output (regenerated every ~30s by the mt5-feed PM2
+# process) - never something to commit, same as the other data/*.json state
+# files above.
+data/mt5_market_data.json

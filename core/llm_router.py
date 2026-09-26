@@ -321,7 +321,26 @@ class OpenRouterClient(LLMClient):
                 )
                 if resp.status_code == 200:
                     data = resp.json()
-                    return data["choices"][0]["message"]["content"]
+                    message = data["choices"][0]["message"]
+                    # FIX 2026-09-26: some free/"reasoning" models (e.g. the
+                    # *-reasoning:free entries in DEFAULT_MODELS) return
+                    # content=null and put the real text in a separate
+                    # `reasoning` field instead. Returning that None as a
+                    # "successful" result used to silently propagate all the
+                    # way up to FacilitatorAgent.decide() / DebaterAgent.argue(),
+                    # which then crashed on re.sub(pattern, "", None) with a
+                    # confusing NoneType error instead of trying the next model
+                    # or falling through to Ollama. Treat empty content as a
+                    # failed attempt so rotation actually kicks in.
+                    content = message.get("content") or message.get("reasoning")
+                    if content:
+                        return content
+                    logger.warning(
+                        "OpenRouter free model %s returned empty content. Rotating to next free model.",
+                        active_model,
+                    )
+                    active_model = self._get_next_model()
+                    continue
                 logger.warning(
                     "OpenRouter free model %s failed (%s: %s). Rotating to next free model.",
                     active_model, resp.status_code, resp.text[:100],
@@ -346,8 +365,11 @@ class OpenRouterClient(LLMClient):
                 timeout=60,
             )
             if ollama_resp.status_code == 200:
-                logger.info("OpenRouter failover to local Ollama (llama3.2) succeeded.")
-                return ollama_resp.json().get("response", "")
+                ollama_text = ollama_resp.json().get("response") or ""
+                if ollama_text:
+                    logger.info("OpenRouter failover to local Ollama (llama3.2) succeeded.")
+                    return ollama_text
+                logger.warning("Local Ollama failover returned an empty response.")
         except Exception as o_err:
             logger.warning("Local Ollama failover failed: %s", o_err)
 

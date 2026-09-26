@@ -158,6 +158,30 @@ module.exports = {
       out_file: "logs/tradingkit-analyst-out.log"
     },
     {
+      // MT5 backup market-data feed — scripts/mt5_market_feed.py. Added
+      // 2026-09-26 as a self-healing fallback DATA source for the OANDA
+      // forex/commodity/index pairs, NOT a second trading engine (it
+      // connects to the same OANDA demo account src/brokers/oandaBroker.js
+      // already trades via the v20 REST API, so it never places an order -
+      // see the big comment at the top of mt5_market_feed.py). Polls MT5
+      // every MT5_FEED_INTERVAL_S seconds (default 30) and writes
+      // data/mt5_market_data.json; src/data/oandaMarketData.js reads that
+      // file ONLY when OANDA's own REST API fails to return a price/candles
+      // for a pair that cycle. Requires the MetaTrader5 terminal to be
+      // installed and MT5_LOGIN/MT5_PASSWORD/MT5_SERVER set in .env (see
+      // scripts/mt5_check.py to test the connection by hand first).
+      name: "mt5-feed",
+      cwd: "F:/aitradingagent",
+      script: "scripts/mt5_market_feed.py",
+      interpreter: "F:/aitradingagent/venv/Scripts/python.exe",
+      watch: false,
+      autorestart: true,
+      restart_delay: 15000,
+      max_restarts: 15,
+      error_file: "logs/mt5-feed-err.log",
+      out_file: "logs/mt5-feed-out.log"
+    },
+    {
       name: "telegram-listener",
       cwd: "F:/aitradingagent",
       script: "src/notifications/telegramListener.js",

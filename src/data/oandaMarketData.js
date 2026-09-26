@@ -8,6 +8,7 @@
 const logger = require('../utils/logger');
 const oanda = require('../brokers/oandaBroker');
 const { calculateAllIndicators } = require('./indicators');
+const { getMt5Fallback } = require('./mt5MarketData');
 
 const CACHE_TTL_MS = 25 * 1000; // matches marketData.js's crypto cache window
 const cache = {}; // keyed by pair
@@ -29,19 +30,41 @@ async function fetchOandaMarketData(pair) {
     }),
   ]);
 
-  if (!priceQuote) return null; // index.js already treats a null marketData entry as "unavailable"
+  // SELF-HEALING FALLBACK (2026-09-26): if OANDA's REST API didn't give us a
+  // usable price and/or candles this cycle, try the MT5 feed before giving
+  // up on the pair entirely. Same account, same instrument - this only
+  // covers for the REST API being briefly down/rate-limited, it never trades
+  // a second time. See scripts/mt5_market_feed.py for the full reasoning.
+  let effectivePrice = priceQuote;
+  let effectiveCandles = candles;
+  let source = `oanda_${oanda.ENV}_api`;
+  if (!effectivePrice || effectiveCandles.length === 0) {
+    const mt5Data = getMt5Fallback(pair);
+    if (mt5Data) {
+      if (!effectivePrice) {
+        effectivePrice = mt5Data.price;
+        logger.info(`[OANDA] ${pair} price came from the MT5 fallback feed this cycle (REST API had none).`);
+      }
+      if (effectiveCandles.length === 0 && mt5Data.candles.length > 0) {
+        effectiveCandles = mt5Data.candles;
+      }
+      source = 'oanda_via_mt5_fallback';
+    }
+  }
 
-  const currentPrice = priceQuote.mid;
-  const firstClose = candles.length > 0 ? candles[0].close : currentPrice;
+  if (!effectivePrice) return null; // index.js already treats a null marketData entry as "unavailable"
+
+  const currentPrice = effectivePrice.mid;
+  const firstClose = effectiveCandles.length > 0 ? effectiveCandles[0].close : currentPrice;
   const change24h = firstClose > 0 ? ((currentPrice - firstClose) / firstClose) * 100 : 0;
-  const closes = candles.map((c) => c.close);
+  const closes = effectiveCandles.map((c) => c.close);
   const high24h = closes.length ? Math.max(...closes, currentPrice) : currentPrice;
   const low24h = closes.length ? Math.min(...closes, currentPrice) : currentPrice;
 
   // calculateAllIndicators accepts OANDA's {open,high,low,close,volume} candle
   // shape directly — src/data/indicators.js already handles both ccxt arrays
   // and object candles, so no conversion is needed here.
-  const indicators = calculateAllIndicators(candles, null);
+  const indicators = calculateAllIndicators(effectiveCandles, null);
 
   const result = {
     symbol: pair.split('/')[0],
@@ -51,12 +74,12 @@ async function fetchOandaMarketData(pair) {
       change24h: parseFloat(change24h.toFixed(3)),
       change1h: 0.0,
       change7d: 0.0,
-      volume24h: candles.reduce((s, c) => s + (c.volume || 0), 0),
+      volume24h: effectiveCandles.reduce((s, c) => s + (c.volume || 0), 0),
       marketCap: 0,
       cmcRank: 0,
       high24h,
       low24h,
-      source: `oanda_${oanda.ENV}_api`,
+      source,
     },
     indicators,
     // Forex/commodities/indices have no crypto Fear & Greed index. Neutral 50
