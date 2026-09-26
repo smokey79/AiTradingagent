@@ -1,0 +1,56 @@
+{
+  "MTF_EMA_VWAP_ETH_2h": {
+    "pos": null,
+    "entry": null,
+    "entryTime": null,
+    "longStop": null,
+    "shortStop": null,
+    "lastBarTs": 1790222400000,
+    "startedAt": "2026-09-24T06:25:27.887Z"
+  },
+  "MTF_EMA_VWAP_ARB_1h": {
+    "pos": null,
+    "entry": null,
+    "entryTime": null,
+    "longStop": null,
+    "shortStop": null,
+    "lastBarTs": 1790269200000,
+    "startedAt": "2026-09-24T06:25:28.436Z"
+  },
+  "MTF_EMA_VWAP_ADX20_ARB_1h": {
+    "pos": null,
+    "entry": null,
+    "entryTime": null,
+    "longStop": null,
+    "shortStop": null,
+    "lastBarTs": 1790269200000,
+    "startedAt": "2026-09-24T06:25:28.436Z"
+  },
+  "MTF_EMA_ADX20_ATR15_ARB_2h": {
+    "pos": null,
+    "entry": null,
+    "entryTime": null,
+    "longStop": null,
+    "shortStop": null,
+    "lastBarTs": 1790265600000,
+    "startedAt": "2026-09-24T06:25:28.436Z"
+  },
+  "MTF_EMA_VWAP_ADX20_CRO_1h": {
+    "pos": null,
+    "entry": null,
+    "entryTime": null,
+    "longStop": null,
+    "shortStop": null,
+    "lastBarTs": 1790226000000,
+    "startedAt": "2026-09-24T06:25:29.559Z"
+  },
+  "MTF_EMA_ADX20_ATR15_BTC_4h": {
+    "pos": null,
+    "entry": null,
+    "entryTime": null,
+    "longStop": null,
+    "shortStop": null,
+    "lastBarTs": 1790208000000,
+    "startedAt": "2026-09-24T06:25:30.149Z"
+  }
+}

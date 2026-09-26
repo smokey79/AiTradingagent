@@ -187,10 +187,20 @@ module.exports = {
     },
     {
       // Live dashboard UI — npm run dashboard equivalent
-      // PORT overridden here (not in .env) to 3003 — 3001 is held by a
-      // separate Hermes node.exe process on this machine (found 2026-09-11).
-      // This override is scoped to just this PM2 app, so nothing else that
-      // reads the shared PORT/DASHBOARD_PORT from .env is affected.
+      // PORT set to 3001 (2026-09-16) to match .env PORT=3001, Watchdog.ps1's
+      // health check, RestartBot.ps1's port-based process discovery, the
+      // desktop shortcut, and votes.html/wallets.html — all of which assume
+      // 3001. The earlier 3003 override was to dodge a conflicting process
+      // that is no longer present; verify with `netstat -ano | findstr :3001`
+      // before restarting if that ever changes again.
+      // DASHBOARD_ONLY=true added 2026-09-16: server.js starts its OWN copy of
+      // autoTrader.js when run as main unless this is set (see
+      // scripts/testVotesEndpoint.js for the precedent). Since
+      // trading-orchestrator (src/orchestrator/index.js, below) already runs
+      // the real auto-trading loop as its own PM2 app, leaving this unset
+      // meant TWO independent auto-trading engines were running at once here
+      // -- double LLM/API calls and two processes writing trades to the same
+      // trade_ledger.json concurrently. Dashboard now serves UI/API only.
       name: "dashboard",
       cwd: "F:/aitradingagent",
       script: "src/dashboard/server.js",
@@ -199,7 +209,7 @@ module.exports = {
       autorestart: true,
       restart_delay: 10000,
       max_restarts: 30,
-      env: { PORT: "3003" }
+      env: { PORT: "3001", DASHBOARD_ONLY: "true" }
     },
     {
       // Freqtrade execution engine, running in DRY-RUN, acting on signals

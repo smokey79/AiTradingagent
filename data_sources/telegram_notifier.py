@@ -85,7 +85,7 @@ class TelegramNotifier:
         price: float,
         consensus_score: str = "7/8 Agents Agreed",
         gate_68_met: bool = True,
-        win_rate_pct: float = 76.5,
+        win_rate_pct: Optional[float] = None,
         youtube_sentiment: Optional[Dict[str, Any]] = None,
         futures_5x: Optional[Dict[str, Any]] = None,
         technical_setup: Optional[Dict[str, Any]] = None,
@@ -126,7 +126,7 @@ class TelegramNotifier:
 ━━━━━━━━━━━━━━━━━━━━
 🎯 <b>Asset:</b> <code>{symbol}</code> @ <b>${price:,.2f}</b>
 🤖 <b>Consensus:</b> <b>{consensus_score}</b> (Confidence: <b>{confidence*100:.1f}%</b>)
-🛡️ <b>Probability Gate:</b> {gate_badge} (Win-Rate: <b>{win_rate_pct:.1f}%</b>)
+🛡️ <b>Probability Gate:</b> {gate_badge} (Win-Rate: <b>{(f"{win_rate_pct:.1f}%" if win_rate_pct is not None else "not measured")}</b>)
 
 🧠 <b>YouTube Subscriptions Alpha:</b>
   • Market Bias: <b>{yt_bias}</b> ({yt_polarity:+0.2f})
@@ -159,7 +159,7 @@ class TelegramNotifier:
         price: float,
         consensus_score: str = "7/8 Agents Agreed",
         gate_68_met: bool = True,
-        win_rate_pct: float = 76.5,
+        win_rate_pct: Optional[float] = None,
         youtube_sentiment: Optional[Dict[str, Any]] = None,
         futures_5x: Optional[Dict[str, Any]] = None,
         technical_setup: Optional[Dict[str, Any]] = None,

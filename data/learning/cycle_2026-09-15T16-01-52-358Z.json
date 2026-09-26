@@ -1,0 +1,87 @@
+{
+  "generatedAt": "2026-09-15T16:01:52.358Z",
+  "mode": "PAPER",
+  "evidence": {
+    "ledgerRecords": 7,
+    "resolvedLearnable": 7,
+    "excludedFromLearning": 0,
+    "stillOpen": 0,
+    "minSampleRequired": 30,
+    "sampleSufficient": false
+  },
+  "overall": {
+    "trades": 7,
+    "wins": 1,
+    "losses": 6,
+    "winRate": 0.14285714285714285,
+    "netPnl": 0,
+    "profitFactor": null,
+    "avgPnl": 0
+  },
+  "byRegime": {},
+  "byPair": {
+    "SNDKB/USDT": {
+      "trades": 1,
+      "wins": 0,
+      "losses": 1,
+      "winRate": 0,
+      "netPnl": 0,
+      "profitFactor": null,
+      "avgPnl": 0
+    },
+    "MUB/USDT": {
+      "trades": 1,
+      "wins": 0,
+      "losses": 1,
+      "winRate": 0,
+      "netPnl": 0,
+      "profitFactor": null,
+      "avgPnl": 0
+    },
+    "PAXG/USDT": {
+      "trades": 2,
+      "wins": 0,
+      "losses": 2,
+      "winRate": 0,
+      "netPnl": 0,
+      "profitFactor": null,
+      "avgPnl": 0
+    },
+    "GOOGLB/USDT": {
+      "trades": 1,
+      "wins": 0,
+      "losses": 1,
+      "winRate": 0,
+      "netPnl": 0,
+      "profitFactor": null,
+      "avgPnl": 0
+    },
+    "METAB/USDT": {
+      "trades": 1,
+      "wins": 1,
+      "losses": 0,
+      "winRate": 1,
+      "netPnl": 0,
+      "profitFactor": null,
+      "avgPnl": 0
+    },
+    "QQQB/USDT": {
+      "trades": 1,
+      "wins": 0,
+      "losses": 1,
+      "winRate": 0,
+      "netPnl": 0,
+      "profitFactor": null,
+      "avgPnl": 0
+    }
+  },
+  "agents": {},
+  "proposals": [
+    {
+      "direction": "investigate",
+      "title": "Insufficient evidence — no tuning this cycle",
+      "detail": "7 resolved real trades on record; 30 are required before any parameter is changed. Anything tuned on this sample would be fitting noise."
+    }
+  ],
+  "autoApplied": []
+}

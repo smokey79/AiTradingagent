@@ -37,7 +37,7 @@ echo.
 echo =====================================================
 echo   Dashboard:  http://localhost:3001
 echo   Telegram:   Listening on @intelligent_trading_signals
-echo   TradingKit: pk_OUN_iLVFJCGKR5ZEPWH9pQCnUSaUQnHM
+echo   TradingKit: connected (key from .env)
 echo =====================================================
 echo.
 echo 18 AI agents now active in consensus pipeline:

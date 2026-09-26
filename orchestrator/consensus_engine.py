@@ -309,12 +309,12 @@ async def call_data_sourcer(market_package: dict) -> dict:
     return {
         "agent": "data_sourcer",
         "signal": "BUY" if sourcer_data.get("sourcer_verdict") in ("PROCEED", "PROCEED_DEFENSIVE") else "HOLD",
-        "confidence": round((sourcer_data.get("composite_score", 85.0) / 100), 2),
-        "hit_rate_pct": sourcer_data.get("rolling_win_rate_pct", "78.0%"),
-        "gate_68_met": sourcer_data.get("gate_68_met", True),
-        "sourcer_score": sourcer_data.get("composite_score", 85.0),
-        "verdict": sourcer_data.get("sourcer_verdict", "PROCEED"),
-        "notes": f"Composite Feed Quality: {sourcer_data.get('composite_score', 85.0)}/100 (Arbitrage, Flash Loans & CCXT). Hit-Rate: {sourcer_data.get('rolling_win_rate_pct')}",
+        "confidence": round((sourcer_data.get("composite_score", 0.0) / 100), 2),
+        "hit_rate_pct": sourcer_data.get("rolling_win_rate_pct", "unknown"),
+        "gate_68_met": sourcer_data.get("gate_68_met", False),  # fail closed when missing
+        "sourcer_score": sourcer_data.get("composite_score", 0.0),
+        "verdict": sourcer_data.get("sourcer_verdict", "HOLD"),
+        "notes": f"Measured feed quality: {sourcer_data.get('composite_score', 0.0)}/100 ({sourcer_data.get('feeds_live', 0)} feeds live). Hit-Rate: {sourcer_data.get('rolling_win_rate_pct', 'unknown')} ({sourcer_data.get('gate_status', 'unknown')})",
     }
 
 
@@ -324,25 +324,31 @@ async def call_luxalgo_learner(symbol: str, market_package: dict) -> dict:
         from orchestrator.luxalgo_strategy_learner import LuxAlgoStrategyLearnerAgent
         learner = LuxAlgoStrategyLearnerAgent()
         strat = learner.learn_and_generate_strategy(strategy_type="luxalgo_smc", symbol=symbol)
+        verified = bool(strat.get("gate_68_met"))  # evidence gate: measured results only
+        wr = strat.get("target_win_rate_pct")
         return {
             "agent": "luxalgo_learner",
-            "signal": "BUY",
-            "confidence": 0.88,
+            # Votes only when its strategy has passed the evidence gate. It used to vote BUY
+            # every cycle at 0.88 confidence, which counted towards the consensus threshold.
+            "signal": "BUY" if verified else "HOLD",
+            "confidence": 0.60 if verified else 0.0,
+            "evidence_status": strat.get("status"),
             "strategy_title": strat["title"],
             "target_win_rate_pct": strat["target_win_rate_pct"],
             "leverage": "5X Futures",
             "risk_reward_ratio": strat["risk_management"]["risk_reward_ratio"],
             "liquidation_buffer_pct": strat["risk_management"]["liquidation_safety_buffer_pct"],
             "concepts": strat["concepts"],
-            "notes": f"LuxAlgo SMC order block & liquidity sweep aligned on {symbol}. Win rate: {strat['target_win_rate_pct']}%.",
+            "notes": (f"LuxAlgo SMC template on {symbol}. Measured win rate: {wr}%." if wr is not None
+                      else f"LuxAlgo SMC template on {symbol}. No measured results yet, so no vote."),
         }
     except Exception as e:
         return {
             "agent": "luxalgo_learner",
-            "signal": "BUY",
-            "confidence": 0.80,
+            "signal": "HOLD",          # was BUY with an invented 74.5% win rate on error
+            "confidence": 0.0,
             "strategy_title": "LuxAlgo Smart Money Concepts — 5X Liquidity Sweep",
-            "target_win_rate_pct": 74.5,
+            "target_win_rate_pct": None,
             "leverage": "5X Futures",
             "risk_reward_ratio": 2.67,
             "liquidation_buffer_pct": 17.5,
@@ -378,7 +384,12 @@ async def call_copilot_orchestrator(symbol: str, market_package: dict, all_agent
     system_prompt = load_skill("SKILL_COPILOT_ORCHESTRATOR.md")
     risk_data = market_package.get("risk", {})
     sourcer_data = market_package.get("sourcer", {})
-    gate_68_met = sourcer_data.get("gate_68_met", sourcer_data.get("gate_72_met", True))
+    gate_68_met = sourcer_data.get("gate_68_met", sourcer_data.get("gate_72_met", False))  # fail closed
+    # Before 20 real trades the gate cannot be assessed: paper mode may keep trading to build
+    # the sample; live mode may not. After 20 trades the gate must be met.
+    gate_applicable = sourcer_data.get("gate_applicable", True)
+    paper_mode = bool(market_package.get("paper_mode", False))
+    gate_blocks = (gate_applicable and not gate_68_met) or (not gate_applicable and not paper_mode)
 
     # Check oversight verdict
     oversight_output = next((a for a in all_agent_outputs if a.get("agent") == "trader_oversight"), None)
@@ -387,7 +398,7 @@ async def call_copilot_orchestrator(symbol: str, market_package: dict, all_agent
     user_message = (
         f"Target Symbol: {symbol} (5X Futures & DEX Spot)\n"
         f"Monte Carlo Risk Approved: {risk_data.get('approved', False)}\n"
-        f"Data Sourcer Quality: {sourcer_data.get('composite_score', 85.0)}/100 (Hit Rate: {sourcer_data.get('rolling_win_rate_pct', '76%')} | 68% Gate: {'MET' if gate_68_met else 'HOLD'})\n"
+        f"Data Sourcer Quality: {sourcer_data.get('composite_score', 0.0)}/100 (Hit Rate: {sourcer_data.get('rolling_win_rate_pct', 'unknown')} | 68% Gate: {sourcer_data.get('gate_status', 'MET' if gate_68_met else 'HOLD')})\n"
         f"Safe Position USDT: ${risk_data.get('position_usd', 0.0)}\n"
         f"Trader Oversight Approved: {economic_approved} (5X Net Margin: {oversight_output.get('net_profitability_pct', 19.5)}%)\n\n"
         f"All 8 Agent Signals (including LuxAlgo SMC & Arbitrage):\n{json.dumps(all_agent_outputs, indent=2)}\n\n"
@@ -401,10 +412,14 @@ async def call_copilot_orchestrator(symbol: str, market_package: dict, all_agent
         res["veto_triggered"] = True
         res["veto_reason"] = "Monte Carlo Risk Gate rejection (drawdown/ruin probability threshold exceeded)"
         res["final_signal"] = "HOLD"
-    elif not gate_68_met:
+    elif gate_blocks:
         res["approved_for_execution"] = False
         res["veto_triggered"] = True
-        res["veto_reason"] = f"Win Rate Gate ({sourcer_data.get('rolling_win_rate_pct', '0%')}) below 68.0% requirement. Retaining paper memory mode."
+        res["veto_reason"] = (
+            f"Win Rate Gate: {sourcer_data.get('gate_status', 'not met')} "
+            f"({sourcer_data.get('rolling_win_rate_pct', 'unknown')}, need 68% over 20 real trades)."
+            + ("" if paper_mode else " Live trading blocked until the gate is met.")
+        )
         res["final_signal"] = "HOLD"
     elif not economic_approved:
         res["approved_for_execution"] = False
@@ -443,6 +458,7 @@ async def run_consensus(
         proposed_position_pct=proposed_position_pct,
         symbol=symbol,
     )
+    market_package["paper_mode"] = paper  # lets the win-rate gate allow paper sampling only
 
     # Step 1: Parallel Analyst Invocations + DeepSeek R1 + Data Sourcer + Trader Oversight + LuxAlgo Learner
     log.info("Step 1: Ingesting DeepSeek R1, Technical, Macro, Real-Time, Deep Research, Data Sourcer, Trader Oversight (5X Futures), and LuxAlgo SMC in parallel...")
@@ -596,7 +612,7 @@ async def run_consensus(
             price=current_price,
             consensus_score=f"{agreeing_count}/{len(agent_outputs)} Agents Agreed",
             gate_68_met=final_decision.get("approved_for_execution", True) and not final_decision.get("veto_triggered", False),
-            win_rate_pct=float(oversight_data.get("target_win_rate_pct", 76.5) or 76.5),
+            win_rate_pct=oversight_data.get("target_win_rate_pct"),  # None = not measured (was a fixed 76.5)
             youtube_sentiment=yt_feed,
             futures_5x={
                 "margin_collateral_usd": float(oversight_data.get("margin_collateral_usd", 50.0) or 50.0),

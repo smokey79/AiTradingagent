@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wallet Link — read only</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin:0; font:14px/1.5 system-ui,Segoe UI,sans-serif;
+         background:#0d1117; color:#e6edf3; padding:20px; }
+  h1 { font-size:20px; margin:0 0 4px; }
+  .sub { color:#8b949e; font-size:12px; margin-bottom:16px; }
+  .banner { border-radius:8px; padding:10px 12px; margin-bottom:14px; font-size:13px; }
+  .safe { background:#0f2f1c; border:1px solid #2ea04326; color:#7ee787; }
+  .warn { background:#2d1e00; border:1px solid #d2992226; color:#e3b341; }
+  .total { font-size:30px; font-weight:600; margin:10px 0 2px; }
+  .totalnote { color:#8b949e; font-size:12px; margin-bottom:18px; }
+  table { width:100%; border-collapse:collapse; }
+  th,td { text-align:left; padding:9px 10px; border-bottom:1px solid #21262d; }
+  th { color:#8b949e; font-weight:500; font-size:12px; text-transform:uppercase;
+       letter-spacing:.04em; }
+  td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  .addr { font-family:ui-monospace,Consolas,monospace; font-size:11px; color:#6e7681; }
+  a { color:#58a6ff; text-decoration:none; }
+  .tag { font-size:10px; padding:2px 6px; border-radius:10px; margin-left:6px;
+         background:#30363d; color:#8b949e; }
+  .tag.pooled { background:#3d2a00; color:#e3b341; }
+  .tag.err { background:#3d1518; color:#f85149; }
+  .note { color:#e3b341; font-size:11px; padding:0 10px 10px; }
+  button { background:#21262d; color:#e6edf3; border:1px solid #30363d;
+           border-radius:6px; padding:6px 12px; cursor:pointer; font-size:13px; }
+  #stamp { color:#6e7681; font-size:11px; margin-top:14px; }
+</style>
+</head>
+<body>
+<h1>Wallet Link</h1>
+<div class="sub">On-chain balances for the addresses in your .env</div>
+
+<div class="banner safe">
+  <strong>Read-only.</strong> This page reads public blockchain data. It holds no
+  private key and cannot sign, send or approve any transaction.
+</div>
+
+<div id="pooledBanner" class="banner warn" hidden></div>
+
+<div class="total" id="total">…</div>
+<div class="totalnote" id="totalNote">loading</div>
+
+<table>
+  <thead>
+    <tr><th>Chain</th><th class="num">Balance</th><th class="num">USD</th></tr>
+  </thead>
+  <tbody id="rows"><tr><td colspan="3">Loading…</td></tr></tbody>
+</table>
+
+<div id="stamp"></div>
+<p><button onclick="load(true)">Refresh</button></p>
+
+<script>
+const fmtUsd = v => v === null || v === undefined
+  ? '—' : '$' + v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+
+async function load(force) {
+  const rows = document.getElementById('rows');
+  try {
+    const r = await fetch('/api/wallets' + (force ? '?force=1' : ''));
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+
+    document.getElementById('total').textContent =
+      d.totalUsd === null ? 'withheld' : fmtUsd(d.totalUsd);
+    document.getElementById('totalNote').textContent =
+      d.totalUsd === null
+        ? 'A chain or a price was unavailable, so no total is claimed.'
+        : 'Your holdings across ' + d.chainsOk + '/' + d.chainsTotal + ' chains.';
+
+    const pooled = d.wallets.filter(w => w.pooled);
+    const pb = document.getElementById('pooledBanner');
+    if (pooled.length) {
+      pb.hidden = false;
+      pb.innerHTML = '<strong>Excluded from the total:</strong> ' +
+        pooled.map(w => w.label).join(', ') +
+        ' — a shared exchange deposit address. The large balance shown there ' +
+        'belongs to the exchange’s customer pool, not to you.';
+    } else { pb.hidden = true; }
+
+    rows.innerHTML = '';
+    for (const w of d.wallets) {
+      const tr = document.createElement('tr');
+      const tag = !w.ok ? '<span class="tag err">unreachable</span>'
+                : w.pooled ? '<span class="tag pooled">pooled — not counted</span>' : '';
+      tr.innerHTML =
+        '<td>' + w.label + tag +
+          '<div class="addr"><a href="' + w.explorer + '" target="_blank" rel="noopener">' +
+            w.address + '</a></div></td>' +
+        '<td class="num">' + (w.ok ? w.balance + ' ' + w.symbol : (w.error || 'error')) + '</td>' +
+        '<td class="num">' + (w.pooled ? '(' + fmtUsd(w.usd) + ')' : fmtUsd(w.usd)) + '</td>';
+      rows.appendChild(tr);
+      if (w.note) {
+        const nt = document.createElement('tr');
+        nt.innerHTML = '<td colspan="3" class="note">' + w.note + '</td>';
+        rows.appendChild(nt);
+      }
+    }
+    document.getElementById('stamp').textContent =
+      'Read ' + new Date(d.generatedAt).toLocaleString() + (d.cached ? ' (cached)' : '');
+  } catch (e) {
+    rows.innerHTML = '<tr><td colspan="3">Could not load: ' + e.message + '</td></tr>';
+  }
+}
+load(false);
+setInterval(() => load(false), 60000);
+</script>
+</body>
+</html>

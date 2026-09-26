@@ -183,11 +183,12 @@ class DataPipeline:
         active_sym = symbol or "BTC/USDT"
         candles = market_data.get("ohlcv", {}).get(active_sym, [])
 
-        onchain_data = calculate_mvrv_proxy(candles) if candles else {"mvrv_proxy": 1.15, "cycle_phase": "BULL_ACCUMULATION", "valuation": "UNDERVALUED"}
-        vol_data = detect_volatility_regime(candles) if candles else {"regime": "NORMAL_VOLATILITY", "breakout_probability": 0.65}
+        # Placeholders when no candles arrived are flagged is_fallback so the Data Sourcer scores them 0.
+        onchain_data = calculate_mvrv_proxy(candles) if candles else {"mvrv_proxy": 1.15, "cycle_phase": "BULL_ACCUMULATION", "valuation": "UNDERVALUED", "is_fallback": True}
+        vol_data = detect_volatility_regime(candles) if candles else {"regime": "NORMAL_VOLATILITY", "breakout_probability": 0.65, "is_fallback": True}
         rotation_data = analyze_peer_rotation(market_data.get("tickers", []))
         rs_rankings = rank_relative_strength(market_data.get("ohlcv", {}))
-        rs_data = rs_rankings[0] if rs_rankings else {"symbol": active_sym, "rsi_14": 55.0, "status": "OUTPERFORMING"}
+        rs_data = rs_rankings[0] if rs_rankings else {"symbol": active_sym, "rsi_14": 55.0, "status": "OUTPERFORMING", "is_fallback": True}
 
         quant_metrics = {
             "onchain_mvrv": onchain_data,
@@ -217,11 +218,13 @@ class DataPipeline:
             if "backtests" in historical_data:
                 backtest_results = historical_data["backtests"]
                 if backtest_results:
-                    avg_win_rate = sum(b.get("win_rate", 0.76) for b in backtest_results) / len(backtest_results)
-                    sourcer_eval["historical_backtest_avg_win_rate"] = avg_win_rate
-                    log.info(f"  Historical backtest avg win-rate: {avg_win_rate:.1%}")
+                    measured = [b["win_rate"] for b in backtest_results if isinstance(b, dict) and b.get("win_rate") is not None]
+                    if measured:  # only backtests that actually report a win rate (was: missing = 76%)
+                        avg_win_rate = sum(measured) / len(measured)
+                        sourcer_eval["historical_backtest_avg_win_rate"] = avg_win_rate
+                        log.info(f"  Historical backtest avg win-rate: {avg_win_rate:.1%} ({len(measured)} backtests)")
         mc = MonteCarloRisk(
-            win_rate=sourcer_eval.get("rolling_win_rate", 0.76),
+            win_rate=sourcer_eval.get("win_rate_for_risk_model", 0.50),  # measured, or a labelled 50% prior
             avg_win=self.mc_params["avg_win"],
             avg_loss=self.mc_params["avg_loss"],
         )
@@ -293,8 +296,8 @@ class DataPipeline:
             f"  Volatility Regime: {vol.get('regime', 'NORMAL')} | Sector Leader: {rot.get('leading_token', 'BTC/USDT')}",
             "",
             f"=== AGENT DATA SOURCER & HIT-RATE QUALITY ===",
-            f"  Verdict: {sourcer.get('sourcer_verdict', 'PROCEED')} | Composite Quality: {sourcer.get('composite_score', 85.0)}/100",
-            f"  Rolling Win-Rate: {sourcer.get('rolling_win_rate_pct', '76.0%')} (Gate 72%: {'[MET]' if sourcer.get('gate_72_met') else '[HOLD]'})",
+            f"  Verdict: {sourcer.get('sourcer_verdict', 'HOLD')} | Feed Quality: {sourcer.get('composite_score', 0.0)}/100",
+            f"  Rolling Win-Rate: {sourcer.get('rolling_win_rate_pct', 'unknown')} (Gate {sourcer.get('target_gate', '68%')}: {sourcer.get('gate_status', 'unknown')})",
             "",
             f"=== MONTE CARLO RISK GATE ({risk['simulation']['n_simulations']} Simulation Paths) ===",
             f"  Decision: {'APPROVED' if risk['approved'] else 'REJECTED'}",
@@ -309,8 +312,8 @@ class DataPipeline:
             "macro_signal": signal.get("signal", "neutral"),
             "position_usd": risk["position_usd"],
             "safe_position_pct": risk["safe_position_pct"],
-            "sourcer_score": sourcer.get("composite_score", 85.0),
-            "win_rate": sourcer.get("rolling_win_rate", 0.76),
+            "sourcer_score": sourcer.get("composite_score", 0.0),
+            "win_rate": sourcer.get("rolling_win_rate"),  # None until real trades exist
         }
 
 

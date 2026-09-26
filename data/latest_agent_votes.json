@@ -1,24 +1,2213 @@
 {
-  "_SAMPLE": true,
-  "_note": "SAMPLE DATA, not real votes. Written 2026-09-15 so the votes page is not blank before the bot restarts. The first real consensus cycle overwrites this file entirely. If you still see _SAMPLE:true, the bot has not yet run a cycle on the new code.",
-  "updatedAt": "2026-09-15T16:45:00.000Z",
   "pairs": {
-    "BTC/USDT": {
+    "AAVE/USDT": {
       "type": "agent_votes",
-      "pair": "BTC/USDT (SAMPLE)",
-      "timestamp": "2026-09-15T16:45:00.000Z",
-      "finalSignal": "HOLD",
-      "confidence": 0.41,
+      "pair": "AAVE/USDT",
+      "timestamp": "2026-09-24T18:20:32.291Z",
+      "finalSignal": "BUY",
+      "confidence": 0.669,
+      "agentsAgreeing": 3,
+      "totalAgents": 10,
+      "approvedForExecution": true,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "BUY",
+          "confidence": 0.88,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Strong bullish alignment: Price above EMA50/200 with RSI at 61.0 and positive MACD"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "No EMA50/100+VWAP cross this bar for AAVE."
+        },
+        {
+          "name": "technical_daily",
+          "signal": "BUY",
+          "confidence": 0.55,
+          "weight": 0.06,
+          "agreed": true,
+          "reason": "Trend up (EMA20>EMA50), momentum confirmed (RSI 61.4, MACD>signal), not overbought/overextended. [default config]"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no cross-cycle-robust 15m/1h/4h combo for AAVE"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 5.4 across the top 4 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dire"
+        },
+        {
+          "name": "gemini",
+          "signal": "BUY",
+          "confidence": 0.86,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Multi-agent confluence confirmed (2 peer agents bullish) + Equilibrium Consolidation"
+        }
+      ]
+    },
+    "SUI/USDT": {
+      "type": "agent_votes",
+      "pair": "SUI/USDT",
+      "timestamp": "2026-09-24T18:20:32.530Z",
+      "finalSignal": "BUY",
+      "confidence": 0.668,
+      "agentsAgreeing": 3,
+      "totalAgents": 10,
+      "approvedForExecution": true,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "BUY",
+          "confidence": 0.88,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Strong bullish alignment: Price above EMA50/200 with RSI at 61.5 and positive MACD"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "No EMA50/100+VWAP cross this bar for SUI."
+        },
+        {
+          "name": "technical_daily",
+          "signal": "BUY",
+          "confidence": 0.51,
+          "weight": 0.06,
+          "agreed": true,
+          "reason": "Trend up (EMA20>EMA50), momentum confirmed (RSI 68.1, MACD>signal), not overbought/overextended. [default config]"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no entry condition fired on 15m for SUI"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 11.3 across the top 5 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dir"
+        },
+        {
+          "name": "gemini",
+          "signal": "BUY",
+          "confidence": 0.86,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Multi-agent confluence confirmed (2 peer agents bullish) + Equilibrium Consolidation"
+        }
+      ]
+    },
+    "CRO/USDT": {
+      "type": "agent_votes",
+      "pair": "CRO/USDT",
+      "timestamp": "2026-09-24T18:20:32.760Z",
+      "finalSignal": "SELL",
+      "confidence": 0.472,
       "agentsAgreeing": 1,
       "totalAgents": 11,
       "approvedForExecution": false,
       "vetoTriggered": false,
       "votes": [
-        { "name": "gemini", "signal": "BUY", "confidence": 0.7, "weight": 0.2, "agreed": false, "reason": "sample row - replaced on first real cycle" },
-        { "name": "deepseek", "signal": "HOLD", "confidence": 0, "weight": 0.15, "agreed": false, "reason": "" },
-        { "name": "grok", "signal": "HOLD", "confidence": 0, "weight": 0.15, "agreed": false, "reason": "" },
-        { "name": "hermes", "signal": "HOLD", "confidence": 0, "weight": 0.1, "agreed": false, "reason": "" }
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "HOLD",
+          "confidence": 0.75,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Technical structure analysed"
+        },
+        {
+          "name": "strategy_learner",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market consolidating within standard volatility bands."
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "No EMA50/100+VWAP cross this bar for CRO."
+        },
+        {
+          "name": "technical_daily",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "technical_daily unavailable: No Binance daily symbol mapped for CRO"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no cross-cycle-robust 15m/1h/4h combo for CRO"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 4.9 across the top 1 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dire"
+        },
+        {
+          "name": "gemini",
+          "signal": "SELL",
+          "confidence": 0.78,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Double Top Overextension Rejection confirmed at 50-EMA ($0.05) with 25.25% distance"
+        }
+      ]
+    },
+    "HYPE/USDT": {
+      "type": "agent_votes",
+      "pair": "HYPE/USDT",
+      "timestamp": "2026-09-24T18:20:32.779Z",
+      "finalSignal": "HOLD",
+      "confidence": 0.065,
+      "agentsAgreeing": 0,
+      "totalAgents": 10,
+      "approvedForExecution": false,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "SELL",
+          "confidence": 0.73,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Strong bearish rejection confirmed below 50-EMA ($93.69) with 0.11x volume. [LossLearner Alert: Adjusted -12%]"
+        },
+        {
+          "name": "claude",
+          "signal": "HOLD",
+          "confidence": 0.68,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Market consolidating near moving averages"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "technical_lab unavailable: No Bybit symbol mapped for HYPE"
+        },
+        {
+          "name": "technical_daily",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "technical_daily unavailable: No Binance daily symbol mapped for HYPE"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no cross-cycle-robust 15m/1h/4h combo for HYPE"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.55,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev crowd quality OK but non-directional: 5/5 profitable, median Sharpe 2.6, WR 66.3%, PF 1.9, 697 trades. Historical backtest quality says nothing about current direction, s"
+        },
+        {
+          "name": "gemini",
+          "signal": "BUY",
+          "confidence": 0.85,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Bullish Golden EMA Alignment confirmed at 50-EMA ($93.69) with -0.05% distance"
+        }
+      ]
+    },
+    "MATIC/USDT": {
+      "type": "agent_votes",
+      "pair": "MATIC/USDT",
+      "timestamp": "2026-09-24T08:21:45.779Z",
+      "finalSignal": "HOLD",
+      "confidence": 0.065,
+      "agentsAgreeing": 0,
+      "totalAgents": 10,
+      "approvedForExecution": false,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "SELL",
+          "confidence": 0.73,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Strong bearish rejection confirmed below 50-EMA ($0.38) with 0.35x volume. [LossLearner Alert: Adjusted -12%]"
+        },
+        {
+          "name": "claude",
+          "signal": "HOLD",
+          "confidence": 0.68,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Market consolidating near moving averages"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "technical_lab unavailable: No Bybit symbol mapped for MATIC"
+        },
+        {
+          "name": "technical_daily",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "technical_daily unavailable: No Binance daily symbol mapped for MATIC"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no cross-cycle-robust 15m/1h/4h combo for MATIC"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev unavailable: timeout of 5000ms exceeded"
+        },
+        {
+          "name": "gemini",
+          "signal": "BUY",
+          "confidence": 0.85,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Bullish Golden EMA Alignment confirmed at 50-EMA ($0.38) with -0.16% distance"
+        }
+      ]
+    },
+    "HBAR/USDT": {
+      "type": "agent_votes",
+      "pair": "HBAR/USDT",
+      "timestamp": "2026-09-24T18:20:32.697Z",
+      "finalSignal": "BUY",
+      "confidence": 0.586,
+      "agentsAgreeing": 2,
+      "totalAgents": 10,
+      "approvedForExecution": true,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "BUY",
+          "confidence": 0.78,
+          "weight": 0.075,
+          "agreed": true,
+          "reason": "Strong bullish bounce confirmed above 50-EMA ($0.09) with 0.3x volume. Outperforming BTC by +2.16% RS. [LossLearner Alert: Adjusted -12%]"
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "HOLD",
+          "confidence": 0.68,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Market consolidating near moving averages"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "technical_lab unavailable: No Bybit symbol mapped for HBAR"
+        },
+        {
+          "name": "technical_daily",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "technical_daily unavailable: No Binance daily symbol mapped for HBAR"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no entry condition fired on 15m for HBAR"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 7.4 across the top 2 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dire"
+        },
+        {
+          "name": "gemini",
+          "signal": "BUY",
+          "confidence": 0.85,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Bullish Golden EMA Alignment confirmed at 50-EMA ($0.09) with 2.48% distance"
+        }
+      ]
+    },
+    "LINK/USDT": {
+      "type": "agent_votes",
+      "pair": "LINK/USDT",
+      "timestamp": "2026-09-24T18:20:32.380Z",
+      "finalSignal": "HOLD",
+      "confidence": 0,
+      "agentsAgreeing": 0,
+      "totalAgents": 10,
+      "approvedForExecution": false,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "HOLD",
+          "confidence": 0.68,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Market consolidating near moving averages"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "technical_lab unavailable: No Bybit symbol mapped for LINK"
+        },
+        {
+          "name": "technical_daily",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "technical_daily unavailable: No Binance daily symbol mapped for LINK"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no cross-cycle-robust 15m/1h/4h combo for LINK"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 13.4 across the top 5 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dir"
+        },
+        {
+          "name": "gemini",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Equilibrium Consolidation confirmed at 50-EMA ($12.60) with 3.89% distance"
+        }
+      ]
+    },
+    "NEAR/USDT": {
+      "type": "agent_votes",
+      "pair": "NEAR/USDT",
+      "timestamp": "2026-09-24T18:20:41.788Z",
+      "finalSignal": "BUY",
+      "confidence": 0.618,
+      "agentsAgreeing": 2,
+      "totalAgents": 9,
+      "approvedForExecution": true,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "BUY",
+          "confidence": 0.78,
+          "weight": 0.075,
+          "agreed": true,
+          "reason": "Strong bullish bounce confirmed above 50-EMA ($4.41) with 0.4x volume. Outperforming BTC by +8.56% RS. [LossLearner Alert: Adjusted -12%]"
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "BUY",
+          "confidence": 0.88,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Strong bullish alignment: Price above EMA50/200 with RSI at 63.2 and positive MACD"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "technical_lab unavailable: No Bybit symbol mapped for NEAR"
+        },
+        {
+          "name": "technical_daily",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "technical_daily unavailable: No Binance daily symbol mapped for NEAR"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no entry condition fired on 1h for NEAR"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 12.1 across the top 5 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dir"
+        }
+      ]
+    },
+    "XRP/USDT": {
+      "type": "agent_votes",
+      "pair": "XRP/USDT",
+      "timestamp": "2026-09-24T18:20:37.671Z",
+      "finalSignal": "BUY",
+      "confidence": 0.457,
+      "agentsAgreeing": 1,
+      "totalAgents": 9,
+      "approvedForExecution": false,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "BUY",
+          "confidence": 0.78,
+          "weight": 0.075,
+          "agreed": true,
+          "reason": "Strong bullish bounce confirmed above 50-EMA ($1.51) with 0.35x volume. Outperforming BTC by +2.11% RS. [LossLearner Alert: Adjusted -12%]"
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "HOLD",
+          "confidence": 0.75,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Technical structure analysed"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "technical_lab unavailable: No Bybit symbol mapped for XRP"
+        },
+        {
+          "name": "technical_daily",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "technical_daily unavailable: No Binance daily symbol mapped for XRP"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no cross-cycle-robust 15m/1h/4h combo for XRP"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 13.6 across the top 5 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dir"
+        }
+      ]
+    },
+    "BNB/USDT": {
+      "type": "agent_votes",
+      "pair": "BNB/USDT",
+      "timestamp": "2026-09-24T18:20:32.503Z",
+      "finalSignal": "BUY",
+      "confidence": 0.501,
+      "agentsAgreeing": 1,
+      "totalAgents": 10,
+      "approvedForExecution": false,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "HOLD",
+          "confidence": 0.68,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Market consolidating near moving averages"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "technical_lab unavailable: No Bybit symbol mapped for BNB"
+        },
+        {
+          "name": "technical_daily",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "technical_daily unavailable: No Binance daily symbol mapped for BNB"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no cross-cycle-robust 15m/1h/4h combo for BNB"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 10.5 across the top 5 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dir"
+        },
+        {
+          "name": "gemini",
+          "signal": "BUY",
+          "confidence": 0.88,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Bull Flag 50-EMA Dynamic Bounce confirmed at 50-EMA ($776.52) with 0.32% distance"
+        }
+      ]
+    },
+    "BTC/USDT": {
+      "type": "agent_votes",
+      "pair": "BTC/USDT",
+      "timestamp": "2026-09-24T18:20:38.170Z",
+      "finalSignal": "HOLD",
+      "confidence": 0.066,
+      "agentsAgreeing": 0,
+      "totalAgents": 9,
+      "approvedForExecution": false,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "SELL",
+          "confidence": 0.73,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Strong bearish rejection confirmed below 50-EMA ($84488.19) with 0.24x volume. [LossLearner Alert: Adjusted -12%]"
+        },
+        {
+          "name": "claude",
+          "signal": "HOLD",
+          "confidence": 0.68,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Market consolidating near moving averages"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "No EMA50/100+VWAP cross this bar for BTC."
+        },
+        {
+          "name": "technical_daily",
+          "signal": "BUY",
+          "confidence": 0.53,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "Trend up (EMA20>EMA50), momentum confirmed (RSI 65.4, MACD>signal), not overbought/overextended. [3/3 cycles, 103 trades total, avg PF 1.69, avg return +12.7%, worst-cycle DD -7.0%"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no entry condition fired on 4h for BTC"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 16.2 across the top 5 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dir"
+        }
+      ]
+    },
+    "ETH/USDT": {
+      "type": "agent_votes",
+      "pair": "ETH/USDT",
+      "timestamp": "2026-09-24T18:20:38.503Z",
+      "finalSignal": "SELL",
+      "confidence": 0.375,
+      "agentsAgreeing": 2,
+      "totalAgents": 9,
+      "approvedForExecution": false,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "SELL",
+          "confidence": 0.73,
+          "weight": 0.075,
+          "agreed": true,
+          "reason": "Strong bearish rejection confirmed below 50-EMA ($2690.59) with 0.42x volume. [LossLearner Alert: Adjusted -12%]"
+        },
+        {
+          "name": "claude",
+          "signal": "SELL",
+          "confidence": 0.78,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Overbought RSI (49.8) and order book selling pressure below EMA50"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "No EMA50/100+VWAP cross this bar for ETH."
+        },
+        {
+          "name": "technical_daily",
+          "signal": "BUY",
+          "confidence": 0.54,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "Trend up (EMA20>EMA100), momentum confirmed (RSI 62.7, MACD>signal), not overbought/overextended. [3/3 cycles, 97 trades total, avg PF 1.67, avg return +8.6%, worst-cycle DD -6.0%]"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no entry condition fired on 15m for ETH"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 17.9 across the top 5 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dir"
+        }
+      ]
+    },
+    "SOL/USDT": {
+      "type": "agent_votes",
+      "pair": "SOL/USDT",
+      "timestamp": "2026-09-24T18:20:38.870Z",
+      "finalSignal": "BUY",
+      "confidence": 0.59,
+      "agentsAgreeing": 2,
+      "totalAgents": 9,
+      "approvedForExecution": true,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "BUY",
+          "confidence": 0.88,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Strong bullish alignment: Price above EMA50/200 with RSI at 61.7 and positive MACD"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "No EMA50/100+VWAP cross this bar for SOL."
+        },
+        {
+          "name": "technical_daily",
+          "signal": "BUY",
+          "confidence": 0.53,
+          "weight": 0.06,
+          "agreed": true,
+          "reason": "Trend up (EMA50>EMA200), momentum confirmed (RSI 65.6, MACD>signal), not overbought/overextended. [3/3 cycles, 63 trades total, avg PF 2.03, avg return +9.7%, worst-cycle DD -3.0%]"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no cross-cycle-robust 15m/1h/4h combo for SOL"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 21.8 across the top 5 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dir"
+        }
+      ]
+    },
+    "AVAX/USDT": {
+      "type": "agent_votes",
+      "pair": "AVAX/USDT",
+      "timestamp": "2026-09-24T18:20:32.598Z",
+      "finalSignal": "HOLD",
+      "confidence": 0.064,
+      "agentsAgreeing": 0,
+      "totalAgents": 10,
+      "approvedForExecution": false,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "SELL",
+          "confidence": 0.73,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Strong bearish rejection confirmed below 50-EMA ($10.53) with 0.3x volume. [LossLearner Alert: Adjusted -12%]"
+        },
+        {
+          "name": "claude",
+          "signal": "HOLD",
+          "confidence": 0.68,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Market consolidating near moving averages"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "No EMA50/100+VWAP cross this bar for AVAX."
+        },
+        {
+          "name": "technical_daily",
+          "signal": "BUY",
+          "confidence": 0.51,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "Trend up (EMA20>EMA100), momentum confirmed (RSI 67.7, MACD>signal), not overbought/overextended. [3/3 cycles, 35 trades total, avg PF 1.88, avg return +5.7%, worst-cycle DD -4.0%]"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no entry condition fired on 15m for AVAX"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 13.3 across the top 5 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dir"
+        },
+        {
+          "name": "gemini",
+          "signal": "HOLD",
+          "confidence": 0.48,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "VETO / CAUTION: Agent contradictions detected — skipping trade for capital protection"
+        }
+      ]
+    },
+    "ARB/USDT": {
+      "type": "agent_votes",
+      "pair": "ARB/USDT",
+      "timestamp": "2026-09-24T18:20:32.619Z",
+      "finalSignal": "HOLD",
+      "confidence": 0.098,
+      "agentsAgreeing": 0,
+      "totalAgents": 10,
+      "approvedForExecution": false,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "SELL",
+          "confidence": 0.78,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Strong bearish rejection confirmed below 50-EMA ($0.22) with 0.23x volume. Lagging BTC by -2.92% RS. [LossLearner Alert: Adjusted -12%]"
+        },
+        {
+          "name": "claude",
+          "signal": "HOLD",
+          "confidence": 0.68,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Market consolidating near moving averages"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "No EMA50/100+VWAP cross this bar for ARB."
+        },
+        {
+          "name": "technical_daily",
+          "signal": "BUY",
+          "confidence": 0.52,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "Trend up (EMA20>EMA50), momentum confirmed (RSI 66.9, MACD>signal), not overbought/overextended. [3/3 cycles, 28 trades total (thinnest reliable sample), avg PF 1.62, avg return +2"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no cross-cycle-robust 15m/1h/4h combo for ARB"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 6.3 across the top 5 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dire"
+        },
+        {
+          "name": "gemini",
+          "signal": "BUY",
+          "confidence": 0.74,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Pattern authority override: Bullish Golden EMA Alignment validated despite peer conflict"
+        }
+      ]
+    },
+    "OP/USDT": {
+      "type": "agent_votes",
+      "pair": "OP/USDT",
+      "timestamp": "2026-09-24T18:20:32.479Z",
+      "finalSignal": "BUY",
+      "confidence": 0.586,
+      "agentsAgreeing": 2,
+      "totalAgents": 10,
+      "approvedForExecution": true,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "BUY",
+          "confidence": 0.78,
+          "weight": 0.075,
+          "agreed": true,
+          "reason": "Strong bullish bounce confirmed above 50-EMA ($0.13) with 0.19x volume. Outperforming BTC by +6% RS. [LossLearner Alert: Adjusted -12%]"
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "HOLD",
+          "confidence": 0.68,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Market consolidating near moving averages"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "No EMA50/100+VWAP cross this bar for OP."
+        },
+        {
+          "name": "technical_daily",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "OP disabled for technical_daily: DISABLED: best cross-cycle combo still nets avg PF 1.02 / avg return -1.5% (net losing), -9.7% worst-cycle DD. No edge found."
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no cross-cycle-robust 15m/1h/4h combo for OP"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 6.6 across the top 5 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dire"
+        },
+        {
+          "name": "gemini",
+          "signal": "BUY",
+          "confidence": 0.85,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Bullish Golden EMA Alignment confirmed at 50-EMA ($0.13) with 1.34% distance"
+        }
+      ]
+    },
+    "LTC/USDT": {
+      "type": "agent_votes",
+      "pair": "LTC/USDT",
+      "timestamp": "2026-09-24T18:20:32.553Z",
+      "finalSignal": "BUY",
+      "confidence": 0.626,
+      "agentsAgreeing": 2,
+      "totalAgents": 10,
+      "approvedForExecution": true,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "BUY",
+          "confidence": 0.88,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Strong bullish alignment: Price above EMA50/200 with RSI at 65.6 and positive MACD"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "No EMA50/100+VWAP cross this bar for LTC."
+        },
+        {
+          "name": "technical_daily",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "Veto: RSI overbought — sitting out despite 2/2 bull votes."
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no cross-cycle-robust 15m/1h/4h combo for LTC"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 13.0 across the top 5 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dir"
+        },
+        {
+          "name": "gemini",
+          "signal": "BUY",
+          "confidence": 0.85,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Bullish Golden EMA Alignment confirmed at 50-EMA ($65.54) with 9.88% distance"
+        }
+      ]
+    },
+    "TRX/USDT": {
+      "type": "agent_votes",
+      "pair": "TRX/USDT",
+      "timestamp": "2026-09-24T18:20:32.575Z",
+      "finalSignal": "BUY",
+      "confidence": 0.638,
+      "agentsAgreeing": 3,
+      "totalAgents": 10,
+      "approvedForExecution": true,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "BUY",
+          "confidence": 0.78,
+          "weight": 0.075,
+          "agreed": true,
+          "reason": "Strong bullish bounce confirmed above 50-EMA ($0.34) with 0.26x volume. Outperforming BTC by +0.47% RS. [LossLearner Alert: Adjusted -12%]"
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "HOLD",
+          "confidence": 0.68,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Market consolidating near moving averages"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "No EMA50/100+VWAP cross this bar for TRX."
+        },
+        {
+          "name": "technical_daily",
+          "signal": "BUY",
+          "confidence": 0.58,
+          "weight": 0.06,
+          "agreed": true,
+          "reason": "Trend up (EMA20>EMA50), momentum confirmed (RSI 55.9, MACD>signal), not overbought/overextended. [default config]"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no cross-cycle-robust 15m/1h/4h combo for TRX"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 4.1 across the top 2 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dire"
+        },
+        {
+          "name": "gemini",
+          "signal": "BUY",
+          "confidence": 0.88,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Multi-agent confluence confirmed (2 peer agents bullish) + Bull Flag 50-EMA Dynamic Bounce"
+        }
+      ]
+    },
+    "ZEC/USDT": {
+      "type": "agent_votes",
+      "pair": "ZEC/USDT",
+      "timestamp": "2026-09-24T18:20:32.400Z",
+      "finalSignal": "HOLD",
+      "confidence": 0.098,
+      "agentsAgreeing": 0,
+      "totalAgents": 10,
+      "approvedForExecution": false,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "HOLD",
+          "confidence": 0.68,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Market consolidating near moving averages"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "No EMA50/100+VWAP cross this bar for ZEC."
+        },
+        {
+          "name": "technical_daily",
+          "signal": "BUY",
+          "confidence": 0.52,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "Trend up (EMA20>EMA50), momentum confirmed (RSI 65.8, MACD>signal), not overbought/overextended. [default config]"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no entry condition fired on 15m/1h/4h for ZEC"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 6.4 across the top 5 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dire"
+        },
+        {
+          "name": "gemini",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Equilibrium Consolidation confirmed at 50-EMA ($1529.64) with 2.65% distance"
+        }
+      ]
+    },
+    "OKB/USDT": {
+      "type": "agent_votes",
+      "pair": "OKB/USDT",
+      "timestamp": "2026-09-24T18:20:43.560Z",
+      "finalSignal": "BUY",
+      "confidence": 0.512,
+      "agentsAgreeing": 1,
+      "totalAgents": 10,
+      "approvedForExecution": false,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "BUY",
+          "confidence": 0.88,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Strong bullish alignment: Price above EMA50/200 with RSI at 66.0 and positive MACD"
+        },
+        {
+          "name": "strategy_learner",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market consolidating within standard volatility bands."
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "No EMA50/100+VWAP cross this bar for OKB."
+        },
+        {
+          "name": "technical_daily",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "technical_daily unavailable: No Binance daily symbol mapped for OKB"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no cross-cycle-robust 15m/1h/4h combo for OKB"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 4.3 across the top 1 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dire"
+        }
+      ]
+    },
+    "ICP/USDT": {
+      "type": "agent_votes",
+      "pair": "ICP/USDT",
+      "timestamp": "2026-09-24T18:20:32.350Z",
+      "finalSignal": "BUY",
+      "confidence": 0.666,
+      "agentsAgreeing": 3,
+      "totalAgents": 10,
+      "approvedForExecution": true,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "BUY",
+          "confidence": 0.88,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Strong bullish alignment: Price above EMA50/200 with RSI at 60.5 and positive MACD"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "No EMA50/100+VWAP cross this bar for ICP."
+        },
+        {
+          "name": "technical_daily",
+          "signal": "BUY",
+          "confidence": 0.52,
+          "weight": 0.06,
+          "agreed": true,
+          "reason": "Trend up (EMA20>EMA50), momentum confirmed (RSI 66.0, MACD>signal), not overbought/overextended. [default config]"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no cross-cycle-robust 15m/1h/4h combo for ICP"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.55,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev crowd quality OK but non-directional: 5/5 profitable, median Sharpe 3.7, WR 66.6%, PF 1.8, 6387 trades. Historical backtest quality says nothing about current direction, "
+        },
+        {
+          "name": "gemini",
+          "signal": "BUY",
+          "confidence": 0.86,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Multi-agent confluence confirmed (2 peer agents bullish) + Bullish Golden EMA Alignment"
+        }
+      ]
+    },
+    "POL/USDT": {
+      "type": "agent_votes",
+      "pair": "POL/USDT",
+      "timestamp": "2026-09-24T18:20:32.741Z",
+      "finalSignal": "HOLD",
+      "confidence": 0.105,
+      "agentsAgreeing": 0,
+      "totalAgents": 10,
+      "approvedForExecution": false,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "HOLD",
+          "confidence": 0.68,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Market consolidating near moving averages"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "No EMA50/100+VWAP cross this bar for POL."
+        },
+        {
+          "name": "technical_daily",
+          "signal": "BUY",
+          "confidence": 0.57,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "Trend up (EMA20>EMA50), momentum confirmed (RSI 57.3, MACD>signal), not overbought/overextended. [default config]"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no cross-cycle-robust 15m/1h/4h combo for POL"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 6.1 across the top 2 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dire"
+        },
+        {
+          "name": "gemini",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Equilibrium Consolidation confirmed at 50-EMA ($0.10) with 6.62% distance"
+        }
+      ]
+    },
+    "ATOM/USDT": {
+      "type": "agent_votes",
+      "pair": "ATOM/USDT",
+      "timestamp": "2026-09-24T18:20:32.720Z",
+      "finalSignal": "BUY",
+      "confidence": 0.67,
+      "agentsAgreeing": 3,
+      "totalAgents": 10,
+      "approvedForExecution": true,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "BUY",
+          "confidence": 0.88,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Strong bullish alignment: Price above EMA50/200 with RSI at 60.0 and positive MACD"
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "No EMA50/100+VWAP cross this bar for ATOM."
+        },
+        {
+          "name": "technical_daily",
+          "signal": "BUY",
+          "confidence": 0.57,
+          "weight": 0.06,
+          "agreed": true,
+          "reason": "Trend up (EMA20>EMA50), momentum confirmed (RSI 58.5, MACD>signal), not overbought/overextended. [default config]"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no cross-cycle-robust 15m/1h/4h combo for ATOM"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev: median Sharpe 4.0 across the top 5 exceeds the plausibility bar (4) — this is the tail of a 240K-backtest leaderboard, so it is read as selection bias, not edge. No dire"
+        },
+        {
+          "name": "gemini",
+          "signal": "BUY",
+          "confidence": 0.86,
+          "weight": 0.1,
+          "agreed": true,
+          "reason": "Multi-agent confluence confirmed (2 peer agents bullish) + Equilibrium Consolidation"
+        }
+      ]
+    },
+    "FLR/USDT": {
+      "type": "agent_votes",
+      "pair": "FLR/USDT",
+      "timestamp": "2026-09-24T18:20:32.799Z",
+      "finalSignal": "HOLD",
+      "confidence": 0,
+      "agentsAgreeing": 0,
+      "totalAgents": 11,
+      "approvedForExecution": false,
+      "vetoTriggered": false,
+      "votes": [
+        {
+          "name": "bull_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a long entry right now."
+        },
+        {
+          "name": "bear_agent",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market conditions do not favor a short entry right now."
+        },
+        {
+          "name": "claude",
+          "signal": "HOLD",
+          "confidence": 0.68,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Market consolidating near moving averages"
+        },
+        {
+          "name": "strategy_learner",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "Market consolidating within standard volatility bands."
+        },
+        {
+          "name": "tradingkit",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "TradingKit unavailable"
+        },
+        {
+          "name": "telegram_channel",
+          "signal": "HOLD",
+          "confidence": 0.5,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "No Telegram signal"
+        },
+        {
+          "name": "technical_lab",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "No EMA50/100+VWAP cross this bar for FLR."
+        },
+        {
+          "name": "technical_daily",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.06,
+          "agreed": false,
+          "reason": "technical_daily unavailable: No Binance daily symbol mapped for FLR"
+        },
+        {
+          "name": "technical_mtf",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.09,
+          "agreed": false,
+          "reason": "technical_mtf: no cross-cycle-robust 15m/1h/4h combo for FLR"
+        },
+        {
+          "name": "traderdev_strategy",
+          "signal": "HOLD",
+          "confidence": 0.6,
+          "weight": 0.075,
+          "agreed": false,
+          "reason": "TraderDev crowd neutral: 5/5 profitable, median Sharpe 0.8, WR 78.9% — inconclusive edge"
+        },
+        {
+          "name": "gemini",
+          "signal": "HOLD",
+          "confidence": 0.7,
+          "weight": 0.1,
+          "agreed": false,
+          "reason": "Equilibrium Consolidation confirmed at 50-EMA ($94.26) with -99.99% distance"
+        }
       ]
     }
-  }
+  },
+  "updatedAt": "2026-09-24T18:20:43.561Z"
 }

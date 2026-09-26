@@ -87,6 +87,16 @@ async function _ensureSession() {
   await _initPromise;
 }
 
+// FIXED 2026-09-23: mcpCall previously discarded the real error text on any
+// failure (isError response OR a thrown/network error) and just returned
+// null, so checkHealth() could only ever report a generic "no response" —
+// which sent tradingkit_analyst.js into a 132-restart crash loop before the
+// ACTUAL cause (a revoked API key) was ever visible anywhere. This
+// module-level var carries the real message forward for checkHealth() to
+// surface, without changing mcpCall's null-on-failure contract for its
+// other callers.
+let _lastToolError = null;
+
 // Call a real TradingKit tool by name. Retries the handshake once if the
 // session was lost server-side (e.g. after a long idle gap).
 async function mcpCall(toolName, args = {}) {
@@ -97,7 +107,8 @@ async function mcpCall(toolName, args = {}) {
       const r = await _rpc('tools/call', { name: toolName, arguments: args }, Date.now());
       const items = (r?.result?.content || []).filter((c) => c.type === 'text');
       if (r?.result?.isError) {
-        logger.debug(`[TradingKit] ${toolName} returned isError: ${items.map((i) => i.text).join(' | ')}`);
+        _lastToolError = items.map((i) => i.text).join(' | ') || `${toolName} returned an error`;
+        logger.debug(`[TradingKit] ${toolName} returned isError: ${_lastToolError}`);
         return null;
       }
       if (items.length === 0) return r?.result ?? null;
@@ -117,6 +128,7 @@ async function mcpCall(toolName, args = {}) {
         _initPromise = null;
         continue; // retry once with a fresh handshake
       }
+      _lastToolError = err.response?.data ? JSON.stringify(err.response.data).slice(0, 200) : err.message;
       logger.debug(`[TradingKit] ${toolName} failed: ${err.message}`);
       return null;
     }
@@ -156,7 +168,7 @@ async function createAlert(opts) { return mcpCall('create_alert', opts); }
 
 async function checkHealth() {
   const result = await whoami();
-  if (!result || result.error) return { ok: false, error: result?.error || 'no response' };
+  if (!result || result.error) return { ok: false, error: result?.error || _lastToolError || 'no response' };
   return { ok: true, user: result.email || result.id, tier: result.tier };
 }
 

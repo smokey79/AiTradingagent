@@ -20,10 +20,22 @@
       </h1>
       <span class="badge badge-paper">📄 Paper Execution</span>
       <span class="badge badge-live"><span class="pulse-dot"></span> CMC Pro Live</span>
-      <span class="badge badge-gate">🎯 72% Win Rate Gate</span>
+      <!-- 2026-09-16: this read a hardcoded "72%" long after the gate was
+           changed to 0.68, so the dashboard was reporting a number nobody
+           had configured. It now shows the live value from /api/config. -->
+      <span class="badge badge-gate" id="gate-badge">🎯 <span id="gate-value">--</span>% Win Rate Gate</span>
       <span class="badge badge-paper" id="node-clock-badge">
         📅 <span id="node-clock-text">--:--:-- UTC</span>
       </span>
+      <script>
+        // Populate the gate badge from the live config rather than hardcoding it.
+        // The existing /api/config returns { success, config: { minConfidence, ... } }.
+        fetch('/api/config').then(r => r.json()).then(r => {
+          const v = r && r.config && r.config.minConfidence;
+          const el = document.getElementById('gate-value');
+          if (el && typeof v === 'number') el.textContent = (v * 100).toFixed(0);
+        }).catch(() => {});
+      </script>
     </div>
     <div class="header-actions">
       <div class="d-flex items-center subtle-box gap-6">

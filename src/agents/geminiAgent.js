@@ -49,7 +49,7 @@ ${JSON.stringify(peerSignals, null, 2)}
 
 Validate consensus consistency, detect conflicts, and output strictly JSON.`;
 
-    const geminiModel = process.env.GEMINI_MODEL || 'gemini-3.6-flash';
+    const geminiModel = process.env.GEMINI_MODEL || 'gemini-3.7-flash';
     const res = await axios.post(
       `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${apiKey}`,
       {
@@ -142,7 +142,15 @@ Validate consensus consistency, detect conflicts, and output strictly JSON.`;
       return await callLocalOllama(symbol, marketData, peerSignals);
     } catch (ollamaErr) {
       circuitBreakerUntil = Date.now() + 60000;
-      logger.warn(`Ollama local fallback failed — using cross-validator rule simulation engine`);
+      try {
+        const geminiCloudKey = process.env.OLLAMA_API_KEY_GEMINI || process.env.OLLAMA_API_KEY;
+        if (geminiCloudKey && !geminiCloudKey.startsWith('your_')) {
+          return await callOllamaCloud(symbol, marketData, peerSignals);
+        }
+      } catch (cloudErr) {
+        logger.warn(`Ollama Cloud fallback also failed: ${cloudErr.message}`);
+      }
+      logger.warn(`Ollama local + cloud fallback failed — using cross-validator rule simulation engine`);
       return simulateGeminiValidation(symbol, marketData, peerSignals);
     }
   }
@@ -197,7 +205,13 @@ Output strictly valid JSON with keys: signal, confidence, reason, validation_res
           num_ctx: 4096,
         },
       },
-      { timeout: 2500, proxy: false }
+      // 2026-09-16: was hardcoded 2500ms — the same bug already fixed in
+      // hermesAgent.js's callLocalOllama (a warm llama3.2 answers in ~591ms,
+      // but this machine runs with ~1-2GB free of 15.4GB, so Ollama evicts
+      // the model between calls and the next call pays a multi-second cold
+      // load, which 2500ms always lost). Now shares hermesAgent.js's
+      // OLLAMA_TIMEOUT_MS (default 12000) instead of its own separate value.
+      { timeout: Number(process.env.OLLAMA_TIMEOUT_MS || 12000), proxy: false }
     );
 
     const rawText = res.data?.response?.trim();
@@ -221,6 +235,75 @@ Output strictly valid JSON with keys: signal, confidence, reason, validation_res
     logger.warn(`Ollama local fallback also failed: ${err.message}`);
     throw err;
   }
+}
+
+// 2026-09-16: new tier, added between local Ollama and the heuristic
+// simulation. hermesAgent.js already has this same local->cloud->heuristic
+// pattern (see callOllamaCloud there) using the OLLAMA_API_KEY already set
+// in .env — this agent had no cloud tier at all and dropped straight from a
+// failed/timed-out local call to the canned rule engine.
+async function callOllamaCloud(symbol, marketData, peerSignals = []) {
+  // Dedicated key so this agent doesn't share Ollama Cloud's per-key rate
+  // limit with hermesAgent.js's own cloud tier (both hitting OLLAMA_API_KEY
+  // produced HTTP 429s within one cycle, confirmed live 2026-09-16). Falls
+  // back to the shared key only if a Gemini-specific one isn't set.
+  const apiKey = (process.env.OLLAMA_API_KEY_GEMINI || process.env.OLLAMA_API_KEY || '').trim();
+  if (!apiKey || apiKey.startsWith('your_')) {
+    throw new Error('No Ollama Cloud API key configured');
+  }
+
+  const cloudUrl = (process.env.OLLAMA_CLOUD_URL || 'https://ollama.com/api').replace(/\/+$/, '') + '/chat';
+  const model = process.env.OLLAMA_CLOUD_MODEL || 'gpt-oss:20b';
+  const systemPrompt = loadSkillPrompt();
+  const ind = marketData?.indicators || {};
+  const price = marketData?.price || {};
+
+  const userPrompt = `Cross-validate trading signals for ${symbol}:
+Price: $${price.price || 0} | 24h Change: ${price.change24h || 0}%
+RSI(14): ${ind.rsi14 || 50} | EMA50: $${ind.ema50 || 0} | EMA200: $${ind.ema200 || 0}
+MACD Histogram: ${ind.macd?.histogram || 0}
+Peer Agent Signals to Validate:
+${JSON.stringify(peerSignals.map(s => ({ agent: s.agent, signal: s.signal, confidence: s.confidence })), null, 2)}
+
+Validate consensus consistency, detect conflicts, and output strictly valid JSON with keys: signal, confidence, reason, validation_result, agent_conflicts_detected, portfolio_risk_score, strategy_profitability_gate.`;
+
+  const res = await axios.post(
+    cloudUrl,
+    {
+      model,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+      format: 'json',
+      stream: false,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      timeout: 15000,
+    }
+  );
+
+  const rawText = res.data?.message?.content;
+  const parsed = cleanJson(rawText);
+  if (!parsed || !parsed.signal) throw new Error('Invalid JSON response from Ollama Cloud');
+
+  logger.info(`[Gemini Agent] Successfully validated via Ollama Cloud fallback model (${model})`);
+  return {
+    agent: 'gemini',
+    symbol,
+    signal: parsed.signal?.toUpperCase() || 'HOLD',
+    confidence: parseFloat(parsed.confidence) || 0.80,
+    reason: parsed.reason || `Cross-validation completed via Ollama Cloud (${model})`,
+    validation_result: parsed.validation_result || 'PASS',
+    agent_conflicts_detected: parsed.agent_conflicts_detected || [],
+    portfolio_risk_score: parsed.portfolio_risk_score || 3.0,
+    strategy_profitability_gate: parsed.strategy_profitability_gate !== false,
+    raw: parsed,
+  };
 }
 
 function simulateGeminiValidation(symbol, marketData, peerSignals = []) {

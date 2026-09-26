@@ -6,6 +6,18 @@ YouTube Alpha Sourcing, Multi-Channel Sentiment Gauging & LuxAlgo Strategy Learn
 2. Gauges multi-factor sentiment (polarity, key price levels, bullish/bearish bias, token mentions).
 3. Synthesizes 5X leverage futures & DEX strategies with PineScript v5 generation.
 4. Reinforces channel credibility weights dynamically based on realized market accuracy.
+
+2026-09-24 evidence fix (see orchestrator/strategy_evidence.py):
+- Win rates are no longer hard-coded. `target_win_rate_pct` is the MEASURED win rate from a
+  recorded backtest/paper run, or None when nothing has been measured.
+- `gate_68_met` is kept for backward compatibility but now means "passed the evidence gate"
+  (sample size, profit factor, expectancy, drawdown, out-of-sample). It is False until
+  real results exist. The full verdict is in `evidence_gate`.
+- New strategies start as UNVERIFIED_RESEARCH, never ACTIVE_PRODUCTION_STRATEGY.
+- Failed transcript fetches no longer invent a bullish transcript; placeholder channels
+  produce a neutral HOLD with data_quality="no_real_transcript".
+- Run `python -m orchestrator.luxalgo_strategy_learner --migrate` once to re-label old
+  entries (backups are written first).
 """
 
 import os
@@ -55,6 +67,13 @@ def load_drive_file(file_name: str, dest_dir: Path = Path("./drive_cache")) -> P
     return dest_path
     sys.path.insert(0, str(PROJECT_ROOT))
 
+try:
+    from orchestrator.strategy_evidence import (
+        EvidenceStore, evaluate_gate, from_js_backtest, STATUS_UNVERIFIED,
+    )
+except Exception:  # running from inside orchestrator/
+    from strategy_evidence import EvidenceStore, evaluate_gate, from_js_backtest, STATUS_UNVERIFIED  # type: ignore
+
 DATA_DIR = PROJECT_ROOT / "data"
 STRATEGY_DIR = PROJECT_ROOT / "strategy"
 SENTIMENT_DIR = PROJECT_ROOT / "src" / "sentiment"
@@ -62,6 +81,7 @@ MEMORY_PATH = STRATEGY_DIR / "strategy_memory.json"
 LEARNED_STRATEGIES_PATH = DATA_DIR / "learned_strategies.json"
 CREDIBILITY_PATH = SENTIMENT_DIR / "channel_credibility.json"
 SENTIMENT_CACHE_PATH = DATA_DIR / "youtube_sentiment_cache.json"
+TRANSCRIPT_CACHE_PATH = DATA_DIR / "youtube_transcripts_cache.json"   # real transcripts only, keyed by channel
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [LuxAlgoLearner] %(message)s")
 log = logging.getLogger("LuxAlgoStrategyLearner")
@@ -86,7 +106,11 @@ def extract_video_id(url_or_id: str) -> str:
     return url_or_id[:11]
 
 
-# ── Subscribed Reliable Crypto Intelligence Channels Registry ────────────────
+# ── Subscribed Crypto Channels Registry ──────────────────────────────────────
+# WARNING: channel_id values and recent_videos below are PLACEHOLDERS, not real YouTube
+# data, and the weights are unmeasured priors. Sentiment is only produced for a channel
+# once a real transcript from it has been fetched (see TRANSCRIPT_CACHE_PATH).
+CHANNEL_REGISTRY_IS_PLACEHOLDER = True
 SUBSCRIBED_ALPHA_CHANNELS = {
     "LuxAlgo": {
         "channel_id": "UC_LuxAlgo_Official",
@@ -162,7 +186,8 @@ LUXALGO_KNOWLEDGE_BASE = {
         "title": "LuxAlgo Smart Money Concepts — Order Block & Liquidity Sweep 5X",
         "channel": "LuxAlgo",
         "concepts": ["Order Blocks (OB)", "Liquidity Sweeps", "Fair Value Gaps (FVG)", "Break of Structure (BoS)"],
-        "target_win_rate_pct": 76.5,
+        "claimed_win_rate_pct": None,   # no measured result; old 76.5 was invented
+        "requires_paid_indicator": False,  # free SMC logic (LuxAlgo SMC script / smartmoneyconcepts pip)
         "timeframes": ["15m", "1h", "4h"],
         "summary": "Identifies institutional order blocks after stop-hunts and enters on retest with 5X leverage.",
         "entry_rule": "Enter LONG when price sweeps previous swing low liquidity and closes back above Bullish Order Block with confirmation volume.",
@@ -172,7 +197,9 @@ LUXALGO_KNOWLEDGE_BASE = {
         "title": "LuxAlgo Oscillator Matrix & Money Flow Divergence v2",
         "channel": "LuxAlgo",
         "concepts": ["Oscillator Matrix", "Money Flow Index (MFI)", "Hyper-Wave Momentum", "Volume Exhaustion"],
-        "target_win_rate_pct": 73.0,
+        "claimed_win_rate_pct": None,   # old 73.0 was invented
+        "requires_paid_indicator": True,   # Oscillator Matrix is a paid, closed-source LuxAlgo toolkit
+        "paid_indicators": ["LuxAlgo Oscillator Matrix"],
         "timeframes": ["5m", "15m", "1h"],
         "summary": "Combines multi-layer momentum waves and institutional money flow divergence for reversal sniping.",
         "entry_rule": "Enter LONG on bullish regular divergence on Oscillator Matrix while Money Flow line turns dark green above baseline.",
@@ -182,7 +209,9 @@ LUXALGO_KNOWLEDGE_BASE = {
         "title": "LuxAlgo Signals & Overlays — Neo-Cloud Trend Catcher 5X",
         "channel": "LuxAlgo",
         "concepts": ["Confirmation Signals", "Neo-Cloud", "Smart Trail", "Dynamic Volatility Bands"],
-        "target_win_rate_pct": 71.5,
+        "claimed_win_rate_pct": None,   # old 71.5 was invented
+        "requires_paid_indicator": True,   # Signals & Overlays (Neo-Cloud, Smart Trail) is paid, closed-source
+        "paid_indicators": ["LuxAlgo Signals & Overlays"],
         "timeframes": ["15m", "1h"],
         "summary": "Trend-following breakout system with Neo-Cloud dynamic support and ATR trailing stop.",
         "entry_rule": "Enter LONG on 'Strong Buy' signal confirmed by Neo-Cloud color shift (Green) and candle close above Smart Trail.",
@@ -201,12 +230,15 @@ def _normalize_strategy(s: Dict[str, Any]) -> Dict[str, Any]:
     symbol = s.get("symbol") or "BTC/USDT"
     timeframe = s.get("timeframe") or "15m"
 
-    target_win_rate = s.get("target_win_rate_pct")
-    if target_win_rate is None:
-        if isinstance(s.get("backtest"), dict) and s["backtest"].get("winRate") is not None:
-            target_win_rate = s["backtest"]["winRate"]
-        else:
-            target_win_rate = 75.0
+    # Only a measured win rate is kept. Old records carry invented values (76.5 etc.),
+    # so a stored number is trusted only when it comes with an embedded backtest that has trades.
+    bt = s.get("backtest") if isinstance(s.get("backtest"), dict) else {}
+    bt_trades = int(float(bt.get("totalTrades") or 0)) if bt else 0
+    target_win_rate = None
+    if bt_trades > 0 and bt.get("winRate") is not None:
+        target_win_rate = float(bt["winRate"])
+    elif isinstance(s.get("evidence_gate"), dict) and (s["evidence_gate"].get("metrics") or {}).get("win_rate_pct") is not None:
+        target_win_rate = s["evidence_gate"]["metrics"]["win_rate_pct"]
 
     rm = s.get("risk_management")
     if not isinstance(rm, dict):
@@ -245,12 +277,17 @@ def _normalize_strategy(s: Dict[str, Any]) -> Dict[str, Any]:
         "leverage": leverage,
         "channel_source": channel,
         "target_win_rate_pct": target_win_rate,
+        "win_rate_is_measured": target_win_rate is not None,
+        "gate_68_met": bool((s.get("evidence_gate") or {}).get("passed", False)),
+        "evidence_gate": s.get("evidence_gate") or {"passed": False, "status": STATUS_UNVERIFIED,
+                                                     "reasons": ["Not yet evaluated against measured results."], "metrics": None},
         "concepts": concepts,
         "risk_management": rm,
         "pinescript_code": pinescript,
         "pinescript": pinescript,
         "learned_at": s.get("learned_at") or s.get("learnedAt") or datetime.now(timezone.utc).isoformat(),
-        "status": s.get("status") or "ACTIVE_PRODUCTION_STRATEGY",
+        # Never trust a stored "ACTIVE_PRODUCTION_STRATEGY": status follows the evidence gate.
+        "status": (s.get("evidence_gate") or {}).get("status") or STATUS_UNVERIFIED,
         "backtest": s.get("backtest") or {},
         "parameters": s.get("parameters") or {},
     }
@@ -272,6 +309,8 @@ class LuxAlgoStrategyLearnerAgent:
         self.learned_strategies = self._load_learned_strategies()
         self.credibility = self._load_credibility()
         self.sentiment_cache = self._load_sentiment_cache()
+        self.evidence = EvidenceStore()
+        self.transcripts = self._load_json(TRANSCRIPT_CACHE_PATH, {})
 
     def _load_learned_strategies(self) -> List[Dict[str, Any]]:
         try:
@@ -295,14 +334,15 @@ class LuxAlgoStrategyLearnerAgent:
                 return json.loads(CREDIBILITY_PATH.read_text(encoding="utf-8"))
         except Exception:
             pass
-        # Initialize default channel credibility from registry
+        # Start every channel neutral: weight 1.0, no trades, accuracy unknown.
+        # (Previously this invented 20 trades and a 70-80% accuracy per channel.)
         res = {}
         for name, data in SUBSCRIBED_ALPHA_CHANNELS.items():
             res[name] = {
-                "weight": data["weight"],
-                "accuracy": round(0.70 + (data["weight"] - 1.0) * 0.25, 2),
-                "trades": 20,
-                "wins": int(20 * (0.70 + (data["weight"] - 1.0) * 0.25)),
+                "weight": 1.0,
+                "accuracy": None,
+                "trades": 0,
+                "wins": 0,
                 "category": data["category"],
             }
         return res
@@ -326,6 +366,21 @@ class LuxAlgoStrategyLearnerAgent:
             SENTIMENT_CACHE_PATH.write_text(json.dumps(self.sentiment_cache, indent=2), encoding="utf-8")
         except Exception as e:
             log.error(f"Error saving sentiment cache: {e}")
+
+    @staticmethod
+    def _load_json(path: Path, default: Any) -> Any:
+        try:
+            if path.exists():
+                return json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+        return default
+
+    def _save_transcripts(self):
+        try:
+            TRANSCRIPT_CACHE_PATH.write_text(json.dumps(self.transcripts, indent=2), encoding="utf-8")
+        except Exception as e:
+            log.error(f"Error saving transcript cache: {e}")
 
     # ── Transcript Ingestion ──────────────────────────────────────────────────
 
@@ -359,16 +414,23 @@ class LuxAlgoStrategyLearnerAgent:
             transcript_text = " ".join([item["text"] for item in transcript_list])
             log.info(f"Fetched {len(transcript_list)} transcript segments for video {video_id}")
         except Exception as e:
-            log.debug(f"Direct transcript API note for {video_id} ({e}). Using semantic transcript synthesis.")
-            transcript_text = (
-                f"Video Title: {title}. Channel: {author}. In-depth analysis of institutional order blocks, "
-                "liquidity sweeps, fair value gaps, 5X futures leverage execution, and dynamic ATR risk management for Bitcoin and Ethereum."
-            )
+            # No invented transcript: without real text there is no sentiment signal.
+            log.warning(f"No transcript available for {video_id} ({e}). Sentiment will be neutral/no-signal.")
+            transcript_text = ""
 
+        transcript_available = bool(transcript_text.strip())
         sentiment_analysis = self.gauge_transcript_sentiment(transcript_text, channel_name=author)
+
+        if transcript_available:
+            entry = {"video_id": video_id, "title": title, "text": transcript_text[:20000],
+                     "fetched_at": datetime.now(timezone.utc).isoformat()}
+            vids = [v for v in self.transcripts.get(author, []) if v.get("video_id") != video_id]
+            self.transcripts[author] = ([entry] + vids)[:10]
+            self._save_transcripts()
 
         return {
             "success": True,
+            "transcript_available": transcript_available,
             "video_id": video_id,
             "url": f"https://www.youtube.com/watch?v={video_id}",
             "title": title,
@@ -412,7 +474,7 @@ class LuxAlgoStrategyLearnerAgent:
         if total_signals > 0:
             raw_polarity = (bull_count - bear_count) / total_signals
         else:
-            raw_polarity = 0.25  # Slight positive baseline for structural crypto growth
+            raw_polarity = 0.0  # no keywords = no opinion (was a hard-coded +0.25 bullish bias)
 
         # Categorize
         if raw_polarity >= 0.40:
@@ -432,16 +494,20 @@ class LuxAlgoStrategyLearnerAgent:
             bias_signal = "HOLD"
 
         # Channel credibility weight multiplier
-        channel_weight = self.credibility.get(channel_name, {}).get("weight", 1.20)
-        confidence = round(min(0.95, max(0.50, 0.65 + abs(raw_polarity) * 0.25 * (channel_weight / 1.2))), 2)
+        channel_weight = self.credibility.get(channel_name, {}).get("weight", 1.0)
+        if total_signals == 0:
+            confidence = 0.0
+        else:
+            # Confidence grows with evidence volume; capped well below certainty.
+            volume_factor = min(1.0, total_signals / 20.0)
+            confidence = round(min(0.90, abs(raw_polarity) * volume_factor * min(channel_weight, 1.5)), 2)
 
         # Detect mentioned assets
         tokens_detected = []
         for sym in ["BTC", "ETH", "SOL", "CRO", "AVAX", "ARB", "OP"]:
             if sym.lower() in text_lower or sym in transcript_text:
                 tokens_detected.append(f"{sym}/USDT")
-        if not tokens_detected:
-            tokens_detected = ["BTC/USDT", "ETH/USDT"]
+        # (no default assets: if none are mentioned, none are reported)
 
         # Detect potential price targets using regex (e.g. $80,000, 78k, $3,500)
         price_patterns = re.findall(r"\$?\b(\d{1,3}(?:,\d{3})+|\d{2,5}(?:\.\d+)?k?)\b", transcript_text, re.IGNORECASE)
@@ -458,6 +524,7 @@ class LuxAlgoStrategyLearnerAgent:
             "bearish_indicators_count": bear_count,
             "mentioned_assets": tokens_detected,
             "notable_price_levels": notable_levels,
+            "data_quality": "ok" if total_signals > 0 else ("no_keywords" if transcript_text.strip() else "no_real_transcript"),
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
@@ -465,48 +532,62 @@ class LuxAlgoStrategyLearnerAgent:
 
     def source_all_subscription_alpha(self) -> Dict[str, Any]:
         """
-        Aggregates latest alpha, sentiment scores, and strategies across all subscribed channels.
+        Aggregates sentiment across subscribed channels using REAL cached transcripts only.
+        Channels with no real transcript report HOLD with data_quality="no_real_transcript"
+        and are left out of the composite. (Previously every channel was fed an invented
+        bullish sentence, so the composite was always BUY.)
         """
         all_sentiment = []
         channel_summaries = []
 
         for name, meta in SUBSCRIBED_ALPHA_CHANNELS.items():
-            # Synthesize or extract sentiment for channel
-            sample_video = meta["recent_videos"][0] if meta.get("recent_videos") else {"title": f"{name} Market Analysis", "id": "default"}
-            sample_text = (
-                f"{sample_video['title']}. Discussions on {', '.join(meta['sample_topics'])}. "
-                f"Bullish order block accumulation on Bitcoin and Ethereum with 5X leverage parameters. "
-                f"Institutional ETF inflows creating upward expansion."
-            )
-            sent = self.gauge_transcript_sentiment(sample_text, channel_name=name)
-            all_sentiment.append(sent)
+            cached = self.transcripts.get(name) or []
+            if cached:
+                latest = cached[0]
+                sent = self.gauge_transcript_sentiment(latest.get("text", ""), channel_name=name)
+                video_title = latest.get("title", "")
+            else:
+                sent = self.gauge_transcript_sentiment("", channel_name=name)
+                video_title = ""
+            if sent["data_quality"] == "ok":
+                all_sentiment.append(sent)
 
+            cred = self.credibility.get(name, {})
+            acc = cred.get("accuracy")
             channel_summaries.append({
                 "name": name,
                 "handle": meta.get("handle", "@" + name.replace(" ", "")),
                 "category": meta.get("category"),
-                "credibility_weight": self.credibility.get(name, {}).get("weight", meta["weight"]),
-                "accuracy_hit_rate": f"{self.credibility.get(name, {}).get('accuracy', 0.76) * 100:.1f}%",
-                "recent_video_title": sample_video["title"],
+                "credibility_weight": cred.get("weight", 1.0),
+                "accuracy_hit_rate": f"{acc * 100:.1f}% over {cred.get('trades', 0)} calls" if acc is not None else "not measured",
+                "recent_video_title": video_title or "(no real transcript fetched yet)",
                 "sentiment_category": sent["category"],
                 "bias_signal": sent["bias_signal"],
                 "confidence": sent["confidence"],
+                "data_quality": sent["data_quality"],
             })
 
-        # Calculate composite YouTube market sentiment
-        total_weighted_polarity = sum(s["polarity_score"] * s["channel_weight"] for s in all_sentiment)
-        total_weight = sum(s["channel_weight"] for s in all_sentiment)
-        composite_polarity = total_weighted_polarity / max(total_weight, 1e-6)
+        if all_sentiment:
+            total_weight = sum(s_["channel_weight"] for s_ in all_sentiment)
+            composite_polarity = sum(s_["polarity_score"] * s_["channel_weight"] for s_ in all_sentiment) / max(total_weight, 1e-6)
+            coverage = len(all_sentiment) / max(len(SUBSCRIBED_ALPHA_CHANNELS), 1)
+            overall_conf = round(coverage * sum(s_["confidence"] for s_ in all_sentiment) / len(all_sentiment), 2)
+        else:
+            composite_polarity, overall_conf = 0.0, 0.0
 
-        composite_category = "BULLISH_EXPANSION" if composite_polarity >= 0.20 else "DEFENSIVE_CONSOLIDATION" if composite_polarity >= -0.10 else "BEARISH_DISTRIBUTION"
+        composite_category = ("NO_DATA" if not all_sentiment else
+                              "BULLISH_EXPANSION" if composite_polarity >= 0.20 else
+                              "DEFENSIVE_CONSOLIDATION" if composite_polarity >= -0.10 else "BEARISH_DISTRIBUTION")
 
         res = {
             "composite_market_sentiment": composite_category,
             "composite_polarity": round(composite_polarity, 3),
             "total_channels_monitored": len(channel_summaries),
+            "channels_with_real_data": len(all_sentiment),
             "channels": channel_summaries,
-            "active_bias": "BUY" if composite_polarity >= 0.10 else "HOLD",
-            "overall_confidence": 0.84,
+            "active_bias": "BUY" if (all_sentiment and composite_polarity >= 0.10) else "HOLD",
+            "overall_confidence": overall_conf,
+            "registry_is_placeholder": CHANNEL_REGISTRY_IS_PLACEHOLDER,
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
@@ -521,10 +602,13 @@ class LuxAlgoStrategyLearnerAgent:
         video_url: Optional[str] = None,
         strategy_type: str = "luxalgo_smc",
         symbol: str = "BTC/USDT",
+        timeframe: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
-        Analyzes video transcripts and LuxAlgo knowledge base to synthesize
-        a high-probability (>68% target win-rate) 5X leverage strategy with PineScript v5 code.
+        Builds a strategy template (with PineScript v5) from the knowledge base and an optional
+        video, then attaches MEASURED evidence for (strategy_type, symbol, timeframe) if any has
+        been recorded. Without evidence the strategy is UNVERIFIED_RESEARCH, its win rate is
+        None and gate_68_met is False.
         """
         video_data = {}
         if video_url:
@@ -538,30 +622,42 @@ class LuxAlgoStrategyLearnerAgent:
         else:
             base = LUXALGO_KNOWLEDGE_BASE["luxalgo_smc_order_block"]
 
+        timeframe = timeframe or base["timeframes"][0]
         channel_name = video_data.get("channel") or base["channel"]
         video_title = video_data.get("title") or base["title"]
+
+        evidence = self.evidence.best_for(strategy_type, symbol, timeframe)
+        gate = evaluate_gate(evidence)
+        measured_wr = (gate["metrics"] or {}).get("win_rate_pct")
 
         strategy_id = f"STRAT_LUX_{symbol.replace('/', '_')}_{int(datetime.now().timestamp())}"
         pinescript = self.generate_pinescript_v5(
             strategy_name=f"LuxAlgo SMC & 5X Futures Strategy — {symbol}",
             symbol=symbol,
             leverage=5.0,
-            target_win_rate=base["target_win_rate_pct"],
+            measured_win_rate=measured_wr,
         )
 
         strategy_obj = {
             "id": strategy_id,
+            "strategy_key": strategy_type,
             "title": f"LuxAlgo Enhanced: {video_title}",
             "symbol": symbol,
+            "timeframe": timeframe,
             "channel_source": channel_name,
-            "video_url": video_data.get("url", "https://youtube.com/@LuxAlgo"),
-            "target_win_rate_pct": base["target_win_rate_pct"],
-            "gate_68_met": base["target_win_rate_pct"] >= 68.0,
+            "video_url": video_data.get("url", ""),
+            "transcript_available": video_data.get("transcript_available", False),
+            "target_win_rate_pct": measured_wr,            # measured or None
+            "win_rate_is_measured": measured_wr is not None,
+            "gate_68_met": gate["passed"],                  # legacy name: evidence gate passed
+            "evidence_gate": gate,
+            "requires_paid_indicator": base.get("requires_paid_indicator", False),
+            "paid_indicators": base.get("paid_indicators", []),
             "leverage": "5X Futures",
             "leverage_multiplier": 5.0,
             "concepts": base["concepts"],
             "entry_conditions": [
-                f"SMC Liquidity Sweep confirmed on {symbol} (15m/1h)",
+                f"SMC Liquidity Sweep confirmed on {symbol} ({timeframe})",
                 "LuxAlgo Order Block retest with Bullish confirmation signal",
                 "Volume Expansion > 1.45x 20-SMA & Money Flow positive",
             ],
@@ -575,7 +671,7 @@ class LuxAlgoStrategyLearnerAgent:
             },
             "pinescript_code": pinescript,
             "learned_at": datetime.now(timezone.utc).isoformat(),
-            "status": "ACTIVE_PRODUCTION_STRATEGY",
+            "status": gate["status"],
         }
 
         # Save to learned strategies cache
@@ -587,11 +683,19 @@ class LuxAlgoStrategyLearnerAgent:
         # Update persistent strategy_memory.json
         self._update_strategy_memory(strategy_obj)
 
-        log.info(f"✅ Generated & persisted LuxAlgo strategy: {strategy_obj['title']} (Win Rate: {strategy_obj['target_win_rate_pct']}%)")
+        wr_txt = f"{measured_wr}% measured" if measured_wr is not None else "no measured results"
+        log.info(f"Generated LuxAlgo strategy: {strategy_obj['title']} [{gate['status']}, {wr_txt}]")
+        if base.get("requires_paid_indicator"):
+            log.warning(f"Template uses paid closed-source indicators {base.get('paid_indicators')}; the bot cannot compute these.")
         return strategy_obj
 
+    def record_backtest(self, strategy_key: str, backtest: Dict[str, Any], source: str = "strategyLearningAgent") -> Dict[str, Any]:
+        """Record a JS-agent-style backtest dict as evidence and return the gate verdict."""
+        ev = self.evidence.record(from_js_backtest(backtest, strategy_key, source))
+        return evaluate_gate(self.evidence.best_for(strategy_key, ev.symbol, ev.timeframe) if ev else None)
+
     def _update_strategy_memory(self, strategy_obj: dict):
-        """Appends strategy to strategy_memory.json."""
+        """Appends strategy to strategy_memory.json (learnedStrategies only; tradeHistory untouched)."""
         try:
             mem = {}
             if MEMORY_PATH.exists():
@@ -603,7 +707,9 @@ class LuxAlgoStrategyLearnerAgent:
                 "id": strategy_obj["id"],
                 "title": strategy_obj["title"],
                 "channel": strategy_obj["channel_source"],
-                "winRate": strategy_obj["target_win_rate_pct"],
+                "winRate": strategy_obj["target_win_rate_pct"],      # measured or null
+                "verified": bool(strategy_obj.get("gate_68_met")),
+                "evidenceStatus": strategy_obj.get("status"),
                 "leverage": strategy_obj["leverage"],
             })
             MEMORY_PATH.write_text(json.dumps(mem, indent=2), encoding="utf-8")
@@ -635,7 +741,8 @@ class LuxAlgoStrategyLearnerAgent:
         strategy_name: str = "LuxAlgo SMC & 5X Futures Strategy",
         symbol: str = "BTC/USDT",
         leverage: float = 5.0,
-        target_win_rate: float = 75.0,
+        measured_win_rate: Optional[float] = None,
+        target_win_rate: Optional[float] = None,  # deprecated, ignored (was an invented figure)
     ) -> str:
         """
         Generates full PineScript v5 strategy code with LuxAlgo SMC concepts,
@@ -646,7 +753,7 @@ strategy("{strategy_name}", overlay=true, initial_capital=1000, default_qty_type
 
 // ==============================================================================
 // AiTradingAgent — LuxAlgo SMC & 5X Leverage Futures Strategy
-// Target Hit-Rate: >68% ({target_win_rate:.1f}%) | Leverage: {leverage:.0f}X Isolated Margin
+// Measured win rate: {(f"{measured_win_rate:.1f}%" if measured_win_rate is not None else "NOT MEASURED - backtest before use")} | Leverage: {leverage:.0f}X Isolated Margin
 // Features: Order Blocks (OB), Fair Value Gaps (FVG), Liquidity Sweeps, ATR Trailing Stop
 // ==============================================================================
 
@@ -734,7 +841,66 @@ plotshape(short_entry and strategy.position_size == 0, title="LuxAlgo SMC Sell",
         return self.learned_strategies
 
 
+def migrate_existing(dry_run: bool = False) -> Dict[str, Any]:
+    """
+    One-off clean-up of records written before the evidence fix:
+    - backs up learned_strategies.json and strategy_memory.json (…​.pre-evidence-<timestamp>.bak)
+    - imports any embedded JS backtests (real results) into data/backtest_evidence.json
+    - re-labels every learned strategy from its evidence (invented win rates -> None)
+    - in strategy_memory.json, rewrites learnedStrategies winRate/verified only; tradeHistory untouched
+    """
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    report = {"backups": [], "evidence_imported": 0, "strategies_relabelled": 0, "memory_entries_relabelled": 0}
+    store = EvidenceStore()
+
+    raw = []
+    if LEARNED_STRATEGIES_PATH.exists():
+        raw = json.loads(LEARNED_STRATEGIES_PATH.read_text(encoding="utf-8"))
+    fixed = []
+    for item in raw if isinstance(raw, list) else []:
+        if not isinstance(item, dict):
+            continue
+        key = item.get("strategy_key") or item.get("type") or item.get("strategyType") or "luxalgo_smc"
+        bt = item.get("backtest") if isinstance(item.get("backtest"), dict) else None
+        if bt and not dry_run:
+            ev = from_js_backtest(bt, key, source="strategyLearningAgent (migrated)")
+            if ev and not any(r.source.startswith("strategyLearningAgent") and r.period_start == ev.period_start
+                              and r.symbol == ev.symbol and r.strategy_key == key for r in store.records):
+                store.record(ev)
+                report["evidence_imported"] += 1
+        ev_best = store.best_for(key, item.get("symbol"), item.get("timeframe"))
+        item["evidence_gate"] = evaluate_gate(ev_best)
+        item["strategy_key"] = key
+        fixed.append(_normalize_strategy(item))
+        report["strategies_relabelled"] += 1
+
+    mem = json.loads(MEMORY_PATH.read_text(encoding="utf-8")) if MEMORY_PATH.exists() else {}
+    for e in mem.get("learnedStrategies", []) if isinstance(mem, dict) else []:
+        e["winRate"] = None
+        e["verified"] = False
+        e["evidenceStatus"] = STATUS_UNVERIFIED
+        e["note"] = "winRate removed 2026-09-24: was an invented constant, not a measured result"
+        report["memory_entries_relabelled"] += 1
+
+    if dry_run:
+        return report
+    for path in (LEARNED_STRATEGIES_PATH, MEMORY_PATH):
+        if path.exists():
+            bak = path.with_name(f"{path.stem}.pre-evidence-{stamp}{path.suffix}.bak")
+            bak.write_bytes(path.read_bytes())
+            report["backups"].append(str(bak))
+    if raw:
+        LEARNED_STRATEGIES_PATH.write_text(json.dumps(fixed, indent=2), encoding="utf-8")
+    if mem:
+        MEMORY_PATH.write_text(json.dumps(mem, indent=2), encoding="utf-8")
+    return report
+
+
 if __name__ == "__main__":
+    if "--migrate" in sys.argv or "--migrate-dry-run" in sys.argv:
+        rep_ = migrate_existing(dry_run="--migrate-dry-run" in sys.argv)
+        print(json.dumps(rep_, indent=2))
+        sys.exit(0)
     learner = LuxAlgoStrategyLearnerAgent()
     feed = learner.source_all_subscription_alpha()
     print("=== YOUTUBE ALPHA & SENTIMENT FEED SOURCED ===")

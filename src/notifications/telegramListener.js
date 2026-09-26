@@ -5,9 +5,8 @@
  * trading indicator channels and feed signals into the
  * orchestrator consensus pipeline in real-time.
  *
- * Credentials (already in .env):
- *   TELEGRAM_API_ID=33055993
- *   TELEGRAM_API_HASH=cf771225a0a24187d87fb00ce4e3fed3
+ * Credentials come from .env — TELEGRAM_API_ID / TELEGRAM_API_HASH
+ * (get them from https://my.telegram.org). Never hardcode them here.
  *
  * Run once to generate session:
  *   node src/notifications/setupTelegram.js
@@ -24,9 +23,9 @@ const path = require('path');
 const logger = require('../utils/logger');
 const { ingestTelegramMessage, sendTelegramMessage } = require('./telegramNotifier');
 
-const API_ID      = parseInt(process.env.TELEGRAM_API_ID  || '33055993');
-const API_HASH    = process.env.TELEGRAM_API_HASH          || 'cf771225a0a24187d87fb00ce4e3fed3';
-const SESSION_STR = process.env.TELEGRAM_SESSION           || '';
+const API_ID      = parseInt(process.env.TELEGRAM_API_ID || '', 10);
+const API_HASH    = process.env.TELEGRAM_API_HASH || '';
+const SESSION_STR = process.env.TELEGRAM_SESSION  || '';
 
 // ── Channels to monitor ──────────────────────────────────────────────────────
 // Add any channel title fragments here — case-insensitive substring match
@@ -124,14 +123,14 @@ function getLatestSignals(limit = 10) {
 // ── Main listener ─────────────────────────────────────────────────────────────
 async function startTelegramListener() {
   if (!API_ID || !API_HASH) {
-    logger.warn('⚠️  Telegram Listener: API_ID or API_HASH missing — skipping');
+    logger.warn('⚠️  Telegram Listener: TELEGRAM_API_ID or TELEGRAM_API_HASH missing from .env — skipping');
     return;
   }
 
   if (!SESSION_STR) {
     logger.warn('⚠️  Telegram Listener: No SESSION string yet.');
     logger.info('   Run:  node src/notifications/setupTelegram.js');
-    logger.info('   API_ID=33055993  API_HASH=cf771225a0a24187d87fb00ce4e3fed3  ← already set ✅');
+    logger.info('   (TELEGRAM_API_ID / TELEGRAM_API_HASH already set in .env)');
     return;
   }
 

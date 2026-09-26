@@ -108,7 +108,9 @@ class TestAiTradingPlatform(unittest.TestCase):
         sourcer = DataSourcerAgent()
         eval_summary = sourcer.evaluate_feeds()
         self.assertIn("composite_score", eval_summary)
-        self.assertGreaterEqual(eval_summary["composite_score"], 70.0)
+        # 2026-09-24: scores are measured. With no feed data passed in, quality must NOT be high.
+        self.assertLess(eval_summary["composite_score"], 70.0)
+        self.assertIsNone(eval_summary["feed_scores"]["ccxt_orderbook"]["accuracy_pct"])
         self.assertIn("feed_scores", eval_summary)
         self.assertIn("ccxt_orderbook", eval_summary["feed_scores"])
         self.assertIn("sosovalue_etf", eval_summary["feed_scores"])

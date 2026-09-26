@@ -169,3 +169,13 @@ data/copilot-activity-history*.csv
 # --- Added 2026-09-26: bulky, regenerable historical OHLCV downloads ---
 # --- (re-fetched by scripts/fetch_multitimeframe_ohlcv.py / pybacktest) ---
 data/ohlcv/
+
+
+# --- Added 2026-09-26: scratch/backup file clutter and vendored build tools ---
+_diag_*.ps1
+_diag_*.js
+*.bak
+*.pre-pm2-backup
+tools/apache-maven-*/
+tools/*/target/
+data/*_backup_*.json

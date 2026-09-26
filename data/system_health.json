@@ -1,10 +1,10 @@
 {
   "overallStatus": "HEALTHY",
-  "timestamp": "2026-09-15T15:52:42.824Z",
+  "timestamp": "2026-09-24T18:22:15.194Z",
   "checks": {
     "agents": {
       "ok": true,
-      "detail": "13 healthy, 0 failing, 0 dead"
+      "detail": "14 healthy, 0 failing, 0 dead"
     },
     "ollama": {
       "ok": true,
@@ -16,7 +16,7 @@
     },
     "exchange": {
       "ok": true,
-      "detail": "Bitget API reachable. Server time: 1789487563083"
+      "detail": "Bitget API reachable. Server time: 1790274136414"
     },
     "coingecko": {
       "ok": true,
@@ -28,42 +28,43 @@
     },
     "disk": {
       "ok": true,
-      "detail": "Log file: 0.0 MB",
-      "logMb": 0
+      "detail": "Log file: 10.0 MB",
+      "logMb": 10
     },
     "memory": {
       "ok": true,
-      "detail": "RAM: 1061 MB free / 15773 MB total (93.3% used) | Heap: 239/292 MB",
-      "usedPct": 93.3,
-      "freeMb": 1061,
+      "detail": "RAM: 2637 MB free / 15773 MB total (83.3% used) | Heap: 231/257 MB",
+      "usedPct": 83.3,
+      "freeMb": 2637,
       "totalMb": 15773,
-      "heapUsedMb": 239,
-      "heapTotalMb": 292
+      "heapUsedMb": 231,
+      "heapTotalMb": 257
     },
     "win_rate": {
       "ok": true,
-      "detail": "14.3% hit rate over 7 recent trades",
+      "detail": "Collecting sample: 7/250 real trades (gate 68% not assessed yet)",
       "hitRate": 14.299999999999999,
       "totalTrades": 7,
+      "gate68Met": false,
       "gate72Met": false
     },
     "heartbeat": {
       "ok": true,
-      "detail": "Last cycle 17s ago",
-      "staleSec": 17,
-      "lastCycle": "2026-09-15T15:52:26.284Z"
+      "detail": "Last cycle 231s ago",
+      "staleSec": 231,
+      "lastCycle": "2026-09-24T18:18:23.950Z"
     }
   },
   "agents": {
     "overallStatus": "WARNING",
     "agents": {
-      "total": 23,
-      "healthy": 13,
-      "degraded": 10,
+      "total": 25,
+      "healthy": 14,
+      "degraded": 11,
       "failing": 0,
       "dead": 0
     },
-    "activeAgents": 23,
+    "activeAgents": 25,
     "consensusAble": true,
     "details": {
       "deepseek": {
@@ -104,13 +105,13 @@
       },
       "claude": {
         "agent": "claude",
-        "status": "HEALTHY",
-        "latencyMs": 617,
-        "avgLatencyMs": 642,
+        "status": "DEGRADED",
+        "latencyMs": 103278,
+        "avgLatencyMs": 101690,
         "errorRate": 0,
         "consecutiveFails": 0,
-        "totalCalls": 101916,
-        "totalErrors": 664,
+        "totalCalls": 131649,
+        "totalErrors": 3841,
         "recentResults": [
           "ok",
           "ok",
@@ -133,10 +134,10 @@
           "ok",
           "ok"
         ],
-        "lastSeen": "2026-09-15T15:52:35.331Z",
+        "lastSeen": "2026-09-24T18:20:14.455Z",
         "lastError": "Claude timed out after 10000ms",
-        "lastHealed": "2026-09-15T01:14:47.018Z",
-        "healCount": 14
+        "lastHealed": "2026-09-16T09:15:09.551Z",
+        "healCount": 24
       },
       "gpt4o": {
         "agent": "gpt4o",
@@ -229,39 +230,39 @@
       },
       "openrouter_free": {
         "agent": "openrouter_free",
-        "status": "HEALTHY",
-        "latencyMs": 6252,
-        "avgLatencyMs": 5788,
-        "errorRate": 0,
+        "status": "RECOVERED",
+        "latencyMs": 11553,
+        "avgLatencyMs": 11651,
+        "errorRate": 1,
         "consecutiveFails": 0,
-        "totalCalls": 101915,
-        "totalErrors": 541,
+        "totalCalls": 131648,
+        "totalErrors": 711,
         "recentResults": [
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok"
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error"
         ],
-        "lastSeen": "2026-09-15T15:52:35.338Z",
-        "lastError": "Claude timed out after 10000ms",
-        "lastHealed": "2026-09-15T02:36:22.346Z",
-        "healCount": 14
+        "lastSeen": "2026-09-24T17:49:14.728Z",
+        "lastError": "OpenRouterFree timed out after 15000ms",
+        "lastHealed": "2026-09-24T18:20:19.378Z",
+        "healCount": 25
       },
       "perplexity": {
         "agent": "perplexity",
@@ -481,39 +482,39 @@
       },
       "strategy_learner": {
         "agent": "strategy_learner",
-        "status": "HEALTHY",
-        "latencyMs": 605,
-        "avgLatencyMs": 587,
-        "errorRate": 0,
+        "status": "RECOVERED",
+        "latencyMs": 4702,
+        "avgLatencyMs": 2348,
+        "errorRate": 0.9,
         "consecutiveFails": 0,
-        "totalCalls": 101913,
-        "totalErrors": 2774,
+        "totalCalls": 131646,
+        "totalErrors": 3000,
         "recentResults": [
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
+          "error",
           "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
-          "ok",
+          "error",
+          "error",
+          "error",
           "ok"
         ],
-        "lastSeen": "2026-09-15T15:52:35.346Z",
+        "lastSeen": "2026-09-24T18:20:14.516Z",
         "lastError": "StrategyLearner timed out after 5000ms",
-        "lastHealed": "2026-09-15T02:41:21.539Z",
-        "healCount": 39
+        "lastHealed": "2026-09-24T18:20:19.391Z",
+        "healCount": 46
       },
       "provider_rotator": {
         "agent": "provider_rotator",
@@ -626,11 +627,11 @@
       "tradingkit": {
         "agent": "tradingkit",
         "status": "HEALTHY",
-        "latencyMs": 50,
-        "avgLatencyMs": 50,
+        "latencyMs": 6,
+        "avgLatencyMs": 36,
         "errorRate": 0,
         "consecutiveFails": 0,
-        "totalCalls": 74706,
+        "totalCalls": 104439,
         "totalErrors": 11,
         "recentResults": [
           "ok",
@@ -654,7 +655,7 @@
           "ok",
           "ok"
         ],
-        "lastSeen": "2026-09-15T15:52:35.355Z",
+        "lastSeen": "2026-09-24T18:20:14.524Z",
         "lastError": "TradingKit timed out after 8000ms",
         "lastHealed": null,
         "healCount": 0
@@ -662,11 +663,11 @@
       "telegram_channel": {
         "agent": "telegram_channel",
         "status": "HEALTHY",
-        "latencyMs": 50,
-        "avgLatencyMs": 50,
+        "latencyMs": 3,
+        "avgLatencyMs": 33,
         "errorRate": 0,
         "consecutiveFails": 0,
-        "totalCalls": 74704,
+        "totalCalls": 104437,
         "totalErrors": 0,
         "recentResults": [
           "ok",
@@ -690,7 +691,7 @@
           "ok",
           "ok"
         ],
-        "lastSeen": "2026-09-15T15:52:35.362Z",
+        "lastSeen": "2026-09-24T18:20:14.534Z",
         "lastError": null,
         "lastHealed": null,
         "healCount": 0
@@ -698,12 +699,12 @@
       "technical_lab": {
         "agent": "technical_lab",
         "status": "HEALTHY",
-        "latencyMs": 50,
-        "avgLatencyMs": 91,
+        "latencyMs": 2334,
+        "avgLatencyMs": 2023,
         "errorRate": 0,
         "consecutiveFails": 0,
-        "totalCalls": 42506,
-        "totalErrors": 57,
+        "totalCalls": 72239,
+        "totalErrors": 136,
         "recentResults": [
           "ok",
           "ok",
@@ -726,7 +727,7 @@
           "ok",
           "ok"
         ],
-        "lastSeen": "2026-09-15T15:52:35.369Z",
+        "lastSeen": "2026-09-24T18:20:14.541Z",
         "lastError": "TechnicalLab timed out after 8000ms",
         "lastHealed": null,
         "healCount": 0
@@ -734,12 +735,12 @@
       "technical_daily": {
         "agent": "technical_daily",
         "status": "HEALTHY",
-        "latencyMs": 50,
-        "avgLatencyMs": 87,
+        "latencyMs": 5,
+        "avgLatencyMs": 1385,
         "errorRate": 0,
         "consecutiveFails": 0,
-        "totalCalls": 42506,
-        "totalErrors": 54,
+        "totalCalls": 72239,
+        "totalErrors": 124,
         "recentResults": [
           "ok",
           "ok",
@@ -762,7 +763,7 @@
           "ok",
           "ok"
         ],
-        "lastSeen": "2026-09-15T15:52:35.377Z",
+        "lastSeen": "2026-09-24T18:20:14.548Z",
         "lastError": "TechnicalDaily timed out after 8000ms",
         "lastHealed": null,
         "healCount": 0
@@ -770,11 +771,11 @@
       "bull_agent": {
         "agent": "bull_agent",
         "status": "HEALTHY",
-        "latencyMs": 52,
-        "avgLatencyMs": 52,
+        "latencyMs": 6,
+        "avgLatencyMs": 36,
         "errorRate": 0,
         "consecutiveFails": 0,
-        "totalCalls": 35061,
+        "totalCalls": 64797,
         "totalErrors": 0,
         "recentResults": [
           "ok",
@@ -798,7 +799,7 @@
           "ok",
           "ok"
         ],
-        "lastSeen": "2026-09-15T15:52:35.318Z",
+        "lastSeen": "2026-09-24T18:20:14.392Z",
         "lastError": null,
         "lastHealed": null,
         "healCount": 0
@@ -806,11 +807,11 @@
       "bear_agent": {
         "agent": "bear_agent",
         "status": "HEALTHY",
-        "latencyMs": 52,
-        "avgLatencyMs": 52,
+        "latencyMs": 6,
+        "avgLatencyMs": 36,
         "errorRate": 0,
         "consecutiveFails": 0,
-        "totalCalls": 35061,
+        "totalCalls": 64796,
         "totalErrors": 0,
         "recentResults": [
           "ok",
@@ -834,7 +835,7 @@
           "ok",
           "ok"
         ],
-        "lastSeen": "2026-09-15T15:52:35.326Z",
+        "lastSeen": "2026-09-24T18:20:14.425Z",
         "lastError": null,
         "lastHealed": null,
         "healCount": 0
@@ -842,12 +843,12 @@
       "traderdev_strategy": {
         "agent": "traderdev_strategy",
         "status": "HEALTHY",
-        "latencyMs": 50,
-        "avgLatencyMs": 75,
+        "latencyMs": 2587,
+        "avgLatencyMs": 2507,
         "errorRate": 0,
         "consecutiveFails": 0,
-        "totalCalls": 22893,
-        "totalErrors": 8,
+        "totalCalls": 52626,
+        "totalErrors": 44,
         "recentResults": [
           "ok",
           "ok",
@@ -870,16 +871,88 @@
           "ok",
           "ok"
         ],
-        "lastSeen": "2026-09-15T15:52:35.439Z",
+        "lastSeen": "2026-09-24T18:20:14.634Z",
         "lastError": "TraderDev timed out after 6000ms",
+        "lastHealed": null,
+        "healCount": 0
+      },
+      "technical_mtf": {
+        "agent": "technical_mtf",
+        "status": "HEALTHY",
+        "latencyMs": 2,
+        "avgLatencyMs": 352,
+        "errorRate": 0,
+        "consecutiveFails": 0,
+        "totalCalls": 524,
+        "totalErrors": 25,
+        "recentResults": [
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok"
+        ],
+        "lastSeen": "2026-09-24T18:20:14.556Z",
+        "lastError": "TechnicalMtf timed out after 8000ms",
+        "lastHealed": null,
+        "healCount": 0
+      },
+      "evidence_candidates": {
+        "agent": "evidence_candidates",
+        "status": "HEALTHY",
+        "latencyMs": 7,
+        "avgLatencyMs": 65,
+        "errorRate": 0.05,
+        "consecutiveFails": 0,
+        "totalCalls": 188,
+        "totalErrors": 13,
+        "recentResults": [
+          "ok",
+          "ok",
+          "ok",
+          "error",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok",
+          "ok"
+        ],
+        "lastSeen": "2026-09-24T18:20:14.656Z",
+        "lastError": "EvidenceCandidates timed out after 15000ms",
         "lastHealed": null,
         "healCount": 0
       }
     },
-    "timestamp": "2026-09-15T15:52:42.824Z"
+    "timestamp": "2026-09-24T18:22:15.193Z"
   },
   "failedChecks": [],
   "criticalFails": [],
   "excludedAgents": [],
-  "uptime": 15133
+  "uptime": 249
 }

@@ -83,7 +83,14 @@ Output strictly valid JSON with keys: signal, confidence, reason, constraints, r
         num_ctx: 4096,
       },
     },
-    { timeout: 2500, proxy: false }
+    // 2026-09-16: was 2500ms. Measured directly (scripts/probeAgentProviders.js):
+    // a WARM llama3.2 answers in 591ms, but this machine runs with ~1GB free of
+    // 15.4GB, so Ollama evicts the model between calls and the next call pays a
+    // cold load of several seconds. At 2.5s that cold load always lost, the agent
+    // fell through to Ollama Cloud (15s) then OpenRouter (12s), and the caller
+    // saw "Hermes timed out after 30000ms" — the local model was never the
+    // problem, the budget was. num_predict is 1024 here too, which needs room.
+    { timeout: Number(process.env.OLLAMA_TIMEOUT_MS || 12000), proxy: false }
   );
 
   const text = res.data?.response?.trim();

@@ -1,0 +1,56 @@
+[
+ {
+  "trades": 138,
+  "win_rate_pct": 21.7,
+  "pct_pf": 2.056,
+  "in_trades": 63,
+  "in_pf": 2.133,
+  "oos_trades": 75,
+  "oos_pf": 1.987,
+  "avg_trade_pct": 2.3671,
+  "net15_pct": 59.0,
+  "dd15_pct": 4.6,
+  "pass": true,
+  "fail_reasons": [],
+  "bootstrap": {
+   "profitable_share": 1.0,
+   "dd_p95": 14.2
+  },
+  "id": "PY_EMA_VWAP_ETH_2h",
+  "strat": "EMA_VWAP",
+  "coin": "ETH",
+  "tf": "2h",
+  "candles": 24231,
+  "data_source": "bybit",
+  "first_candle": 1615766400000,
+  "seconds": 15.7
+ },
+ {
+  "trades": 897,
+  "win_rate_pct": 34.3,
+  "pct_pf": 1.069,
+  "in_trades": 464,
+  "in_pf": 0.973,
+  "oos_trades": 433,
+  "oos_pf": 1.195,
+  "avg_trade_pct": 0.1256,
+  "net15_pct": 13.7,
+  "dd15_pct": 19.3,
+  "pass": false,
+  "fail_reasons": [
+   "PF 1.069<1.2"
+  ],
+  "bootstrap": {
+   "profitable_share": 0.695,
+   "dd_p95": 38.6
+  },
+  "id": "PY_ST_AI_ETH_2h",
+  "strat": "ST_AI",
+  "coin": "ETH",
+  "tf": "2h",
+  "candles": 24231,
+  "data_source": "bybit",
+  "first_candle": 1615766400000,
+  "seconds": 1.4
+ }
+]

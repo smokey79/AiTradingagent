@@ -1,0 +1,38 @@
+[
+  {
+    "id": 722,
+    "date": "2026-09-24T04:19:07.000Z",
+    "fromBot": true,
+    "text": "🆔 Wallet ID: 3437725\n💰 Balance: 10,000.00$\n📊 Equity: 10,000.00$"
+  },
+  {
+    "id": 721,
+    "date": "2026-09-24T04:19:03.000Z",
+    "fromBot": true,
+    "text": "Please choose an action:"
+  },
+  {
+    "id": 720,
+    "date": "2026-09-24T04:18:56.000Z",
+    "fromBot": true,
+    "text": "Please select one of your wallets:"
+  },
+  {
+    "id": 719,
+    "date": "2026-09-24T04:18:26.000Z",
+    "fromBot": true,
+    "text": "Various options are now available to you."
+  },
+  {
+    "id": 718,
+    "date": "2026-09-24T04:18:26.000Z",
+    "fromBot": true,
+    "text": "✅ Successfully connected!\n\nThe bot is now linked to your account. From now on, you can:\n• Close your trades directly via Telegram  \n• Check your account status and balance  \n• Receive important notifications (such as trade openings and closings)\n\n✅ You can now return to the app and enjoy the full features."
+  },
+  {
+    "id": 717,
+    "date": "2026-09-24T04:18:26.000Z",
+    "fromBot": false,
+    "text": "/start"
+  }
+]

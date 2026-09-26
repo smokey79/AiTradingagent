@@ -40,6 +40,19 @@ app.use(express.static(PUBLIC_DIR));
 const pythonBridge = require('../bridge/pythonBridge');
 app.use('/api', pythonBridge);
 
+// ─── Read-only wallet link (added 2026-09-15) ────────────────────────────────
+// Public on-chain balances only. No private key is read and no transaction can
+// be signed from here — see src/wallet/walletViewer.js for the full rationale.
+app.get('/api/wallets', async (req, res) => {
+  try {
+    const { getWalletSnapshot } = require('../wallet/walletViewer');
+    const snap = await getWalletSnapshot({ force: req.query.force === '1' });
+    res.json(snap);
+  } catch (e) {
+    res.status(500).json({ error: e.message, readOnly: true, wallets: [] });
+  }
+});
+
 // ─── Live AI agent votes (added 2026-09-15) ───────────────────────────────────
 // Serves the per-agent vote breakdown written by orchestrator/consensus.js,
 // merged with agent_health.json so silent agents are visibly silent rather
@@ -1146,6 +1159,10 @@ app.post('/api/autotrading/toggle', (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
+
+// 2026-09-16: an /api/config route already exists earlier in this file and
+// wins registration, so no second one is added here. The header badge reads
+// that existing endpoint's config.minConfidence instead of a hardcoded value.
 
 app.post('/api/cycle', async (req, res) => {
   try {

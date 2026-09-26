@@ -1003,7 +1003,7 @@ $ ready.</div>
               </div>
               <div class="font-12 text-muted mb-6">Channel Source: <span class="blue font-bold">{{ s.channel_source or 'LuxAlgo & YouTube Alpha' }}</span></div>
               <div class="font-12 text-muted mb-8">
-                Target Hit-Rate: <span class="green font-bold">{{ s.target_win_rate_pct or 75 }}%</span> &bull; 
+                Measured Win Rate: {% if s.target_win_rate_pct is not none %}<span class="green font-bold">{{ s.target_win_rate_pct }}%</span>{% else %}<span class="font-bold">not measured</span>{% endif %} ({{ s.status or 'UNVERIFIED_RESEARCH' }}) &bull; 
                 Risk/Reward: <span class="cyan font-bold">1:{{ (s.risk_management.risk_reward_ratio if s.risk_management else 2.5) }}</span>
               </div>
               <div class="font-11-5 text-dim mb-10">
@@ -1149,7 +1149,7 @@ $ ready.</div>
           <thead>
             <tr>
               <th>Data Source Feed</th>
-              <th>Quality Score</th>
+              <th>Quality Score (measured)</th>
               <th>Accuracy %</th>
               <th>Profit Weight</th>
               <th>Net PnL Contribution</th>
@@ -1161,9 +1161,9 @@ $ ready.</div>
             <tr>
               <td class="font-bold">{{ f.name }}</td>
               <td class="mono blue font-bold">{{ f.score }}/100</td>
-              <td class="mono green">{{ f.accuracy_pct }}%</td>
+              <td class="mono green">{% if f.accuracy_pct is not none %}{{ f.accuracy_pct }}%{% else %}not measured{% endif %}</td>
               <td class="mono">{{ f.profit_weight }}x</td>
-              <td class="mono green font-bold">{{ f.contribution_to_pnl }}</td>
+              <td class="mono green font-bold">{{ f.contribution_to_pnl or 'not measured' }}</td>
               <td><span class="badge badge-live">{{ f.status }}</span></td>
             </tr>
             {% endfor %}
@@ -1589,7 +1589,7 @@ $ ready.</div>
         });
         const data = await res.json();
         if (data.success) {
-          alert(`✅ Strategy synthesized from video!\nTitle: ${data.strategy.title}\nTarget Win Rate: ${data.strategy.target_win_rate_pct}%`);
+          alert(`✅ Strategy synthesized from video!\nTitle: ${data.strategy.title}\nMeasured Win Rate: ${data.strategy.target_win_rate_pct == null ? "not measured yet" : data.strategy.target_win_rate_pct + "%"}`);
           location.reload();
         } else {
           alert("Error learning from video: " + (data.error || "Unknown error"));

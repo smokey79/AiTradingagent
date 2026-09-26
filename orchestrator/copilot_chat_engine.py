@@ -208,7 +208,7 @@ class CopilotChatEngine:
                     f"- **Composite Market Sentiment**: **{feed.get('composite_market_sentiment')}** (Polarity: {feed.get('composite_polarity'):+0.2f})\n"
                     f"- **Monitored Subscriptions**: 6 channels (LuxAlgo 1.45x, Crypto Banter 1.20x, Coin Bureau 1.25x, TradingView Mastery 1.30x, Benjamin Cowen 1.35x, Glassnode 1.40x)\n"
                     f"- **Active Strategy**: {top_strat.get('title', 'LuxAlgo SMC 5X Sweep')}\n"
-                    f"- **Target Win-Rate**: **{top_strat.get('target_win_rate_pct', 76.5)}%** (Gate 68% Unlocked)\n\n"
+                    f"- **Measured Win-Rate**: **{(str(top_strat.get('target_win_rate_pct')) + '%') if top_strat.get('target_win_rate_pct') is not None else 'not measured yet'}** (Evidence gate: {top_strat.get('status', 'UNVERIFIED_RESEARCH')})\n\n"
                     f"You can paste any new video link in the **LuxAlgo & YouTube Alpha tab** to instantly ingest transcripts and update strategy memory."
                 )
                 return {

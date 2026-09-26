@@ -2,9 +2,9 @@
   "mcpServers": {
     "tradingkit": {
       "type":    "url",
-      "url":     "https://mcp.trader.dev/mcp?key=pk_OUN_iLVFJCGKR5ZEPWH9pQCnUSaUQnHM",
+      "url":     "${TRADINGKIT_MCP_URL}",
       "name":    "TradingKit",
-      "comment": "Live market data, indicators, signals — pk_OUN_iLVFJCGKR5ZEPWH9pQCnUSaUQnHM"
+      "comment": "Live market data, indicators, signals — key comes from the TRADINGKIT_MCP_URL env var, never hardcoded here"
     },
     "trading-data": {
       "command": "node",

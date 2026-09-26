@@ -40,28 +40,55 @@ async function getActivePairs() {
     return dynamicPairsCache;
   }
 
+  // ── 2026-09-16 ─────────────────────────────────────────────────────────
+  // TRADING_PAIRS is now AUTHORITATIVE. It previously had NO effect: this
+  // function built the universe from Binance top-tickers and only fell back
+  // to TRADING_PAIRS if that fetch threw, so a curated pair list was dead
+  // config. Worse, the ranking below used `quoteVolume * last` — quoteVolume
+  // is ALREADY in the quote currency, so multiplying by price double-counted
+  // it and ranked by unit PRICE as much as liquidity. That is how PAXG (gold,
+  // ~$4,280) and tokenised equities (TSLAB/CRCLB/METAB/QQQB, $600-700) got
+  // into a list meant to be the most liquid pairs — instruments that barely
+  // move intraday, which the 2026-09-15 timeout analysis found was a direct
+  // cause of every position exiting on the timer instead of a real stop.
+  // Binance is also UK-restricted for this account (market data only) while
+  // execution is on Bitget.
+  // Discovery is now OPT-IN (DYNAMIC_UNIVERSE=true) and can only NARROW or
+  // RE-RANK the configured list — never introduce an unvetted instrument.
+  const configured = (process.env.TRADING_PAIRS
+    || 'BTC/USDT,ETH/USDT,SOL/USDT,CRO/USDT,AVAX/USDT,ARB/USDT')
+    .split(',').map(p => p.trim()).filter(Boolean);
+
+  if (process.env.DYNAMIC_UNIVERSE !== 'true') {
+    dynamicPairsCache = configured;
+    lastPairsCacheUpdate = now;
+    logger.info(`[Orchestrator] Universe = ${configured.length} configured pairs (TRADING_PAIRS): ${configured.join(', ')}`);
+    return configured;
+  }
+
   try {
     const ccxt = require('ccxt');
     const exchange = new ccxt.binance({ enableRateLimit: true });
     logger.info('🔄 [Orchestrator] Fetching active tickers from Binance to build dynamic universe...');
     const tickers = await exchange.fetchTickers();
-    const candidates = Object.keys(tickers)
-      .filter(sym => sym.endsWith('/USDT') && tickers[sym].quoteVolume > 0 && tickers[sym].last > 0)
+    // Only ever rank pairs that are already in TRADING_PAIRS, and rank by
+    // quoteVolume DIRECTLY — no `* last` multiplier (that was the bug).
+    const candidates = configured
+      .filter(sym => tickers[sym] && tickers[sym].quoteVolume > 0 && tickers[sym].last > 0)
       .map(sym => ({
         symbol: sym,
-        volume: tickers[sym].quoteVolume * (tickers[sym].last || 1.0)
+        volume: tickers[sym].quoteVolume
       }));
 
     candidates.sort((a, b) => b.volume - a.volume);
-    const selected = candidates.slice(0, 25).map(c => c.symbol);
-    
-    // Ensure core majors are always in the list
-    const core = ['BTC/USDT', 'ETH/USDT', 'SOL/USDT', 'CRO/USDT', 'AVAX/USDT', 'ARB/USDT'];
-    for (const c of core) {
-      if (!selected.includes(c)) {
-        selected.push(c);
-      }
-    }
+    const ranked = candidates.map(c => c.symbol);
+
+    // Keep every configured pair. A pair Binance has no ticker for (CRO and
+    // other Bitget-traded names) is simply ranked last — a missing Binance
+    // ticker is not evidence about a pair that trades on the venue we
+    // actually execute on. The old code replaced the list instead of
+    // ordering it, which is how curated pairs silently disappeared.
+    const selected = [...ranked, ...configured.filter(p => !ranked.includes(p))];
 
     dynamicPairsCache = selected;
     lastPairsCacheUpdate = now;

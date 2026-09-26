@@ -294,7 +294,7 @@ class IntegratedDataPipeline:
         )
 
         mc = MonteCarloRisk(
-            win_rate=sourcer_eval.get("rolling_win_rate", 0.76),
+            win_rate=sourcer_eval.get("win_rate_for_risk_model", 0.50),  # measured, or a labelled 50% prior
             avg_win=self.mc_params["avg_win"],
             avg_loss=self.mc_params["avg_loss"],
         )

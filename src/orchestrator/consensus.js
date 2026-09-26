@@ -38,7 +38,9 @@ const providerRotator = require('../agents/providerRotator');
 const volatilityRegimeAgent = require('../agents/volatilityRegimeAgent');
 const technicalLabAgent = require('../agents/technicalLabAgent');
 const technicalDailyAgent = require('../agents/technicalDailyAgent');
+const technicalMtfAgent = require('../agents/technicalMtfAgent');
 const traderDevAgent = require('../agents/traderDevAgent');
+const evidenceCandidatesAgent = require('../agents/evidenceCandidatesAgent');
 const healthMonitor = require('../health/agentHealthMonitor');
 const { isExcluded } = require('../health/selfHealer');
 const { evaluateNegativePatterns } = require('../learning/lossLearner');
@@ -66,9 +68,11 @@ const AGENT_WEIGHTS = {
   volatility_regime: 0.08,
   technical_lab: 0.20,  // 2026-09-14 merge: walk-forward-validated EMA50/100+VWAP strategy (ETH only) from F:\aitradingagent2 — see claude/session-2026-09-14-merge-report.md
   technical_daily: 0.12,  // 2026-09-14: own-OHLCV (ccxt, no Alpha Vantage quota) 3-cycle-robust daily EMA/RSI/MACD/ATR strategy, BTC/ETH/SOL/AVAX/ARB (OP/CRO disabled, no real edge/insufficient sample) — lower weight than technical_lab because 3-cycle robustness is a real but slightly weaker validation than genuine out-of-sample walk-forward. See src/agents/technicalConsensusAgent.js.
+  technical_mtf: 0.09,  // 2026-09-23: 15m/1h/4h multi-timeframe research across a top-50-derived 25-token universe (backtest_mtf.py, ~9,000 backtests, 3-cycle-robust + 20%-drawdown-cap). BTC/ETH/ZEC/ADA/NEAR/AVAX/SUI/HBAR/TAO/ENA. Lowest of the three technical agents' weights because a search this wide (40 combos x 3 strategies x 25 tokens x 3 timeframes) carries real multiple-comparisons risk even after the robustness filters — treat as a real but less battle-tested signal until watched live. See src/agents/technicalMtfAgent.js and claude/session-2026-09-23-mtf-top50-research.md.
   tradingkit: 0.18,   // TradingKit strategy signals — real market data
   telegram_channel: 0.12, // Live indicator channel signals
   traderdev_strategy: 0.15, // TraderDev leaderboard crowd-consensus (240K+ backtested strategies)
+  evidence_candidates: 0.15, // 2026-09-24: 6 lab-passing strategy cells run as forward paper tests; weight is scaled x0.5..x1.5 by measured evidence (src/risk/strategyEvidence.js). See research/multi_tf_lab_2026-09-24.
 };
 
 const SIGNAL_VALUES = {
@@ -170,18 +174,22 @@ async function runConsensus(pair, marketData) {
     telegramRes,
     technicalLabRes,
     technicalDailyRes,
+    technicalMtfRes,
     traderDevRes,
+    evidenceCandidatesRes,
   ] = await Promise.allSettled([
     timedAgent('bull_agent',          withTimeout(bullAgent.getSignal(symbol, marketData),            5000,  'BullAgent')),
     timedAgent('bear_agent',          withTimeout(bearAgent.getSignal(symbol, marketData),            5000,  'BearAgent')),
-    timedAgent('claude',              withTimeout(claudeAgent.getSignal(symbol, marketData),              10000, 'Claude')),
-    timedAgent('openrouter_free',     withTimeout(openrouterFreeAgent.getSignal(symbol, marketData),      10000, 'OpenRouterFree')),
+    timedAgent('claude',              withTimeout(claudeAgent.getSignal(symbol, marketData),              18000, 'Claude')),
+    timedAgent('openrouter_free',     withTimeout(openrouterFreeAgent.getSignal(symbol, marketData),      15000, 'OpenRouterFree')),
     timedAgent('strategy_learner',    withTimeout(strategyLearningAgent.getSignal(symbol, marketData),     5000, 'StrategyLearner')),
     timedAgent('tradingkit',          withTimeout(runTradingKitAsAgent(),                                  8000, 'TradingKit')),
     timedAgent('telegram_channel',    Promise.resolve(runTelegramSignalAsAgent())),
     timedAgent('technical_lab',       withTimeout(technicalLabAgent.getSignal(symbol, marketData),         8000, 'TechnicalLab')),
     timedAgent('technical_daily',     withTimeout(technicalDailyAgent.getSignal(symbol, marketData),       8000, 'TechnicalDaily')),
+    timedAgent('technical_mtf',       withTimeout(technicalMtfAgent.getSignal(symbol, marketData),         8000, 'TechnicalMtf')),
     timedAgent('traderdev_strategy',  withTimeout(traderDevAgent.getSignal(symbol, marketData),            6000, 'TraderDev')),
+    timedAgent('evidence_candidates', withTimeout(evidenceCandidatesAgent.getSignal(symbol, marketData),   15000, 'EvidenceCandidates')),
   ]);
 
   // Record health outcomes for every agent
@@ -195,7 +203,9 @@ async function runConsensus(pair, marketData) {
     telegram_channel: telegramRes,
     technical_lab: technicalLabRes,
     technical_daily: technicalDailyRes,
+    technical_mtf: technicalMtfRes,
     traderdev_strategy: traderDevRes,
+    evidence_candidates: evidenceCandidatesRes,
   };
   for (const [name, res] of Object.entries(agentResults)) {
     const latency = agentLatencies[name] || 0;
@@ -225,6 +235,13 @@ async function runConsensus(pair, marketData) {
         const hitRate = acc.accuracy;
         const multiplier = Math.max(0.50, Math.min(1.60, hitRate / 0.70));
         effectiveWeight = parseFloat((baseWeight * multiplier).toFixed(3));
+      }
+
+      // Evidence-scaled vote (2026-09-24): agents that report a measured evidence tier
+      // (e.g. evidence_candidates) get x0.5..x1.5. Only changes vote weight, never risk limits.
+      const vm = Number(res.value.voteMultiplier);
+      if (Number.isFinite(vm) && vm > 0) {
+        effectiveWeight = parseFloat((effectiveWeight * Math.max(0.5, Math.min(1.5, vm))).toFixed(3));
       }
 
       // Regime-Aware Dynamic Arbitration:
@@ -266,6 +283,7 @@ async function runConsensus(pair, marketData) {
   processResult('telegram_channel', telegramRes);
   processResult('technical_lab', technicalLabRes);
   processResult('technical_daily', technicalDailyRes);
+  processResult('technical_mtf', technicalMtfRes);
   processResult('traderdev_strategy', traderDevRes);
 
   // ── Fast-track: skip Gemini if consensus is already crystal clear ──────────

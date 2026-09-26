@@ -220,15 +220,45 @@ async function runCycle() {
     log('TradingKit disabled (no TRADINGKIT_API_KEY) — exiting.');
     process.exit(0);
   }
-  const health = await tk.checkHealth();
-  if (!health.ok) {
-    log(`auth check failed: ${health.error} — exiting.`);
-    process.exit(1);
+
+  // FIXED 2026-09-23: this used to process.exit(1) on a failed auth check,
+  // which PM2 (autorestart:true, restart_delay 30000) then respawned every
+  // 30s forever -- max_restarts only caps UNSTABLE restarts (crashes before
+  // min_uptime), and this process starts fine and exits cleanly each time,
+  // so PM2 never considered it unstable and never stopped retrying. Found
+  // live at 132+ restarts with a permanently revoked API key. A revoked/
+  // invalid key is not a transient blip -- retrying every 30s cannot fix
+  // it, only Alan generating a new key at trader.dev can. So: stay alive,
+  // log once, and just re-check on the SAME slow interval as normal
+  // operation (default 4h) instead of exiting for PM2 to keep respawning.
+  if (RUN_ONCE) {
+    const health = await tk.checkHealth();
+    if (!health.ok) {
+      log(`auth check failed: ${health.error} — exiting (--once mode).`);
+      process.exit(1);
+    }
+    log(`authenticated as ${health.user} (tier: ${health.tier})`);
+    await runCycle();
+    return;
   }
-  log(`authenticated as ${health.user} (tier: ${health.tier})`);
+
+  let authenticated = false;
+  while (!authenticated) {
+    const health = await tk.checkHealth();
+    if (health.ok) {
+      log(`authenticated as ${health.user} (tier: ${health.tier})`);
+      authenticated = true;
+      break;
+    }
+    log(`auth check failed: ${health.error} — will not keep restarting; `
+      + `re-checking in ${Math.round(INTERVAL_MS / 3600000)}h. Fix: generate a new key at `
+      + `trader.dev account settings -> API Keys, update TRADINGKIT_API_KEY in .env, `
+      + `then \`pm2 restart tradingkit-analyst\` to pick it up sooner.`);
+    await sleep(INTERVAL_MS);
+  }
 
   do {
     await runCycle();
-    if (!RUN_ONCE) await sleep(INTERVAL_MS);
-  } while (!RUN_ONCE);
+    await sleep(INTERVAL_MS);
+  } while (true);
 })();

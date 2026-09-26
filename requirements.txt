@@ -38,3 +38,6 @@ aiohttp>=3.9.0
 
 # Utilities
 python-dateutil>=2.8.2
+
+alpaca-py==0.44.0
+

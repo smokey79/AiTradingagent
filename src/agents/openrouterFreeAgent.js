@@ -2,14 +2,14 @@
  * openrouterFreeAgent.js
  * ========================
  * Free Multi-Model OpenRouter Agent with Automatic Key & Model Rotation.
- * Leverages zero-cost token inference on OpenRouter's free tier:
+ * Leverages zero-cost token inference on OpenRouter's free tier. Active
+ * rotation (confirmed working or ZDR-clean as of 2026-09-16 -- see the
+ * FREE_MODELS comment below for the full survey of what's blocked/why):
  *   - inclusionai/ling-3.0-flash-fin:free
  *   - inclusionai/ling-3.0-flash-vl:free
  *   - inclusionai/ling-3.0-flash-sante:free
- *   - google/gemma-4-31b-it:free
- *   - google/gemma-4-26b-a4b-it:free
- *   - nvidia/nemotron-3-super-120b-a12b:free
- *   - nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
+ *   - z-ai/glm-5.2:free
+ *   - openrouter/free
  */
 const axios = require('axios');
 const logger = require('../utils/logger');
@@ -39,14 +39,30 @@ function getNextKey() {
 }
 
 // ── Free models pool ─────────────────────────────────────────────
+// Pruned 2026-09-16: live-tested every entry against this account. The 4
+// removed below (meta-llama 3.2, gemma-2-9b, both nvidia nemotron) ALL
+// 404 — 2 are discontinued/paid-only now, 2 are blocked by this account's
+// Zero-Data-Retention privacy setting (openrouter.ai/settings/privacy) —
+// so a third of every rotation cycle was silently wasted on a call that
+// could never succeed, before even hitting a rate limit. The 3 remaining
+// are the only free family confirmed reachable on this account.
+//
+// Extended 2026-09-16 (part 2): re-surveyed all 23 free-priced models on
+// OpenRouter. 16 of the other 20 are blocked by this account's ZDR privacy
+// setting (unlock at openrouter.ai/settings/privacy — a real privacy
+// tradeoff, left to Alan to decide, not changed here). 2 more
+// (thinkingmachines/inkling, inkling-small) are permanently blocked
+// regardless of ZDR — "agentic harness only" models, unusable here either
+// way. The remaining 2 below are NOT ZDR-blocked, just already hit their
+// account-wide daily free quota for today — added to the rotation now so
+// they start contributing automatically once that quota resets (no code
+// change needed later), instead of only 3 models ever being tried.
 const FREE_MODELS = [
   'inclusionai/ling-3.0-flash-fin:free',                     // 1. Financial & algorithmic analysis
   'inclusionai/ling-3.0-flash-vl:free',                      // 2. High-speed visual/token analysis
   'inclusionai/ling-3.0-flash-sante:free',                   // 3. Compact low-latency inference
-  'meta-llama/llama-3.2-3b-instruct:free',                   // 4. Meta LLaMA 3.2 3B Instruct
-  'google/gemma-2-9b-it:free',                               // 5. Google Gemma 2 9B Instruct
-  'nvidia/nemotron-3-super-120b-a12b:free',                  // 6. NVIDIA Nemotron 3 Super 120B
-  'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free',      // 7. NVIDIA Nemotron 3 Reasoning
+  'z-ai/glm-5.2:free',                                       // 4. Daily-quota-capped today; resets ~daily
+  'openrouter/free',                                         // 5. OpenRouter's own auto-router (free tier); same daily cap
 ];
 
 let modelIndex = 0;
@@ -74,6 +90,59 @@ function cleanJson(text) {
     return JSON.parse(match[0]);
   }
   return JSON.parse(text.replace(/```json|```/g, '').trim());
+}
+
+// Optional paid fallback, OFF by default — mirrors aitradingagent2's
+// src/llm/openrouter.js pattern (added 2026-09-16). Tried only after the
+// free model AND the local Ollama fallback have both failed, so it never
+// spends anything on a call the free/local tiers could have answered.
+// Set OPENROUTER_ALLOW_PAID_FALLBACK=true once you have OpenRouter credit
+// (this account has $10 as of 2026-09-16) to stop this agent going quiet
+// / falling back to the canned heuristic simulation below.
+const PAID_FALLBACK_ENABLED = process.env.OPENROUTER_ALLOW_PAID_FALLBACK === 'true';
+const PAID_FALLBACK_MODEL = process.env.OPENROUTER_PAID_FALLBACK_MODEL || 'openai/gpt-4o-mini';
+
+async function callOpenRouterPaid(apiKey, symbol, userPayload) {
+  if (!PAID_FALLBACK_ENABLED || !apiKey) return null;
+  try {
+    const { data } = await axios.post(
+      'https://openrouter.ai/api/v1/chat/completions',
+      {
+        model: PAID_FALLBACK_MODEL,
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: JSON.stringify(userPayload) },
+        ],
+        max_tokens: 500,
+        temperature: 0.2,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://github.com/smokey79/aitradingagent',
+          'X-Title': 'AiTradingAgent-PaidFallback',
+        },
+        timeout: 6000,
+      }
+    );
+    const raw = data.choices?.[0]?.message?.content ?? '{}';
+    const parsed = cleanJson(raw);
+    if (parsed && parsed.signal) {
+      return {
+        agent: 'openrouter_free',
+        signal: parsed.signal.toUpperCase(),
+        confidence: Math.max(0.5, Math.min(1.0, parseFloat(parsed.confidence) || 0.75)),
+        reason: parsed.reason || `${PAID_FALLBACK_MODEL} paid-fallback analysis.`,
+        constraints: parsed.constraints || [],
+        model_used: PAID_FALLBACK_MODEL,
+        provider: 'openrouter_paid_fallback',
+      };
+    }
+  } catch (err) {
+    logger.warn(`OpenRouter paid fallback (${PAID_FALLBACK_MODEL}) failed for ${symbol}: ${err.message}`);
+  }
+  return null;
 }
 
 let ollamaCooldownUntil = 0;
@@ -142,6 +211,13 @@ async function getSignal(symbol, marketData) {
     return simulateOpenRouterFreeSignal(symbol, marketData, selectedModel);
   }
 
+  // NOTE: without a paid fallback, both the free-model and Ollama branches
+  // below can fail silently into simulateOpenRouterFreeSignal() — a canned
+  // heuristic, not a real model opinion — with no error thrown, which is
+  // why this agent could show HEALTHY while quietly voting on fabricated
+  // reasoning. The paid-fallback tier further down (checked before that
+  // heuristic) is the fix for that, once OPENROUTER_ALLOW_PAID_FALLBACK=true.
+
   try {
     const { data } = await axios.post(
       'https://openrouter.ai/api/v1/chat/completions',
@@ -184,6 +260,10 @@ async function getSignal(symbol, marketData) {
     if (ollamaSignal) return ollamaSignal;
   }
 
+  const paidSignal = await callOpenRouterPaid(apiKey, symbol, userPayload);
+  if (paidSignal) return paidSignal;
+
+  logger.warn(`[OpenRouterFree] Free model + Ollama + paid fallback (enabled=${PAID_FALLBACK_ENABLED}) all unavailable for ${symbol} — falling back to heuristic simulation, NOT a real model opinion.`);
   return simulateOpenRouterFreeSignal(symbol, marketData, selectedModel);
 }
 

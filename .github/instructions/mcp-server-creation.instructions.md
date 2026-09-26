@@ -6,7 +6,7 @@ applyTo:
   - **/mcpCli.ts
   - **/mcpOfficial.ts
   - **/resources/mcp-servers/**
-deployedAt: "2026-09-15T01:37:53.406Z"
+deployedAt: "2026-09-16T08:05:45.915Z"
 ---
 
 # mcp-server-creation

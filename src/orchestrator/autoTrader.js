@@ -104,9 +104,19 @@ async function scheduleNextCycle(delayMs = 15000) {
     if (isAutoTradingActive) {
       const portfolio = getPortfolioState();
       const hasOpen = portfolio && portfolio.openCount > 0;
-      const nextDelayMs = hasOpen ? 5000 : 15000;
-      
-      logger.info(`⏱️ [AutoTrader] Next autonomous cycle scheduled in ${(nextDelayMs / 1000).toFixed(0)}s (dynamic feedback)...`);
+      // FIXED 2026-09-16: this used to hardcode 5000/15000ms regardless of
+      // AUTO_TRADE_INTERVAL_SEC, so Phase 1 (runTradingCycle -> full 16-pair
+      // LLM consensus) fired every 5-15s no matter what the .env interval
+      // said -- the exact "runaway cycle rate" bug diagnosed earlier today
+      // (194/min, then 47.5/min), which the AUTO_TRADE_INTERVAL_SEC 15->1800
+      // fix never actually reached because this recursive chain bypassed it.
+      // Now: honour the configured interval for a fresh full cycle, and only
+      // check up to 6x more often (min once/min) while a position is open,
+      // for exit monitoring -- not to re-run full consensus on a fast timer.
+      const baseIntervalMs = parseInt(process.env.AUTO_TRADE_INTERVAL_SEC || '1800', 10) * 1000;
+      const nextDelayMs = hasOpen ? Math.max(60000, Math.round(baseIntervalMs / 6)) : baseIntervalMs;
+
+      logger.info(`⏱️ [AutoTrader] Next autonomous cycle scheduled in ${(nextDelayMs / 1000).toFixed(0)}s (base interval ${(baseIntervalMs / 1000).toFixed(0)}s, ${hasOpen ? 'position open - faster check' : 'no open position'})...`);
       scheduleNextCycle(nextDelayMs);
     }
   }, delayMs);

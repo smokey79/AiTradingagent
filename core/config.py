@@ -117,12 +117,12 @@ class Settings(BaseSettings):
     openrouter_free_model: str = "inclusionai/ling-3.0-flash-fin:free"
     openrouter_free_models: list = [
         "inclusionai/ling-3.0-flash-fin:free",
-        "inclusionai/ling-3.0-flash-vl:free",
-        "inclusionai/ling-3.0-flash-sante:free",
-        "google/gemma-4-31b-it:free",
-        "google/gemma-4-26b-a4b-it:free",
         "nvidia/nemotron-3-super-120b-a12b:free",
+        "nex-agi/nex-n2.5-pro:free",
+        "google/gemma-4-31b-it:free",
+        "poolside/laguna-s-2.1:free",
         "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+        "thinkingmachines/inkling:free",
     ]
 
     # OpenAI (via CheaperInference gateway)

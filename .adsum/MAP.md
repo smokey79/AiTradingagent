@@ -22,10 +22,10 @@ backtester/
   engine.py
 bridge/
   python_to_node.py
-(183 doc file(s) omitted)
+(184 doc file(s) omitted)
 _archive/ — 29 more file(s) (use list_files to enumerate)
 _credentials_review_2026-09-11/ — 20 more file(s) (use list_files to enumerate)
 ./ — 94 more file(s) (use list_files to enumerate)
 agents/ — 11 more file(s) (use list_files to enumerate)
-config/ — 52 more file(s) (use list_files to enumerate)
+config/ — 51 more file(s) (use list_files to enumerate)
 (walk stopped early: entry cap reached — use list_files for anything not listed)

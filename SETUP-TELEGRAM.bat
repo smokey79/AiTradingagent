@@ -12,8 +12,7 @@ echo ============================================================
 echo   AiTradingAgent — Telegram Session Setup
 echo ============================================================
 echo.
-echo API_ID  : 33055993
-echo API_HASH: cf771225a0a24187d87fb00ce4e3fed3
+echo API_ID / API_HASH are read from .env — see TELEGRAM_API_ID / TELEGRAM_API_HASH
 echo.
 echo This will ask for your Telegram phone number,
 echo send you a code, and save your session to .env
