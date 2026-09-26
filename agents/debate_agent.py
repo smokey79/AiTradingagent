@@ -165,10 +165,13 @@ class FacilitatorAgent:
         prompt = (
             "You are a senior fund manager reviewing a trading debate.\n"
             "Based on the arguments below, make the final trading decision.\n"
-            "Reply with ONLY a JSON object — no markdown, no extra text.\n\n"
+            "Do NOT explain your reasoning, do NOT summarise the data, and do "
+            "NOT write any text before or after the object. Your entire reply "
+            "must be exactly one line containing only the JSON object below, "
+            "with the placeholder values replaced — nothing else.\n\n"
             f"Symbol : {candle.symbol}  |  Close : {candle.close}\n\n"
             f"DEBATE TRANSCRIPT:\n{transcript}\n\n"
-            "Your decision:\n"
+            "Reply with exactly this shape (one line, no markdown fence):\n"
             '{"action": "LONG"|"SHORT"|"FLAT", "size": 0.0-1.0, '
             '"reason": "one sentence", "bull_score": 0.0-1.0, '
             '"bear_score": 0.0-1.0, "confidence": 0.0-1.0}'
@@ -178,14 +181,26 @@ class FacilitatorAgent:
         # DebaterAgent.argue() above — try the assigned provider, then fall
         # through to the router's full chain before defaulting to FLAT.
         try:
+            # NOTE 2026-09-26: the free OpenRouter facilitator model
+            # (inclusionai/ling-3.0-flash-fin:free) is a reasoning-style
+            # model that ALWAYS narrates a step-by-step "1. Analyze the
+            # Request... 2. Analyze the Debate... 3. Draft the JSON..."
+            # chain before emitting the JSON object, no matter how firmly
+            # the prompt says not to. Confirmed live: with a real 6-message
+            # debate transcript, that preamble alone can run several hundred
+            # tokens before the JSON even starts. 300/600 tokens cut the
+            # response off mid-reasoning, before any JSON existed at all
+            # ("No JSON object found"). 1024 gives it room to actually reach
+            # and complete the JSON block, which the regex extraction above
+            # then pulls out from wherever it lands in the response.
             try:
-                raw = self.llm.generate_text(prompt, max_tokens=300, llm=self.llm_name)
+                raw = self.llm.generate_text(prompt, max_tokens=1024, llm=self.llm_name)
             except Exception as primary_exc:
                 logger.warning(
                     "Facilitator primary (%s) failed: %s — trying router fallback chain.",
                     self.llm_name, primary_exc,
                 )
-                raw = self.llm.generate_text(prompt, max_tokens=300)
+                raw = self.llm.generate_text(prompt, max_tokens=1024)
             if not raw:
                 # FIX 2026-09-26: a provider can return an empty/None result
                 # as a "successful" call (see the OpenRouter content=null fix
@@ -211,26 +226,37 @@ class FacilitatorAgent:
             except json.JSONDecodeError:
                 # FIX 2026-09-26: free OpenRouter models routinely ignore the
                 # "reply with ONLY a JSON object" instruction and "think out
-                # loud" first (e.g. "Let me analyze the debate transcript...
-                # {"action": "LONG", ...}"). That made json.loads() fail on
-                # every single cycle where a free model answered the
-                # facilitator seat, silently defaulting every decision to
-                # FLAT regardless of what the bull/bear/neutral debate
-                # actually concluded. Recover by pulling out the {...} block
-                # embedded in the prose instead of requiring the whole reply
-                # to be pure JSON.
-                match = re.search(r"\{.*\}", cleaned, re.DOTALL)
-                if not match:
+                # loud" first — confirmed live, this specific free model
+                # (inclusionai/ling-3.0-flash-fin:free) narrates a whole
+                # "1. Analyze the Request... 2. Analyze the Debate... 3.
+                # Draft the JSON..." chain, and step 1 usually ECHOES the
+                # {"action": "LONG"|"SHORT"|"FLAT", ...} template from this
+                # very prompt (which is not valid JSON — it's a type union
+                # placeholder) before the real answer appears later in
+                # step 3. A single greedy first-{-to-last-} match would
+                # therefore span from the echoed template through to the
+                # real answer and fail to parse. Instead, collect every
+                # flat (non-nested) {...} block in the response and use the
+                # first one — scanning from the END backwards, since the
+                # model's real answer consistently comes after its echoed
+                # template — that actually parses as JSON and has a
+                # recognisable "action" field.
+                candidates = re.findall(r"\{[^{}]*\}", cleaned)
+                data = None
+                for candidate in reversed(candidates):
+                    try:
+                        parsed = json.loads(candidate)
+                    except json.JSONDecodeError:
+                        continue
+                    if isinstance(parsed, dict) and "action" in parsed:
+                        data = parsed
+                        break
+                if data is None:
                     raise ValueError(
-                        f"No JSON object found in LLM response "
+                        f"No parseable JSON object with an 'action' field "
+                        f"found among {len(candidates)} candidate(s) "
                         f"(cleaned={cleaned[:200]!r})"
                     )
-                try:
-                    data = json.loads(match.group(0))
-                except json.JSONDecodeError as json_exc:
-                    raise ValueError(
-                        f"{json_exc} (extracted={match.group(0)[:200]!r})"
-                    ) from json_exc
 
             action = str(data.get("action", "FLAT")).upper()
             if action not in {"LONG", "SHORT", "FLAT"}:
