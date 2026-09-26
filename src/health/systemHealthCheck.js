@@ -29,7 +29,15 @@ const TRADE_LEDGER_PATH = path.resolve(__dirname, '../../data/trade_ledger.json'
 
 // Check intervals
 const CHECK_INTERVAL_MS     = parseInt(process.env.HEALTH_CHECK_INTERVAL_MS || '60000', 10);
-const HEARTBEAT_TIMEOUT_MS  = 5 * 60 * 1000; // 5 min without a cycle = unhealthy
+// FIXED 2026-09-26: this was a hardcoded 5 min, left over from before
+// AUTO_TRADE_INTERVAL_SEC was deliberately raised to 1800s (30 min) on
+// 2026-09-16 to fit the free LLM quota budget. Since then the heartbeat
+// has been a guaranteed false alarm for ~25 of every 30 minutes (DEGRADED
+// status while the system was working exactly as configured). Now derived
+// from the actual configured cycle interval, with a floor of 5 min and a
+// 2x safety margin so a genuinely stuck loop (one cycle late) still trips it.
+const AUTO_TRADE_INTERVAL_SEC_FOR_HEARTBEAT = parseInt(process.env.AUTO_TRADE_INTERVAL_SEC || '1800', 10);
+const HEARTBEAT_TIMEOUT_MS  = Math.max(5 * 60 * 1000, AUTO_TRADE_INTERVAL_SEC_FOR_HEARTBEAT * 1000 * 2);
 
 let healthCheckInterval  = null;
 let lastSystemHealth     = null;
