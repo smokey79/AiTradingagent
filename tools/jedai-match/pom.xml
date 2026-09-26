@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  jedai-match: one-off Maven project that builds a single runnable JAR
+  wrapping the JedAI entity-resolution library (org.scify:jedai-core).
+
+  WHY THIS EXISTS: Alan asked (2026-09-26) to add JedAI to the project for
+  entity resolution / record matching work (not trading signals; researched
+  and confirmed JedAI is a Java data-integration / record-linkage toolkit,
+  unrelated to trade advice). First real use case: finding possible
+  duplicate trade records across F:\aitradingagent\data\trade_ledger.json
+  and its sibling files (lost_trades_memory.json, quarantine_simulated
+  trades.json, trade_ledger backups) that do not share a clean common ID,
+  which is exactly what entity resolution is for, and directly relevant to
+  Alan's "no phantom profits" concern flagged in an earlier session.
+
+  You should never need to touch this file or run Maven again after the
+  one time build; scripts\BuildJedaiMatch.ps1 does it once and produces
+  tools\jedai-match\target\jedai-match.jar, which is all the trade dedupe
+  scripts need afterwards.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.aitradingagent</groupId>
+  <artifactId>jedai-match</artifactId>
+  <version>1.0</version>
+  <packaging>jar</packaging>
+
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.scify</groupId>
+      <artifactId>jedai-core</artifactId>
+      <version>3.2.1</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>jedai-match</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.5.1</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals><goal>shade</goal></goals>
+            <configuration>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>com.aitradingagent.TradeMatcher</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

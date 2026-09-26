@@ -134,6 +134,9 @@ batch_trading_engine.py
 # ------------------------------------------------------------------------------
 # 7. MISC REPO EXCLUSIONS
 # ------------------------------------------------------------------------------
+# Accidental nested clone of the freqtrade-stable repository
+freqtrade-stable/freqtrade-stable/
+
 CLAUDE_BATCH_API_GUIDE.md
 CODE_QUALITY_GUIDE.md
 DOCKER_DEPLOYMENT_GUIDE.md
@@ -143,3 +146,13 @@ ENVIRONMENT_SETUP.md
 .eslintrc.json
 .prettierignore
 .prettierrc.json
+
+# --- Added 2026-09-26: found live credentials staged for commit in these ---
+# --- paths (Anthropic/OpenAI/Gemini/DeepSeek/GitHub keys). Never track  ---
+# --- these again. Existing copies are left on disk, just untracked.    ---
+_credentials_review_*/
+_archive/secrets_archive/
+data/copilot-activity-history*.csv
+*.ENVtxt
+*ENVtxt
+*.env-txt
