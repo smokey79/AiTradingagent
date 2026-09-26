@@ -1,189 +1,189 @@
 {
-  "updatedAt": "2026-09-24T18:20:43.583Z",
+  "updatedAt": "2026-09-26T15:46:31.367Z",
   "signals": {
-    "AAVE/USDT": {
+    "POL/USDT": {
       "signal": "BUY",
-      "confidence": 0.669,
+      "confidence": 0.633,
       "approved": true,
       "agentsAgreeing": 3,
-      "reasoning": "3/10 specialist AI agents aligned on BUY (67% confidence). claude: Strong bullish alignment: Price above EMA50/200 with RSI at 61.0 and positive MACD | technical_daily: Trend up (EMA20>EMA50), momentum confirmed (RSI 61.4, MACD>signal), not overbought/overextended. [default config]",
-      "ts": "2026-09-24T18:20:32.321Z"
+      "reasoning": "3/10 specialist AI agents aligned on BUY (63% confidence). bull_agent: Strong bullish bounce confirmed above 50-EMA ($0.11) with 0.58x volume. Outperforming BTC by +5.65% RS. [LossLearner Alert: Adjusted -12%] | technical_daily: Trend up (EMA20>EMA50), momentum confirmed (RSI 66.0, MACD>signal), not overbought/overextended. [default config]",
+      "ts": "2026-09-26T15:46:20.537Z"
     },
-    "ICP/USDT": {
-      "signal": "BUY",
-      "confidence": 0.666,
-      "approved": true,
-      "agentsAgreeing": 3,
-      "reasoning": "3/10 specialist AI agents aligned on BUY (67% confidence). claude: Strong bullish alignment: Price above EMA50/200 with RSI at 60.5 and positive MACD | technical_daily: Trend up (EMA20>EMA50), momentum confirmed (RSI 66.0, MACD>signal), not overbought/overextended. [default config]",
-      "ts": "2026-09-24T18:20:32.372Z"
-    },
-    "LINK/USDT": {
-      "signal": "HOLD",
-      "confidence": 0,
-      "approved": false,
-      "agentsAgreeing": 0,
-      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/10 agreeing. Capital preserved.",
-      "ts": "2026-09-24T18:20:32.395Z"
-    },
-    "ZEC/USDT": {
-      "signal": "HOLD",
-      "confidence": 0.098,
-      "approved": false,
-      "agentsAgreeing": 0,
-      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/10 agreeing. Capital preserved.",
-      "ts": "2026-09-24T18:20:32.471Z"
-    },
-    "OP/USDT": {
+    "XRP/USDT": {
       "signal": "BUY",
       "confidence": 0.586,
       "approved": true,
       "agentsAgreeing": 2,
-      "reasoning": "2/10 specialist AI agents aligned on BUY (59% confidence). bull_agent: Strong bullish bounce confirmed above 50-EMA ($0.13) with 0.19x volume. Outperforming BTC by +6% RS. [LossLearner Alert: Adjusted -12%] | gemini: Bullish Golden EMA Alignment confirmed at 50-EMA ($0.13) with 1.34% distance",
-      "ts": "2026-09-24T18:20:32.491Z"
-    },
-    "BNB/USDT": {
-      "signal": "BUY",
-      "confidence": 0.501,
-      "approved": false,
-      "agentsAgreeing": 1,
-      "reasoning": "1/10 specialist AI agents aligned on BUY (50% confidence). gemini: Bull Flag 50-EMA Dynamic Bounce confirmed at 50-EMA ($776.52) with 0.32% distance",
-      "ts": "2026-09-24T18:20:32.523Z"
-    },
-    "SUI/USDT": {
-      "signal": "BUY",
-      "confidence": 0.668,
-      "approved": true,
-      "agentsAgreeing": 3,
-      "reasoning": "3/10 specialist AI agents aligned on BUY (67% confidence). claude: Strong bullish alignment: Price above EMA50/200 with RSI at 61.5 and positive MACD | technical_daily: Trend up (EMA20>EMA50), momentum confirmed (RSI 68.1, MACD>signal), not overbought/overextended. [default config]",
-      "ts": "2026-09-24T18:20:32.543Z"
-    },
-    "LTC/USDT": {
-      "signal": "BUY",
-      "confidence": 0.626,
-      "approved": true,
-      "agentsAgreeing": 2,
-      "reasoning": "2/10 specialist AI agents aligned on BUY (63% confidence). claude: Strong bullish alignment: Price above EMA50/200 with RSI at 65.6 and positive MACD | gemini: Bullish Golden EMA Alignment confirmed at 50-EMA ($65.54) with 9.88% distance",
-      "ts": "2026-09-24T18:20:32.564Z"
-    },
-    "TRX/USDT": {
-      "signal": "BUY",
-      "confidence": 0.638,
-      "approved": true,
-      "agentsAgreeing": 3,
-      "reasoning": "3/10 specialist AI agents aligned on BUY (64% confidence). bull_agent: Strong bullish bounce confirmed above 50-EMA ($0.34) with 0.26x volume. Outperforming BTC by +0.47% RS. [LossLearner Alert: Adjusted -12%] | technical_daily: Trend up (EMA20>EMA50), momentum confirmed (RSI 55.9, MACD>signal), not overbought/overextended. [default config]",
-      "ts": "2026-09-24T18:20:32.591Z"
-    },
-    "AVAX/USDT": {
-      "signal": "HOLD",
-      "confidence": 0.064,
-      "approved": false,
-      "agentsAgreeing": 0,
-      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/10 agreeing. Capital preserved.",
-      "ts": "2026-09-24T18:20:32.613Z"
-    },
-    "ARB/USDT": {
-      "signal": "HOLD",
-      "confidence": 0.098,
-      "approved": false,
-      "agentsAgreeing": 0,
-      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/10 agreeing. Capital preserved.",
-      "ts": "2026-09-24T18:20:32.687Z"
+      "reasoning": "2/10 specialist AI agents aligned on BUY (59% confidence). bull_agent: Strong bullish bounce confirmed above 50-EMA ($1.55) with 0.76x volume. [LossLearner Alert: Adjusted -12%] | gemini: Bull Flag 50-EMA Dynamic Bounce confirmed at 50-EMA ($1.55) with 0.1% distance",
+      "ts": "2026-09-26T15:46:20.583Z"
     },
     "HBAR/USDT": {
       "signal": "BUY",
       "confidence": 0.586,
       "approved": true,
       "agentsAgreeing": 2,
-      "reasoning": "2/10 specialist AI agents aligned on BUY (59% confidence). bull_agent: Strong bullish bounce confirmed above 50-EMA ($0.09) with 0.3x volume. Outperforming BTC by +2.16% RS. [LossLearner Alert: Adjusted -12%] | gemini: Bullish Golden EMA Alignment confirmed at 50-EMA ($0.09) with 2.48% distance",
-      "ts": "2026-09-24T18:20:32.709Z"
-    },
-    "ATOM/USDT": {
-      "signal": "BUY",
-      "confidence": 0.67,
-      "approved": true,
-      "agentsAgreeing": 3,
-      "reasoning": "3/10 specialist AI agents aligned on BUY (67% confidence). claude: Strong bullish alignment: Price above EMA50/200 with RSI at 60.0 and positive MACD | technical_daily: Trend up (EMA20>EMA50), momentum confirmed (RSI 58.5, MACD>signal), not overbought/overextended. [default config]",
-      "ts": "2026-09-24T18:20:32.733Z"
-    },
-    "POL/USDT": {
-      "signal": "HOLD",
-      "confidence": 0.105,
-      "approved": false,
-      "agentsAgreeing": 0,
-      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/10 agreeing. Capital preserved.",
-      "ts": "2026-09-24T18:20:32.753Z"
+      "reasoning": "2/10 specialist AI agents aligned on BUY (59% confidence). bull_agent: Strong bullish bounce confirmed above 50-EMA ($0.09) with 1.02x volume. Outperforming BTC by +1.43% RS. [LossLearner Alert: Adjusted -12%] | gemini: Bullish Golden EMA Alignment confirmed at 50-EMA ($0.09) with 5.46% distance",
+      "ts": "2026-09-26T15:46:20.604Z"
     },
     "CRO/USDT": {
       "signal": "SELL",
-      "confidence": 0.472,
-      "approved": false,
-      "agentsAgreeing": 1,
-      "reasoning": "1/11 specialist AI agents aligned on SELL (47% confidence). gemini: Double Top Overextension Rejection confirmed at 50-EMA ($0.05) with 25.25% distance",
-      "ts": "2026-09-24T18:20:32.775Z"
-    },
-    "HYPE/USDT": {
-      "signal": "HOLD",
-      "confidence": 0.065,
-      "approved": false,
-      "agentsAgreeing": 0,
-      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/10 agreeing. Capital preserved.",
-      "ts": "2026-09-24T18:20:32.795Z"
-    },
-    "FLR/USDT": {
-      "signal": "HOLD",
-      "confidence": 0,
-      "approved": false,
-      "agentsAgreeing": 0,
-      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/11 agreeing. Capital preserved.",
-      "ts": "2026-09-24T18:20:32.868Z"
-    },
-    "XRP/USDT": {
-      "signal": "BUY",
-      "confidence": 0.457,
-      "approved": false,
-      "agentsAgreeing": 1,
-      "reasoning": "1/9 specialist AI agents aligned on BUY (46% confidence). bull_agent: Strong bullish bounce confirmed above 50-EMA ($1.51) with 0.35x volume. Outperforming BTC by +2.11% RS. [LossLearner Alert: Adjusted -12%]",
-      "ts": "2026-09-24T18:20:37.691Z"
-    },
-    "BTC/USDT": {
-      "signal": "HOLD",
-      "confidence": 0.066,
-      "approved": false,
-      "agentsAgreeing": 0,
-      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/9 agreeing. Capital preserved.",
-      "ts": "2026-09-24T18:20:38.186Z"
-    },
-    "ETH/USDT": {
-      "signal": "SELL",
-      "confidence": 0.375,
-      "approved": false,
+      "confidence": 0.596,
+      "approved": true,
       "agentsAgreeing": 2,
-      "reasoning": "2/9 specialist AI agents aligned on SELL (38% confidence). bear_agent: Strong bearish rejection confirmed below 50-EMA ($2690.59) with 0.42x volume. [LossLearner Alert: Adjusted -12%] | claude: Overbought RSI (49.8) and order book selling pressure below EMA50",
-      "ts": "2026-09-24T18:20:38.524Z"
+      "reasoning": "2/11 specialist AI agents aligned on SELL (60% confidence). claude: Overbought RSI (100.0) and order book selling pressure below EMA50 | gemini: Double Top Overextension Rejection confirmed at 50-EMA ($0.05) with 31.75% distance",
+      "ts": "2026-09-26T15:46:20.675Z"
+    },
+    "OP/USDT": {
+      "signal": "BUY",
+      "confidence": 0.626,
+      "approved": true,
+      "agentsAgreeing": 2,
+      "reasoning": "2/10 specialist AI agents aligned on BUY (63% confidence). claude: Strong bullish alignment: Price above EMA50/200 with RSI at 65.3 and positive MACD | gemini: Bullish Golden EMA Alignment confirmed at 50-EMA ($0.14) with 6.9% distance",
+      "ts": "2026-09-26T15:46:20.697Z"
+    },
+    "BNB/USDT": {
+      "signal": "SELL",
+      "confidence": 0.581,
+      "approved": true,
+      "agentsAgreeing": 2,
+      "reasoning": "2/10 specialist AI agents aligned on SELL (58% confidence). bear_agent: Strong bearish rejection confirmed below 50-EMA ($775.28) with 0.88x volume. Lagging BTC by -0.56% RS. [LossLearner Alert: Adjusted -12%] | gemini: Bear Flag 50-EMA Dynamic Rejection confirmed at 50-EMA ($775.28) with -0.13% distance",
+      "ts": "2026-09-26T15:46:20.717Z"
+    },
+    "AVAX/USDT": {
+      "signal": "BUY",
+      "confidence": 0.746,
+      "approved": true,
+      "agentsAgreeing": 2,
+      "reasoning": "2/10 specialist AI agents aligned on BUY (75% confidence). claude: Strong bullish alignment: Price above EMA50/200 with RSI at 66.8 and positive MACD | gemini: Bullish Golden EMA Alignment confirmed at 50-EMA ($10.62) with 4.12% distance",
+      "ts": "2026-09-26T15:46:20.734Z"
     },
     "SOL/USDT": {
       "signal": "BUY",
-      "confidence": 0.59,
+      "confidence": 0.84,
+      "approved": true,
+      "agentsAgreeing": 4,
+      "reasoning": "4/10 specialist AI agents aligned on BUY (84% confidence). bull_agent: Strong bullish bounce confirmed above 50-EMA ($119.68) with 1.35x volume. Outperforming BTC by +1.04% RS. | claude: Strong bullish alignment: Price above EMA50/200 with RSI at 60.2 and positive MACD",
+      "ts": "2026-09-26T15:46:20.753Z"
+    },
+    "LTC/USDT": {
+      "signal": "BUY",
+      "confidence": 0.626,
       "approved": true,
       "agentsAgreeing": 2,
-      "reasoning": "2/9 specialist AI agents aligned on BUY (59% confidence). claude: Strong bullish alignment: Price above EMA50/200 with RSI at 61.7 and positive MACD | technical_daily: Trend up (EMA50>EMA200), momentum confirmed (RSI 65.6, MACD>signal), not overbought/overextended. [3/3 cycles, 63 trades total, avg PF 2.03, avg return +9.7%, worst-cycle DD -3.0%]",
-      "ts": "2026-09-24T18:20:38.888Z"
+      "reasoning": "2/10 specialist AI agents aligned on BUY (63% confidence). claude: Strong bullish alignment: Price above EMA50/200 with RSI at 54.8 and positive MACD | gemini: Bullish Golden EMA Alignment confirmed at 50-EMA ($70.92) with 2.75% distance",
+      "ts": "2026-09-26T15:46:20.774Z"
+    },
+    "AAVE/USDT": {
+      "signal": "BUY",
+      "confidence": 0.668,
+      "approved": true,
+      "agentsAgreeing": 3,
+      "reasoning": "3/10 specialist AI agents aligned on BUY (67% confidence). claude: Strong bullish alignment: Price above EMA50/200 with RSI at 58.3 and positive MACD | technical_daily: Trend up (EMA20>EMA50), momentum confirmed (RSI 66.8, MACD>signal), not overbought/overextended. [default config]",
+      "ts": "2026-09-26T15:46:20.848Z"
+    },
+    "ZEC/USDT": {
+      "signal": "BUY",
+      "confidence": 0.576,
+      "approved": true,
+      "agentsAgreeing": 2,
+      "reasoning": "2/9 specialist AI agents aligned on BUY (58% confidence). technical_daily: Trend up (EMA20>EMA50), momentum confirmed (RSI 65.2, MACD>signal), not overbought/overextended. [default config] | gemini: Bull Flag 50-EMA Dynamic Bounce confirmed at 50-EMA ($1546.66) with 0.23% distance",
+      "ts": "2026-09-26T15:46:20.876Z"
+    },
+    "ETH/USDT": {
+      "signal": "HOLD",
+      "confidence": 0.068,
+      "approved": false,
+      "agentsAgreeing": 0,
+      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/10 agreeing. Capital preserved.",
+      "ts": "2026-09-26T15:46:20.893Z"
+    },
+    "HYPE/USDT": {
+      "signal": "BUY",
+      "confidence": 0.5,
+      "approved": false,
+      "agentsAgreeing": 1,
+      "reasoning": "1/10 specialist AI agents aligned on BUY (50% confidence). gemini: Bull Flag 50-EMA Dynamic Bounce confirmed at 50-EMA ($92.32) with 0.07% distance",
+      "ts": "2026-09-26T15:46:20.909Z"
+    },
+    "OKB/USDT": {
+      "signal": "BUY",
+      "confidence": 0.789,
+      "approved": true,
+      "agentsAgreeing": 3,
+      "reasoning": "3/11 specialist AI agents aligned on BUY (79% confidence). bull_agent: High-volume momentum breakout retest above 50-EMA. | claude: Strong bullish alignment: Price above EMA50/200 with RSI at 58.3 and positive MACD",
+      "ts": "2026-09-26T15:46:20.929Z"
+    },
+    "ARB/USDT": {
+      "signal": "BUY",
+      "confidence": 0.754,
+      "approved": true,
+      "agentsAgreeing": 3,
+      "reasoning": "3/10 specialist AI agents aligned on BUY (75% confidence). bull_agent: High-volume momentum breakout retest above 50-EMA. | technical_daily: Trend up (EMA20>EMA50), momentum confirmed (RSI 68.9, MACD>signal), not overbought/overextended. [3/3 cycles, 28 trades total (thinnest reliable sample), avg PF 1.62, avg return +2.8%, worst-cycle DD -3.0%]",
+      "ts": "2026-09-26T15:46:21.230Z"
+    },
+    "SUI/USDT": {
+      "signal": "BUY",
+      "confidence": 0.683,
+      "approved": true,
+      "agentsAgreeing": 3,
+      "reasoning": "3/10 specialist AI agents aligned on BUY (68% confidence). bull_agent: Strong bullish bounce confirmed above 50-EMA ($1.11) with 0.43x volume. Outperforming BTC by +6.59% RS. [LossLearner Alert: Adjusted -12%] | claude: Strong bullish alignment: Price above EMA50/200 with RSI at 62.6 and positive MACD",
+      "ts": "2026-09-26T15:46:21.879Z"
     },
     "NEAR/USDT": {
+      "signal": "BUY",
+      "confidence": 0.586,
+      "approved": true,
+      "agentsAgreeing": 2,
+      "reasoning": "2/10 specialist AI agents aligned on BUY (59% confidence). bull_agent: Strong bullish bounce confirmed above 50-EMA ($4.80) with 0.73x volume. [LossLearner Alert: Adjusted -12%] | gemini: Bull Flag 50-EMA Dynamic Bounce confirmed at 50-EMA ($4.80) with 0.55% distance",
+      "ts": "2026-09-26T15:46:22.035Z"
+    },
+    "BTC/USDT": {
+      "signal": "SELL",
+      "confidence": 0.388,
+      "approved": false,
+      "agentsAgreeing": 2,
+      "reasoning": "2/8 specialist AI agents aligned on SELL (39% confidence). bear_agent: Strong bearish rejection confirmed below 50-EMA ($84244.83) with 1.08x volume. [LossLearner Alert: Adjusted -12%] | claude: Overbought RSI (51.5) and order book selling pressure below EMA50",
+      "ts": "2026-09-26T15:46:26.773Z"
+    },
+    "LINK/USDT": {
       "signal": "BUY",
       "confidence": 0.618,
       "approved": true,
       "agentsAgreeing": 2,
-      "reasoning": "2/9 specialist AI agents aligned on BUY (62% confidence). bull_agent: Strong bullish bounce confirmed above 50-EMA ($4.41) with 0.4x volume. Outperforming BTC by +8.56% RS. [LossLearner Alert: Adjusted -12%] | claude: Strong bullish alignment: Price above EMA50/200 with RSI at 63.2 and positive MACD",
-      "ts": "2026-09-24T18:20:41.860Z"
+      "reasoning": "2/9 specialist AI agents aligned on BUY (62% confidence). bull_agent: Strong bullish bounce confirmed above 50-EMA ($13.76) with 0.65x volume. Outperforming BTC by +3.3% RS. [LossLearner Alert: Adjusted -12%] | claude: Strong bullish alignment: Price above EMA50/200 with RSI at 64.3 and positive MACD",
+      "ts": "2026-09-26T15:46:29.006Z"
     },
-    "OKB/USDT": {
-      "signal": "BUY",
-      "confidence": 0.512,
+    "TRX/USDT": {
+      "signal": "SELL",
+      "confidence": 0.611,
       "approved": false,
       "agentsAgreeing": 1,
-      "reasoning": "1/10 specialist AI agents aligned on BUY (51% confidence). claude: Strong bullish alignment: Price above EMA50/200 with RSI at 66.0 and positive MACD",
-      "ts": "2026-09-24T18:20:43.573Z"
+      "reasoning": "1/8 specialist AI agents aligned on SELL (61% confidence). bear_agent: Strong bearish rejection confirmed below 50-EMA ($0.34) with 1.45x volume. Lagging BTC by -0.72% RS.",
+      "ts": "2026-09-26T15:46:30.555Z"
+    },
+    "ICP/USDT": {
+      "signal": "HOLD",
+      "confidence": 0,
+      "approved": false,
+      "agentsAgreeing": 0,
+      "reasoning": "Consensus equilibrium: Agents did not reach the minimum agreement threshold. 0/9 agreeing. Capital preserved.",
+      "ts": "2026-09-26T15:46:30.950Z"
+    },
+    "ATOM/USDT": {
+      "signal": "BUY",
+      "confidence": 0.515,
+      "approved": false,
+      "agentsAgreeing": 1,
+      "reasoning": "1/9 specialist AI agents aligned on BUY (52% confidence). technical_daily: Trend up (EMA20>EMA50), momentum confirmed (RSI 63.4, MACD>signal), not overbought/overextended. [default config]",
+      "ts": "2026-09-26T15:46:31.247Z"
+    },
+    "FLR/USDT": {
+      "signal": "BUY",
+      "confidence": 0.509,
+      "approved": false,
+      "agentsAgreeing": 1,
+      "reasoning": "1/10 specialist AI agents aligned on BUY (51% confidence). claude: Strong bullish alignment: Price above EMA50/200 with RSI at 56.7 and positive MACD",
+      "ts": "2026-09-26T15:46:31.366Z"
     }
   }
 }

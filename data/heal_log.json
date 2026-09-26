@@ -1,19 +1,5 @@
 [
   {
-    "timestamp": "2026-09-07T00:28:51.009Z",
-    "agent": "strategy_learner",
-    "action": "MODEL_FALLBACK",
-    "success": false,
-    "detail": "No fallback chain defined"
-  },
-  {
-    "timestamp": "2026-09-07T00:28:51.028Z",
-    "agent": "expert_trader",
-    "action": "SOFT_RESET",
-    "success": false,
-    "detail": "Cannot find module 'F:\\aitradingagent\\src\\agents\\expert_traderAgent.js'\nRequire stack:\n- F:\\aitradingagent\\src\\health\\selfHealer.js\n- F:\\aitradingagent\\src\\orchestrator\\consensus.js\n- F:\\aitradingagent\\src\\orchestrator\\index.js\n- F:\\aitradingagent\\src\\orchestrator\\autoTrader.js\n- F:\\aitradingagent\\src\\dashboard\\server.js"
-  },
-  {
     "timestamp": "2026-09-07T00:28:51.040Z",
     "agent": "expert_trader",
     "action": "RULE_FALLBACK",
@@ -1394,6 +1380,20 @@
   },
   {
     "timestamp": "2026-09-24T18:20:19.402Z",
+    "agent": "strategy_learner",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for strategyLearningAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-26T15:46:34.188Z",
+    "agent": "openrouter_free",
+    "action": "SOFT_RESET",
+    "success": true,
+    "detail": "Module cache cleared for openrouterFreeAgent.js and agent marked RECOVERED"
+  },
+  {
+    "timestamp": "2026-09-26T15:46:34.219Z",
     "agent": "strategy_learner",
     "action": "SOFT_RESET",
     "success": true,

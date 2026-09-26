@@ -22,8 +22,16 @@ const { executeTrade } = require('../utils/exchangeRouter');
 const { allocateProfits, getVaultSummary } = require('../utils/profitAllocator');
 const { getPerformanceStats } = require('../risk/tradeLedger');
 const { startContinuousLearning } = require('../agents/learningAgent');
+// Added 2026-09-26: OANDA wiring (forex/commodities/indices). Opt-in via
+// OANDA_TRADING_ENABLED=true - off by default so this never silently starts
+// trading a new asset class. See config/instrument_universe.json for the
+// pair list.
+const { isOandaPair, getOandaPairs } = require('../utils/instrumentUniverse');
+const { fetchOandaMarketData } = require('../data/oandaMarketData');
+const oandaExecutor = require('../utils/oandaExecutor');
 
 const PAPER = process.env.PAPER_TRADING !== 'false';
+const OANDA_TRADING_ENABLED = process.env.OANDA_TRADING_ENABLED === 'true';
 // Note: removed unused local MIN_CONFIDENCE (2026-09-03) — it was declared
 // here but never referenced anywhere in this file, which read like a safety
 // gate that did nothing. The real confidence gate is enforced in
@@ -59,11 +67,22 @@ async function getActivePairs() {
     || 'BTC/USDT,ETH/USDT,SOL/USDT,CRO/USDT,AVAX/USDT,ARB/USDT')
     .split(',').map(p => p.trim()).filter(Boolean);
 
+  // Added 2026-09-26: append OANDA's forex/commodities/indices pairs when
+  // opted in. Kept as a simple concat, never a replace, for the same reason
+  // TRADING_PAIRS is authoritative above - a curated list must not silently
+  // disappear or get reordered by this.
+  const withOanda = OANDA_TRADING_ENABLED
+    ? [...configured, ...getOandaPairs().filter((p) => !configured.includes(p))]
+    : configured;
+  if (OANDA_TRADING_ENABLED) {
+    logger.info(`[Orchestrator] OANDA_TRADING_ENABLED=true - added ${withOanda.length - configured.length} OANDA pair(s): ${getOandaPairs().join(', ')}`);
+  }
+
   if (process.env.DYNAMIC_UNIVERSE !== 'true') {
-    dynamicPairsCache = configured;
+    dynamicPairsCache = withOanda;
     lastPairsCacheUpdate = now;
-    logger.info(`[Orchestrator] Universe = ${configured.length} configured pairs (TRADING_PAIRS): ${configured.join(', ')}`);
-    return configured;
+    logger.info(`[Orchestrator] Universe = ${withOanda.length} configured pairs (TRADING_PAIRS): ${withOanda.join(', ')}`);
+    return withOanda;
   }
 
   try {
@@ -88,7 +107,13 @@ async function getActivePairs() {
     // ticker is not evidence about a pair that trades on the venue we
     // actually execute on. The old code replaced the list instead of
     // ordering it, which is how curated pairs silently disappeared.
-    const selected = [...ranked, ...configured.filter(p => !ranked.includes(p))];
+    // OANDA pairs never have a Binance ticker (different venue entirely) -
+    // append them after ranking rather than letting the Binance-only filter
+    // above drop them.
+    const withOandaRanked = OANDA_TRADING_ENABLED
+      ? [...ranked, ...getOandaPairs().filter((p) => !ranked.includes(p))]
+      : ranked;
+    const selected = [...withOandaRanked, ...configured.filter(p => !withOandaRanked.includes(p))];
 
     dynamicPairsCache = selected;
     lastPairsCacheUpdate = now;
@@ -153,6 +178,13 @@ async function runTradingCycle() {
   await Promise.allSettled(
     pairs.map(async (pair) => {
       try {
+        // OANDA pairs (forex/commodities/indices) get real OANDA prices in
+        // the same marketData shape, and skip TradingKit enrichment (that
+        // feed is crypto-only).
+        if (isOandaPair(pair)) {
+          marketDataMap[pair] = await fetchOandaMarketData(pair);
+          return;
+        }
         const base = await fetchMarketData(pair, cmcQuotes);
         // Enrich with TradingKit real-time data (indicators + signal)
         marketDataMap[pair] = await enrichMarketData(pair, base);
@@ -285,8 +317,12 @@ async function runTradingCycle() {
         return { pair, signal: consensus.signal, executed: false, reason: `Risk Gate: ${riskCheck.reason}` };
       }
 
-      // Execute
-      const tradeResult = await executeTrade(pair, consensus.signal, riskCheck, marketData, PAPER);
+      // Execute — OANDA-covered pairs route through oandaExecutor (real OANDA
+      // prices, OANDA's own stop-loss/leverage-cap/live-gate rules); every
+      // other pair keeps using the crypto exchangeRouter, unchanged.
+      const tradeResult = isOandaPair(pair)
+        ? await oandaExecutor.executeTrade(pair, consensus.signal, riskCheck, marketData, PAPER)
+        : await executeTrade(pair, consensus.signal, riskCheck, marketData, PAPER);
       const allocation  = await allocateProfits(tradeResult);
 
       if (global.broadcastDashboardEvent) {

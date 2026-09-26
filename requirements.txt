@@ -41,3 +41,6 @@ python-dateutil>=2.8.2
 
 alpaca-py==0.44.0
 
+
+# Added 2026-09-26: MetaTrader5 bridge (src/bridge/mt5Bridge.py). Windows-only package.
+MetaTrader5>=5.0.45
