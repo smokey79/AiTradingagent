@@ -5,6 +5,15 @@
  * Evaluates why trades failed, extracts deterministic failure traps,
  * maintains decaying negative pattern memory, and applies pre-trade
  * filters to protect and maximize hit rate.
+ *
+ * 2026-09-26 (Claude): added a content-based dedupe guard in recordLossPostMortem().
+ * A caller bug elsewhere (learningAgent.js calling this with positional args instead of
+ * an options object) had been writing dozens of byte-for-byte identical placeholder
+ * records to data/lost_trades_memory.json. That caller bug is fixed, but this guard stays
+ * as defense-in-depth: any future bug that re-submits the exact same diagnosis (same
+ * symbol/trapType/entry/exit/pnl/diagnostic) is now skipped instead of piling up, so the
+ * memory file — and anything that weights trapType frequency from it — can't be polluted
+ * by repeat/duplicate writes again.
  */
 
 'use strict';
@@ -63,6 +72,21 @@ function saveLossMemory(records) {
   } catch (e) {
     logger.warn(`Failed to save loss memory: ${e.message}`);
   }
+}
+
+/**
+ * True if `records` already contains a post-mortem with the same diagnosis content
+ * as `candidate` (ignoring id/timestamp/activeWeight, which always differ).
+ */
+function isDuplicatePostMortem(records, candidate) {
+  return records.some(r =>
+    r.symbol === candidate.symbol &&
+    r.trapType === candidate.trapType &&
+    r.entryPrice === candidate.entryPrice &&
+    r.exitPrice === candidate.exitPrice &&
+    r.pnlUsd === candidate.pnlUsd &&
+    r.diagnostic === candidate.diagnostic
+  );
 }
 
 /**
@@ -162,6 +186,10 @@ function recordLossPostMortem({
   };
 
   const existing = loadLossMemory();
+  if (isDuplicatePostMortem(existing, postMortem)) {
+    logger.info(`🧠 [LossLearner] Skipped duplicate post-mortem for ${cleanSymbol} (${side}): [${trapType}] already recorded.`);
+    return postMortem;
+  }
   existing.push(postMortem);
   saveLossMemory(existing);
 
