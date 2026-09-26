@@ -76,6 +76,79 @@ def _is_permanent_llm_error(exc: Exception) -> bool:
 
 
 # ---------------------------------------------------------------------------
+# Shared Gemini daily call budget (2026-09-26)
+# ---------------------------------------------------------------------------
+#
+# Google's free tier caps Gemini at 20 requests/day/model. The fixes above
+# stop wasted RETRIES once a call has already failed with a quota error,
+# but several separate processes call Gemini (this router - used by
+# python-debate, hermes-analyst, tradingkit-analyst - AND the Node.js
+# consensus engine's src/agents/geminiAgent.js), so none of them know how
+# close the *shared* daily quota is until they personally get rejected.
+# This is a small cross-process, cross-language soft budget: a single JSON
+# file both sides read/increment before attempting a real call, so once
+# today's count hits GEMINI_DAILY_CALL_LIMIT (18 by default - a safety
+# margin under Google's real 20/day cap) every process skips the real API
+# call entirely instead of making one they can now predict will fail.
+# It resets itself automatically at UTC midnight (compares the stored date
+# to today's UTC date on every check) - note this may not line up exactly
+# with the instant Google's own quota resets, so it's a courtesy pre-check,
+# not a replacement for the per-call 429 handling above.
+
+GEMINI_DAILY_CALL_LIMIT = int(os.environ.get("GEMINI_DAILY_CALL_LIMIT", "18"))
+_GEMINI_BUDGET_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "data", "gemini_call_budget.json",
+)
+
+
+def _today_utc_str() -> str:
+    return time.strftime("%Y-%m-%d", time.gmtime())
+
+
+def _read_gemini_budget() -> dict:
+    try:
+        with open(_GEMINI_BUDGET_PATH, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if data.get("date") != _today_utc_str():
+            return {"date": _today_utc_str(), "count": 0}
+        return {"date": data["date"], "count": int(data.get("count", 0))}
+    except (FileNotFoundError, json.JSONDecodeError, ValueError, KeyError, OSError):
+        return {"date": _today_utc_str(), "count": 0}
+
+
+def _write_gemini_budget(data: dict) -> None:
+    try:
+        os.makedirs(os.path.dirname(_GEMINI_BUDGET_PATH), exist_ok=True)
+        tmp_path = _GEMINI_BUDGET_PATH + ".tmp"
+        with open(tmp_path, "w", encoding="utf-8") as f:
+            json.dump(data, f)
+        os.replace(tmp_path, _GEMINI_BUDGET_PATH)
+    except OSError as exc:
+        logger.warning("Could not persist Gemini call budget: %s", exc)
+
+
+def _reserve_gemini_call_slot() -> bool:
+    """
+    True  -> a slot was reserved (count incremented); go ahead and call.
+    False -> today's soft budget is already used; skip the real API call.
+
+    Best-effort, not distributed-locked: two processes racing on the exact
+    same instant could each read the same count before either writes back,
+    so this can occasionally overshoot by a call or two. That's fine here -
+    Google's real 20/day cap is the actual backstop, and a slightly early
+    or late skip has no functional cost since the existing fallback chain
+    (OpenRouter/Ollama/rule-engine) produces the same result either way.
+    """
+    data = _read_gemini_budget()
+    if data["count"] >= GEMINI_DAILY_CALL_LIMIT:
+        return False
+    data["count"] += 1
+    _write_gemini_budget(data)
+    return True
+
+
+# ---------------------------------------------------------------------------
 # Abstract base
 # ---------------------------------------------------------------------------
 
@@ -242,6 +315,20 @@ class GeminiClient(LLMClient):
         kwargs.pop("llm", None)
         max_tokens = kwargs.pop("max_tokens", 1024)
         temperature = kwargs.get("temperature", 0.7)
+
+        if not _reserve_gemini_call_slot():
+            # 2026-09-26: today's shared soft budget (GEMINI_DAILY_CALL_LIMIT,
+            # default 18 of Google's real 20/day free-tier cap) is already
+            # used - across ALL processes sharing this key, not just this
+            # one. Skip the real call entirely instead of making one we can
+            # already predict will be rejected; LLMRouter's fallback chain
+            # (the caller one level up) moves on to the next provider
+            # immediately, exactly as it would on a real 429.
+            raise RuntimeError(
+                f"GeminiClient: skipped - today's shared call budget "
+                f"({GEMINI_DAILY_CALL_LIMIT}/day) is already used across "
+                f"all processes. Not calling the real API."
+            )
 
         def _call():
             if self._sdk_client is not None:

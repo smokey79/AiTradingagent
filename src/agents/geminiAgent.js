@@ -33,10 +33,79 @@ function cleanJson(text) {
 
 let circuitBreakerUntil = 0;
 
+// ---------------------------------------------------------------------------
+// Shared Gemini daily call budget (2026-09-26)
+// ---------------------------------------------------------------------------
+// Google's free tier caps Gemini at 20 requests/day/model. This process
+// calls getSignal() every AUTO_TRADE_INTERVAL_SEC (default 30s) per symbol,
+// and core/llm_router.py's GeminiClient (python-debate, hermes-analyst,
+// tradingkit-analyst) shares the SAME API key/quota - so none of them know
+// how close the quota is until they personally get rejected. This is a
+// small cross-process, cross-language soft budget: the same JSON file
+// core/llm_router.py's GeminiClient reads/writes, so once today's combined
+// count from ALL of them hits GEMINI_DAILY_CALL_LIMIT (18 by default - a
+// safety margin under Google's real 20/day cap), every process skips the
+// real API call instead of making one it can now predict will fail. Resets
+// itself at UTC midnight (compares the stored date to today's UTC date on
+// every check) - this may not land exactly on Google's own reset instant,
+// so it's a courtesy pre-check, not a replacement for the circuit breaker
+// above, which still handles a real 429 if one slips through.
+const GEMINI_DAILY_CALL_LIMIT = parseInt(process.env.GEMINI_DAILY_CALL_LIMIT || '18', 10);
+const GEMINI_BUDGET_PATH = path.resolve(__dirname, '../../data/gemini_call_budget.json');
+
+function todayUtcStr() {
+  return new Date().toISOString().slice(0, 10); // YYYY-MM-DD, UTC
+}
+
+function readGeminiBudget() {
+  try {
+    const data = JSON.parse(fs.readFileSync(GEMINI_BUDGET_PATH, 'utf8'));
+    if (data.date !== todayUtcStr()) {
+      return { date: todayUtcStr(), count: 0 };
+    }
+    return { date: data.date, count: Number(data.count) || 0 };
+  } catch (e) {
+    return { date: todayUtcStr(), count: 0 };
+  }
+}
+
+function writeGeminiBudget(data) {
+  try {
+    fs.mkdirSync(path.dirname(GEMINI_BUDGET_PATH), { recursive: true });
+    const tmp = `${GEMINI_BUDGET_PATH}.tmp`;
+    fs.writeFileSync(tmp, JSON.stringify(data));
+    fs.renameSync(tmp, GEMINI_BUDGET_PATH);
+  } catch (e) {
+    logger.warn(`Could not persist Gemini call budget: ${e.message}`);
+  }
+}
+
+// Best-effort, not distributed-locked (see core/llm_router.py's Python
+// counterpart for the same trade-off) - Google's real 20/day cap is the
+// actual backstop, so an occasional overshoot by a call or two is fine.
+// Kept fully synchronous (no await between read and write) so concurrent
+// getSignal() calls within THIS process can't interleave mid-check either.
+function reserveGeminiCallSlot() {
+  const data = readGeminiBudget();
+  if (data.count >= GEMINI_DAILY_CALL_LIMIT) {
+    return false;
+  }
+  data.count += 1;
+  writeGeminiBudget(data);
+  return true;
+}
+
 async function getSignal(symbol, marketData, peerSignals = []) {
   const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey || apiKey.startsWith('your_') || apiKey.trim() === '' || Date.now() < circuitBreakerUntil) {
+    return simulateGeminiValidation(symbol, marketData, peerSignals);
+  }
+
+  if (!reserveGeminiCallSlot()) {
+    logger.info(
+      `[Gemini Agent] Daily call budget (${GEMINI_DAILY_CALL_LIMIT}/day, shared across all processes) already used today - skipping real API call, using fallback chain.`
+    );
     return simulateGeminiValidation(symbol, marketData, peerSignals);
   }
 

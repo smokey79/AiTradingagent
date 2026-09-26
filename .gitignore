@@ -186,3 +186,9 @@ data/*_backup_*.json
 # process) - never something to commit, same as the other data/*.json state
 # files above.
 data/mt5_market_data.json
+
+# Shared Gemini daily call-budget counter (2026-09-26) - read/written by
+# core/llm_router.py's GeminiClient AND src/agents/geminiAgent.js on every
+# real Gemini call attempt across all processes. Pure runtime state that
+# resets itself every UTC day, never something to commit.
+data/gemini_call_budget.json
