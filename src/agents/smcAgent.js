@@ -9,7 +9,7 @@
  */
 const ccxt = require('ccxt');
 const logger = require('../utils/logger');
-const { calculateEMA } = require('../data/indicators');
+const { calculateEMA, calculateRSI, calculateMFI } = require('../data/indicators');
 
 let _binanceClient = null;
 function getBinanceClient() {
@@ -139,6 +139,14 @@ async function getSignal(symbol, marketData = null) {
     const isHighVolume = currentVol > avgVol20 * 1.45;
 
     const ema20 = calculateEMA(closes, 20);
+    // Added 2026-10-05: real RSI and MFI (money flow) for this symbol's 5m
+    // setup, reported alongside the existing indicators so this agent's
+    // output finally matches agents/skills/SKILL_TECHNICAL_ANALYSIS.md's
+    // documented schema. Informational only -- NOT wired into isLongSetup /
+    // isShortSetup below, so this does not change when the agent fires BUY
+    // or SELL, only what it reports about the setup when it does.
+    const rsi14 = calculateRSI(closes, 14);
+    const mfi14 = calculateMFI(highs, lows, closes, volumes, 14);
 
     // ── 4. Casper SMC ORB Retest Strategy Rules ──────────────────────────────
     // LONG entry criteria:
@@ -216,6 +224,8 @@ async function getSignal(symbol, marketData = null) {
       timeframe: '5m',
       indicators: {
         ema_20_status: currentPrice >= ema20 ? 'BULLISH_ABOVE' : 'BEARISH_BELOW',
+        rsi_14: rsi14,
+        mfi_14: mfi14,
         orb_high: orbHigh,
         orb_low: orbLow,
         volume_ratio: parseFloat((currentVol / avgVol20).toFixed(2)),

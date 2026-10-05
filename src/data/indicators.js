@@ -40,15 +40,38 @@ function calculateEMA(closes, period = 20) {
   return parseFloat(ema.toFixed(2));
 }
 
+/** Full-series EMA (needed to build a real MACD signal line). calculateEMA()
+ *  below only ever returns the latest scalar value, which every existing
+ *  caller (smcAgent, calculateAllIndicators, etc.) relies on — left untouched. */
+function emaSeries(values, period) {
+  if (!values || values.length === 0) return [];
+  const k = 2 / (period + 1);
+  const out = new Array(values.length);
+  out[0] = values[0];
+  for (let i = 1; i < values.length; i++) {
+    out[i] = values[i] * k + out[i - 1] * (1 - k);
+  }
+  return out;
+}
+
 function calculateMACD(closes, fastPeriod = 12, slowPeriod = 26, signalPeriod = 9) {
   if (!closes || closes.length < slowPeriod + signalPeriod) {
     return { macd: 0, signal: 0, histogram: 0 };
   }
 
-  const fastEMA = calculateEMA(closes, fastPeriod);
-  const slowEMA = calculateEMA(closes, slowPeriod);
-  const macdLine = parseFloat((fastEMA - slowEMA).toFixed(4));
-  const signalLine = parseFloat((macdLine * 0.85).toFixed(4)); // simplified signal estimation
+  // FIXED 2026-10-05: the signal line used to be `macdLine * 0.85` -- a
+  // placeholder that scales the current MACD value rather than tracking its
+  // own momentum, so it could never produce a genuine crossover. Real MACD
+  // signal = a 9-period EMA of the MACD line's own history. Confirmed
+  // 2026-10-05 that nothing in src/ reads calculateMACD's output for a
+  // trading decision, so this only changes what's reported/displayed.
+  const fastSeries = emaSeries(closes, fastPeriod);
+  const slowSeries = emaSeries(closes, slowPeriod);
+  const macdSeries = closes.map((_, i) => fastSeries[i] - slowSeries[i]);
+  const signalSeries = emaSeries(macdSeries, signalPeriod);
+
+  const macdLine = parseFloat(macdSeries[macdSeries.length - 1].toFixed(4));
+  const signalLine = parseFloat(signalSeries[signalSeries.length - 1].toFixed(4));
   const histogram = parseFloat((macdLine - signalLine).toFixed(4));
 
   return {
@@ -56,6 +79,32 @@ function calculateMACD(closes, fastPeriod = 12, slowPeriod = 26, signalPeriod = 
     signal: signalLine,
     histogram,
   };
+}
+
+/**
+ * Money Flow Index (MFI) -- the volume-weighted RSI. Documented in
+ * agents/skills/SKILL_TECHNICAL_ANALYSIS.md as a required indicator
+ * (MFI > 50 = institutional inflow, < 50 = outflow) but never actually
+ * implemented anywhere in the codebase until now (added 2026-10-05).
+ */
+function calculateMFI(highs, lows, closes, volumes, period = 14) {
+  if (!highs || !lows || !closes || !volumes || closes.length < period + 1) return 50.0;
+
+  const typicalPrices = closes.map((c, i) => (highs[i] + lows[i] + c) / 3);
+  const rawMoneyFlow = typicalPrices.map((tp, i) => tp * (volumes[i] || 0));
+
+  let positiveFlow = 0;
+  let negativeFlow = 0;
+  const start = Math.max(1, typicalPrices.length - period);
+  for (let i = start; i < typicalPrices.length; i++) {
+    if (typicalPrices[i] > typicalPrices[i - 1]) positiveFlow += rawMoneyFlow[i];
+    else if (typicalPrices[i] < typicalPrices[i - 1]) negativeFlow += rawMoneyFlow[i];
+    // unchanged typical price contributes to neither side, per the standard MFI definition
+  }
+
+  if (negativeFlow === 0) return 100.0;
+  const moneyRatio = positiveFlow / negativeFlow;
+  return parseFloat((100 - 100 / (1 + moneyRatio)).toFixed(2));
 }
 
 function calculateBollingerBands(closes, period = 20, multiplier = 2) {
@@ -98,7 +147,9 @@ function calculateATR(highs, lows, closes, period = 14) {
 
   const atrSlice = trueRanges.slice(-period);
   const atr = atrSlice.reduce((a, b) => a + b, 0) / period;
-  return parseFloat(atr.toFixed(2));
+  // 2026-10-03: was toFixed(2), which rounds the ATR of any coin priced under ~$1 (ARB, OP, HBAR, ...) to 0.00 and
+  // silently gave their stops/sizing a zero volatility. 8 significant digits keeps every price scale exact enough.
+  return parseFloat(atr.toPrecision(8));
 }
 
 function analyzeOrderBook(orderBook, depth = 10) {
@@ -154,6 +205,7 @@ function calculateAllIndicators(candles, orderBook = null) {
       macd: { macd: 0, signal: 0, histogram: 0 },
       bollinger: { middle: 0, upper: 0, lower: 0, bandwidth: 0 },
       atr14: 0,
+      mfi14: 50,
       volumeRatio: 1.0,
       orderBook: analyzeOrderBook(orderBook),
     };
@@ -172,6 +224,7 @@ function calculateAllIndicators(candles, orderBook = null) {
   const macd = calculateMACD(closes);
   const bollinger = calculateBollingerBands(closes, 20, 2);
   const atr14 = calculateATR(highs, lows, closes, 14);
+  const mfi14 = calculateMFI(highs, lows, closes, vols, 14);
 
   const volSlice = vols.slice(-20);
   const avgVol20 = volSlice.length > 0 ? volSlice.reduce((a, b) => a + b, 0) / volSlice.length : 1;
@@ -187,6 +240,8 @@ function calculateAllIndicators(candles, orderBook = null) {
     macd,
     bollinger,
     atr14,
+    mfi14,
+    moneyFlowSignal: mfi14 > 50 ? 'inflow' : mfi14 < 50 ? 'outflow' : 'neutral',
     volumeRatio,
     volumeSignal: volumeRatio > 1.5 ? 'high_volume' : volumeRatio < 0.6 ? 'low_volume' : 'normal',
     priceVsEma50: currentPrice >= ema50 ? 'above' : 'below',
@@ -199,6 +254,7 @@ module.exports = {
   calculateRSI,
   calculateEMA,
   calculateMACD,
+  calculateMFI,
   calculateBollingerBands,
   calculateATR,
   analyzeOrderBook,
