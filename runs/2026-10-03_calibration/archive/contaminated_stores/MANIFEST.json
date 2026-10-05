@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-03T21:08:40",
+  "actions": [
+    {
+      "msg": "agent_memory.db archived and recreated empty",
+      "archived_to": "F:\\aitradingagent\\runs\\2026-10-03_calibration\\archive\\contaminated_stores\\agent_memory.db",
+      "rows_archived": {
+        "trades": 2464,
+        "agent_weights": 9,
+        "learning_log": 968,
+        "profit_ledger": 1053,
+        "sweep_log": 981
+      }
+    },
+    {
+      "msg": "won_trades_memory.json: flash-loan wins purged",
+      "removed": 5,
+      "kept": 1
+    },
+    {
+      "msg": "channel_weights.json reset to neutral ({})",
+      "was": {
+        "Rick Astley": 0.704
+      }
+    },
+    {
+      "msg": "learning_memory.json: test-fixture rows removed",
+      "removed": 5,
+      "kept": 0
+    }
+  ]
+}

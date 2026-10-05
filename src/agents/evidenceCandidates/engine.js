@@ -24,7 +24,8 @@ const { STRATEGIES } = require('./config');
 const DATA_DIR = path.resolve(__dirname, '../../../data');
 const STATE_PATH = path.join(DATA_DIR, 'evidence_candidates_state.json');
 const LEDGER_PATH = path.join(DATA_DIR, 'evidence_candidates_ledger.jsonl');
-const FEE_PCT_PER_SIDE = 0.05;
+// 2026-10-03: fee + slippage per side from config/realism.json (0.06% + 0.02% = 0.08%; was 0.05% fee only).
+const FEE_PCT_PER_SIDE = require('../../utils/realism').feePctPerSide() + require('../../utils/realism').slippagePctPerSide();
 const TF_MS = { '1h': 3600e3, '2h': 7200e3, '4h': 14400e3, '1d': 86400e3 };
 
 function loadState() { try { return JSON.parse(fs.readFileSync(STATE_PATH, 'utf8')); } catch { return {}; } }

@@ -35,6 +35,9 @@ const DEFI_WALLET_CHAINS = (process.env.DEFI_WALLET_CHAINS || 'cronos,ethereum')
 
 app.use(express.json());
 app.use(express.static(PUBLIC_DIR));
+// 2026-10-03: arbitrage module + predictor memory endpoints (read-only), page at /arb.html
+try { require('./arbRoutes').mount(app); } catch (e) { console.warn('[dashboard] arb routes not mounted:', e.message); }
+try { require('./engineRoutes').mount(app); } catch (e) { console.warn('[dashboard] engine routes not mounted:', e.message); }   // 2026-10-03: /engine.html
 
 // Python engine bridge — receives signals & arb opportunities
 const pythonBridge = require('../bridge/pythonBridge');
@@ -95,7 +98,7 @@ app.get('/api/agent-votes', (req, res) => {
 app.get('/api/health', async (req, res) => {
   let tradingKit = { enabled: false };
   try {
-    const tk = require('../data/tradingKitFeed');
+    const tk = require('../data/strategyAdvisorFeed'); // tradingkit-analyst retired 2026-10-05
     if (tk.ENABLED) tradingKit = await tk.checkHealth();
   } catch (_) {}
   res.json({
@@ -110,7 +113,7 @@ app.get('/api/health', async (req, res) => {
 // TradingKit proxy endpoints
 app.get('/api/tradingkit/candles', async (req, res) => {
   try {
-    const { fetchCandles } = require('../data/tradingKitFeed');
+    const { fetchCandles } = require('../data/strategyAdvisorFeed');
     const data = await fetchCandles(req.query.symbol||'BTC/USDT', req.query.tf||'15m', parseInt(req.query.limit||100));
     res.json({ success: true, data });
   } catch (e) { res.status(500).json({ success: false, error: e.message }); }
@@ -118,7 +121,7 @@ app.get('/api/tradingkit/candles', async (req, res) => {
 
 app.get('/api/tradingkit/signal', async (req, res) => {
   try {
-    const { fetchSignal } = require('../data/tradingKitFeed');
+    const { fetchSignal } = require('../data/strategyAdvisorFeed');
     const data = await fetchSignal(req.query.symbol||'BTC/USDT');
     res.json({ success: true, data });
   } catch (e) { res.status(500).json({ success: false, error: e.message }); }
@@ -126,7 +129,7 @@ app.get('/api/tradingkit/signal', async (req, res) => {
 
 app.get('/api/tradingkit/indicators', async (req, res) => {
   try {
-    const { fetchIndicators } = require('../data/tradingKitFeed');
+    const { fetchIndicators } = require('../data/strategyAdvisorFeed');
     const data = await fetchIndicators(req.query.symbol||'BTC/USDT', req.query.tf||'15m');
     res.json({ success: true, data });
   } catch (e) { res.status(500).json({ success: false, error: e.message }); }
@@ -1209,6 +1212,33 @@ app.post('/api/cycle', async (req, res) => {
       .catch(err => logger.error(`Manual cycle error: ${err.message}`));
 
     res.json({ success: true, message: 'Trading cycle initiated' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ==============================================================================
+// TradingView Webhook Alerts (2026-09-27)
+// ==============================================================================
+// TradingView's free tier can only POST a raw JSON body — no custom headers —
+// so the shared secret travels inside the body itself (see
+// src/notifications/tradingViewWebhook.js for the alert message template).
+app.post('/api/tradingview/webhook', (req, res) => {
+  try {
+    const { handleTradingViewAlert } = require('../notifications/tradingViewWebhook');
+    const result = handleTradingViewAlert(req.body || {});
+    if (!result.ok) return res.status(401).json({ success: false, error: result.error });
+    res.json({ success: true, signal: result.signal });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/tradingview/signals', (req, res) => {
+  try {
+    const { getLatestTradingViewSignals } = require('../notifications/tradingViewWebhook');
+    const signals = getLatestTradingViewSignals(parseInt(req.query.limit || '20', 10));
+    res.json({ success: true, count: signals.length, signals });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

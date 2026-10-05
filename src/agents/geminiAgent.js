@@ -50,7 +50,11 @@ let circuitBreakerUntil = 0;
 // every check) - this may not land exactly on Google's own reset instant,
 // so it's a courtesy pre-check, not a replacement for the circuit breaker
 // above, which still handles a real 429 if one slips through.
-const GEMINI_DAILY_CALL_LIMIT = parseInt(process.env.GEMINI_DAILY_CALL_LIMIT || '18', 10);
+// CORRECTED 2026-09-27: the old comment here claimed Google's free tier caps Gemini
+// at 20 requests/day/model. Verified false via ai.google.dev's own rate-limits docs
+// plus independent sources: Flash-tier free accounts get ~1,500 requests/day. Default
+// bumped from 18 to 300 (still a conservative margin under the real ~1,500 ceiling).
+const GEMINI_DAILY_CALL_LIMIT = parseInt(process.env.GEMINI_DAILY_CALL_LIMIT || '300', 10);
 const GEMINI_BUDGET_PATH = path.resolve(__dirname, '../../data/gemini_call_budget.json');
 
 function todayUtcStr() {
@@ -96,6 +100,7 @@ function reserveGeminiCallSlot() {
 }
 
 async function getSignal(symbol, marketData, peerSignals = []) {
+  if (process.env.AI_ROUTER_ENABLED === 'true') return require('../utils/openrouterGateway').signal('peer_risk_judge', symbol, marketData, peerSignals);
   const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey || apiKey.startsWith('your_') || apiKey.trim() === '' || Date.now() < circuitBreakerUntil) {
@@ -190,7 +195,7 @@ ${JSON.stringify(peerSignals, null, 2)}
 
 Validate consensus consistency, detect conflicts, and output strictly JSON.`;
 
-        const orModel = process.env.OPENROUTER_GEMINI_FALLBACK || 'inclusionai/ling-3.0-flash-fin:free';
+        const orModel = process.env.OPENROUTER_GEMINI_FALLBACK || 'google/gemma-4-31b-it:free' /* 2026-10-03: Gemini itself is not free on OpenRouter; Gemma is Google's free open model */;
         const res = await axios.post(
           'https://openrouter.ai/api/v1/chat/completions',
           {

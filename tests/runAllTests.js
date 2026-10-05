@@ -4,6 +4,15 @@
  * paper trading execution, profit vault allocation, arbitrage detection,
  * individual AI agents, persistence layers, and system environment validation.
  */
+// 2026-10-03 SAFETY GUARD. This suite WRITES to data/ (trade ledger, portfolio, vault, allocation settings, learning
+// memory, telegram alpha ...) and can send real Telegram messages. Run on live data on 2026-10-03 it left 21 fake
+// winning trades in the ledger. Use `npm test` (runs it in a sandbox copy: scripts/run_tests_safe.ps1) instead.
+if (process.env.AITA_TEST_SANDBOX !== '1' && process.env.ALLOW_LIVE_DATA_TESTS !== '1') {
+  console.error('\nRefusing to run: this suite writes to live data/ and can send Telegram messages.\n' +
+    '  Safe run:   npm test            (sandbox copy, nothing real is touched)\n' +
+    '  Override:   set ALLOW_LIVE_DATA_TESTS=1   (only if you really mean it)\n');
+  process.exit(2);
+}
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 const assert = require('assert');
 const fs = require('fs');
@@ -254,6 +263,10 @@ async function runSuite() {
         amount: 0.0003,
         positionSizeUsd: 20.0,
         pnlUsd: 1.0,
+        // 2026-10-03: only fee-inclusive trades count as evidence now, so the fixture records its cost.
+        grossPnlUsd: 1.03,
+        costUsd: 0.03,
+        costPct: 0.16,
         outcome: 'WIN',
         confidence: 0.85,
         paper: true,
@@ -439,19 +452,19 @@ async function runSuite() {
     assert(typeof vaultData.btcSavingsUsd === 'number');
   });
 
-  // ─── 12. 72% Win Rate & $30 Margin Sentinel ───────────────────────────────
-  console.log('\n─── Module 12: 72% Win Rate & $30 Margin Sentinel ───');
-  await asyncIt('Vetoes trade when confidence is below 72% threshold', async () => {
+  // ─── 12. 68% Confidence Gate & $30 Margin Sentinel ────────────────────────
+  console.log('\n─── Module 12: 68% Confidence Gate & $30 Margin Sentinel ───');
+  await asyncIt('Vetoes trade when confidence is below 68% threshold', async () => {
     const lowConfConsensus = {
       signal: 'BUY',
-      confidence: 0.70, // 70% < 72%
+      confidence: 0.60, // 60% < 68%
       agentsAgreeing: 4,
       totalAgents: 6,
       veto_triggered: false,
     };
     const riskCheck = await checkRiskGate('BTC/USDT', lowConfConsensus, mockMarket);
-    assert.strictEqual(riskCheck.approved, false, 'Trade below 72% confidence must be rejected');
-    assert(riskCheck.rejectionReasons.some(r => r.includes('72%')), 'Rejection reason must reference 72% threshold');
+    assert.strictEqual(riskCheck.approved, false, 'Trade below 68% confidence must be rejected');
+    assert(riskCheck.rejectionReasons.some(r => r.includes('68%')), 'Rejection reason must reference 68% threshold');
   });
 
   await asyncIt('Triggers critical margin veto and halts trading when balance falls below $30.00', async () => {
@@ -501,7 +514,10 @@ async function runSuite() {
     assert(typeof insight.sentimentScore === 'number');
 
     const memory = getLearnedAlpha(5);
-    assert(memory.length >= 1, 'Memory must contain learned insights');
+    // 2026-10-03: REJECT-tier insights are by design never stored, so on a clean learning memory the outcome is
+    // either "stored" or "explicitly rejected by the RAU gate". The old assertion (memory.length >= 1) only passed
+    // because earlier test runs had left fixture rows behind in learning_memory.json.
+    assert(insight.rejected === true || memory.length >= 1, 'Insight must be stored in memory or explicitly rejected by the RAU gate');
   });
 
   it('Parses YouTube RSS channel feeds and integrates with YouTubeSentimentAgent', () => {
@@ -534,7 +550,13 @@ async function runSuite() {
   await asyncIt('Dispatches emergency margin alert and ingests channel alpha', async () => {
     const { sendMarginAlert, ingestTelegramMessage, getIngestedTelegramMessages } = require('../src/notifications/telegramNotifier');
     const alertResult = await sendMarginAlert(24.50, 30.0);
-    assert.strictEqual(alertResult.success, true, 'Margin alert dispatch must succeed');
+    // 2026-10-03: in the sandbox (npm test) Telegram is switched off on purpose so the test cannot send a fake
+    // "emergency margin alert" to your real chat. It then only has to return a well-formed result.
+    if (process.env.AITA_TEST_SANDBOX === '1') {
+      assert(alertResult && typeof alertResult === 'object', 'Margin alert must return a result object (nothing is sent in the sandbox)');
+    } else {
+      assert.strictEqual(alertResult.success, true, 'Margin alert dispatch must succeed');
+    }
 
     const entry = ingestTelegramMessage('🚨 Whale alert: 5,000 BTC transferred from Coinbase to cold storage', 'Whale Alert');
     assert(entry.id.startsWith('TG_'), 'Must record Telegram entry ID');

@@ -1,0 +1,170 @@
+{
+  "status": "passed",
+  "verified_utc": "2026-10-04T14:25:40.603916+00:00",
+  "actual_research_minutes": 90.00080830666654,
+  "ranked_families": 22,
+  "qualifying_families": 0,
+  "ledger_checks": [
+    {
+      "id": "d9dde30bdf17",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "e4722ca6e57f",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "4c53096d7a80",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "73f4f0b0d427",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "fa44fb4f35ba",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "2979ae55e29d",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "e7a088726b86",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "6ea5aed472f6",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "7bb0bf4ef016",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "47d9ee71dc35",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "c0a2e19e6889",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "eaa663b83e4c",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "a5ad909a3b06",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "b522140c6c4d",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "b9ec22441786",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "39cfeb70c6de",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "9ece3854b851",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "f9d3a70a9cf3",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "01ba6ac62776",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "497f75c1672b",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "96a3c558a3fe",
+      "ledger_matches": true,
+      "qualification_matches": true
+    },
+    {
+      "id": "f9a1c1309004",
+      "ledger_matches": true,
+      "qualification_matches": true
+    }
+  ],
+  "reproduced_candidate": "d9dde30bdf17",
+  "reproduced_metrics_match": true,
+  "locked_robustness_check_runs": 9206,
+  "distinct_locked_robustness_combinations": 20,
+  "input_sha256": {
+    "data_manifest.json": "078fa278131590aff290e9a2131e1091c0c6f096d04cba0bd82e00ff92c64105",
+    "funding_manifest.json": "3d9383ca8c05e287aebc18ad6a661406031cfa6fa66d8c8c2b85c92911cddf4e",
+    "marketcap_history.json": "f6d605e2c58ef6dd8e7572552c1009151085c9a438d77340cb40d830908167ec",
+    "instrument_filters.json": "ffc15d6a46766520b5482d5d6074dff3dcf0654ff2a8a480d70239c09abfa7e2",
+    "PRIMARY_FROZEN.json": "fd0fe464d0b6efc4e0ea0566c6988e1b877a306679444480b88bced14f6a4385",
+    "adaptive_lab.py": "b2f0d03015785c18e09c11ed643580c7e76d216a4c608e95476f19da456f030a",
+    "backtest_lab.py": "3dc136200074b9ed74b00162d9a395e26e9d81e3c5df04276c0504ad2ade2b74",
+    "book_lab.py": "a497a677b8bbc39f0a365fed3eda8e8d75d4712768e43b1d62f8fa9ce5a5f61f",
+    "cmc_probe.py": "27a00f2caf3ed4a883a97bd74f5d1bb23f28cd8f1eaf1a74320b5012da0203c1",
+    "data_lab.py": "95bdbb34c64cf1c3d1a1cdc3b2a571ba9f6dad31aaf1d11ffe36f6907d21454d",
+    "describe_results.py": "29d353d9a0a9e5af6ae73a99fc9207c451a7f268f325946d9b9bf37189dc1fb1",
+    "effective_lab.py": "6e5d60871500f27598769f2282fd1e146a0c183c16233728d651e523fa07e618",
+    "finalize_lab.py": "e64888963caf7c8d543a48b2992b83fc656619b2e7c84e3f16555433bad8af51",
+    "funding_audit.py": "5480474d51469341590431346d3c2fa67f8baebe5a8a211048f164aa4c218bdc",
+    "funding_lab.py": "48c32e7c6e9023954235683b373fb20aa2cc5ae81fe5a83b724d78c739cef468",
+    "inspect_local.py": "87bb82587ceea7c62d1c75c72980d9a575c951e63397ee92b5f06f661c67c964",
+    "marketcap_lab.py": "04376eacb2e6562767fc48b1a7444a3a44ec997a45bfa63f44520731d0359435",
+    "pattern_examples.py": "86a76594e8d50d8e7b7b3dfcfcc6014b15aea3ae2bd54f953c9557105c222c45",
+    "pattern_lab.py": "7c86bba5785d21285b42a1023923c9e8b7482ed7989696e1c0339557d1647f89",
+    "prediction_lab.py": "b57db40e182459a2e5d118fdbc9f13e5c4980db2182e29684e4cebdb71d0d23f",
+    "primary_freezer.py": "5a24bb660e94a66fee3a0cd29fbadccbc090217e39473324fbeb9b4dbdca2c09",
+    "regime_report.py": "047f1ee45c0f7578864937e1e523ff299f90c76b578e7076bbee7e639451f59b",
+    "reproduce_lab.py": "a933e13c189c8a016c8ed1df677f5bfe0c6846ce541563588165f425f35506cc",
+    "review_prior.py": "b190bedcd5b9e76dc79f9372fb00a1a0cb04ec8ccdc29bfcbe0dbc2b559732b5",
+    "run_lab.py": "6f6e752a6b456328139e45577db006a3cbcc7e5bf960d66107d4535441934004",
+    "strategies_lab.py": "087c939bce18e5b3e4db0e9618ba934e7b0c8d5a0cb69f6fe5933a90e527aa11",
+    "supplementary_lab.py": "10997892c6ee65d53b0b48f0b44405983f42d234635997b729b6e76bd7e71037",
+    "test_lab.py": "aca13c4c5ea3b71c64af51eb176d561603e10c6945f917e27427d16235d44b8b",
+    "timeframe_audit.py": "a7addad0c6af3403d04556a17a7601e8924c4fd87f02171062311636814336ff",
+    "verify_delivery.py": "1a631549434829811ba2033200410633f1801dc2ea5f05d695ebe30edbfcf7d0",
+    "view_server.py": "478becbeccfc745bcffbeddb5ecdd01f7c14e9a54d6c3b207904f5c4e8aa37b0",
+    "funding\\AAVE.json": "f1fa1ba653b069a91f70c77857d662a1acf55ee08fa1857935128bf17dc76cf0",
+    "funding\\ARB.json": "cc9907bc9ecc82802cedaec9f4c2e486ba397762885d7e3eabf758fa83ee9225",
+    "funding\\ATOM.json": "89ac756554f124a805214df956cc84f9ca696b24b44a3fab1dca89b6b45573e7",
+    "funding\\AVAX.json": "e43d2bc075c401e57d257c681015363df26ae1c936ab127214bd9068824789d0",
+    "funding\\BTC.json": "405f260a618362270abfc877b106796fef67b143d57e1dab2c6272ccff824446",
+    "funding\\CRO.json": "db76a8ec8743814119ac90a4ea16eec5d461d96695e2498c09fc1e6bc9eb0d7d",
+    "funding\\ETH.json": "f4005f5a40c6ccbd9add87954cbd736270ef081fa267c21d44d10dc9cbcfc8b2",
+    "funding\\ICP.json": "e87211fa849a9027ebf334eff895513d2675e06dbb64629cbf13c461a535e886",
+    "funding\\LTC.json": "99d04427f7f42d741416dc908734cbf56cf1de04ef847d7a85a8e0e1b7f6df9a",
+    "funding\\POL.json": "9473b23d330f563bc29872161a6045fb7ed2910e45501f1cab3dbfa731ce051b",
+    "funding\\SOL.json": "ccebc3bcf0beb1cae2bb62b11caf33e7fc7b3d72132faf05aef167a6139e9d31",
+    "funding\\SUI.json": "cc2e50dc63785d7ee35ae60a39387e9e15ecbbf57685b7a67390a5698ac5498b",
+    "funding\\TRX.json": "349033d344eab05b432caeecda81d4e7070d7bbf32b265e0fc70b71f42182f94",
+    "funding\\ZEC.json": "f96692bfb13181dcb5da23282f2b120ce453fe847fb122b3a80c025908dc2c76"
+  }
+}

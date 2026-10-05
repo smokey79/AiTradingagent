@@ -1,0 +1,35 @@
+{
+  "startedAt": "2026-09-29T22:02:09.483Z",
+  "endsAt": "2026-09-30T22:02:09.483Z",
+  "spendUsd": 0.8934239999999998,
+  "decisionsMade": 35,
+  "book": {
+    "startUsd": 250,
+    "cash": 250,
+    "positions": [],
+    "closed": [],
+    "halted": true,
+    "haltReason": "contest finished",
+    "nextId": 1
+  },
+  "memeMeta": {
+    "meme:ethereum/0xA43fe16908251ee70EF74718545e4FE6C5cCEc9f": "PEPE",
+    "meme:solana/2qFEi1rTPDwzLr1N1KbQ7c8s3S6oS5mxYR8sN65bvvxs": "PEPE",
+    "meme:solana/4UPzyXL1wSy3A3ur4bfvKLKVzKs8nH873fC4DVuaoQGP": "PEPE",
+    "meme:solana/23Lb6pSqtigcZh3aAJ7HfxJNEq9Fm4SeQ87VKEQtQ1G3": "PEPE",
+    "meme:bsc/0x353d328eFbEf48b79a570cBc2fdE20F40e9f2063": "DOGE",
+    "meme:bsc/0xac109C8025F272414fd9e2faA805a583708A017f": "DOGE",
+    "meme:solana/8JWZxNhbU4Svkz5REbUS4z6c1ZZwhcMCAfSrfxL5HBFW": "DOGE",
+    "meme:bsc/0xce6160bB594fC055c943F59De92ceE30b8c6B32c": "DOGE",
+    "meme:solana/BttaBirnpLJbystxxnwYhSejWT4s3Lbij5dpuXLNuDtQ": "DOGE",
+    "meme:solana/GSQkPA4Y5caMjS3b7JSEjqYRvrSGenPh3jfrpahFKDBw": "DOGE",
+    "meme:solana/5zpyutJu9ee6jFymDGoK7F6S5Kczqtc9FomP3ueKuyA9": "Bonk",
+    "meme:solana/31p1hptjhFo6ZD8oBqkfutNXQKGGPyi7YcEAfsyKW777": "Bonk",
+    "meme:solana/AtcGozT6i1GR3wJAjVwRwmt7qbHqZrBUqKs2DcMAKoVe": "Bonk",
+    "meme:solana/3UwfrdLTpAjxTRni1boc5HUWe6hzc4HgE5yLdvEp2Noc": "Bonk",
+    "meme:solana/85Dczq3uuz7mVHc1azS9qWwTcUnUrB1WFyEPfk7w8jVN": "DOGE",
+    "meme:solana/9ZpDuZTX1CdPWTaFXSrC8bkDaGr2oetzCpTcSTY6dQ84": "DOGE",
+    "meme:solana/5b3RoWwCMmL2R72YpPEEp9hKpZ7Y2XwjG4brD8eErKA7": "PEPE"
+  },
+  "finishedAt": "2026-10-05T00:24:39.441Z"
+}

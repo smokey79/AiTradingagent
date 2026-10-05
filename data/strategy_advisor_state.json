@@ -1,0 +1,39 @@
+{
+  "sourcedByPreset": {},
+  "lastSourcingAt": 1791159661509,
+  "BTC": {
+    "lastOptimizedAt": 1791159885142,
+    "strategyType": "casper_orb_retest",
+    "fitnessScore": 0.1173
+  },
+  "ETH": {
+    "lastOptimizedAt": 1791159887980,
+    "strategyType": "casper_orb_retest",
+    "fitnessScore": 0.1058
+  },
+  "CRO": {
+    "lastOptimizedAt": 1791159889216,
+    "strategyType": "casper_orb_retest",
+    "fitnessScore": 0.4525
+  },
+  "SOL": {
+    "lastOptimizedAt": 1791159892769,
+    "strategyType": "casper_orb_retest",
+    "fitnessScore": 0.1658
+  },
+  "AVAX": {
+    "lastOptimizedAt": 1791159894963,
+    "strategyType": "casper_orb_retest",
+    "fitnessScore": 0.202
+  },
+  "ARB": {
+    "lastOptimizedAt": 1791159897475,
+    "strategyType": "casper_orb_retest",
+    "fitnessScore": 0.1898
+  },
+  "OP": {
+    "lastOptimizedAt": 1791159899489,
+    "strategyType": "casper_orb_retest",
+    "fitnessScore": 0.7161
+  }
+}

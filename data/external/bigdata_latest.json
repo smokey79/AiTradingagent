@@ -1,0 +1,93 @@
+{
+  "source": "bigdata.com",
+  "weight": 0.15,
+  "lookback_hours": 24.0,
+  "assets": {
+    "BTC": {
+      "n_chunks": 40,
+      "n_docs": 25,
+      "sentiment": -0.1311,
+      "agreement": 0.625,
+      "top_headlines": [
+        {
+          "headline": "Hunter Biden Predicts Bitcoin Will Hit $220,000 by 2028, Calls Elizabeth Warren's Crypto Criticism 'So Wrong'",
+          "source": "Benzinga",
+          "sentiment": -0.54,
+          "url": "https://www.benzinga.com/node/62038273?utm_campaign=partner_feed&utm_medium=feed&utm_source=ravenpack"
+        },
+        {
+          "headline": "Bitcoin, Ethereum, XRP, Dogecoin Slide as Treasury Yields Push Higher: Analyst Flags BTC 'Buying Opportunity' Before the Rally Resumes",
+          "source": "Benzinga",
+          "sentiment": -0.54,
+          "url": "https://www.benzinga.com/node/62038122?utm_campaign=partner_feed&utm_medium=feed&utm_source=ravenpack"
+        },
+        {
+          "headline": "Calamos ETF Trust files FORM 485APOS on Sep 28, 2026",
+          "source": "Edgar SEC Filings",
+          "sentiment": -0.51,
+          "url": "https://www.sec.gov/Archives/edgar/data/1579881/000110465926111341/tm2625622d1_485apos.htm"
+        }
+      ]
+    },
+    "ETH": {
+      "n_chunks": 40,
+      "n_docs": 20,
+      "sentiment": -0.0683,
+      "agreement": 0.575,
+      "top_headlines": [
+        {
+          "headline": "Is It Too Late to Buy Ethereum After a 72% Quarter?",
+          "source": "AOL.com",
+          "sentiment": -0.69,
+          "url": "https://www.aol.com/articles/too-buy-ethereum-72-quarter-130017000.html"
+        },
+        {
+          "headline": "Bitmine Immersion Technologies (BMNR) Announces ETH Holdings Reach over 6 Million Tokens with Total Crypto, Cash & Marketable Securities Holdings of $17.2 Billion",
+          "source": "Benzinga",
+          "sentiment": -0.67,
+          "url": "https://www.benzinga.com/node/62019122?utm_campaign=partner_feed&utm_medium=feed&utm_source=ravenpack"
+        },
+        {
+          "headline": "Will Ethereum Hit $4,000 Before the End of 2026?",
+          "source": "AOL.com",
+          "sentiment": 0.6,
+          "url": "https://www.aol.com/articles/ethereum-hit-4-000-end-160027000.html"
+        }
+      ]
+    }
+  },
+  "errors": {
+    "SOL": "429 Client Error:  for url: https://api.bigdata.com/v1/search",
+    "CRO": "429 Client Error:  for url: https://api.bigdata.com/v1/search",
+    "AVAX": "429 Client Error:  for url: https://api.bigdata.com/v1/search",
+    "ARB": "429 Client Error:  for url: https://api.bigdata.com/v1/search",
+    "OP": "429 Client Error:  for url: https://api.bigdata.com/v1/search"
+  },
+  "macro": {
+    "n_chunks": 40,
+    "n_docs": 39,
+    "sentiment": -0.2671,
+    "agreement": 0.925,
+    "top_headlines": [
+      {
+        "headline": "China Merchants CSI Baijiu Index (LOF) C Bar",
+        "source": "Eastmoney (\u4e1c\u65b9\u8d22\u5bcc\u7f51)",
+        "sentiment": -0.67,
+        "url": "https://guba.eastmoney.com/news,of012414,1778640143.html"
+      },
+      {
+        "headline": "Gold steadies near seven-week low after 4% plunge as Fed hike bets rise",
+        "source": "Yahoo! Finance",
+        "sentiment": -0.63,
+        "url": "https://uk.finance.yahoo.com/news/gold-steadies-near-seven-week-015210576.html"
+      },
+      {
+        "headline": "US stock futures retreat amid AI and oil pressures",
+        "source": "Mubasher Info",
+        "sentiment": -0.58,
+        "url": "https://www.mubasher.info/news/4677611/%D8%AA%D8%B1%D8%A7%D8%AC%D8%B9-%D8%A7%D9%84%D8%B9%D9%82%D9%88%D8%AF-%D8%A7%D9%84%D8%A2%D8%AC%D9%84%D8%A9-%D9%84%D9%84%D8%A3%D8%B3%D9%87%D9%85-%D8%A7%D9%84%D8%A3%D9%85%D8%B1%D9%8A%D9%83%D9%8A%D8%A9-%D9%85%D8%B9-%D8%B6%D8%BA%D9%88%D8%B7-%D8%A7%D9%84%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D9%84%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9%D9%8A-%D9%88%D8%A7%D9%84%D9%86%D9%81%D8%B7/"
+      }
+    ]
+  },
+  "fetched_utc": "2026-09-29T05:16:40.750888+00:00"
+}

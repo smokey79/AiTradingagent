@@ -145,6 +145,12 @@ def main():
         try:
             candle = get_latest_market_candle(DEBATE_SYMBOL)
             features = build_market_features(candle)
+            # 2026-10-03 data-quality gate: never debate (or publish a decision) on a dead/flat candle.
+            if not candle.close > 0 or features.get("volatility", 0) <= 0:
+                logger.warning("Data-quality gate: skipping debate for %s (price=%s, volatility=%s%%)",
+                               candle.symbol, candle.close, features.get("volatility"))
+                time.sleep(DEBATE_INTERVAL_S)
+                continue
             learned_context = learning_agent.get_prompt_context()
 
             logger.info("Running debate for %s @ $%s...", candle.symbol, candle.close)
@@ -171,30 +177,19 @@ def main():
             logger.info("Debate decision: %s (size=%.2f) — %s",
                         decision["action"], decision.get("size", 0.0), decision.get("reason", ""))
 
-            # Record outcome in learning agent for weight adaptation
+            # 2026-10-03: a debate DECISION is not a closed trade. It used to be logged as a trade with
+            # entry == exit, pnl 0 and was_correct=True, so the learning agent "learned" that every non-FLAT
+            # decision was a win (964 such rows; the debate weight came out of that noise). Decisions are now
+            # logged as events only; real outcomes reach the learning agent from the SQLite ledger
+            # (LearningAgent.sync_from_ledger -> core/ledger_db.real_trades).
             try:
-                from agents.learning_agent import TradeRecord
-                trade_record = TradeRecord(
-                    trade_id=f"debate_{int(time.time())}",
-                    timestamp=datetime.now(timezone.utc).isoformat(),
-                    symbol=candle.symbol,
-                    action=decision["action"],
-                    size=float(decision.get("size", 0.0)),
-                    entry_price=candle.close,
-                    exit_price=candle.close,  # Will be updated on position close
-                    pnl_usd=0.0,
-                    pnl_pct=0.0,
-                    hold_bars=0,
-                    pattern_name=None,
-                    signal_source="debate",
-                    llm_provider="router",
-                    features=str(features),
-                    decision_reason=str(decision.get("reason", "")),
-                    was_correct=decision["action"] != "FLAT",
+                learning_agent.db.log_event(
+                    "debate_decision",
+                    f"{candle.symbol} {decision['action']} size={float(decision.get('size', 0.0)):.2f} :: {decision.get('reason', '')}"[:500],
                 )
-                learning_agent.after_trade(trade_record)
+                learning_agent.sync_from_ledger()
             except Exception as learn_err:
-                logger.debug("Learning agent recording failed: %s", learn_err)
+                logger.debug("Learning agent event logging failed: %s", learn_err)
 
             # Publish to Node.js bridge & files
             bridge.on_decision(

@@ -107,6 +107,39 @@ async function getOpenPositions(http) {
   return (await call('GET', `/v3/accounts/${accountId()}/openPositions`, undefined, http)).positions || [];
 }
 
+/**
+ * Added 2026-09-27: OANDA's free, account-agnostic Position Book — aggregated
+ * RETAIL long/short positioning by price bucket for one instrument. Not tied
+ * to your own account's positions; it's OANDA's whole retail book. Read-only,
+ * no execution implications — purely a new sentiment data source for
+ * src/agents/oandaSentimentAgent.js. Returns null on any error rather than
+ * throwing, since this is advisory-only and must never block a trading cycle.
+ * Shape: { instrument, unixTime, price, buckets: [{price, longCountPercent,
+ * shortCountPercent}], longPercent, shortPercent } where longPercent/
+ * shortPercent are the whole-book totals (sum of longCountPercent across all
+ * buckets, and likewise for short) — the actual long/short skew to read.
+ */
+async function getPositionBook(symbol, http) {
+  try {
+    const inst = toInstrument(symbol);
+    const d = await call('GET', `/v3/instruments/${inst}/positionBook`, undefined, http);
+    const pb = d.positionBook;
+    if (!pb || !Array.isArray(pb.buckets)) return null;
+    const longPercent = pb.buckets.reduce((s, b) => s + parseFloat(b.longCountPercent || '0'), 0);
+    const shortPercent = pb.buckets.reduce((s, b) => s + parseFloat(b.shortCountPercent || '0'), 0);
+    return {
+      instrument: pb.instrument || inst,
+      unixTime: pb.unixTime || null,
+      price: pb.price != null ? parseFloat(pb.price) : null,
+      buckets: pb.buckets,
+      longPercent: parseFloat(longPercent.toFixed(2)),
+      shortPercent: parseFloat(shortPercent.toFixed(2)),
+    };
+  } catch (e) {
+    return null;
+  }
+}
+
 function liveGateStatus() {
   try {
     const { getPerformanceStats } = require('../risk/tradeLedger');
@@ -158,4 +191,4 @@ async function placeMarketOrder(symbol, units, opts = {}, http) {
 }
 
 module.exports = { ENV, BASE, LEVERAGE_CAP, SYMBOL_MAP, toInstrument, getAccountSummary, getInstruments, getCandles,
-  getPrice, getOpenPositions, placeMarketOrder, liveGateStatus };
+  getPrice, getOpenPositions, getPositionBook, placeMarketOrder, liveGateStatus };

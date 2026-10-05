@@ -113,6 +113,13 @@ function simulateFlashLoan({
  * Execute Flash Loan Arbitrage (Simulation / Paper / Live Dispatch)
  */
 async function executeFlashLoanArbitrage(opportunity, isPaper = true) {
+  // 2026-10-03: flash-loan arbitrage is OBSERVATION-ONLY until ARB_MODE=live AND the flashloan-sim fork test
+  // has written a passing marker (see config/realism.json -> arbitrage). A non-paper request is refused.
+  const realism = require('../utils/realism');
+  if (!isPaper && !realism.liveArbAllowed()) {
+    logger.warn('Flash-loan LIVE execution refused: observation-only until ARB_MODE=live and the fork-test marker passes.');
+    return { success: false, reason: 'observation_only', observationOnly: true, paper: true };
+  }
   const sim = simulateFlashLoan({
     token: opportunity.token || 'WETH',
     borrowAmountUsd: opportunity.borrowAmountUsd || 10000,
@@ -136,6 +143,10 @@ async function executeFlashLoanArbitrage(opportunity, isPaper = true) {
     txId: `FL_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
     timestamp: new Date().toISOString(),
     paper: isPaper,
+    // 2026-10-03: arithmetic-only result. Flagged so no recorder can ever count it as a real trade.
+    simulated: true,
+    isSimulated: true,
+    observationOnly: !realism.liveArbAllowed(),
     simulation: sim,
     status: 'COMPLETED',
   };

@@ -43,7 +43,12 @@ function recordSignal(pair, consensus) {
   pending[pair] = {
     signal:        consensus.signal || 'HOLD',
     confidence:    typeof consensus.confidence === 'number' ? consensus.confidence : 0,
-    approved:      !!consensus.approved_for_execution,
+    approved:      !!consensus.approved_for_execution && consensus.capitalPolicy?.allowed !== false,
+    holdingHorizonH: consensus.holdingHorizonH || 1,
+    capitalPolicy: consensus.capitalPolicy || null,
+    riskApproved: consensus.riskDecision?.approved === true,
+    maxStakeUsd: consensus.riskDecision?.positionSizeUsd ?? null,
+    exitApproved: consensus.exitApproved === true,
     agentsAgreeing:consensus.agentsAgreeing ?? null,
     reasoning:     consensus.reasoning || '',
     ts:            new Date().toISOString(),

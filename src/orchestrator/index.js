@@ -9,15 +9,24 @@
  *   6. Stream live events to WebSocket Trading Dashboard
  */
 require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
+require('../utils/privateEnv').loadApiDefaults();
 const cron = require('node-cron');
 const logger = require('../utils/logger');
 const { fetchMarketData } = require('../data/marketData');
 const { runConsensus } = require('./consensus');
+const predictorAgent = require('../predictor/predictorAgent');   // 2026-10-03: prediction after the bull/bear debate
+const predictionStore = require('../predictor/predictionStore');
+const probabilityEngine = require('../engine/engine');           // 2026-10-03: multi-horizon probability engine + cost/risk gate
 const { checkRiskGate, getPortfolioState, resolveAllOpenPositions } = require('../risk/riskGate');
 const { isKillSwitchEngaged } = require('../utils/killSwitch');
 const { recordSignal, flushSignals } = require('./signalBridge');
-const { enrichMarketData, fetchMarketOverview } = require('../data/tradingKitFeed');
+// 2026-10-05: tradingkit-analyst/tradingKitFeed retired per Alan's instruction
+// ("remove tradingkit analyst, use a single agent tradingview strategy
+// advisor/picker..."); strategyAdvisorFeed.js is its drop-in replacement,
+// same enrichMarketData(pair, baseMarketData) contract.
+const { enrichMarketData, fetchMarketOverview } = require('../data/strategyAdvisorFeed');
 const { getLatestSignals } = require('../notifications/telegramListener');
+const { getLatestTradingViewSignals } = require('../notifications/tradingViewWebhook');
 const { executeTrade } = require('../utils/exchangeRouter');
 const { allocateProfits, getVaultSummary } = require('../utils/profitAllocator');
 const { getPerformanceStats } = require('../risk/tradeLedger');
@@ -26,12 +35,19 @@ const { startContinuousLearning } = require('../agents/learningAgent');
 // OANDA_TRADING_ENABLED=true - off by default so this never silently starts
 // trading a new asset class. See config/instrument_universe.json for the
 // pair list.
-const { isOandaPair, getOandaPairs } = require('../utils/instrumentUniverse');
+const { isOandaPair, getOandaPairs, isAlpacaPair, getAlpacaPairs } = require('../utils/instrumentUniverse');
 const { fetchOandaMarketData } = require('../data/oandaMarketData');
 const oandaExecutor = require('../utils/oandaExecutor');
+// 2026-09-27 (Alan's explicit instruction): multi-market expansion — Alpaca
+// wiring follows the exact same opt-in pattern as OANDA above.
+// alpacaBroker.js already existed (built 2026-09-26) but was never called
+// from the live cycle; this activates it, off by default, same as OANDA.
+const { fetchAlpacaMarketData } = require('../data/alpacaMarketData');
+const alpacaExecutor = require('../utils/alpacaExecutor');
 
 const PAPER = process.env.PAPER_TRADING !== 'false';
 const OANDA_TRADING_ENABLED = process.env.OANDA_TRADING_ENABLED === 'true';
+const ALPACA_TRADING_ENABLED = process.env.ALPACA_TRADING_ENABLED === 'true';
 // Note: removed unused local MIN_CONFIDENCE (2026-09-03) — it was declared
 // here but never referenced anywhere in this file, which read like a safety
 // gate that did nothing. The real confidence gate is enforced in
@@ -78,11 +94,21 @@ async function getActivePairs() {
     logger.info(`[Orchestrator] OANDA_TRADING_ENABLED=true - added ${withOanda.length - configured.length} OANDA pair(s): ${getOandaPairs().join(', ')}`);
   }
 
+  // 2026-09-27 (Alan's explicit instruction): same append-never-replace
+  // pattern as OANDA above — Alpaca pairs are added on top, never used to
+  // reorder or drop the crypto list.
+  const withAlpaca = ALPACA_TRADING_ENABLED
+    ? [...withOanda, ...getAlpacaPairs().filter((p) => !withOanda.includes(p))]
+    : withOanda;
+  if (ALPACA_TRADING_ENABLED) {
+    logger.info(`[Orchestrator] ALPACA_TRADING_ENABLED=true - added ${withAlpaca.length - withOanda.length} Alpaca pair(s): ${getAlpacaPairs().join(', ')}`);
+  }
+
   if (process.env.DYNAMIC_UNIVERSE !== 'true') {
-    dynamicPairsCache = withOanda;
+    dynamicPairsCache = withAlpaca;
     lastPairsCacheUpdate = now;
-    logger.info(`[Orchestrator] Universe = ${withOanda.length} configured pairs (TRADING_PAIRS): ${withOanda.join(', ')}`);
-    return withOanda;
+    logger.info(`[Orchestrator] Universe = ${withAlpaca.length} configured pairs (TRADING_PAIRS): ${withAlpaca.join(', ')}`);
+    return withAlpaca;
   }
 
   try {
@@ -113,7 +139,11 @@ async function getActivePairs() {
     const withOandaRanked = OANDA_TRADING_ENABLED
       ? [...ranked, ...getOandaPairs().filter((p) => !ranked.includes(p))]
       : ranked;
-    const selected = [...withOandaRanked, ...configured.filter(p => !withOandaRanked.includes(p))];
+    // 2026-09-27: same append pattern as the non-dynamic branch above.
+    const withAlpacaRanked = ALPACA_TRADING_ENABLED
+      ? [...withOandaRanked, ...getAlpacaPairs().filter((p) => !withOandaRanked.includes(p))]
+      : withOandaRanked;
+    const selected = [...withAlpacaRanked, ...configured.filter(p => !withAlpacaRanked.includes(p))];
 
     dynamicPairsCache = selected;
     lastPairsCacheUpdate = now;
@@ -185,8 +215,13 @@ async function runTradingCycle() {
           marketDataMap[pair] = await fetchOandaMarketData(pair);
           return;
         }
+        // 2026-09-27 (Alan's explicit instruction): multi-market expansion.
+        if (isAlpacaPair(pair)) {
+          marketDataMap[pair] = await fetchAlpacaMarketData(pair);
+          return;
+        }
         const base = await fetchMarketData(pair, cmcQuotes);
-        // Enrich with TradingKit real-time data (indicators + signal)
+        // Enrich with the Strategy Advisor's cached backtest-pick signal
         marketDataMap[pair] = await enrichMarketData(pair, base);
       } catch (err) {
         logger.warn(`[${pair}] Market data fetch failed: ${err.message}`);
@@ -194,7 +229,7 @@ async function runTradingCycle() {
       }
     })
   );
-  logger.info(`⚡ [Parallel] Market data ready (+ TradingKit) in ${Date.now() - cycleStart}ms`);
+  logger.info(`⚡ [Parallel] Market data ready (+ Strategy Advisor) in ${Date.now() - cycleStart}ms`);
 
   // ── Inject live Telegram signals into market data ───────────────────────
   const tgSignals = getLatestSignals(20);
@@ -203,6 +238,16 @@ async function runTradingCycle() {
     for (const sig of tgSignals) {
       if (!sig.symbol || !marketDataMap[sig.symbol]) continue;
       marketDataMap[sig.symbol].telegramSignal = sig;
+    }
+  }
+
+  // ── Inject live TradingView webhook alerts into market data ─────────────
+  const tvSignals = getLatestTradingViewSignals(20);
+  if (tvSignals.length > 0) {
+    logger.info(`📺 [TradingView] Injecting ${tvSignals.length} live alert signal(s) into consensus`);
+    for (const sig of tvSignals) {
+      if (!sig.symbol || !marketDataMap[sig.symbol]) continue;
+      marketDataMap[sig.symbol].tradingViewSignal = sig;
     }
   }
 
@@ -273,10 +318,19 @@ async function runTradingCycle() {
   const pairResults = await Promise.allSettled(
     pairs.map(async (pair) => {
       const pairStart = Date.now();
-      const marketData = marketDataMap[pair];
+      let marketData = marketDataMap[pair];
 
       if (!marketData) {
         return { pair, signal: 'HOLD', executed: false, reason: 'Market data unavailable' };
+      }
+
+      // 2026-10-03: data-quality gate (fail-closed). No agent votes and no trade on a snapshot with
+      // synthetic/missing/stale/flat candles, a hard-coded seed price, or a pegged RSI/ATR.
+      if (marketData.quality && marketData.quality.ok === false) {
+        const why = marketData.quality.reasons.join('; ');
+        logger.warn(`[${pair}] Data-quality gate: skipped this cycle (${why})`);
+        try { recordSignal(pair, { signal: 'HOLD', confidence: 0, approved_for_execution: false, reasoning: `data-quality gate: ${why}` }); } catch (_) { /* best effort */ }
+        return { pair, signal: 'HOLD', executed: false, reason: `Data-quality gate: ${why}` };
       }
 
       logger.info(
@@ -285,13 +339,59 @@ async function runTradingCycle() {
         `| RSI: ${marketData.indicators.rsi14.toFixed(1)} | F&G: ${marketData.fearGreed.value}`
       );
 
+      // Shared closed-candle pattern/source evidence is visible to every AI reviewer.
+      try {
+        if (/\/USDT$/.test(pair)) marketData.horizonCandles = await require('../engine/horizonData').fetchHorizonCandles(pair);
+        marketData = require('../learning/expertContext').enrich(pair, marketData);
+      } catch (e) { logger.warn(`[${pair}] Expert context unavailable: ${e.message}`); }
+
       // Consensus
       const consensus = await runConsensus(pair, marketData);
+
+      // Predictor agent (2026-10-03): runs AFTER the bull/bear debate and BEFORE the final analysis (risk gate). It gives a
+      // direction + probability, stores it, and scores the older predictions for this pair against today's real price.
+      // Advisory for now: it does not veto or size trades until its scored hit rate proves it earns that role.
+      try {
+        const px = marketData.price.price;
+        predictionStore.resolveDuePrice('trade', pair, px);
+        const pr = predictorAgent.predictTrade({ pair, price: px, indicators: marketData.indicators, consensus, debate: consensus.debate || {} });
+        consensus.prediction = { direction: pr.direction, probability: pr.probability, horizonMin: pr.horizonMin, expectedMovePct: pr.expectedMovePct,
+          agreesWithConsensus: pr.agreesWithConsensus, reasoning: pr.reasoning };
+        logger.info(`  [${pair}] Predictor: ${pr.direction} P=${pr.probability.toFixed(2)} over ${pr.horizonMin} min (${pr.agreesWithConsensus ? 'agrees with' : 'differs from'} consensus ${consensus.signal})`);
+      } catch (e) { logger.warn(`  [${pair}] Predictor skipped (non-fatal): ${e.message}`); }
+
+      // Probability engine (2026-10-03): multi-horizon calibrated probabilities + expected return, reviewed by the reasoning agent, then a
+      // cost/risk gate (fees, spread, slippage, uncertainty). ENGINE_GATE_MODE=shadow (default) only logs/scores the decision;
+      // enforce blocks gate-failed signals (and, via approved_for_execution, the Freqtrade bridge too); auto enforces only once the model validated.
+      try {
+        const eng = await probabilityEngine.evaluate({ pair, marketData, consensus, debate: consensus.debate || {} });
+        consensus.engine = eng;
+        const g = eng.gate;
+        if (consensus.signal === 'BUY' || consensus.signal === 'SELL') {
+          logger.info(`  [${pair}] Engine[${eng.mode}]: ${g.pass ? 'PASS' : 'WOULD REJECT'} ${(g.reasons || []).map((r) => r.code).join(',')}${g.netEdgePct != null ? ` | net edge ${g.netEdgePct.toFixed(3)}%` : ''}`);
+        }
+        if (eng.mode === 'enforce' && !g.pass && consensus.approved_for_execution) {
+          consensus.approved_for_execution = false;
+          consensus.reasoning = `Engine gate rejected: ${(g.reasons || []).map((r) => r.code).join(', ')}`;
+        }
+      } catch (e) { logger.warn(`  [${pair}] Engine skipped (non-fatal, nothing approved by it): ${e.message}`); }
 
       // Freqtrade signal bridge — mirror this pair's decision out to
       // data/freqtrade_signals.json so ConsensusBridgeStrategy can act on
       // it. Purely additive: doesn't affect the Node execution path below.
-      recordSignal(pair, consensus);
+      try {
+        consensus.exitApproved = consensus.signal === 'SELL' && consensus.approved_for_execution === true;
+        consensus.capitalPolicy = require('../risk/capitalPolicy').check(Number(consensus.holdingHorizonH || 1));
+        if (!consensus.capitalPolicy.allowed) {
+          consensus.approved_for_execution = false;
+          consensus.reasoning = consensus.capitalPolicy.reason;
+        }
+        require('../learning/expertContext').recordPeerOutcome(pair, consensus);
+      } catch (e) {
+        consensus.approved_for_execution = false;
+        consensus.reasoning = `Capital policy unavailable: ${e.message}`;
+      }
+      recordSignal(pair, { ...consensus, approved_for_execution: false });
 
       if (global.broadcastDashboardEvent) {
         global.broadcastDashboardEvent({
@@ -317,12 +417,21 @@ async function runTradingCycle() {
         return { pair, signal: consensus.signal, executed: false, reason: `Risk Gate: ${riskCheck.reason}` };
       }
 
+      if (process.env.EXECUTION_OWNER === 'freqtrade') {
+        recordSignal(pair, { ...consensus, riskDecision: riskCheck });
+        return { pair, signal: consensus.signal, executed: false, executionOwner: 'freqtrade', reason: 'Approved signal delivered to the Freqtrade bridge; no duplicate Node fill.' };
+      }
+
       // Execute — OANDA-covered pairs route through oandaExecutor (real OANDA
       // prices, OANDA's own stop-loss/leverage-cap/live-gate rules); every
       // other pair keeps using the crypto exchangeRouter, unchanged.
+      // 2026-09-27 (Alan's explicit instruction): multi-market expansion —
+      // Alpaca slots into this same venue-routing chain as OANDA above.
       const tradeResult = isOandaPair(pair)
         ? await oandaExecutor.executeTrade(pair, consensus.signal, riskCheck, marketData, PAPER)
-        : await executeTrade(pair, consensus.signal, riskCheck, marketData, PAPER);
+        : isAlpacaPair(pair)
+          ? await alpacaExecutor.executeTrade(pair, consensus.signal, riskCheck, marketData, PAPER)
+          : await executeTrade(pair, consensus.signal, riskCheck, marketData, PAPER);
       const allocation  = await allocateProfits(tradeResult);
 
       if (global.broadcastDashboardEvent) {
@@ -374,6 +483,8 @@ if (require.main === module) {
   } else {
     const intervalSec = parseInt(process.env.AUTO_TRADE_INTERVAL_SEC || '30', 10);
     logger.info(`🚀 Starting Full-Stack Continuous Auto-Trading Engine (${intervalSec}s loop)...`);
+    // 2026-10-03: cache the exchange's own minimum order sizes (public endpoint, refreshed every 6h).
+    try { require('../utils/exchangeLimits').startAutoRefresh({ logger }); } catch (e) { logger.warn(`exchange limits refresh not started: ${e.message}`); }
     startContinuousLearning();
     startAutoTrading(intervalSec, true);
   }

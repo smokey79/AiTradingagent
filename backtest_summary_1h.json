@@ -1,0 +1,13 @@
+{
+  "backtest_date": "2026-10-01T03:58:47.927340",
+  "symbol": "BTC/USDT",
+  "timeframe": "1h",
+  "strategy": "EMA Crossover + JEDAI Advisor",
+  "initial_balance": 1000.0,
+  "final_balance": 1000.0,
+  "return_pct": 0.0,
+  "total_trades": 0,
+  "win_rate": 0,
+  "max_drawdown_pct": 0.0,
+  "recommendation": "PAPER_TRADE"
+}

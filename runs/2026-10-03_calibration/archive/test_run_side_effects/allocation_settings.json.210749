@@ -1,0 +1,8 @@
+{
+  "baseCurrency": "GBPX",
+  "defaultAllocationPct": 10,
+  "overrideAllocationPct": null,
+  "memeAllocationPct": 3,
+  "maxExposurePct": 70,
+  "updatedAt": "2026-10-03T20:04:56.560Z"
+}

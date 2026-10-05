@@ -1,0 +1,15 @@
+{
+  "name": "flashloan-sim",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Stage 1 of Alan's flash-loan setup (2026-09-29): Balancer flash-loan arb contract + Arbitrum mainnet-FORK simulation. No wallet, no keys, no real money.",
+  "scripts": {
+    "compile": "hardhat compile",
+    "fork-test": "hardhat run scripts/forkTest.js"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.8",
+    "ethers": "^6.13.4",
+    "hardhat": "^2.26.0"
+  }
+}

@@ -1,0 +1,37 @@
+[
+  {
+    "pattern": "Bullish engulfing",
+    "pattern_timestamp_ms": 1704967200000,
+    "utc": "2024-01-11T10:00:00+00:00",
+    "gross_next_open_to_third_close_pct": 0.9658682468680846,
+    "selection": "first chronological occurrence after250-bar warm-up"
+  },
+  {
+    "pattern": "Bearish engulfing",
+    "pattern_timestamp_ms": 1704985200000,
+    "utc": "2024-01-11T15:00:00+00:00",
+    "gross_next_open_to_third_close_pct": -0.4128374727426998,
+    "selection": "first chronological occurrence after250-bar warm-up"
+  },
+  {
+    "pattern": "Lower-wick rejection",
+    "pattern_timestamp_ms": 1704996000000,
+    "utc": "2024-01-11T18:00:00+00:00",
+    "gross_next_open_to_third_close_pct": -0.9869394582770363,
+    "selection": "first chronological occurrence after250-bar warm-up"
+  },
+  {
+    "pattern": "Inside-bar upside break",
+    "pattern_timestamp_ms": 1705222800000,
+    "utc": "2024-01-14T09:00:00+00:00",
+    "gross_next_open_to_third_close_pct": -0.7390197311769375,
+    "selection": "first chronological occurrence after250-bar warm-up"
+  },
+  {
+    "pattern": "Three-bar upside reversal",
+    "pattern_timestamp_ms": 1705035600000,
+    "utc": "2024-01-12T05:00:00+00:00",
+    "gross_next_open_to_third_close_pct": -0.736661003927852,
+    "selection": "first chronological occurrence after250-bar warm-up"
+  }
+]

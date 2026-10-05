@@ -101,7 +101,7 @@ Indicators: RSI(14)=${ind.rsi14 || 50}, EMA20=$${ind.ema20 || 0}, EMA50=$${ind.e
 MACD Hist=${ind.macd?.histogram || 0}, Bias=${ind.orderBook?.bias || 'neutral'}
 Respond strictly in valid JSON.`;
 
-      const freeModel = process.env.OPENROUTER_FREE_MODEL || 'inclusionai/ling-3.0-flash-fin:free';
+      const freeModel = process.env.OPENROUTER_FREE_MODEL || 'inclusionai/ling-3.0-flash-sante:free';
       const res = await axios.post(
         'https://openrouter.ai/api/v1/chat/completions',
         {
@@ -194,7 +194,81 @@ function simulateDeepSeekAnalysis(symbol, marketData) {
   };
 }
 
+/**
+ * callDeepSeekRaw(prompt) — 2026-09-27 (Alan's explicit instruction: "use
+ * deepseek for bear"). Added for the Bear debate agent
+ * (src/agents/bearDebateAgent.js), which previously ran on local
+ * Ollama/Hermes — that connection has been unreachable, causing Bear to
+ * default-veto almost every candidate out of caution. Sends an arbitrary
+ * free-form prompt (not the fixed-schema signal prompt getSignal() above
+ * uses) straight to DeepSeek: the direct DeepSeek API first (DEEPSEEK_API_KEY
+ * is configured on this machine), falling back to OpenRouter's free
+ * DeepSeek R1 tier if the direct call fails. No heuristic fallback here —
+ * bearDebateAgent's own caller already fails safe (defaults to veto=true)
+ * if this throws, matching the standing rule to never loosen a safety
+ * check on a failure.
+ */
+async function callDeepSeekRaw(prompt) {
+  const deepseekApiKey = process.env.DEEPSEEK_API_KEY;
+  if (deepseekApiKey && !deepseekApiKey.startsWith('your_') && deepseekApiKey.trim() !== '') {
+    try {
+      const res = await axios.post(
+        'https://api.deepseek.com/chat/completions',
+        {
+          model: 'deepseek-reasoner',
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 300,
+          temperature: 0.25,
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${deepseekApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          timeout: 15000,
+        }
+      );
+      const text = res.data?.choices?.[0]?.message?.content;
+      if (text) return { text, model: 'deepseek-reasoner' };
+    } catch (err) {
+      logger.warn(`[DeepSeek] callDeepSeekRaw direct API failed: ${err.message}`);
+    }
+  }
+
+  const openrouterApiKey = process.env.OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY_1;
+  if (openrouterApiKey && !openrouterApiKey.startsWith('your_') && openrouterApiKey.trim() !== '') {
+    try {
+      const freeModel = process.env.OPENROUTER_DEEPSEEK_MODEL || 'deepseek/deepseek-r1:free';
+      const res = await axios.post(
+        'https://openrouter.ai/api/v1/chat/completions',
+        {
+          model: freeModel,
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 300,
+          temperature: 0.25,
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${openrouterApiKey}`,
+            'Content-Type': 'application/json',
+            'HTTP-Referer': 'https://github.com/smokey79/aitradingagent',
+            'X-Title': 'AiTradingAgent',
+          },
+          timeout: 12000,
+        }
+      );
+      const text = res.data?.choices?.[0]?.message?.content;
+      if (text) return { text, model: freeModel };
+    } catch (err) {
+      logger.warn(`[DeepSeek] callDeepSeekRaw OpenRouter fallback failed: ${err.message}`);
+    }
+  }
+
+  throw new Error('callDeepSeekRaw: direct DeepSeek API and OpenRouter DeepSeek fallback both unreachable');
+}
+
 module.exports = {
   getSignal,
-  simulateDeepSeekAnalysis
+  simulateDeepSeekAnalysis,
+  callDeepSeekRaw
 };

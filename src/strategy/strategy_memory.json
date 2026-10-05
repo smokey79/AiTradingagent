@@ -1,307 +1,97 @@
 {
   "version": 1,
-  "lastUpdated": "2026-09-15T15:35:01.688Z",
+  "lastUpdated": "2026-10-05T00:58:08.218Z",
   "tradeHistory": [
     {
-      "symbol": "SNDKB",
-      "side": "BUY",
-      "entryPrice": 1557.6806598731189,
-      "exitPrice": 1555.0638749519173,
-      "sizeUsdt": 25,
-      "pnlUsdt": -0.04,
-      "pnlPct": -0.0016799238692574467,
-      "isWin": false,
-      "exchange": "PaperEngine",
-      "agentVotes": {
-        "bull_agent": "BUY",
-        "bear_agent": "HOLD",
-        "claude": "BUY",
-        "openrouter_free": "HOLD",
-        "strategy_learner": "HOLD",
-        "tradingkit": "HOLD",
-        "telegram_channel": "HOLD",
-        "technical_lab": "HOLD",
-        "technical_daily": "HOLD",
-        "traderdev_strategy": "HOLD",
-        "gemini": "BUY"
-      },
-      "youtubeChannels": [],
-      "timestamp": "2026-09-15T05:41:44.618Z"
-    },
-    {
-      "symbol": "MUB",
-      "side": "BUY",
-      "entryPrice": 936.910460185298,
-      "exitPrice": 935.4512770480429,
-      "sizeUsdt": 25,
-      "pnlUsdt": -0.04,
-      "pnlPct": -0.0015574413983663825,
-      "isWin": false,
-      "exchange": "PaperEngine",
-      "agentVotes": {
-        "bull_agent": "BUY",
-        "bear_agent": "HOLD",
-        "claude": "BUY",
-        "openrouter_free": "HOLD",
-        "strategy_learner": "HOLD",
-        "tradingkit": "HOLD",
-        "telegram_channel": "HOLD",
-        "technical_lab": "HOLD",
-        "technical_daily": "HOLD",
-        "traderdev_strategy": "HOLD",
-        "gemini": "BUY"
-      },
-      "youtubeChannels": [],
-      "timestamp": "2026-09-15T11:56:36.005Z"
-    },
-    {
-      "symbol": "PAXG",
+      "symbol": "FLOKI",
       "side": "SELL",
-      "entryPrice": 4273.423790098582,
-      "exitPrice": 4278.047465423484,
-      "sizeUsdt": 24.99,
-      "pnlUsdt": -0.03,
-      "pnlPct": -0.0010819604027139068,
-      "isWin": false,
-      "exchange": "PaperEngine",
-      "agentVotes": {
-        "bull_agent": "HOLD",
-        "bear_agent": "SELL",
-        "claude": "SELL",
-        "openrouter_free": "HOLD",
-        "strategy_learner": "SELL",
-        "tradingkit": "HOLD",
-        "telegram_channel": "HOLD",
-        "technical_lab": "HOLD",
-        "technical_daily": "HOLD",
-        "traderdev_strategy": "HOLD",
-        "gemini": "SELL"
-      },
-      "youtubeChannels": [],
-      "timestamp": "2026-09-15T14:58:28.115Z"
-    },
-    {
-      "symbol": "GOOGLB",
-      "side": "BUY",
-      "entryPrice": 345.20962706538324,
-      "exitPrice": 343.97906660593304,
-      "sizeUsdt": 24.99,
+      "entryPrice": 0.000028836912,
+      "exitPrice": 0.00002939,
+      "sizeUsdt": 1.38,
       "pnlUsdt": -0.09,
-      "pnlPct": -0.0035646759619978176,
+      "pnlPct": -0.06521739130434782,
       "isWin": false,
       "exchange": "PaperEngine",
       "agentVotes": {
-        "bull_agent": "BUY",
-        "bear_agent": "HOLD",
-        "claude": "BUY",
-        "openrouter_free": "HOLD",
-        "strategy_learner": "HOLD",
-        "tradingkit": "HOLD",
-        "telegram_channel": "HOLD",
-        "technical_lab": "HOLD",
-        "technical_daily": "HOLD",
-        "traderdev_strategy": "HOLD",
-        "gemini": "BUY"
-      },
-      "youtubeChannels": [],
-      "timestamp": "2026-09-15T15:04:49.053Z"
-    },
-    {
-      "symbol": "PAXG",
-      "side": "SELL",
-      "entryPrice": 4272.34759567023,
-      "exitPrice": 4280.046037280801,
-      "sizeUsdt": 24.99,
-      "pnlUsdt": -0.05,
-      "pnlPct": -0.0018019230500751972,
-      "isWin": false,
-      "exchange": "PaperEngine",
-      "agentVotes": {
-        "bull_agent": "HOLD",
-        "bear_agent": "SELL",
         "claude": "SELL",
-        "openrouter_free": "HOLD",
-        "strategy_learner": "SELL",
-        "tradingkit": "HOLD",
-        "telegram_channel": "HOLD",
-        "technical_lab": "HOLD",
-        "technical_daily": "HOLD",
-        "traderdev_strategy": "HOLD",
-        "gemini": "SELL"
+        "openrouter_free": "SELL",
+        "oanda_sentiment": "HOLD",
+        "bigdata_sentiment": "HOLD"
       },
       "youtubeChannels": [],
-      "timestamp": "2026-09-15T15:05:01.219Z"
+      "timestamp": "2026-10-05T00:53:00.375Z"
     },
     {
-      "symbol": "METAB",
-      "side": "BUY",
-      "entryPrice": 665.1959628517203,
-      "exitPrice": 668.0727652314675,
-      "sizeUsdt": 24.99,
-      "pnlUsdt": 0.11,
-      "pnlPct": 0.004324744196303104,
-      "isWin": true,
-      "exchange": "PaperEngine",
-      "agentVotes": {
-        "bull_agent": "BUY",
-        "bear_agent": "HOLD",
-        "claude": "BUY",
-        "openrouter_free": "HOLD",
-        "strategy_learner": "HOLD",
-        "tradingkit": "HOLD",
-        "telegram_channel": "HOLD",
-        "technical_lab": "HOLD",
-        "technical_daily": "HOLD",
-        "traderdev_strategy": "HOLD",
-        "gemini": "BUY"
-      },
-      "youtubeChannels": [],
-      "timestamp": "2026-09-15T15:05:19.539Z"
-    },
-    {
-      "symbol": "QQQB",
+      "symbol": "ADA",
       "side": "SELL",
-      "entryPrice": 704.3730970087823,
-      "exitPrice": 705.5102409155517,
-      "sizeUsdt": 24.99,
-      "pnlUsdt": -0.04,
-      "pnlPct": -0.0016144056489357178,
+      "entryPrice": 0.25869288,
+      "exitPrice": 0.2636,
+      "sizeUsdt": 1.1,
+      "pnlUsdt": -0.07,
+      "pnlPct": -0.06363636363636364,
       "isWin": false,
       "exchange": "PaperEngine",
       "agentVotes": {
-        "bull_agent": "HOLD",
-        "bear_agent": "SELL",
         "claude": "SELL",
-        "openrouter_free": "HOLD",
-        "strategy_learner": "SELL",
-        "tradingkit": "HOLD",
-        "telegram_channel": "HOLD",
-        "technical_lab": "HOLD",
-        "technical_daily": "HOLD",
-        "traderdev_strategy": "HOLD",
-        "gemini": "SELL"
+        "oanda_sentiment": "HOLD",
+        "bigdata_sentiment": "HOLD"
       },
       "youtubeChannels": [],
-      "timestamp": "2026-09-15T15:35:01.669Z"
+      "timestamp": "2026-10-05T00:58:04.100Z"
     }
   ],
   "channelCredibility": {},
   "stats": {
-    "wins": 1,
-    "losses": 6,
-    "totalPnl": -0.18,
-    "winRate": 0.1429,
-    "winAmounts": [
-      0.004324744196303104
-    ],
+    "wins": 0,
+    "losses": 2,
+    "totalPnl": -0.16,
+    "winRate": 0,
+    "winAmounts": [],
     "lossAmounts": [
-      0.0016799238692574467,
-      0.0015574413983663825,
-      0.0010819604027139068,
-      0.0035646759619978176,
-      0.0018019230500751972,
-      0.0016144056489357178
+      0.06521739130434782,
+      0.06363636363636364
     ],
     "symbolStats": {
-      "SNDKB": {
-        "trades": 1,
-        "wins": 0,
-        "pnl": -0.04,
-        "winRate": 0
-      },
-      "MUB": {
-        "trades": 1,
-        "wins": 0,
-        "pnl": -0.04,
-        "winRate": 0
-      },
-      "PAXG": {
-        "trades": 2,
-        "wins": 0,
-        "pnl": -0.08,
-        "winRate": 0
-      },
-      "GOOGLB": {
+      "FLOKI": {
         "trades": 1,
         "wins": 0,
         "pnl": -0.09,
         "winRate": 0
       },
-      "METAB": {
-        "trades": 1,
-        "wins": 1,
-        "pnl": 0.11,
-        "winRate": 1
-      },
-      "QQQB": {
+      "ADA": {
         "trades": 1,
         "wins": 0,
-        "pnl": -0.04,
+        "pnl": -0.07,
         "winRate": 0
       }
     },
-    "avgWin": 0.0043,
-    "avgLoss": 0.0019,
+    "avgWin": 0.04,
+    "avgLoss": 0.0644,
     "kelly": 0,
     "fullKelly": 0,
     "recommendedPct": 0
   },
   "notes": "This file is the persistent strategy brain.",
   "agentAccuracy": {
-    "bull_agent": {
-      "correct": 1,
-      "total": 7,
-      "accuracy": 0.1429
-    },
-    "bear_agent": {
-      "correct": 0,
-      "total": 7,
-      "accuracy": 0
-    },
     "claude": {
-      "correct": 1,
-      "total": 7,
-      "accuracy": 0.1429
+      "correct": 0,
+      "total": 2,
+      "accuracy": 0
     },
     "openrouter_free": {
       "correct": 0,
-      "total": 7,
+      "total": 1,
       "accuracy": 0
     },
-    "strategy_learner": {
+    "oanda_sentiment": {
       "correct": 0,
-      "total": 7,
+      "total": 2,
       "accuracy": 0
     },
-    "tradingkit": {
+    "bigdata_sentiment": {
       "correct": 0,
-      "total": 7,
+      "total": 2,
       "accuracy": 0
-    },
-    "telegram_channel": {
-      "correct": 0,
-      "total": 7,
-      "accuracy": 0
-    },
-    "technical_lab": {
-      "correct": 0,
-      "total": 7,
-      "accuracy": 0
-    },
-    "technical_daily": {
-      "correct": 0,
-      "total": 7,
-      "accuracy": 0
-    },
-    "traderdev_strategy": {
-      "correct": 0,
-      "total": 7,
-      "accuracy": 0
-    },
-    "gemini": {
-      "correct": 1,
-      "total": 7,
-      "accuracy": 0.1429
     }
   }
 }

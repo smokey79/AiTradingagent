@@ -1,0 +1,797 @@
+{
+  "strategy": "3-candle RSI/VWAP/EMA14-50",
+  "days": 365,
+  "costPerSide": 0.0015,
+  "generated": "2026-09-30T03:04:58.703Z",
+  "results": {
+    "SE1 pure sweep+engulf 3R | 1h BTC/USDT": {
+      "n": 101,
+      "winRate": 0.3069306930693069,
+      "avgR": -0.13337029316210164,
+      "profitFactor": 0.9967028025808378,
+      "totalPct": -0.026189971143264712,
+      "maxDD": 0.22308324966966542
+    },
+    "SE1 pure sweep+engulf 3R | 1h ETH/USDT": {
+      "n": 100,
+      "winRate": 0.32,
+      "avgR": -0.021077381965178242,
+      "profitFactor": 0.9225301379266563,
+      "totalPct": -0.10889790496456209,
+      "maxDD": 0.23957727050082234
+    },
+    "SE1 pure sweep+engulf 3R | 1h SOL/USDT": {
+      "n": 106,
+      "winRate": 0.27358490566037735,
+      "avgR": -0.17639115715653592,
+      "profitFactor": 0.7514851257131602,
+      "totalPct": -0.3180534819856421,
+      "maxDD": 0.4689082971094334
+    },
+    "SE1 pure sweep+engulf 3R | 1h XRP/USDT": {
+      "n": 122,
+      "winRate": 0.2786885245901639,
+      "avgR": -0.20235257813258878,
+      "profitFactor": 0.9708042678559063,
+      "totalPct": -0.08314070046082367,
+      "maxDD": 0.3910042782719707
+    },
+    "SE1 pure sweep+engulf 3R | 1h DOGE/USDT": {
+      "n": 114,
+      "winRate": 0.3508771929824561,
+      "avgR": 0.1272178846073475,
+      "profitFactor": 1.3282072108240859,
+      "totalPct": 0.4271167485331757,
+      "maxDD": 0.2474650761460918
+    },
+    "SE1 pure sweep+engulf 3R | 1h BNB/USDT": {
+      "n": 95,
+      "winRate": 0.3894736842105263,
+      "avgR": 0.18311860078301676,
+      "profitFactor": 1.5004358855100979,
+      "totalPct": 0.4003815652007794,
+      "maxDD": 0.13435953750873697
+    },
+    "SE1 pure sweep+engulf 3R | 1h ADA/USDT": {
+      "n": 118,
+      "winRate": 0.3305084745762712,
+      "avgR": 0.09422797937633015,
+      "profitFactor": 1.2902488287121472,
+      "totalPct": 0.433691857478232,
+      "maxDD": 0.29989809189727346
+    },
+    "SE1 pure sweep+engulf 3R | 1h LINK/USDT": {
+      "n": 124,
+      "winRate": 0.3225806451612903,
+      "avgR": -0.02043674109434411,
+      "profitFactor": 1.1120141525603726,
+      "totalPct": 0.10400674097121043,
+      "maxDD": 0.3239093315198567
+    },
+    "SE1 pure sweep+engulf 3R | 1h ALL": {
+      "n": 880,
+      "winRate": 0.32045454545454544,
+      "avgR": -0.020998594779916162,
+      "profitFactor": 1.0939749321059775,
+      "totalPct": 0.7162800332224739,
+      "maxDD": 0.8618004968059937
+    },
+    "SE1 pure sweep+engulf 3R | 4h BTC/USDT": {
+      "n": 26,
+      "winRate": 0.3076923076923077,
+      "avgR": 0.004389607669912468,
+      "profitFactor": 1.2113675826076313,
+      "totalPct": 0.05799984908790612,
+      "maxDD": 0.16206287353845183
+    },
+    "SE1 pure sweep+engulf 3R | 4h ETH/USDT": {
+      "n": 22,
+      "winRate": 0.22727272727272727,
+      "avgR": -0.22553447489909895,
+      "profitFactor": 0.9663243311613859,
+      "totalPct": -0.05240523610051151,
+      "maxDD": 0.16931781640631305
+    },
+    "SE1 pure sweep+engulf 3R | 4h SOL/USDT": {
+      "n": 27,
+      "winRate": 0.2222222222222222,
+      "avgR": -0.26812736199451154,
+      "profitFactor": 1.0119025865627675,
+      "totalPct": -0.03543150593736777,
+      "maxDD": 0.2411976400720247
+    },
+    "SE1 pure sweep+engulf 3R | 4h XRP/USDT": {
+      "n": 32,
+      "winRate": 0.4375,
+      "avgR": 0.573079424782809,
+      "profitFactor": 2.3064814156117968,
+      "totalPct": 0.6914802753231728,
+      "maxDD": 0.11275965245651354
+    },
+    "SE1 pure sweep+engulf 3R | 4h DOGE/USDT": {
+      "n": 32,
+      "winRate": 0.34375,
+      "avgR": 0.23551732216337712,
+      "profitFactor": 1.5959275723888227,
+      "totalPct": 0.3505828524744916,
+      "maxDD": 0.1526375283993071
+    },
+    "SE1 pure sweep+engulf 3R | 4h BNB/USDT": {
+      "n": 23,
+      "winRate": 0.21739130434782608,
+      "avgR": -0.3245297177332961,
+      "profitFactor": 0.7763188496618222,
+      "totalPct": -0.09552093150347629,
+      "maxDD": 0.1224557466306222
+    },
+    "SE1 pure sweep+engulf 3R | 4h ADA/USDT": {
+      "n": 25,
+      "winRate": 0.28,
+      "avgR": -0.006229759527129995,
+      "profitFactor": 1.455872543224074,
+      "totalPct": 0.2039487422890831,
+      "maxDD": 0.25591537052980873
+    },
+    "SE1 pure sweep+engulf 3R | 4h LINK/USDT": {
+      "n": 31,
+      "winRate": 0.41935483870967744,
+      "avgR": 0.5388390048657615,
+      "profitFactor": 2.125864683981772,
+      "totalPct": 0.6426002680911036,
+      "maxDD": 0.11165693272291022
+    },
+    "SE1 pure sweep+engulf 3R | 4h ALL": {
+      "n": 218,
+      "winRate": 0.3165137614678899,
+      "avgR": 0.10491793639843218,
+      "profitFactor": 1.4349703299125165,
+      "totalPct": 2.9515538728080792,
+      "maxDD": 0.6333256516792556
+    },
+    "SE1 pure sweep+engulf 3R | 1d BTC/USDT": {
+      "n": 3,
+      "winRate": 0.6666666666666666,
+      "avgR": 1.5787982701892025,
+      "profitFactor": 3.945424641010518,
+      "totalPct": 0.1355836554191019,
+      "maxDD": 0.04624962015053191
+    },
+    "SE1 pure sweep+engulf 3R | 1d ETH/USDT": {
+      "n": 3,
+      "winRate": 0.3333333333333333,
+      "avgR": 0.25028660668065955,
+      "profitFactor": 0.7480674152911939,
+      "totalPct": -0.029394392733595565,
+      "maxDD": 0.09582649139130317
+    },
+    "SE1 pure sweep+engulf 3R | 1d SOL/USDT": {
+      "n": 1,
+      "winRate": 0,
+      "avgR": -1.102068493150684,
+      "profitFactor": 0,
+      "totalPct": -0.03239202791571616,
+      "maxDD": 0.03239202791571616
+    },
+    "SE1 pure sweep+engulf 3R | 1d XRP/USDT": {
+      "n": 0
+    },
+    "SE1 pure sweep+engulf 3R | 1d DOGE/USDT": {
+      "n": 2,
+      "winRate": 1,
+      "avgR": 2.9314554322858117,
+      "profitFactor": null,
+      "totalPct": 0.27306661603391325,
+      "maxDD": 0
+    },
+    "SE1 pure sweep+engulf 3R | 1d BNB/USDT": {
+      "n": 4,
+      "winRate": 0.25,
+      "avgR": -0.10517878609748521,
+      "profitFactor": 0.8109747673427625,
+      "totalPct": -0.024846214140729406,
+      "maxDD": 0.07493100356584637
+    },
+    "SE1 pure sweep+engulf 3R | 1d ADA/USDT": {
+      "n": 0
+    },
+    "SE1 pure sweep+engulf 3R | 1d LINK/USDT": {
+      "n": 3,
+      "winRate": 0.6666666666666666,
+      "avgR": 1.6070815738727342,
+      "profitFactor": 4.467330639419524,
+      "totalPct": 0.21513890440300898,
+      "maxDD": 0.06181915526472348
+    },
+    "SE1 pure sweep+engulf 3R | 1d ALL": {
+      "n": 16,
+      "winRate": 0.5,
+      "avgR": 0.9155391612036743,
+      "profitFactor": 2.5465522391126867,
+      "totalPct": 0.6088351022492051,
+      "maxDD": 0.12267670140941744
+    },
+    "SE2 + EMA14/50 trend 3R | 1h BTC/USDT": {
+      "n": 27,
+      "winRate": 0.2222222222222222,
+      "avgR": -0.4528204353680113,
+      "profitFactor": 1.131502117856114,
+      "totalPct": 0.025082041225174212,
+      "maxDD": 0.1190748987354121
+    },
+    "SE2 + EMA14/50 trend 3R | 1h ETH/USDT": {
+      "n": 34,
+      "winRate": 0.2647058823529412,
+      "avgR": -0.23463335677767136,
+      "profitFactor": 0.7336551471481055,
+      "totalPct": -0.11619952377584208,
+      "maxDD": 0.1844040508443432
+    },
+    "SE2 + EMA14/50 trend 3R | 1h SOL/USDT": {
+      "n": 30,
+      "winRate": 0.3333333333333333,
+      "avgR": 0.10047254607793892,
+      "profitFactor": 1.0273890307637574,
+      "totalPct": -0.0030406874940178685,
+      "maxDD": 0.21888688664871003
+    },
+    "SE2 + EMA14/50 trend 3R | 1h XRP/USDT": {
+      "n": 34,
+      "winRate": 0.2647058823529412,
+      "avgR": -0.22966950120281648,
+      "profitFactor": 0.9450570235352982,
+      "totalPct": -0.03690444418309735,
+      "maxDD": 0.1649677694175321
+    },
+    "SE2 + EMA14/50 trend 3R | 1h DOGE/USDT": {
+      "n": 43,
+      "winRate": 0.3953488372093023,
+      "avgR": 0.29671755188071525,
+      "profitFactor": 1.568770453765669,
+      "totalPct": 0.2554985476466103,
+      "maxDD": 0.10743839998357652
+    },
+    "SE2 + EMA14/50 trend 3R | 1h BNB/USDT": {
+      "n": 28,
+      "winRate": 0.39285714285714285,
+      "avgR": 0.17597337031850108,
+      "profitFactor": 1.828756698625913,
+      "totalPct": 0.1615763005884776,
+      "maxDD": 0.05225982336840951
+    },
+    "SE2 + EMA14/50 trend 3R | 1h ADA/USDT": {
+      "n": 38,
+      "winRate": 0.34210526315789475,
+      "avgR": 0.12736319119537698,
+      "profitFactor": 1.570729842477803,
+      "totalPct": 0.24444896365259128,
+      "maxDD": 0.1746929442551367
+    },
+    "SE2 + EMA14/50 trend 3R | 1h LINK/USDT": {
+      "n": 28,
+      "winRate": 0.35714285714285715,
+      "avgR": 0.1270168957726828,
+      "profitFactor": 1.4276894770861825,
+      "totalPct": 0.12023063939953116,
+      "maxDD": 0.10922526246737807
+    },
+    "SE2 + EMA14/50 trend 3R | 1h ALL": {
+      "n": 262,
+      "winRate": 0.3244274809160305,
+      "avgR": 0.004137827873715736,
+      "profitFactor": 1.2463830049538647,
+      "totalPct": 0.7685126231714474,
+      "maxDD": 0.5475206847882087
+    },
+    "SE2 + EMA14/50 trend 3R | 4h BTC/USDT": {
+      "n": 7,
+      "winRate": 0.14285714285714285,
+      "avgR": -0.7091145695406359,
+      "profitFactor": 0.17513686990541066,
+      "totalPct": -0.09999010147555099,
+      "maxDD": 0.10197905249555139
+    },
+    "SE2 + EMA14/50 trend 3R | 4h ETH/USDT": {
+      "n": 2,
+      "winRate": 0,
+      "avgR": -1.1339072610475414,
+      "profitFactor": 0,
+      "totalPct": -0.05331362173429299,
+      "maxDD": 0.05331362173429299
+    },
+    "SE2 + EMA14/50 trend 3R | 4h SOL/USDT": {
+      "n": 10,
+      "winRate": 0.3,
+      "avgR": 0.04910364687479496,
+      "profitFactor": 1.5287657349531978,
+      "totalPct": 0.07916832380140026,
+      "maxDD": 0.10143731015829649
+    },
+    "SE2 + EMA14/50 trend 3R | 4h XRP/USDT": {
+      "n": 6,
+      "winRate": 0.16666666666666666,
+      "avgR": -0.501745393584046,
+      "profitFactor": 0.37950803133680433,
+      "totalPct": -0.07120380167141471,
+      "maxDD": 0.07120380167141471
+    },
+    "SE2 + EMA14/50 trend 3R | 4h DOGE/USDT": {
+      "n": 4,
+      "winRate": 0.25,
+      "avgR": -0.12453245336472935,
+      "profitFactor": 0.4959737725491236,
+      "totalPct": -0.04941303866169666,
+      "maxDD": 0.06170071850335335
+    },
+    "SE2 + EMA14/50 trend 3R | 4h BNB/USDT": {
+      "n": 1,
+      "winRate": 0,
+      "avgR": -1.1819565217391355,
+      "profitFactor": 0,
+      "totalPct": -0.019487455197132797,
+      "maxDD": 0.019487455197132797
+    },
+    "SE2 + EMA14/50 trend 3R | 4h ADA/USDT": {
+      "n": 11,
+      "winRate": 0,
+      "avgR": -1.1260262218856805,
+      "profitFactor": 0,
+      "totalPct": -0.2924451019565377,
+      "maxDD": 0.2924451019565377
+    },
+    "SE2 + EMA14/50 trend 3R | 4h LINK/USDT": {
+      "n": 6,
+      "winRate": 0.16666666666666666,
+      "avgR": -0.5083939556198124,
+      "profitFactor": 0.43064000517951967,
+      "totalPct": -0.0596048605211984,
+      "maxDD": 0.0795036829854816
+    },
+    "SE2 + EMA14/50 trend 3R | 4h ALL": {
+      "n": 47,
+      "winRate": 0.14893617021276595,
+      "avgR": -0.5716551257722396,
+      "profitFactor": 0.4116077734469275,
+      "totalPct": -0.4703627067025744,
+      "maxDD": 0.5353959798674004
+    },
+    "SE2 + EMA14/50 trend 3R | 1d BTC/USDT": {
+      "n": 1,
+      "winRate": 0,
+      "avgR": -1.0693647710559868,
+      "profitFactor": 0,
+      "totalPct": -0.04624962015053191,
+      "maxDD": 0.04624962015053191
+    },
+    "SE2 + EMA14/50 trend 3R | 1d ETH/USDT": {
+      "n": 0
+    },
+    "SE2 + EMA14/50 trend 3R | 1d SOL/USDT": {
+      "n": 0
+    },
+    "SE2 + EMA14/50 trend 3R | 1d XRP/USDT": {
+      "n": 0
+    },
+    "SE2 + EMA14/50 trend 3R | 1d DOGE/USDT": {
+      "n": 0
+    },
+    "SE2 + EMA14/50 trend 3R | 1d BNB/USDT": {
+      "n": 1,
+      "winRate": 0,
+      "avgR": -1.1356412213740452,
+      "profitFactor": 0,
+      "totalPct": -0.025117170352861762,
+      "maxDD": 0.025117170352861762
+    },
+    "SE2 + EMA14/50 trend 3R | 1d ADA/USDT": {
+      "n": 0
+    },
+    "SE2 + EMA14/50 trend 3R | 1d LINK/USDT": {
+      "n": 2,
+      "winRate": 0.5,
+      "avgR": 0.9414045036662443,
+      "profitFactor": 2.1510800798184206,
+      "totalPct": 0.06293821342586159,
+      "maxDD": 0.06181915526472348
+    },
+    "SE2 + EMA14/50 trend 3R | 1d ALL": {
+      "n": 4,
+      "winRate": 0.25,
+      "avgR": -0.08054924627438587,
+      "profitFactor": 0.9984383312685967,
+      "totalPct": -0.011685503002594744,
+      "maxDD": 0.07020513091531755
+    },
+    "SE3 + RSI filter 3R | 1h BTC/USDT": {
+      "n": 97,
+      "winRate": 0.29896907216494845,
+      "avgR": -0.16409079855210826,
+      "profitFactor": 0.874171425739743,
+      "totalPct": -0.12452677114132316,
+      "maxDD": 0.2521422549727699
+    },
+    "SE3 + RSI filter 3R | 1h ETH/USDT": {
+      "n": 93,
+      "winRate": 0.3118279569892473,
+      "avgR": -0.06313400907021124,
+      "profitFactor": 0.918915296590088,
+      "totalPct": -0.09931146266434765,
+      "maxDD": 0.23641621246265
+    },
+    "SE3 + RSI filter 3R | 1h SOL/USDT": {
+      "n": 105,
+      "winRate": 0.2571428571428571,
+      "avgR": -0.250868691147101,
+      "profitFactor": 0.7048761053302754,
+      "totalPct": -0.3506479898873309,
+      "maxDD": 0.4904653857107901
+    },
+    "SE3 + RSI filter 3R | 1h XRP/USDT": {
+      "n": 117,
+      "winRate": 0.27350427350427353,
+      "avgR": -0.22790158763823282,
+      "profitFactor": 0.8764768483195489,
+      "totalPct": -0.17999946528325816,
+      "maxDD": 0.37163330731187394
+    },
+    "SE3 + RSI filter 3R | 1h DOGE/USDT": {
+      "n": 106,
+      "winRate": 0.3867924528301887,
+      "avgR": 0.2752781356288644,
+      "profitFactor": 1.6646468335205098,
+      "totalPct": 0.9599073203217878,
+      "maxDD": 0.20078294030119936
+    },
+    "SE3 + RSI filter 3R | 1h BNB/USDT": {
+      "n": 87,
+      "winRate": 0.39080459770114945,
+      "avgR": 0.1910063418636568,
+      "profitFactor": 1.5398472797522713,
+      "totalPct": 0.3984803160399315,
+      "maxDD": 0.13102339294988075
+    },
+    "SE3 + RSI filter 3R | 1h ADA/USDT": {
+      "n": 114,
+      "winRate": 0.3157894736842105,
+      "avgR": 0.033521566766119615,
+      "profitFactor": 1.1497987696085656,
+      "totalPct": 0.16852269680487053,
+      "maxDD": 0.2908635088081929
+    },
+    "SE3 + RSI filter 3R | 1h LINK/USDT": {
+      "n": 115,
+      "winRate": 0.3130434782608696,
+      "avgR": -0.07028988435323372,
+      "profitFactor": 1.0713261374011807,
+      "totalPct": 0.04675735432791539,
+      "maxDD": 0.30106904354605357
+    },
+    "SE3 + RSI filter 3R | 1h ALL": {
+      "n": 834,
+      "winRate": 0.31654676258992803,
+      "avgR": -0.03987867217948387,
+      "profitFactor": 1.073951767288135,
+      "totalPct": 0.4076247585981343,
+      "maxDD": 0.8580502364592067
+    },
+    "SE3 + RSI filter 3R | 4h BTC/USDT": {
+      "n": 25,
+      "winRate": 0.32,
+      "avgR": 0.04694562267441337,
+      "profitFactor": 1.4265506118257143,
+      "totalPct": 0.11769722640320945,
+      "maxDD": 0.11478248040039984
+    },
+    "SE3 + RSI filter 3R | 4h ETH/USDT": {
+      "n": 22,
+      "winRate": 0.22727272727272727,
+      "avgR": -0.22553447489909895,
+      "profitFactor": 0.9663243311613859,
+      "totalPct": -0.05240523610051151,
+      "maxDD": 0.16931781640631305
+    },
+    "SE3 + RSI filter 3R | 4h SOL/USDT": {
+      "n": 26,
+      "winRate": 0.23076923076923078,
+      "avgR": -0.2351766851004422,
+      "profitFactor": 1.0591113199383826,
+      "totalPct": -0.008635106776001655,
+      "maxDD": 0.24119764007202482
+    },
+    "SE3 + RSI filter 3R | 4h XRP/USDT": {
+      "n": 32,
+      "winRate": 0.4375,
+      "avgR": 0.573079424782809,
+      "profitFactor": 2.3064814156117968,
+      "totalPct": 0.6914802753231728,
+      "maxDD": 0.11275965245651354
+    },
+    "SE3 + RSI filter 3R | 4h DOGE/USDT": {
+      "n": 32,
+      "winRate": 0.34375,
+      "avgR": 0.23551732216337712,
+      "profitFactor": 1.5959275723888227,
+      "totalPct": 0.3505828524744916,
+      "maxDD": 0.1526375283993071
+    },
+    "SE3 + RSI filter 3R | 4h BNB/USDT": {
+      "n": 23,
+      "winRate": 0.21739130434782608,
+      "avgR": -0.3245297177332961,
+      "profitFactor": 0.7763188496618222,
+      "totalPct": -0.09552093150347629,
+      "maxDD": 0.1224557466306222
+    },
+    "SE3 + RSI filter 3R | 4h ADA/USDT": {
+      "n": 21,
+      "winRate": 0.3333333333333333,
+      "avgR": 0.20101435366068607,
+      "profitFactor": 2.018222459872246,
+      "totalPct": 0.3967279974789697,
+      "maxDD": 0.20725203874609477
+    },
+    "SE3 + RSI filter 3R | 4h LINK/USDT": {
+      "n": 31,
+      "winRate": 0.41935483870967744,
+      "avgR": 0.5388390048657615,
+      "profitFactor": 2.125864683981772,
+      "totalPct": 0.6426002680911036,
+      "maxDD": 0.11165693272291022
+    },
+    "SE3 + RSI filter 3R | 4h ALL": {
+      "n": 212,
+      "winRate": 0.32547169811320753,
+      "avgR": 0.13883731735185761,
+      "profitFactor": 1.5229389125062616,
+      "totalPct": 3.9774943872746906,
+      "maxDD": 0.5979752913876069
+    },
+    "SE3 + RSI filter 3R | 1d BTC/USDT": {
+      "n": 3,
+      "winRate": 0.6666666666666666,
+      "avgR": 1.5787982701892025,
+      "profitFactor": 3.945424641010518,
+      "totalPct": 0.1355836554191019,
+      "maxDD": 0.04624962015053191
+    },
+    "SE3 + RSI filter 3R | 1d ETH/USDT": {
+      "n": 3,
+      "winRate": 0.3333333333333333,
+      "avgR": 0.25028660668065955,
+      "profitFactor": 0.7480674152911939,
+      "totalPct": -0.029394392733595565,
+      "maxDD": 0.09582649139130317
+    },
+    "SE3 + RSI filter 3R | 1d SOL/USDT": {
+      "n": 1,
+      "winRate": 0,
+      "avgR": -1.102068493150684,
+      "profitFactor": 0,
+      "totalPct": -0.03239202791571616,
+      "maxDD": 0.03239202791571616
+    },
+    "SE3 + RSI filter 3R | 1d XRP/USDT": {
+      "n": 0
+    },
+    "SE3 + RSI filter 3R | 1d DOGE/USDT": {
+      "n": 2,
+      "winRate": 1,
+      "avgR": 2.9314554322858117,
+      "profitFactor": null,
+      "totalPct": 0.27306661603391325,
+      "maxDD": 0
+    },
+    "SE3 + RSI filter 3R | 1d BNB/USDT": {
+      "n": 4,
+      "winRate": 0.25,
+      "avgR": -0.10517878609748521,
+      "profitFactor": 0.8109747673427625,
+      "totalPct": -0.024846214140729406,
+      "maxDD": 0.07493100356584637
+    },
+    "SE3 + RSI filter 3R | 1d ADA/USDT": {
+      "n": 0
+    },
+    "SE3 + RSI filter 3R | 1d LINK/USDT": {
+      "n": 3,
+      "winRate": 0.6666666666666666,
+      "avgR": 1.6070815738727342,
+      "profitFactor": 4.467330639419524,
+      "totalPct": 0.21513890440300898,
+      "maxDD": 0.06181915526472348
+    },
+    "SE3 + RSI filter 3R | 1d ALL": {
+      "n": 16,
+      "winRate": 0.5,
+      "avgR": 0.9155391612036743,
+      "profitFactor": 2.5465522391126867,
+      "totalPct": 0.6088351022492051,
+      "maxDD": 0.12267670140941744
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1h BTC/USDT": {
+      "n": 9,
+      "winRate": 0.3333333333333333,
+      "avgR": 0.006036583208932239,
+      "profitFactor": 2.0472447682547235,
+      "totalPct": 0.0716899856517561,
+      "maxDD": 0.041730757435721855
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1h ETH/USDT": {
+      "n": 9,
+      "winRate": 0.2222222222222222,
+      "avgR": -0.4271914886251518,
+      "profitFactor": 0.8129218512624138,
+      "totalPct": -0.021184227948547685,
+      "maxDD": 0.08428132733619997
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1h SOL/USDT": {
+      "n": 10,
+      "winRate": 0.2,
+      "avgR": -0.4073554543063696,
+      "profitFactor": 0.5315641836178406,
+      "totalPct": -0.07542559395287962,
+      "maxDD": 0.09584797062315997
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1h XRP/USDT": {
+      "n": 5,
+      "winRate": 0.2,
+      "avgR": -0.47169470674808317,
+      "profitFactor": 1.015773522226193,
+      "totalPct": -0.0008911164716225439,
+      "maxDD": 0.03764184175160845
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1h DOGE/USDT": {
+      "n": 13,
+      "winRate": 0.5384615384615384,
+      "avgR": 0.9264051635723081,
+      "profitFactor": 3.6018468896922795,
+      "totalPct": 0.36442302419918304,
+      "maxDD": 0.10032942986316518
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1h BNB/USDT": {
+      "n": 4,
+      "winRate": 0.5,
+      "avgR": 0.5685890109890148,
+      "profitFactor": 2.111362964568943,
+      "totalPct": 0.026936150291552607,
+      "maxDD": 0.01663636363636367
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1h ADA/USDT": {
+      "n": 11,
+      "winRate": 0.2727272727272727,
+      "avgR": -0.15909005710021518,
+      "profitFactor": 0.5100977445541344,
+      "totalPct": -0.0832729051423845,
+      "maxDD": 0.1054521592988521
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1h LINK/USDT": {
+      "n": 5,
+      "winRate": 0.2,
+      "avgR": -0.5131459277795446,
+      "profitFactor": 0.30809349536658365,
+      "totalPct": -0.04344727558042061,
+      "maxDD": 0.06169718962490478
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1h ALL": {
+      "n": 66,
+      "winRate": 0.3181818181818182,
+      "avgR": -0.0033412018508198883,
+      "profitFactor": 1.2783178223263965,
+      "totalPct": 0.19060110424399435,
+      "maxDD": 0.1900943943086979
+    },
+    "SE4 + trend + VWAP + RSI 3R | 4h BTC/USDT": {
+      "n": 2,
+      "winRate": 0,
+      "avgR": -1.1793842377969854,
+      "profitFactor": 0,
+      "totalPct": -0.03908722058625824,
+      "maxDD": 0.03908722058625824
+    },
+    "SE4 + trend + VWAP + RSI 3R | 4h ETH/USDT": {
+      "n": 2,
+      "winRate": 0,
+      "avgR": -1.1339072610475414,
+      "profitFactor": 0,
+      "totalPct": -0.05331362173429299,
+      "maxDD": 0.05331362173429299
+    },
+    "SE4 + trend + VWAP + RSI 3R | 4h SOL/USDT": {
+      "n": 7,
+      "winRate": 0.2857142857142857,
+      "avgR": -0.004603166957588588,
+      "profitFactor": 1.6597452963726593,
+      "totalPct": 0.07319487338997921,
+      "maxDD": 0.08435434099170702
+    },
+    "SE4 + trend + VWAP + RSI 3R | 4h XRP/USDT": {
+      "n": 3,
+      "winRate": 0,
+      "avgR": -1.1432964318193342,
+      "profitFactor": 0,
+      "totalPct": -0.07286975298461051,
+      "maxDD": 0.07286975298461051
+    },
+    "SE4 + trend + VWAP + RSI 3R | 4h DOGE/USDT": {
+      "n": 3,
+      "winRate": 0.3333333333333333,
+      "avgR": 0.19757352674729037,
+      "profitFactor": 0.7974638329923428,
+      "totalPct": -0.013892130706365968,
+      "maxDD": 0.03261880727852329
+    },
+    "SE4 + trend + VWAP + RSI 3R | 4h BNB/USDT": {
+      "n": 0
+    },
+    "SE4 + trend + VWAP + RSI 3R | 4h ADA/USDT": {
+      "n": 7,
+      "winRate": 0,
+      "avgR": -1.1441775750985468,
+      "profitFactor": 0,
+      "totalPct": -0.17914965883706324,
+      "maxDD": 0.17914965883706324
+    },
+    "SE4 + trend + VWAP + RSI 3R | 4h LINK/USDT": {
+      "n": 4,
+      "winRate": 0,
+      "avgR": -1.166861425232998,
+      "profitFactor": 0,
+      "totalPct": -0.08315249490720344,
+      "maxDD": 0.08315249490720344
+    },
+    "SE4 + trend + VWAP + RSI 3R | 4h ALL": {
+      "n": 28,
+      "winRate": 0.10714285714285714,
+      "avgR": -0.7204522360082185,
+      "profitFactor": 0.40752698047338054,
+      "totalPct": -0.32826967969901333,
+      "maxDD": 0.3829927777386122
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1d BTC/USDT": {
+      "n": 1,
+      "winRate": 0,
+      "avgR": -1.0693647710559868,
+      "profitFactor": 0,
+      "totalPct": -0.04624962015053191,
+      "maxDD": 0.04624962015053191
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1d ETH/USDT": {
+      "n": 0
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1d SOL/USDT": {
+      "n": 0
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1d XRP/USDT": {
+      "n": 0
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1d DOGE/USDT": {
+      "n": 0
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1d BNB/USDT": {
+      "n": 1,
+      "winRate": 0,
+      "avgR": -1.1356412213740452,
+      "profitFactor": 0,
+      "totalPct": -0.025117170352861762,
+      "maxDD": 0.025117170352861762
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1d ADA/USDT": {
+      "n": 0
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1d LINK/USDT": {
+      "n": 2,
+      "winRate": 0.5,
+      "avgR": 0.9414045036662443,
+      "profitFactor": 2.1510800798184206,
+      "totalPct": 0.06293821342586159,
+      "maxDD": 0.06181915526472348
+    },
+    "SE4 + trend + VWAP + RSI 3R | 1d ALL": {
+      "n": 4,
+      "winRate": 0.25,
+      "avgR": -0.08054924627438587,
+      "profitFactor": 0.9984383312685967,
+      "totalPct": -0.011685503002594744,
+      "maxDD": 0.07020513091531755
+    }
+  }
+}

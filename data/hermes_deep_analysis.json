@@ -1,15 +1,15 @@
 {
-  "timestamp": "2026-09-24T18:19:58.145449+00:00",
+  "timestamp": "2026-10-05T02:45:45.356772+00:00",
   "symbol": "BTCUSDT",
-  "price": 84373.47,
+  "price": 86681.97,
   "features": {
-    "price": 84373.47,
-    "change_pct": 0.306,
-    "volatility": 0.63,
+    "price": 86681.97,
+    "change_pct": 0.091,
+    "volatility": 0.37,
     "is_bullish": true
   },
-  "analysis": "Independent Read: The bullish candle and low volatility suggest a likely near-term bullish bias for BTCUSDT. However, the relatively low 1h change of 0.306% indicates that the current momentum might not be as strong as the bullish candle suggests. A potential risk to watch is the possibility of a surprise market movement, which could cause a sudden shift in sentiment. Overall, the data supports a cautiously optimistic near-term outlook for BTCUSDT, but traders should remain vigilant and be prepared for potential market fluctuations.",
+  "analysis": "Independent Read: The bullish candle and low volatility suggest a likely near-term bullish bias. However, the minimal 0.091% 1h change indicates that the current momentum may be weak. The risk to watch is that the market could be coiled for a larger move, either up or down, rather than a continuation of the current mild uptrend. This observation supports a cautious momentum read, as the low volatility and small price movement could indicate a potential reversal in the making.",
   "model": "hermes3",
-  "elapsed_s": 82.7,
+  "elapsed_s": 29.0,
   "note": "Supplementary commentary only \u2014 not part of the live trade-decision path."
 }

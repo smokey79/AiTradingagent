@@ -63,7 +63,13 @@ async function fetchHistoricalCandles(symbol = 'BTC/USDT', timeframe = '15m', li
   } catch (err) {
     logger.debug(`[BacktestEngine] CCXT fetch failed for ${pair}: ${err.message}. Using synthetic candles.`);
   }
-  return generateSyntheticCandles(77000, limit, timeframe);
+  // 2026-10-05: tag the fallback array so runBacktestSimulation can flag the
+  // result as isSyntheticData — per Alan's standing rule, a synthetic-candle
+  // backtest must never be silently presented as real evidence downstream
+  // (this is read by scripts/strategy_advisor.js before trusting a pick).
+  const synthetic = generateSyntheticCandles(77000, limit, timeframe);
+  synthetic.isSynthetic = true;
+  return synthetic;
 }
 
 /**
@@ -103,8 +109,9 @@ function runBacktestSimulation({
   initialCapital = 1000,
   positionSizePct = 20, // 20% of capital per trade
   leverage = 5.0,
-  slippagePct = 0.05,
-  commissionPct = 0.05,
+  // 2026-10-03: defaults come from config/realism.json (0.02% slippage, 0.06% fee per side).
+  slippagePct = require('../utils/realism').slippagePctPerSide(),
+  commissionPct = require('../utils/realism').feePctPerSide(),
 }) {
   if (!candles || candles.length < 50) {
     throw new Error('Insufficient candle data for backtest (minimum 50 candles required)');
@@ -231,7 +238,7 @@ function runBacktestSimulation({
 
         // Apply slippage and fees
         const fee = sizeUsd * (commissionPct / 100) * 2;
-        const slippage = sizeUsd * (slippagePct / 100);
+        const slippage = sizeUsd * (slippagePct / 100) * 2; // per side, entry + exit (2026-10-03: was one side only)
         
         let priceDiffPct = side === 'BUY' ? (exitPrice - entryPrice) / entryPrice : (entryPrice - exitPrice) / entryPrice;
         let pnlUsd = (sizeUsd * priceDiffPct) - fee - slippage;
@@ -386,6 +393,11 @@ function runBacktestSimulation({
     riskRewardRatio,
     kellyOptimalFractionPct: parseFloat((kellyFraction * 100).toFixed(1)),
     gate68Met,
+    // 2026-10-05: true when `candles` came from generateSyntheticCandles()'s
+    // random-walk fallback rather than real ccxt history — carried through
+    // so nothing downstream (strategy_advisor.js, dashboards, the trade
+    // memory) can mistake a synthetic backtest for validated performance.
+    isSyntheticData: candles.isSynthetic === true,
     parameters: params,
     trades: trades.slice(-30), // include last 30 executed trades
   };

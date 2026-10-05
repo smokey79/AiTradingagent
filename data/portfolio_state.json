@@ -1,8 +1,6 @@
 {
-  "currentBalance": 500,
-  "totalPnL": 0,
-  "sessionPeakBalance": 500,
-  "updatedAt": "2026-09-15T15:55:44.114Z",
-  "resetAt": "2026-09-15T15:55:44.119Z",
-  "resetReason": "Paper balance set to $500 on 2026-09-15 (was $249.82000000000002). Simulated funds."
+  "currentBalance": 249.84,
+  "totalPnL": -0.16,
+  "sessionPeakBalance": 250,
+  "updatedAt": "2026-10-05T02:30:02.691Z"
 }

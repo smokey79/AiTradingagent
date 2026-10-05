@@ -1,0 +1,13 @@
+{
+  "backtest_date": "2026-10-01T03:57:18.711976",
+  "symbol": "BTC/USDT",
+  "timeframe": "15m",
+  "period": "2020-03-25 10:30:00+00:00 to 2026-09-24 08:00:00+00:00",
+  "initial_balance": 1000.0,
+  "final_balance": 998.379312016071,
+  "return_pct": -0.16206879839289742,
+  "total_trades": 41,
+  "win_rate": 31.70731707317073,
+  "max_drawdown_pct": 0.1900477318836487,
+  "jedai_match_rate": 100.0
+}

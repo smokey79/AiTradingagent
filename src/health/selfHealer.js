@@ -27,13 +27,11 @@ const HEAL_COOLDOWN_MS = 5 * 60 * 1000; // 5 min between heals for same agent
 
 // Model fallback chains — when primary model is unavailable, use next in list
 const FALLBACK_CHAINS = {
-  deepseek:       ['inclusionai/ling-3.0-flash-fin:free', 'inclusionai/ling-3.0-flash-vl:free', 'google/gemma-4-31b-it:free'],
+  deepseek:       ['google/gemma-4-31b-it:free'],
   claude:         ['claude-3-5-haiku-20241022', 'claude-3-haiku-20240307'],
   gpt4o:          ['gpt-4o-mini', 'gpt-3.5-turbo'],
   gemini:         ['gemini-2.5-flash', 'gemini-3.7-flash', 'google/gemma-4-31b-it:free'],
   openrouter_free:[
-    'inclusionai/ling-3.0-flash-fin:free',
-    'inclusionai/ling-3.0-flash-vl:free',
     'inclusionai/ling-3.0-flash-sante:free',
     'google/gemma-4-31b-it:free',
     'google/gemma-4-26b-a4b-it:free',
@@ -67,6 +65,13 @@ const AGENT_FILE_MAP = {
   learning_agent:      'learningAgent.js',
   provider_rotator:    'providerRotator.js',
   volatility_regime:   'volatilityRegimeAgent.js',
+  // 2026-09-28: these two were missing, so softReset() fell back to the
+  // `${agentName}Agent.js` guess (oanda_sentimentAgent.js / bigdata_
+  // sentimentAgent.js) which doesn't exist -> "Cannot find module" on every
+  // heal attempt for either agent, found live in trading-orchestrator's log
+  // while wiring bigdata_sentiment in. Fixed to point at the real filenames.
+  oanda_sentiment:     'oandaSentimentAgent.js',
+  bigdata_sentiment:   'bigdataAgent.js',
 };
 
 // Runtime state — excluded agents redistributed weight in consensus

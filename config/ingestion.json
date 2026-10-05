@@ -1,0 +1,13 @@
+{
+  "_note": "Ingestion normaliser (src/ingestion). Turns free text from any source into one strict JSON shape with Haiku. OFF by default: set INGESTION_LLM=true (and a working ANTHROPIC/CLAUDE key) to enable; otherwise the deterministic regex fallback is used and no paid call is made.",
+  "enabled": false,
+  "model": "claude-haiku-4-5-20251001",
+  "decisionModel": "claude-sonnet-4-5-20250929",
+  "maxTokens": 350,
+  "timeoutMs": 20000,
+  "maxCallsPerHour": 120,
+  "maxInputChars": 6000,
+  "cacheTtlHours": 72,
+  "minConfidenceToUse": 0.4,
+  "knownSymbols": ["BTC", "ETH", "SOL", "AVAX", "ARB", "OP", "LINK", "XRP", "DOGE", "ADA", "LTC", "ATOM", "DOT", "NEAR", "BNB", "CRO", "TRX", "ZEC", "SUI", "OKB", "ICP", "AAVE", "POL", "FLR", "MSTR"]
+}

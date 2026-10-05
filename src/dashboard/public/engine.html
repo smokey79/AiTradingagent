@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Probability engine - shadow evaluation</title>
+<style>
+ body{font:14px system-ui,Segoe UI,Arial,sans-serif;margin:0;background:#0f1419;color:#d7dde4}
+ header{padding:14px 20px;background:#151c24;border-bottom:1px solid #243040} h1{font-size:18px;margin:0 0 4px} .sub{color:#8fa1b3;font-size:12px}
+ .banner{padding:8px 20px;font-size:13px;border-bottom:1px solid #5a4a1a;background:#3a2f12;color:#f0d28a}
+ main{padding:16px 20px;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(460px,1fr))}
+ section{background:#151c24;border:1px solid #243040;border-radius:8px;padding:12px 14px;overflow:auto} .wide{grid-column:1/-1}
+ h2{font-size:13px;margin:0 0 8px;color:#9fb6cc;text-transform:uppercase;letter-spacing:.04em}
+ table{border-collapse:collapse;width:100%;font-size:12px}th,td{padding:4px 6px;border-bottom:1px solid #1f2a37;text-align:right;white-space:nowrap}
+ th:first-child,td:first-child,td.l,th.l{text-align:left}th{color:#8fa1b3;font-weight:600}
+ .pos{color:#4cd68a}.neg{color:#ff6b6b}.muted{color:#8fa1b3} .why{white-space:normal;text-align:left;color:#b8c4d0}
+</style></head><body>
+<header><h1>Probability engine &middot; shadow evaluation</h1><div class="sub" id="upd">loading...</div></header>
+<div class="banner" id="banner"></div>
+<main>
+ <section class="wide"><h2>Model (trained on past data, tested on a later slice it never saw)</h2><div id="mline" class="muted"></div><table id="mtab"></table></section>
+ <section><h2>Live forecasts scored against what really happened</h2><div id="elines" class="muted"></div><table id="etab"></table></section>
+ <section><h2>Would the gate have helped? (signals, after fees + spread + slippage)</h2><div id="gnote" class="muted"></div><table id="gtab"></table><h2 style="margin-top:12px">Why the gate rejects</h2><table id="rtab"></table></section>
+ <section class="wide"><h2>Recent forecasts</h2><table id="rec"></table></section>
+</main>
+<script>
+const $=id=>document.getElementById(id), f=(x,d=3)=>x==null?'-':Number(x).toFixed(d), pc=(x,d=2)=>x==null?'-':(x*100).toFixed(d)+'%', cls=x=>x>0?'pos':x<0?'neg':'';
+const tbl=(el,head,rows)=>{$(el).innerHTML='<tr>'+head.map((h,i)=>`<th class="${i?'':'l'}">${h}</th>`).join('')+'</tr>'+rows.join('')};
+async function j(u){return (await fetch(u)).json()}
+async function load(){
+ const [s,r]=await Promise.all([j('/api/engine/summary'),j('/api/engine/recent?limit=40')]);
+ $('upd').textContent='updated '+new Date().toLocaleTimeString()+' - refreshes every 20 s';
+ $('banner').textContent=`Gate mode: ${s.gateMode.toUpperCase()} (setting: ${s.gateModeSetting}). `+(s.gateMode==='shadow'?'Decisions are logged and scored but NOTHING is blocked or approved by the engine.':'The engine is blocking signals that fail the gate.')+' Not collected yet: '+s.notCollectedYet.join('; ')+'.';
+ const m=s.model;
+ if(!m){$('mline').textContent='No trained model yet: run node scripts/engine_train.js';$('mtab').innerHTML=''}
+ else{
+  $('mline').textContent=`Trained ${m.trainedAt.slice(0,16).replace('T',' ')} on ${m.data.pairs} coins / ${m.data.candles} hourly candles. Validated (primary ${m.primaryHorizonH}h): ${m.validated?'YES':'NO'}. Bar: >= ${s.config.validationBar.minOosSignals} out-of-sample trades, profit factor > ${s.config.validationBar.minProfitFactor}, mean net return > 0, Brier skill > 0.`;
+  tbl('mtab',['Horizon','Test rows','Brier skill','Return slope','Threshold','Test trades','Mean net/trade','Win %','Profit factor','Validated','Why not'],Object.entries(m.horizons).map(([h,v])=>{const t=v.testSignals;return `<tr><td class="l">${h}h</td><td>${v.nTest}</td><td class="${cls(v.brierSkill)}">${pc(v.brierSkill)}</td><td>${f(v.slope,2)} &plusmn; ${f(v.slopeSe,2)}</td><td>${v.chosenThreshold??'-'}</td><td>${t?t.n:0}</td><td class="${t?cls(t.mean):''}">${t?pc(t.mean,3):'-'}</td><td>${t?pc(t.winRate,1):'-'}</td><td>${t?f(t.profitFactor,2):'-'}</td><td>${v.validated?'<span class="pos">yes</span>':'<span class="neg">no</span>'}</td><td class="why">${(v.failReasons||[]).join('; ')}</td></tr>`}));
+ }
+ const e=s.evaluation; $('elines').textContent=`${e.forecasts} forecasts logged, ${e.resolved} already scored. Market snapshots logged: ${s.market.n} (${s.market.pairs} coins).`;
+ tbl('etab',['Horizon','Scored','Brier','Base-rate Brier','Skill','Hit when P(up)>50%','Hit when P(down)>50%'],Object.entries(e.byHorizon).map(([h,v])=>`<tr><td class="l">${h}h</td><td>${v.n}</td><td>${v.brier}</td><td>${v.brierBase}</td><td class="${cls(v.brierSkill)}">${pc(v.brierSkill)}</td><td>${v.hitRateWhenPUpOver50==null?'-':pc(v.hitRateWhenPUpOver50,1)+' (n '+v.nPUpOver50+')'}</td><td>${v.hitRateWhenPDownOver50==null?'-':pc(v.hitRateWhenPDownOver50,1)+' (n '+v.nPDownOver50+')'}</td></tr>`));
+ const g=e.gate; $('gnote').textContent=g.note;
+ tbl('gtab',['Group','Trades','Mean net','t-stat','Win %'],[['All signals',g.allSignals],['Gate PASSED',g.gatePassed],['Gate REJECTED',g.gateRejected]].map(([n,x])=>`<tr><td class="l">${n}</td><td>${x.n}</td><td class="${x.mean==null?'':cls(x.mean)}">${x.mean==null?'-':pc(x.mean,3)}</td><td>${x.t??'-'}</td><td>${x.winRate==null?'-':pc(x.winRate,1)}</td></tr>`));
+ tbl('rtab',['Reason','Count'],Object.entries(s.gateReasons).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<tr><td class="l">${k}</td><td>${v}</td></tr>`));
+ tbl('rec',['Time','Coin','H','P(down)','P(flat)','P(up)','Exp. return','Signal','Gate','Reasons','Reviewer','Outcome'],r.map(x=>`<tr><td>${x.created_at.slice(11,19)}</td><td class="l">${x.pair}</td><td>${x.horizon_h}h</td><td>${f(x.p_down,2)}</td><td>${f(x.p_flat,2)}</td><td>${f(x.p_up,2)}</td><td class="${cls(x.exp_ret)}">${pc(x.exp_ret,3)}</td><td>${x.side>0?'BUY':x.side<0?'SELL':''}</td><td>${x.gate_pass==null?'':x.gate_pass?'<span class="pos">pass</span>':'<span class="neg">reject</span>'}</td><td class="why">${x.gate_reasons||''}</td><td>${x.reviewer||''}</td><td class="${x.realized_ret==null?'':cls(x.realized_ret)}">${x.realized_ret==null?'open':pc(x.realized_ret,2)}</td></tr>`));
+}
+load().catch(e=>$('upd').textContent='error: '+e.message); setInterval(()=>load().catch(()=>{}),20000);
+</script></body></html>

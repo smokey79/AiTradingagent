@@ -9,6 +9,7 @@ const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 const logger = require('../utils/logger');
+const { enqueueOllama } = require('../utils/ollamaQueue');
 
 const SKILL_PATH = path.resolve(__dirname, '../../agents/skills/SKILL_HERMES_VALIDATOR.md');
 const OLLAMA_BASE = process.env.OLLAMA_URL || 'http://127.0.0.1:11434';
@@ -206,33 +207,54 @@ async function callOpenRouterHermes(symbol, marketData, skillPrompt) {
   };
 }
 
+// 2026-09-27: swapped the default tier order to favour OpenRouter (Alan's
+// "configure for OpenRouter" request, to cut local RAM/CPU load) — Ollama's
+// keep-alive was just cut from 24h to 10m to free RAM, which means the
+// local model now cold-loads more often than before. Trying OpenRouter
+// first avoids paying that cold-load latency on most cycles, and only
+// falls back to local Ollama (still fully free, just slower/offline) if
+// OpenRouter is rate-limited or down. Flip HERMES_PREFER_LOCAL=true in
+// .env to restore the old local-first order with zero code changes.
+const HERMES_PREFER_LOCAL = String(process.env.HERMES_PREFER_LOCAL || 'false').toLowerCase() === 'true';
+
 async function getSignal(symbol, marketData) {
   const skillPrompt = loadSkillPrompt();
+  const hasOpenRouterKey = process.env.OPENROUTER_API_KEY && !process.env.OPENROUTER_API_KEY.startsWith('your_');
+  const hasOllamaCloudKey = process.env.OLLAMA_API_KEY && !process.env.OLLAMA_API_KEY.startsWith('your_');
 
-  // Tier 1: Try Local Ollama Hermes
+  if (HERMES_PREFER_LOCAL) {
+    // Original order: Local Ollama -> Ollama Cloud -> OpenRouter -> heuristic
+    try {
+      return await callLocalOllama(symbol, marketData, skillPrompt);
+    } catch (ollamaErr) {
+      try {
+        if (hasOllamaCloudKey) return await callOllamaCloud(symbol, marketData, skillPrompt);
+      } catch (cloudErr) {
+        logger.warn(`Ollama Cloud call failed: ${cloudErr.message} — trying fallbacks`);
+      }
+      try {
+        if (hasOpenRouterKey) return await callOpenRouterHermes(symbol, marketData, skillPrompt);
+      } catch (openRouterErr) { /* cloud also unavailable */ }
+      return simulateHermesValidation(symbol, marketData);
+    }
+  }
+
+  // New default order: OpenRouter -> Local Ollama -> Ollama Cloud -> heuristic
   try {
-    return await callLocalOllama(symbol, marketData, skillPrompt);
-  } catch (ollamaErr) {
-    // Tier 2: Try Ollama Cloud
+    if (hasOpenRouterKey) return await callOpenRouterHermes(symbol, marketData, skillPrompt);
+    throw new Error('No OpenRouter key configured — falling through to local Ollama');
+  } catch (openRouterErr) {
+    logger.warn(`Hermes OpenRouter call failed: ${openRouterErr.message} — trying local Ollama`);
     try {
-      if (process.env.OLLAMA_API_KEY && !process.env.OLLAMA_API_KEY.startsWith('your_')) {
-        return await callOllamaCloud(symbol, marketData, skillPrompt);
+      return await callLocalOllama(symbol, marketData, skillPrompt);
+    } catch (ollamaErr) {
+      try {
+        if (hasOllamaCloudKey) return await callOllamaCloud(symbol, marketData, skillPrompt);
+      } catch (cloudErr) {
+        logger.warn(`Ollama Cloud call failed: ${cloudErr.message} — trying heuristic`);
       }
-    } catch (cloudErr) {
-      logger.warn(`Ollama Cloud call failed: ${cloudErr.message} — trying fallbacks`);
+      return simulateHermesValidation(symbol, marketData);
     }
-
-    // Tier 3: Try Cloud OpenRouter Hermes 3 if key is present
-    try {
-      if (process.env.OPENROUTER_API_KEY && !process.env.OPENROUTER_API_KEY.startsWith('your_')) {
-        return await callOpenRouterHermes(symbol, marketData, skillPrompt);
-      }
-    } catch (openRouterErr) {
-      // Cloud also unavailable
-    }
-
-    // Tier 4: Heuristic local rule validator (fast, resilient, guaranteed)
-    return simulateHermesValidation(symbol, marketData);
   }
 }
 
@@ -278,10 +300,63 @@ function simulateHermesValidation(symbol, marketData) {
   };
 }
 
+/**
+ * callHermesRaw(prompt) — NEW 2026-09-27, added for the Bear debate agent
+ * (src/agents/bearDebateAgent.js), Alan's approved Phase 2 plan item 1.
+ * Sends an arbitrary prompt (not the fixed skill-based validator prompt
+ * above) straight to local Ollama first (free, unlimited, no internet
+ * dependency — matches why bearAgent.js in aitradingagent2 runs on Hermes
+ * rather than a cloud model), falling back to the OpenRouter-hosted Hermes
+ * 3 model only if local Ollama is unreachable.
+ */
+async function callHermesRaw(prompt) {
+  try {
+    // 2026-09-27: bumped from 8000ms after live logs showed "timeout of
+    // 8000ms exceeded" on every debate call — this hardware (Radeon iGPU,
+    // no dedicated GPU) takes ~15-20s for local Hermes/Llama inference
+    // (matches the ~18s figure already noted for the Gemini/Ollama
+    // cross-validator elsewhere in this pipeline). 25000ms gives headroom
+    // without hanging a whole trading cycle indefinitely.
+    //
+    // Also routed through enqueueOllama() (src/utils/ollamaQueue.js):
+    // live logs showed EVERY concurrent debate call timing out together
+    // when several candidates fired in the same cycle — this box serves
+    // local Ollama requests one at a time, so a flood of simultaneous
+    // calls queues up server-side and outlives any client timeout. The
+    // queue makes calls wait their turn instead of racing and losing.
+    const { data } = await enqueueOllama(() => axios.post(
+      `${OLLAMA_BASE}/api/generate`,
+      { model: HERMES_MODEL, prompt, stream: false, options: { temperature: 0.25, num_predict: 200 } },
+      { timeout: 40000 }
+    ));
+    if (data.response) return { text: data.response, model: `ollama:${HERMES_MODEL}` };
+  } catch (err) {
+    logger.warn(`[Hermes] callHermesRaw local Ollama failed: ${err.message}`);
+  }
+
+  const key = process.env.OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY_1;
+  if (key) {
+    try {
+      const { data } = await axios.post(
+        'https://openrouter.ai/api/v1/chat/completions',
+        { model: OPENROUTER_HERMES_MODEL, messages: [{ role: 'user', content: prompt }], max_tokens: 300, temperature: 0.25 },
+        { headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' }, timeout: 8000 }
+      );
+      const text = data.choices?.[0]?.message?.content;
+      if (text) return { text, model: OPENROUTER_HERMES_MODEL };
+    } catch (err) {
+      logger.warn(`[Hermes] callHermesRaw OpenRouter fallback failed: ${err.message}`);
+    }
+  }
+
+  throw new Error('callHermesRaw: local Ollama and OpenRouter Hermes both unreachable');
+}
+
 module.exports = {
   getSignal,
   getHermesRuling: getSignal,
   callLocalOllama,
   callOpenRouterHermes,
   simulateHermesValidation,
+  callHermesRaw,
 };

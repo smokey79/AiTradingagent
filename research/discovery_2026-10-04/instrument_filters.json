@@ -1,0 +1,6258 @@
+{
+  "0G": {
+    "maxOrderQty": "350000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "350000.0",
+    "maxMktOrderQty": "70000.0",
+    "minNotionalValue": "5"
+  },
+  "1000000BABYDOGE": {
+    "maxOrderQty": "220000000",
+    "minOrderQty": "100",
+    "qtyStep": "100",
+    "postOnlyMaxOrderQty": "220000000",
+    "maxMktOrderQty": "45000000",
+    "minNotionalValue": "5"
+  },
+  "1000000MOG": {
+    "maxOrderQty": "1500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1500000",
+    "maxMktOrderQty": "250000",
+    "minNotionalValue": "5"
+  },
+  "10000NEX": {
+    "maxOrderQty": "3600000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "3600000",
+    "maxMktOrderQty": "1800000",
+    "minNotionalValue": "5"
+  },
+  "10000SATS": {
+    "maxOrderQty": "410000000",
+    "minOrderQty": "100",
+    "qtyStep": "100",
+    "postOnlyMaxOrderQty": "410000000",
+    "maxMktOrderQty": "82000000",
+    "minNotionalValue": "5"
+  },
+  "1000BONK": {
+    "maxOrderQty": "60000000",
+    "minOrderQty": "100",
+    "qtyStep": "100",
+    "postOnlyMaxOrderQty": "60000000",
+    "maxMktOrderQty": "12000000",
+    "minNotionalValue": "5"
+  },
+  "1000BTT": {
+    "maxOrderQty": "60000000",
+    "minOrderQty": "100",
+    "qtyStep": "100",
+    "postOnlyMaxOrderQty": "60000000",
+    "maxMktOrderQty": "30000000",
+    "minNotionalValue": "5"
+  },
+  "1000CAT": {
+    "maxOrderQty": "15500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "15500000",
+    "maxMktOrderQty": "3100000",
+    "minNotionalValue": "5"
+  },
+  "1000FLOKI": {
+    "maxOrderQty": "9056800",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "9056800",
+    "maxMktOrderQty": "1443800",
+    "minNotionalValue": "5"
+  },
+  "1000LUNC": {
+    "maxOrderQty": "2300000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2300000",
+    "maxMktOrderQty": "460000",
+    "minNotionalValue": "5"
+  },
+  "1000NEIROCTO": {
+    "maxOrderQty": "2950000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2950000",
+    "maxMktOrderQty": "590000",
+    "minNotionalValue": "5"
+  },
+  "1000PEPE": {
+    "maxOrderQty": "110000000",
+    "minOrderQty": "100",
+    "qtyStep": "100",
+    "postOnlyMaxOrderQty": "110000000",
+    "maxMktOrderQty": "42000000",
+    "minNotionalValue": "5"
+  },
+  "1000RATS": {
+    "maxOrderQty": "3100000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "3100000",
+    "maxMktOrderQty": "620000",
+    "minNotionalValue": "5"
+  },
+  "1000TAG": {
+    "maxOrderQty": "25750",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "25750",
+    "maxMktOrderQty": "5150",
+    "minNotionalValue": "5"
+  },
+  "1000TOSHI": {
+    "maxOrderQty": "550000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "550000",
+    "maxMktOrderQty": "110000",
+    "minNotionalValue": "5"
+  },
+  "1000TURBO": {
+    "maxOrderQty": "130500",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "130500",
+    "maxMktOrderQty": "26100",
+    "minNotionalValue": "5"
+  },
+  "1000XEC": {
+    "maxOrderQty": "1300000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "1300000",
+    "maxMktOrderQty": "270000",
+    "minNotionalValue": "5"
+  },
+  "1INCH": {
+    "maxOrderQty": "280000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "280000.0",
+    "maxMktOrderQty": "84000.0",
+    "minNotionalValue": "5"
+  },
+  "2Z": {
+    "maxOrderQty": "1560000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1560000",
+    "maxMktOrderQty": "312000",
+    "minNotionalValue": "5"
+  },
+  "4STOCK": {
+    "maxOrderQty": "1792000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "1792000",
+    "maxMktOrderQty": "448000",
+    "minNotionalValue": "5"
+  },
+  "4": {
+    "maxOrderQty": "9375000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "9375000",
+    "maxMktOrderQty": "1875000",
+    "minNotionalValue": "5"
+  },
+  "AAL": {
+    "maxOrderQty": "13576.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "13576.00",
+    "maxMktOrderQty": "3394.00",
+    "minNotionalValue": "5"
+  },
+  "AAOI": {
+    "maxOrderQty": "2300.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2300.00",
+    "maxMktOrderQty": "750.00",
+    "minNotionalValue": "5"
+  },
+  "AAPL": {
+    "maxOrderQty": "8000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "8000.00",
+    "maxMktOrderQty": "2000.00",
+    "minNotionalValue": "5"
+  },
+  "AAVE": {
+    "maxOrderQty": "1200.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1200.00",
+    "maxMktOrderQty": "460.00",
+    "minNotionalValue": "5"
+  },
+  "ACE": {
+    "maxOrderQty": "650000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "650000.0",
+    "maxMktOrderQty": "130000.0",
+    "minNotionalValue": "5"
+  },
+  "ACH": {
+    "maxOrderQty": "3500000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "3500000",
+    "maxMktOrderQty": "850000",
+    "minNotionalValue": "5"
+  },
+  "ACT": {
+    "maxOrderQty": "11500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "11500000",
+    "maxMktOrderQty": "2300000",
+    "minNotionalValue": "5"
+  },
+  "ACU": {
+    "maxOrderQty": "735000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "735000",
+    "maxMktOrderQty": "147000",
+    "minNotionalValue": "5"
+  },
+  "ADA": {
+    "maxOrderQty": "1500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1500000",
+    "maxMktOrderQty": "590000",
+    "minNotionalValue": "5"
+  },
+  "ADBE": {
+    "maxOrderQty": "488.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "488.00",
+    "maxMktOrderQty": "122.00",
+    "minNotionalValue": "5"
+  },
+  "ADI": {
+    "maxOrderQty": "531.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "531.00",
+    "maxMktOrderQty": "133.00",
+    "minNotionalValue": "5"
+  },
+  "AEHR": {
+    "maxOrderQty": "2272.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2272.00",
+    "maxMktOrderQty": "568.00",
+    "minNotionalValue": "5"
+  },
+  "AEON": {
+    "maxOrderQty": "1856000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "1856000",
+    "maxMktOrderQty": "464000",
+    "minNotionalValue": "5"
+  },
+  "AERO": {
+    "maxOrderQty": "300000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "300000",
+    "maxMktOrderQty": "80000",
+    "minNotionalValue": "5"
+  },
+  "AEVO": {
+    "maxOrderQty": "850000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "850000.0",
+    "maxMktOrderQty": "170000.0",
+    "minNotionalValue": "5"
+  },
+  "AGI": {
+    "maxOrderQty": "3150000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "3150000",
+    "maxMktOrderQty": "630000",
+    "minNotionalValue": "5"
+  },
+  "AGLD": {
+    "maxOrderQty": "168340.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "168340.0",
+    "maxMktOrderQty": "25440.0",
+    "minNotionalValue": "5"
+  },
+  "AIGENSYN": {
+    "maxOrderQty": "905000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "905000",
+    "maxMktOrderQty": "181000",
+    "minNotionalValue": "5"
+  },
+  "AIO": {
+    "maxOrderQty": "365000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "365000",
+    "maxMktOrderQty": "73000",
+    "minNotionalValue": "5"
+  },
+  "AIOZ": {
+    "maxOrderQty": "393000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "393000",
+    "maxMktOrderQty": "78600",
+    "minNotionalValue": "5"
+  },
+  "AIXBT": {
+    "maxOrderQty": "6075000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "6075000",
+    "maxMktOrderQty": "1215000",
+    "minNotionalValue": "5"
+  },
+  "AKE": {
+    "maxOrderQty": "30000000",
+    "minOrderQty": "100",
+    "qtyStep": "100",
+    "postOnlyMaxOrderQty": "30000000",
+    "maxMktOrderQty": "15000000",
+    "minNotionalValue": "5"
+  },
+  "AKT": {
+    "maxOrderQty": "380000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "380000.0",
+    "maxMktOrderQty": "76000.0",
+    "minNotionalValue": "5"
+  },
+  "ALAB": {
+    "maxOrderQty": "600.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "600.00",
+    "maxMktOrderQty": "150.00",
+    "minNotionalValue": "5"
+  },
+  "ALCH": {
+    "maxOrderQty": "1000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1000000",
+    "maxMktOrderQty": "200000",
+    "minNotionalValue": "5"
+  },
+  "ALGO": {
+    "maxOrderQty": "800000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "800000.0",
+    "maxMktOrderQty": "160000.0",
+    "minNotionalValue": "5"
+  },
+  "ALICE": {
+    "maxOrderQty": "216450.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "216450.0",
+    "maxMktOrderQty": "32150.0",
+    "minNotionalValue": "5"
+  },
+  "ALLO": {
+    "maxOrderQty": "200000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "200000",
+    "maxMktOrderQty": "70000",
+    "minNotionalValue": "5"
+  },
+  "ALPINE": {
+    "maxOrderQty": "50000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "50000.0",
+    "maxMktOrderQty": "10000.0",
+    "minNotionalValue": "5"
+  },
+  "ALT": {
+    "maxOrderQty": "12500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "12500000",
+    "maxMktOrderQty": "2500000",
+    "minNotionalValue": "5"
+  },
+  "AMAT": {
+    "maxOrderQty": "400.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "400.00",
+    "maxMktOrderQty": "100.00",
+    "minNotionalValue": "5"
+  },
+  "AMC": {
+    "maxOrderQty": "86920.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "86920.0",
+    "maxMktOrderQty": "21730.0",
+    "minNotionalValue": "5"
+  },
+  "AMDSTOCK": {
+    "maxOrderQty": "1600.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1600.00",
+    "maxMktOrderQty": "400.00",
+    "minNotionalValue": "5"
+  },
+  "AMGN": {
+    "maxOrderQty": "516.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "516.00",
+    "maxMktOrderQty": "129.00",
+    "minNotionalValue": "5"
+  },
+  "AMZN": {
+    "maxOrderQty": "2120.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2120.00",
+    "maxMktOrderQty": "530.00",
+    "minNotionalValue": "5"
+  },
+  "AMZU": {
+    "maxOrderQty": "5729.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "5729.00",
+    "maxMktOrderQty": "1432.00",
+    "minNotionalValue": "5"
+  },
+  "ANET": {
+    "maxOrderQty": "1061.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1061.00",
+    "maxMktOrderQty": "265.00",
+    "minNotionalValue": "5"
+  },
+  "ANIME": {
+    "maxOrderQty": "16500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "16500000",
+    "maxMktOrderQty": "3300000",
+    "minNotionalValue": "5"
+  },
+  "ANKR": {
+    "maxOrderQty": "22000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "22000000",
+    "maxMktOrderQty": "4400000",
+    "minNotionalValue": "5"
+  },
+  "APE": {
+    "maxOrderQty": "763560.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "763560.0",
+    "maxMktOrderQty": "86190.0",
+    "minNotionalValue": "5"
+  },
+  "APEX": {
+    "maxOrderQty": "480000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "480000.0",
+    "maxMktOrderQty": "95000.0",
+    "minNotionalValue": "5"
+  },
+  "API3": {
+    "maxOrderQty": "132010.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "132010.0",
+    "maxMktOrderQty": "24150.0",
+    "minNotionalValue": "5"
+  },
+  "APLD": {
+    "maxOrderQty": "7840.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "7840.00",
+    "maxMktOrderQty": "1960.00",
+    "minNotionalValue": "5"
+  },
+  "APPSTOCK": {
+    "maxOrderQty": "440.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "440.00",
+    "maxMktOrderQty": "110.00",
+    "minNotionalValue": "5"
+  },
+  "APR": {
+    "maxOrderQty": "125000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "125000",
+    "maxMktOrderQty": "25000",
+    "minNotionalValue": "5"
+  },
+  "APT": {
+    "maxOrderQty": "800000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "800000.00",
+    "maxMktOrderQty": "160000.00",
+    "minNotionalValue": "5"
+  },
+  "ARB": {
+    "maxOrderQty": "21500000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "21500000.0",
+    "maxMktOrderQty": "4300000.0",
+    "minNotionalValue": "5"
+  },
+  "ARC": {
+    "maxOrderQty": "2400000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2400000",
+    "maxMktOrderQty": "480000",
+    "minNotionalValue": "5"
+  },
+  "ARIA": {
+    "maxOrderQty": "200000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "200000",
+    "maxMktOrderQty": "79000",
+    "minNotionalValue": "5"
+  },
+  "ARKK": {
+    "maxOrderQty": "2656.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2656.00",
+    "maxMktOrderQty": "664.00",
+    "minNotionalValue": "5"
+  },
+  "ARKM": {
+    "maxOrderQty": "1050000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1050000",
+    "maxMktOrderQty": "210000",
+    "minNotionalValue": "5"
+  },
+  "ARK": {
+    "maxOrderQty": "420000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "420000",
+    "maxMktOrderQty": "210000",
+    "minNotionalValue": "5"
+  },
+  "ARM": {
+    "maxOrderQty": "1560.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1560.00",
+    "maxMktOrderQty": "390.00",
+    "minNotionalValue": "5"
+  },
+  "ARPA": {
+    "maxOrderQty": "4800000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "4800000",
+    "maxMktOrderQty": "960000",
+    "minNotionalValue": "5"
+  },
+  "AR": {
+    "maxOrderQty": "26880.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "26880.0",
+    "maxMktOrderQty": "4060.0",
+    "minNotionalValue": "5"
+  },
+  "ARX": {
+    "maxOrderQty": "116620",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "116620",
+    "maxMktOrderQty": "58310",
+    "minNotionalValue": "5"
+  },
+  "ASML": {
+    "maxOrderQty": "200.000",
+    "minOrderQty": "0.001",
+    "qtyStep": "0.001",
+    "postOnlyMaxOrderQty": "200.000",
+    "maxMktOrderQty": "50.000",
+    "minNotionalValue": "5"
+  },
+  "ASR": {
+    "maxOrderQty": "20500.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "20500.0",
+    "maxMktOrderQty": "4100.0",
+    "minNotionalValue": "5"
+  },
+  "ASTER": {
+    "maxOrderQty": "315000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "315000",
+    "maxMktOrderQty": "130000",
+    "minNotionalValue": "5"
+  },
+  "ASTR": {
+    "maxOrderQty": "2372900",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2372900",
+    "maxMktOrderQty": "523700",
+    "minNotionalValue": "5"
+  },
+  "ASTS": {
+    "maxOrderQty": "4000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4000.00",
+    "maxMktOrderQty": "1000.00",
+    "minNotionalValue": "5"
+  },
+  "ATH": {
+    "maxOrderQty": "18500000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "18500000",
+    "maxMktOrderQty": "3700000",
+    "minNotionalValue": "5"
+  },
+  "ATOM": {
+    "maxOrderQty": "139180.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "139180.0",
+    "maxMktOrderQty": "22100.0",
+    "minNotionalValue": "5"
+  },
+  "AT": {
+    "maxOrderQty": "600000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "600000",
+    "maxMktOrderQty": "120000",
+    "minNotionalValue": "5"
+  },
+  "AUCTION": {
+    "maxOrderQty": "17290.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "17290.0",
+    "maxMktOrderQty": "2560.0",
+    "minNotionalValue": "5"
+  },
+  "A": {
+    "maxOrderQty": "162000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "162000",
+    "maxMktOrderQty": "32400",
+    "minNotionalValue": "5"
+  },
+  "AVAAI": {
+    "maxOrderQty": "5500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "5500000",
+    "maxMktOrderQty": "1100000",
+    "minNotionalValue": "5"
+  },
+  "AVA": {
+    "maxOrderQty": "50000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "50000.0",
+    "maxMktOrderQty": "10000.0",
+    "minNotionalValue": "5"
+  },
+  "AVAX": {
+    "maxOrderQty": "110000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "110000.0",
+    "maxMktOrderQty": "22000.0",
+    "minNotionalValue": "5"
+  },
+  "AVGO": {
+    "maxOrderQty": "1160.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1160.00",
+    "maxMktOrderQty": "290.00",
+    "minNotionalValue": "5"
+  },
+  "AVNT": {
+    "maxOrderQty": "480000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "480000",
+    "maxMktOrderQty": "240000",
+    "minNotionalValue": "5"
+  },
+  "AWE": {
+    "maxOrderQty": "1450000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "1450000",
+    "maxMktOrderQty": "290000",
+    "minNotionalValue": "5"
+  },
+  "AXL": {
+    "maxOrderQty": "1807500",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1807500",
+    "maxMktOrderQty": "361500",
+    "minNotionalValue": "5"
+  },
+  "AXS": {
+    "maxOrderQty": "270000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "270000.0",
+    "maxMktOrderQty": "54000.0",
+    "minNotionalValue": "5"
+  },
+  "AXTI": {
+    "maxOrderQty": "4000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4000.00",
+    "maxMktOrderQty": "1000.00",
+    "minNotionalValue": "5"
+  },
+  "AZTEC": {
+    "maxOrderQty": "7350000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "7350000",
+    "maxMktOrderQty": "1470000",
+    "minNotionalValue": "5"
+  },
+  "B2": {
+    "maxOrderQty": "50000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "50000",
+    "maxMktOrderQty": "10000",
+    "minNotionalValue": "5"
+  },
+  "B3": {
+    "maxOrderQty": "65000000",
+    "minOrderQty": "100",
+    "qtyStep": "100",
+    "postOnlyMaxOrderQty": "65000000",
+    "maxMktOrderQty": "13000000",
+    "minNotionalValue": "5"
+  },
+  "BABA": {
+    "maxOrderQty": "2960.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2960.00",
+    "maxMktOrderQty": "740.00",
+    "minNotionalValue": "5"
+  },
+  "BABY": {
+    "maxOrderQty": "7500000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "7500000",
+    "maxMktOrderQty": "1500000",
+    "minNotionalValue": "5"
+  },
+  "BAC": {
+    "maxOrderQty": "3200.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "3200.00",
+    "maxMktOrderQty": "800.00",
+    "minNotionalValue": "5"
+  },
+  "BANANAS31": {
+    "maxOrderQty": "15000000",
+    "minOrderQty": "100",
+    "qtyStep": "100",
+    "postOnlyMaxOrderQty": "15000000",
+    "maxMktOrderQty": "3000000",
+    "minNotionalValue": "5"
+  },
+  "BANANA": {
+    "maxOrderQty": "17000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "17000.00",
+    "maxMktOrderQty": "3400.00",
+    "minNotionalValue": "5"
+  },
+  "BAND": {
+    "maxOrderQty": "134450.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "134450.0",
+    "maxMktOrderQty": "20410.0",
+    "minNotionalValue": "5"
+  },
+  "BANK": {
+    "maxOrderQty": "400000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "400000",
+    "maxMktOrderQty": "190000",
+    "minNotionalValue": "5"
+  },
+  "BAN": {
+    "maxOrderQty": "725000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "725000",
+    "maxMktOrderQty": "145000",
+    "minNotionalValue": "5"
+  },
+  "BARD": {
+    "maxOrderQty": "700000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "700000.0",
+    "maxMktOrderQty": "140000.0",
+    "minNotionalValue": "5"
+  },
+  "BASED": {
+    "maxOrderQty": "1041500",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1041500",
+    "maxMktOrderQty": "208300",
+    "minNotionalValue": "5"
+  },
+  "BAT": {
+    "maxOrderQty": "270000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "270000.0",
+    "maxMktOrderQty": "53000.0",
+    "minNotionalValue": "5"
+  },
+  "BB": {
+    "maxOrderQty": "600000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "600000",
+    "maxMktOrderQty": "120000",
+    "minNotionalValue": "5"
+  },
+  "BBX": {
+    "maxOrderQty": "11640.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "11640.0",
+    "maxMktOrderQty": "2910.0",
+    "minNotionalValue": "5"
+  },
+  "BCH": {
+    "maxOrderQty": "6500.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "6500.00",
+    "maxMktOrderQty": "1300.00",
+    "minNotionalValue": "5"
+  },
+  "BEAM": {
+    "maxOrderQty": "55000000",
+    "minOrderQty": "100",
+    "qtyStep": "100",
+    "postOnlyMaxOrderQty": "55000000",
+    "maxMktOrderQty": "11000000",
+    "minNotionalValue": "5"
+  },
+  "BEAT": {
+    "maxOrderQty": "36000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "36000",
+    "maxMktOrderQty": "18000",
+    "minNotionalValue": "5"
+  },
+  "BEL": {
+    "maxOrderQty": "650000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "650000",
+    "maxMktOrderQty": "130000",
+    "minNotionalValue": "5"
+  },
+  "BERA": {
+    "maxOrderQty": "240000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "240000",
+    "maxMktOrderQty": "48000",
+    "minNotionalValue": "5"
+  },
+  "BE": {
+    "maxOrderQty": "1200.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1200.00",
+    "maxMktOrderQty": "300.00",
+    "minNotionalValue": "5"
+  },
+  "BICO": {
+    "maxOrderQty": "1550000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1550000.0",
+    "maxMktOrderQty": "310000.0",
+    "minNotionalValue": "5"
+  },
+  "BIGTIME": {
+    "maxOrderQty": "14500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "14500000",
+    "maxMktOrderQty": "2900000",
+    "minNotionalValue": "5"
+  },
+  "BIIB": {
+    "maxOrderQty": "960.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "960.00",
+    "maxMktOrderQty": "240.00",
+    "minNotionalValue": "5"
+  },
+  "BILL": {
+    "maxOrderQty": "1080000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "1080000",
+    "maxMktOrderQty": "216000",
+    "minNotionalValue": "5"
+  },
+  "BIO": {
+    "maxOrderQty": "5500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "5500000",
+    "maxMktOrderQty": "1100000",
+    "minNotionalValue": "5"
+  },
+  "BIRB": {
+    "maxOrderQty": "780000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "780000",
+    "maxMktOrderQty": "156000",
+    "minNotionalValue": "5"
+  },
+  "BITO": {
+    "maxOrderQty": "22640.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "22640.0",
+    "maxMktOrderQty": "5660.0",
+    "minNotionalValue": "5"
+  },
+  "BLEND": {
+    "maxOrderQty": "500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "500000",
+    "maxMktOrderQty": "250000",
+    "minNotionalValue": "5"
+  },
+  "BLESS": {
+    "maxOrderQty": "9000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "9000000",
+    "maxMktOrderQty": "1800000",
+    "minNotionalValue": "5"
+  },
+  "BLUAI": {
+    "maxOrderQty": "2500000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "2500000",
+    "maxMktOrderQty": "500000",
+    "minNotionalValue": "5"
+  },
+  "BLUR": {
+    "maxOrderQty": "6000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "6000000",
+    "maxMktOrderQty": "1200000",
+    "minNotionalValue": "5"
+  },
+  "BMNR": {
+    "maxOrderQty": "16000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "16000.0",
+    "maxMktOrderQty": "4000.0",
+    "minNotionalValue": "5"
+  },
+  "BMT": {
+    "maxOrderQty": "2600000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2600000",
+    "maxMktOrderQty": "520000",
+    "minNotionalValue": "5"
+  },
+  "BNB": {
+    "maxOrderQty": "940.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "940.00",
+    "maxMktOrderQty": "370.00",
+    "minNotionalValue": "5"
+  },
+  "BNC": {
+    "maxOrderQty": "67760.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "67760.0",
+    "maxMktOrderQty": "16940.0",
+    "minNotionalValue": "5"
+  },
+  "BNT": {
+    "maxOrderQty": "140000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "140000",
+    "maxMktOrderQty": "28000",
+    "minNotionalValue": "5"
+  },
+  "BOBA": {
+    "maxOrderQty": "600000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "600000.0",
+    "maxMktOrderQty": "120000.0",
+    "minNotionalValue": "5"
+  },
+  "BOME": {
+    "maxOrderQty": "360000000",
+    "minOrderQty": "100",
+    "qtyStep": "100",
+    "postOnlyMaxOrderQty": "360000000",
+    "maxMktOrderQty": "72000000",
+    "minNotionalValue": "5"
+  },
+  "BOT": {
+    "maxOrderQty": "4748.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4748.00",
+    "maxMktOrderQty": "1187.00",
+    "minNotionalValue": "5"
+  },
+  "BRETT": {
+    "maxOrderQty": "17000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "17000000",
+    "maxMktOrderQty": "3500000",
+    "minNotionalValue": "5"
+  },
+  "BREV": {
+    "maxOrderQty": "312500",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "312500",
+    "maxMktOrderQty": "62500",
+    "minNotionalValue": "5"
+  },
+  "BRKB": {
+    "maxOrderQty": "392.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "392.00",
+    "maxMktOrderQty": "98.00",
+    "minNotionalValue": "5"
+  },
+  "BROCCOLI": {
+    "maxOrderQty": "6500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "6500000",
+    "maxMktOrderQty": "1300000",
+    "minNotionalValue": "5"
+  },
+  "BR": {
+    "maxOrderQty": "450000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "450000",
+    "maxMktOrderQty": "90000",
+    "minNotionalValue": "5"
+  },
+  "BSB": {
+    "maxOrderQty": "840000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "840000",
+    "maxMktOrderQty": "168000",
+    "minNotionalValue": "5"
+  },
+  "BSP": {
+    "maxOrderQty": "5660.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "5660.00",
+    "maxMktOrderQty": "1415.00",
+    "minNotionalValue": "5"
+  },
+  "BSV": {
+    "maxOrderQty": "7700.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "7700.00",
+    "maxMktOrderQty": "1782.00",
+    "minNotionalValue": "5"
+  },
+  "BTC": {
+    "maxOrderQty": "1500.000",
+    "minOrderQty": "0.001",
+    "qtyStep": "0.001",
+    "postOnlyMaxOrderQty": "1500.000",
+    "maxMktOrderQty": "150.000",
+    "minNotionalValue": "5"
+  },
+  "BTDR": {
+    "maxOrderQty": "16221.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "16221.00",
+    "maxMktOrderQty": "4055.00",
+    "minNotionalValue": "5"
+  },
+  "BTR": {
+    "maxOrderQty": "3200000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "3200000",
+    "maxMktOrderQty": "650000",
+    "minNotionalValue": "5"
+  },
+  "BTW": {
+    "maxOrderQty": "3005000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "3005000",
+    "maxMktOrderQty": "601000",
+    "minNotionalValue": "5"
+  },
+  "B": {
+    "maxOrderQty": "600000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "600000",
+    "maxMktOrderQty": "120000",
+    "minNotionalValue": "5"
+  },
+  "BX": {
+    "maxOrderQty": "1560.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1560.00",
+    "maxMktOrderQty": "390.00",
+    "minNotionalValue": "5"
+  },
+  "BYD": {
+    "maxOrderQty": "18248.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "18248.00",
+    "maxMktOrderQty": "4562.00",
+    "minNotionalValue": "5"
+  },
+  "BZ": {
+    "maxOrderQty": "12000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "12000.00",
+    "maxMktOrderQty": "3000.00",
+    "minNotionalValue": "5"
+  },
+  "C98": {
+    "maxOrderQty": "1349310.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1349310.0",
+    "maxMktOrderQty": "163290.0",
+    "minNotionalValue": "5"
+  },
+  "CAKE": {
+    "maxOrderQty": "146350.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "146350.0",
+    "maxMktOrderQty": "16560.0",
+    "minNotionalValue": "5"
+  },
+  "CAP": {
+    "maxOrderQty": "2054000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "2054000",
+    "maxMktOrderQty": "1027000",
+    "minNotionalValue": "5"
+  },
+  "CARV": {
+    "maxOrderQty": "1250000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1250000",
+    "maxMktOrderQty": "250000",
+    "minNotionalValue": "5"
+  },
+  "CASHCAT": {
+    "maxOrderQty": "568000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "568000",
+    "maxMktOrderQty": "284000",
+    "minNotionalValue": "5"
+  },
+  "CATI": {
+    "maxOrderQty": "300000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "300000",
+    "maxMktOrderQty": "60000",
+    "minNotionalValue": "5"
+  },
+  "CATSTOCK": {
+    "maxOrderQty": "100.000",
+    "minOrderQty": "0.001",
+    "qtyStep": "0.001",
+    "postOnlyMaxOrderQty": "100.000",
+    "maxMktOrderQty": "25.000",
+    "minNotionalValue": "5"
+  },
+  "CBRS": {
+    "maxOrderQty": "2800.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2800.00",
+    "maxMktOrderQty": "700.00",
+    "minNotionalValue": "5"
+  },
+  "CC": {
+    "maxOrderQty": "800000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "800000",
+    "maxMktOrderQty": "160000",
+    "minNotionalValue": "5"
+  },
+  "CELO": {
+    "maxOrderQty": "260000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "260000.0",
+    "maxMktOrderQty": "51000.0",
+    "minNotionalValue": "5"
+  },
+  "CETUS": {
+    "maxOrderQty": "3000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "3000000",
+    "maxMktOrderQty": "600000",
+    "minNotionalValue": "5"
+  },
+  "CFG": {
+    "maxOrderQty": "781250",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "781250",
+    "maxMktOrderQty": "156250",
+    "minNotionalValue": "5"
+  },
+  "CFX": {
+    "maxOrderQty": "2251190",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2251190",
+    "maxMktOrderQty": "252700",
+    "minNotionalValue": "5"
+  },
+  "CGNX": {
+    "maxOrderQty": "3232.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "3232.00",
+    "maxMktOrderQty": "808.00",
+    "minNotionalValue": "5"
+  },
+  "CGPT": {
+    "maxOrderQty": "800000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "800000",
+    "maxMktOrderQty": "400000",
+    "minNotionalValue": "5"
+  },
+  "CHILLGUY": {
+    "maxOrderQty": "7000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "7000000",
+    "maxMktOrderQty": "1400000",
+    "minNotionalValue": "5"
+  },
+  "CHIP": {
+    "maxOrderQty": "4000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "4000000",
+    "maxMktOrderQty": "800000",
+    "minNotionalValue": "5"
+  },
+  "CHR": {
+    "maxOrderQty": "320000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "320000.0",
+    "maxMktOrderQty": "64000.0",
+    "minNotionalValue": "5"
+  },
+  "CHZ": {
+    "maxOrderQty": "2400000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2400000",
+    "maxMktOrderQty": "560000",
+    "minNotionalValue": "5"
+  },
+  "CIEN": {
+    "maxOrderQty": "600.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "600.00",
+    "maxMktOrderQty": "150.00",
+    "minNotionalValue": "5"
+  },
+  "CIFR": {
+    "maxOrderQty": "5453.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "5453.00",
+    "maxMktOrderQty": "2726.00",
+    "minNotionalValue": "5"
+  },
+  "CKB": {
+    "maxOrderQty": "34123000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "34123000",
+    "maxMktOrderQty": "3413000",
+    "minNotionalValue": "5"
+  },
+  "CLANKER": {
+    "maxOrderQty": "2650.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2650.00",
+    "maxMktOrderQty": "530.00",
+    "minNotionalValue": "5"
+  },
+  "CLO": {
+    "maxOrderQty": "250000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "250000",
+    "maxMktOrderQty": "50000",
+    "minNotionalValue": "5"
+  },
+  "CLSK": {
+    "maxOrderQty": "13532.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "13532.00",
+    "maxMktOrderQty": "3383.00",
+    "minNotionalValue": "5"
+  },
+  "CL": {
+    "maxOrderQty": "40000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "40000.00",
+    "maxMktOrderQty": "12000.00",
+    "minNotionalValue": "5"
+  },
+  "COAI": {
+    "maxOrderQty": "375000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "375000",
+    "maxMktOrderQty": "75000",
+    "minNotionalValue": "5"
+  },
+  "COHR": {
+    "maxOrderQty": "800.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "800.00",
+    "maxMktOrderQty": "200.00",
+    "minNotionalValue": "5"
+  },
+  "COIN": {
+    "maxOrderQty": "4000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4000.00",
+    "maxMktOrderQty": "1000.00",
+    "minNotionalValue": "5"
+  },
+  "COMP": {
+    "maxOrderQty": "11000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "11000.00",
+    "maxMktOrderQty": "2200.00",
+    "minNotionalValue": "5"
+  },
+  "CONL": {
+    "maxOrderQty": "39761.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "39761.0",
+    "maxMktOrderQty": "9940.0",
+    "minNotionalValue": "5"
+  },
+  "COOKIE": {
+    "maxOrderQty": "2400000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2400000",
+    "maxMktOrderQty": "480000",
+    "minNotionalValue": "5"
+  },
+  "CORE": {
+    "maxOrderQty": "4500000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "4500000.0",
+    "maxMktOrderQty": "810000.0",
+    "minNotionalValue": "5"
+  },
+  "CORZ": {
+    "maxOrderQty": "11848.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "11848.00",
+    "maxMktOrderQty": "2962.00",
+    "minNotionalValue": "5"
+  },
+  "COST": {
+    "maxOrderQty": "208.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "208.00",
+    "maxMktOrderQty": "52.00",
+    "minNotionalValue": "5"
+  },
+  "COTI": {
+    "maxOrderQty": "2218600",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2218600",
+    "maxMktOrderQty": "221900",
+    "minNotionalValue": "5"
+  },
+  "COW": {
+    "maxOrderQty": "1200000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1200000",
+    "maxMktOrderQty": "240000",
+    "minNotionalValue": "5"
+  },
+  "CP": {
+    "maxOrderQty": "2744000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "2744000",
+    "maxMktOrderQty": "686000",
+    "minNotionalValue": "5"
+  },
+  "CRCL": {
+    "maxOrderQty": "16000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "16000.00",
+    "maxMktOrderQty": "4000.00",
+    "minNotionalValue": "5"
+  },
+  "CRDO": {
+    "maxOrderQty": "800.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "800.00",
+    "maxMktOrderQty": "200.00",
+    "minNotionalValue": "5"
+  },
+  "CRM": {
+    "maxOrderQty": "608.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "608.00",
+    "maxMktOrderQty": "303.00",
+    "minNotionalValue": "5"
+  },
+  "CROSS": {
+    "maxOrderQty": "170000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "170000",
+    "maxMktOrderQty": "87000",
+    "minNotionalValue": "5"
+  },
+  "CRO": {
+    "maxOrderQty": "5000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "5000000",
+    "maxMktOrderQty": "700000",
+    "minNotionalValue": "5"
+  },
+  "CRV": {
+    "maxOrderQty": "1198590.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1198590.0",
+    "maxMktOrderQty": "196620.0",
+    "minNotionalValue": "5"
+  },
+  "CRWD": {
+    "maxOrderQty": "1060.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1060.00",
+    "maxMktOrderQty": "265.00",
+    "minNotionalValue": "5"
+  },
+  "CRWV": {
+    "maxOrderQty": "4000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4000.00",
+    "maxMktOrderQty": "1000.00",
+    "minNotionalValue": "5"
+  },
+  "CSCO": {
+    "maxOrderQty": "1800.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1800.00",
+    "maxMktOrderQty": "450.00",
+    "minNotionalValue": "5"
+  },
+  "CSOPSAMSUNG2L": {
+    "maxOrderQty": "14916.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "14916.0",
+    "maxMktOrderQty": "2983.0",
+    "minNotionalValue": "5"
+  },
+  "CSOPSKHYNIX2L": {
+    "maxOrderQty": "35175.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "35175.0",
+    "maxMktOrderQty": "7035.0",
+    "minNotionalValue": "5"
+  },
+  "CTC": {
+    "maxOrderQty": "1000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1000000",
+    "maxMktOrderQty": "200000",
+    "minNotionalValue": "5"
+  },
+  "CTR": {
+    "maxOrderQty": "3050000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "3050000",
+    "maxMktOrderQty": "1525000",
+    "minNotionalValue": "5"
+  },
+  "CT": {
+    "maxOrderQty": "238080",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "238080",
+    "maxMktOrderQty": "59520",
+    "minNotionalValue": "5"
+  },
+  "C": {
+    "maxOrderQty": "625000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "625000",
+    "maxMktOrderQty": "125000",
+    "minNotionalValue": "5"
+  },
+  "CVC": {
+    "maxOrderQty": "1531900",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1531900",
+    "maxMktOrderQty": "153200",
+    "minNotionalValue": "5"
+  },
+  "CVNA": {
+    "maxOrderQty": "3289.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "3289.00",
+    "maxMktOrderQty": "822.00",
+    "minNotionalValue": "5"
+  },
+  "CVXSTOCK": {
+    "maxOrderQty": "944.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "944.00",
+    "maxMktOrderQty": "236.00",
+    "minNotionalValue": "5"
+  },
+  "CVX": {
+    "maxOrderQty": "46000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "46000.00",
+    "maxMktOrderQty": "9200.00",
+    "minNotionalValue": "5"
+  },
+  "CXMT": {
+    "maxOrderQty": "7160.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "7160.0",
+    "maxMktOrderQty": "3580.0",
+    "minNotionalValue": "5"
+  },
+  "CYBER": {
+    "maxOrderQty": "37550.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "37550.0",
+    "maxMktOrderQty": "7030.0",
+    "minNotionalValue": "5"
+  },
+  "CYPH": {
+    "maxOrderQty": "51660.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "51660.0",
+    "maxMktOrderQty": "12915.0",
+    "minNotionalValue": "5"
+  },
+  "CYS": {
+    "maxOrderQty": "250000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "250000",
+    "maxMktOrderQty": "50000",
+    "minNotionalValue": "5"
+  },
+  "DASH": {
+    "maxOrderQty": "8000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "8000.00",
+    "maxMktOrderQty": "1600.00",
+    "minNotionalValue": "5"
+  },
+  "DATA": {
+    "maxOrderQty": "178240",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "178240",
+    "maxMktOrderQty": "89120",
+    "minNotionalValue": "5"
+  },
+  "DBR": {
+    "maxOrderQty": "4000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "4000000",
+    "maxMktOrderQty": "800000",
+    "minNotionalValue": "5"
+  },
+  "DDOG": {
+    "maxOrderQty": "809.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "809.00",
+    "maxMktOrderQty": "202.00",
+    "minNotionalValue": "5"
+  },
+  "DEEP": {
+    "maxOrderQty": "9500000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "9500000",
+    "maxMktOrderQty": "1500000",
+    "minNotionalValue": "5"
+  },
+  "DELL": {
+    "maxOrderQty": "800.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "800.00",
+    "maxMktOrderQty": "200.00",
+    "minNotionalValue": "5"
+  },
+  "DEXE": {
+    "maxOrderQty": "2400.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "2400.0",
+    "maxMktOrderQty": "1200.0",
+    "minNotionalValue": "5"
+  },
+  "DGAI": {
+    "maxOrderQty": "128680",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "128680",
+    "maxMktOrderQty": "32170",
+    "minNotionalValue": "5"
+  },
+  "DIA": {
+    "maxOrderQty": "134000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "134000",
+    "maxMktOrderQty": "67000",
+    "minNotionalValue": "5"
+  },
+  "DJT": {
+    "maxOrderQty": "21540.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "21540.0",
+    "maxMktOrderQty": "5385.0",
+    "minNotionalValue": "5"
+  },
+  "DKNG": {
+    "maxOrderQty": "8032.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "8032.00",
+    "maxMktOrderQty": "2008.00",
+    "minNotionalValue": "5"
+  },
+  "DOGE": {
+    "maxOrderQty": "43678900",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "43678900",
+    "maxMktOrderQty": "5991100",
+    "minNotionalValue": "5"
+  },
+  "DOLO": {
+    "maxOrderQty": "2300000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2300000",
+    "maxMktOrderQty": "460000",
+    "minNotionalValue": "5"
+  },
+  "DOOD": {
+    "maxOrderQty": "10000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "10000000",
+    "maxMktOrderQty": "2000000",
+    "minNotionalValue": "5"
+  },
+  "DOS": {
+    "maxOrderQty": "136260",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "136260",
+    "maxMktOrderQty": "68130",
+    "minNotionalValue": "5"
+  },
+  "DOT": {
+    "maxOrderQty": "198890.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "198890.0",
+    "maxMktOrderQty": "32140.0",
+    "minNotionalValue": "5"
+  },
+  "DRAM": {
+    "maxOrderQty": "27200.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "27200.0",
+    "maxMktOrderQty": "6800.0",
+    "minNotionalValue": "5"
+  },
+  "DRIFT": {
+    "maxOrderQty": "2950000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2950000",
+    "maxMktOrderQty": "590000",
+    "minNotionalValue": "5"
+  },
+  "DUSK": {
+    "maxOrderQty": "900000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "900000",
+    "maxMktOrderQty": "180000",
+    "minNotionalValue": "5"
+  },
+  "DYDX": {
+    "maxOrderQty": "662810.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "662810.0",
+    "maxMktOrderQty": "72560.0",
+    "minNotionalValue": "5"
+  },
+  "DYM": {
+    "maxOrderQty": "500000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "500000.0",
+    "maxMktOrderQty": "100000.0",
+    "minNotionalValue": "5"
+  },
+  "EBAY": {
+    "maxOrderQty": "909.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "909.00",
+    "maxMktOrderQty": "455.00",
+    "minNotionalValue": "5"
+  },
+  "EDEN": {
+    "maxOrderQty": "1500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1500000",
+    "maxMktOrderQty": "300000",
+    "minNotionalValue": "5"
+  },
+  "EDGE": {
+    "maxOrderQty": "242500",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "242500",
+    "maxMktOrderQty": "48500",
+    "minNotionalValue": "5"
+  },
+  "EDU": {
+    "maxOrderQty": "1000000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1000000.0",
+    "maxMktOrderQty": "200000.0",
+    "minNotionalValue": "5"
+  },
+  "EGLD": {
+    "maxOrderQty": "11410.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "11410.00",
+    "maxMktOrderQty": "2534.00",
+    "minNotionalValue": "5"
+  },
+  "EIGEN": {
+    "maxOrderQty": "400000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "400000",
+    "maxMktOrderQty": "120000",
+    "minNotionalValue": "5"
+  },
+  "ELSA": {
+    "maxOrderQty": "415000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "415000",
+    "maxMktOrderQty": "83000",
+    "minNotionalValue": "5"
+  },
+  "ENA": {
+    "maxOrderQty": "3500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "3500000",
+    "maxMktOrderQty": "700000",
+    "minNotionalValue": "5"
+  },
+  "ENJ": {
+    "maxOrderQty": "852520.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "852520.0",
+    "maxMktOrderQty": "142530.0",
+    "minNotionalValue": "5"
+  },
+  "ENSO": {
+    "maxOrderQty": "150000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "150000.0",
+    "maxMktOrderQty": "30000.0",
+    "minNotionalValue": "5"
+  },
+  "ENS": {
+    "maxOrderQty": "40000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "40000.0",
+    "maxMktOrderQty": "8000.0",
+    "minNotionalValue": "5"
+  },
+  "EPIC": {
+    "maxOrderQty": "44500",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "44500",
+    "maxMktOrderQty": "8900",
+    "minNotionalValue": "5"
+  },
+  "ERA": {
+    "maxOrderQty": "650000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "650000",
+    "maxMktOrderQty": "130000",
+    "minNotionalValue": "5"
+  },
+  "ESPORTS": {
+    "maxOrderQty": "2300000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2300000",
+    "maxMktOrderQty": "460000",
+    "minNotionalValue": "5"
+  },
+  "ESP": {
+    "maxOrderQty": "1560000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "1560000",
+    "maxMktOrderQty": "312000",
+    "minNotionalValue": "5"
+  },
+  "ETC": {
+    "maxOrderQty": "10000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "10000.0",
+    "maxMktOrderQty": "3300.0",
+    "minNotionalValue": "5"
+  },
+  "ETHBTC": {
+    "maxOrderQty": "10000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "10000000",
+    "maxMktOrderQty": "2000000",
+    "minNotionalValue": "5"
+  },
+  "ETHFI": {
+    "maxOrderQty": "500000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "500000.0",
+    "maxMktOrderQty": "100000.0",
+    "minNotionalValue": "5"
+  },
+  "ETH": {
+    "maxOrderQty": "10000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "10000.00",
+    "maxMktOrderQty": "2000.00",
+    "minNotionalValue": "5"
+  },
+  "EUL": {
+    "maxOrderQty": "32500.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "32500.0",
+    "maxMktOrderQty": "6500.0",
+    "minNotionalValue": "5"
+  },
+  "EURUSD": {
+    "maxOrderQty": "356000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "356000.0",
+    "maxMktOrderQty": "89000.0",
+    "minNotionalValue": "5"
+  },
+  "EVAA": {
+    "maxOrderQty": "185000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "185000.0",
+    "maxMktOrderQty": "37000.0",
+    "minNotionalValue": "5"
+  },
+  "EWJ": {
+    "maxOrderQty": "2000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2000.00",
+    "maxMktOrderQty": "500.00",
+    "minNotionalValue": "5"
+  },
+  "EWT": {
+    "maxOrderQty": "2000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2000.00",
+    "maxMktOrderQty": "500.00",
+    "minNotionalValue": "5"
+  },
+  "EWY": {
+    "maxOrderQty": "12000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "12000.00",
+    "maxMktOrderQty": "3000.00",
+    "minNotionalValue": "5"
+  },
+  "EWZ": {
+    "maxOrderQty": "5591.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "5591.00",
+    "maxMktOrderQty": "1398.00",
+    "minNotionalValue": "5"
+  },
+  "FARTCOIN": {
+    "maxOrderQty": "3000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "3000000",
+    "maxMktOrderQty": "600000",
+    "minNotionalValue": "5"
+  },
+  "FF": {
+    "maxOrderQty": "2250000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2250000",
+    "maxMktOrderQty": "450000",
+    "minNotionalValue": "5"
+  },
+  "FHE": {
+    "maxOrderQty": "2775000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2775000",
+    "maxMktOrderQty": "555000",
+    "minNotionalValue": "5"
+  },
+  "FIDA": {
+    "maxOrderQty": "3600000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "3600000",
+    "maxMktOrderQty": "720000",
+    "minNotionalValue": "5"
+  },
+  "FIGHT": {
+    "maxOrderQty": "5000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "5000000",
+    "maxMktOrderQty": "1000000",
+    "minNotionalValue": "5"
+  },
+  "FIL": {
+    "maxOrderQty": "295750.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "295750.0",
+    "maxMktOrderQty": "60730.0",
+    "minNotionalValue": "5"
+  },
+  "FLEX": {
+    "maxOrderQty": "1452.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1452.00",
+    "maxMktOrderQty": "363.00",
+    "minNotionalValue": "5"
+  },
+  "FLNC": {
+    "maxOrderQty": "12000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "12000.0",
+    "maxMktOrderQty": "3000.0",
+    "minNotionalValue": "5"
+  },
+  "FLOCK": {
+    "maxOrderQty": "1100000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1100000",
+    "maxMktOrderQty": "220000",
+    "minNotionalValue": "5"
+  },
+  "FLOW": {
+    "maxOrderQty": "5500000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "5500000.0",
+    "maxMktOrderQty": "1100000.0",
+    "minNotionalValue": "5"
+  },
+  "FLR": {
+    "maxOrderQty": "4250000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "4250000",
+    "maxMktOrderQty": "850000",
+    "minNotionalValue": "5"
+  },
+  "FLUID": {
+    "maxOrderQty": "30000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "30000.0",
+    "maxMktOrderQty": "6000.0",
+    "minNotionalValue": "5"
+  },
+  "FLUX": {
+    "maxOrderQty": "100000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "100000",
+    "maxMktOrderQty": "20000",
+    "minNotionalValue": "5"
+  },
+  "FLY": {
+    "maxOrderQty": "10348.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "10348.00",
+    "maxMktOrderQty": "2587.00",
+    "minNotionalValue": "5"
+  },
+  "FOGO": {
+    "maxOrderQty": "2500000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "2500000",
+    "maxMktOrderQty": "500000",
+    "minNotionalValue": "5"
+  },
+  "FOLKS": {
+    "maxOrderQty": "46500.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "46500.00",
+    "maxMktOrderQty": "9300.00",
+    "minNotionalValue": "5"
+  },
+  "FORMSTOCK": {
+    "maxOrderQty": "1752.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1752.00",
+    "maxMktOrderQty": "438.00",
+    "minNotionalValue": "5"
+  },
+  "FORM": {
+    "maxOrderQty": "280000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "280000",
+    "maxMktOrderQty": "56000",
+    "minNotionalValue": "5"
+  },
+  "F": {
+    "maxOrderQty": "25000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "25000000",
+    "maxMktOrderQty": "5000000",
+    "minNotionalValue": "5"
+  },
+  "FUTU": {
+    "maxOrderQty": "1790.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1790.00",
+    "maxMktOrderQty": "447.00",
+    "minNotionalValue": "5"
+  },
+  "FWDI": {
+    "maxOrderQty": "45840.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "45840.0",
+    "maxMktOrderQty": "11460.0",
+    "minNotionalValue": "5"
+  },
+  "GALA": {
+    "maxOrderQty": "58390900",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "58390900",
+    "maxMktOrderQty": "7167900",
+    "minNotionalValue": "5"
+  },
+  "GAS": {
+    "maxOrderQty": "145000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "145000.0",
+    "maxMktOrderQty": "29000.0",
+    "minNotionalValue": "5"
+  },
+  "GBPUSD": {
+    "maxOrderQty": "296000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "296000.0",
+    "maxMktOrderQty": "74000.0",
+    "minNotionalValue": "5"
+  },
+  "GDX": {
+    "maxOrderQty": "2608.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2608.00",
+    "maxMktOrderQty": "652.00",
+    "minNotionalValue": "5"
+  },
+  "GENIUS": {
+    "maxOrderQty": "198300",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "198300",
+    "maxMktOrderQty": "39660",
+    "minNotionalValue": "5"
+  },
+  "GE": {
+    "maxOrderQty": "564.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "564.00",
+    "maxMktOrderQty": "141.00",
+    "minNotionalValue": "5"
+  },
+  "GEV": {
+    "maxOrderQty": "184.000",
+    "minOrderQty": "0.001",
+    "qtyStep": "0.001",
+    "postOnlyMaxOrderQty": "184.000",
+    "maxMktOrderQty": "46.000",
+    "minNotionalValue": "5"
+  },
+  "GIGADEVICE": {
+    "maxOrderQty": "3408.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "3408.00",
+    "maxMktOrderQty": "852.00",
+    "minNotionalValue": "5"
+  },
+  "GIGGLE": {
+    "maxOrderQty": "1040.000",
+    "minOrderQty": "0.001",
+    "qtyStep": "0.001",
+    "postOnlyMaxOrderQty": "1040.000",
+    "maxMktOrderQty": "475.000",
+    "minNotionalValue": "5"
+  },
+  "GILD": {
+    "maxOrderQty": "1536.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1536.00",
+    "maxMktOrderQty": "384.00",
+    "minNotionalValue": "5"
+  },
+  "GLM": {
+    "maxOrderQty": "130000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "130000",
+    "maxMktOrderQty": "32000",
+    "minNotionalValue": "5"
+  },
+  "GLW": {
+    "maxOrderQty": "1200.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1200.00",
+    "maxMktOrderQty": "300.00",
+    "minNotionalValue": "5"
+  },
+  "GMESTOCK": {
+    "maxOrderQty": "9404.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "9404.00",
+    "maxMktOrderQty": "2351.00",
+    "minNotionalValue": "5"
+  },
+  "GMT": {
+    "maxOrderQty": "15500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "15500000",
+    "maxMktOrderQty": "3100000",
+    "minNotionalValue": "5"
+  },
+  "GMX": {
+    "maxOrderQty": "14500.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "14500.00",
+    "maxMktOrderQty": "2900.00",
+    "minNotionalValue": "5"
+  },
+  "GOAT": {
+    "maxOrderQty": "7000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "7000000",
+    "maxMktOrderQty": "1400000",
+    "minNotionalValue": "5"
+  },
+  "GOOGL": {
+    "maxOrderQty": "4000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4000.00",
+    "maxMktOrderQty": "1000.00",
+    "minNotionalValue": "5"
+  },
+  "GPRO": {
+    "maxOrderQty": "162600",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "162600",
+    "maxMktOrderQty": "40650",
+    "minNotionalValue": "5"
+  },
+  "GPS": {
+    "maxOrderQty": "12750000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "12750000",
+    "maxMktOrderQty": "2550000",
+    "minNotionalValue": "5"
+  },
+  "GRAM": {
+    "maxOrderQty": "30300.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "30300.0",
+    "maxMktOrderQty": "15150.0",
+    "minNotionalValue": "5"
+  },
+  "GRASS": {
+    "maxOrderQty": "465000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "465000",
+    "maxMktOrderQty": "93000",
+    "minNotionalValue": "5"
+  },
+  "GRIFFAIN": {
+    "maxOrderQty": "5000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "5000000",
+    "maxMktOrderQty": "1000000",
+    "minNotionalValue": "5"
+  },
+  "GRT": {
+    "maxOrderQty": "3641220.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "3641220.0",
+    "maxMktOrderQty": "555670.0",
+    "minNotionalValue": "5"
+  },
+  "GRVT": {
+    "maxOrderQty": "196000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "196000",
+    "maxMktOrderQty": "98000",
+    "minNotionalValue": "5"
+  },
+  "GS": {
+    "maxOrderQty": "180.000",
+    "minOrderQty": "0.001",
+    "qtyStep": "0.001",
+    "postOnlyMaxOrderQty": "180.000",
+    "maxMktOrderQty": "45.000",
+    "minNotionalValue": "5"
+  },
+  "GTLB": {
+    "maxOrderQty": "3989.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "3989.00",
+    "maxMktOrderQty": "997.00",
+    "minNotionalValue": "5"
+  },
+  "GUN": {
+    "maxOrderQty": "4900000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "4900000",
+    "maxMktOrderQty": "980000",
+    "minNotionalValue": "5"
+  },
+  "GWEI": {
+    "maxOrderQty": "915750",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "915750",
+    "maxMktOrderQty": "183150",
+    "minNotionalValue": "5"
+  },
+  "HAEDAL": {
+    "maxOrderQty": "2300000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "2300000",
+    "maxMktOrderQty": "460000",
+    "minNotionalValue": "5"
+  },
+  "HAJIMI": {
+    "maxOrderQty": "1696000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "1696000",
+    "maxMktOrderQty": "424000",
+    "minNotionalValue": "5"
+  },
+  "HANA": {
+    "maxOrderQty": "5500000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "5500000",
+    "maxMktOrderQty": "1100000",
+    "minNotionalValue": "5"
+  },
+  "HANMI": {
+    "maxOrderQty": "1234.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1234.00",
+    "maxMktOrderQty": "308.00",
+    "minNotionalValue": "5"
+  },
+  "HBAR": {
+    "maxOrderQty": "7416400",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "7416400",
+    "maxMktOrderQty": "1064600",
+    "minNotionalValue": "5"
+  },
+  "HD": {
+    "maxOrderQty": "591.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "591.00",
+    "maxMktOrderQty": "148.00",
+    "minNotionalValue": "5"
+  },
+  "HEI": {
+    "maxOrderQty": "165000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "165000.0",
+    "maxMktOrderQty": "33000.0",
+    "minNotionalValue": "5"
+  },
+  "HEMI": {
+    "maxOrderQty": "4000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "4000000",
+    "maxMktOrderQty": "2000000",
+    "minNotionalValue": "5"
+  },
+  "HIMS": {
+    "maxOrderQty": "5376.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "5376.00",
+    "maxMktOrderQty": "1344.00",
+    "minNotionalValue": "5"
+  },
+  "HIVE": {
+    "maxOrderQty": "293500",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "293500",
+    "maxMktOrderQty": "58700",
+    "minNotionalValue": "5"
+  },
+  "HMSTR": {
+    "maxOrderQty": "712500000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "712500000",
+    "maxMktOrderQty": "142500000",
+    "minNotionalValue": "5"
+  },
+  "HNT": {
+    "maxOrderQty": "65000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "65000.00",
+    "maxMktOrderQty": "13000.00",
+    "minNotionalValue": "5"
+  },
+  "HOLO": {
+    "maxOrderQty": "2400000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2400000",
+    "maxMktOrderQty": "480000",
+    "minNotionalValue": "5"
+  },
+  "HOME": {
+    "maxOrderQty": "3000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "3000000",
+    "maxMktOrderQty": "500000",
+    "minNotionalValue": "5"
+  },
+  "HOOD": {
+    "maxOrderQty": "8000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "8000.00",
+    "maxMktOrderQty": "2000.00",
+    "minNotionalValue": "5"
+  },
+  "HORIZON": {
+    "maxOrderQty": "369000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "369000",
+    "maxMktOrderQty": "92250",
+    "minNotionalValue": "5"
+  },
+  "HPE": {
+    "maxOrderQty": "4000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4000.00",
+    "maxMktOrderQty": "1000.00",
+    "minNotionalValue": "5"
+  },
+  "HUAHONG": {
+    "maxOrderQty": "14306.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "14306.00",
+    "maxMktOrderQty": "3576.00",
+    "minNotionalValue": "5"
+  },
+  "HUMA": {
+    "maxOrderQty": "1050000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1050000",
+    "maxMktOrderQty": "210000",
+    "minNotionalValue": "5"
+  },
+  "H": {
+    "maxOrderQty": "1850000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "1850000",
+    "maxMktOrderQty": "370000",
+    "minNotionalValue": "5"
+  },
+  "HUT": {
+    "maxOrderQty": "1968.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1968.00",
+    "maxMktOrderQty": "492.00",
+    "minNotionalValue": "5"
+  },
+  "HYPER": {
+    "maxOrderQty": "2000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2000000",
+    "maxMktOrderQty": "400000",
+    "minNotionalValue": "5"
+  },
+  "HYPE": {
+    "maxOrderQty": "73500.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "73500.00",
+    "maxMktOrderQty": "14700.00",
+    "minNotionalValue": "5"
+  },
+  "HYUNDAI": {
+    "maxOrderQty": "800.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "800.00",
+    "maxMktOrderQty": "200.00",
+    "minNotionalValue": "5"
+  },
+  "IBIT": {
+    "maxOrderQty": "4639.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4639.00",
+    "maxMktOrderQty": "1160.00",
+    "minNotionalValue": "5"
+  },
+  "IBM": {
+    "maxOrderQty": "1200.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1200.00",
+    "maxMktOrderQty": "300.00",
+    "minNotionalValue": "5"
+  },
+  "ICNT": {
+    "maxOrderQty": "325000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "325000",
+    "maxMktOrderQty": "65000",
+    "minNotionalValue": "5"
+  },
+  "ICP": {
+    "maxOrderQty": "100510.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "100510.0",
+    "maxMktOrderQty": "25860.0",
+    "minNotionalValue": "5"
+  },
+  "ID": {
+    "maxOrderQty": "1960000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1960000",
+    "maxMktOrderQty": "980000",
+    "minNotionalValue": "5"
+  },
+  "ILV": {
+    "maxOrderQty": "18500.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "18500.00",
+    "maxMktOrderQty": "3700.00",
+    "minNotionalValue": "5"
+  },
+  "IMX": {
+    "maxOrderQty": "750000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "750000.0",
+    "maxMktOrderQty": "150000.0",
+    "minNotionalValue": "5"
+  },
+  "INFQ": {
+    "maxOrderQty": "14440.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "14440.00",
+    "maxMktOrderQty": "3610.00",
+    "minNotionalValue": "5"
+  },
+  "INIT": {
+    "maxOrderQty": "806000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "806000",
+    "maxMktOrderQty": "161200",
+    "minNotionalValue": "5"
+  },
+  "INJ": {
+    "maxOrderQty": "60140.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "60140.0",
+    "maxMktOrderQty": "6020.0",
+    "minNotionalValue": "5"
+  },
+  "INTC": {
+    "maxOrderQty": "10400.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "10400.00",
+    "maxMktOrderQty": "2600.00",
+    "minNotionalValue": "5"
+  },
+  "INTU": {
+    "maxOrderQty": "541.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "541.00",
+    "maxMktOrderQty": "135.00",
+    "minNotionalValue": "5"
+  },
+  "INTW": {
+    "maxOrderQty": "7608.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "7608.00",
+    "maxMktOrderQty": "1902.00",
+    "minNotionalValue": "5"
+  },
+  "IN": {
+    "maxOrderQty": "270000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "270000",
+    "maxMktOrderQty": "130000",
+    "minNotionalValue": "5"
+  },
+  "INX": {
+    "maxOrderQty": "6250000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "6250000",
+    "maxMktOrderQty": "1250000",
+    "minNotionalValue": "5"
+  },
+  "IONQ": {
+    "maxOrderQty": "5736.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "5736.00",
+    "maxMktOrderQty": "1434.00",
+    "minNotionalValue": "5"
+  },
+  "IOST": {
+    "maxOrderQty": "61500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "61500000",
+    "maxMktOrderQty": "12300000",
+    "minNotionalValue": "5"
+  },
+  "IOTA": {
+    "maxOrderQty": "1995000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1995000.0",
+    "maxMktOrderQty": "399000.0",
+    "minNotionalValue": "5"
+  },
+  "IOTX": {
+    "maxOrderQty": "5777800",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "5777800",
+    "maxMktOrderQty": "639300",
+    "minNotionalValue": "5"
+  },
+  "IO": {
+    "maxOrderQty": "950000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "950000.0",
+    "maxMktOrderQty": "190000.0",
+    "minNotionalValue": "5"
+  },
+  "IREN": {
+    "maxOrderQty": "6000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "6000.0",
+    "maxMktOrderQty": "1500.0",
+    "minNotionalValue": "5"
+  },
+  "IRYS": {
+    "maxOrderQty": "3200000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "3200000",
+    "maxMktOrderQty": "640000",
+    "minNotionalValue": "5"
+  },
+  "ISRG": {
+    "maxOrderQty": "511.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "511.00",
+    "maxMktOrderQty": "128.00",
+    "minNotionalValue": "5"
+  },
+  "IWM": {
+    "maxOrderQty": "800.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "800.00",
+    "maxMktOrderQty": "200.00",
+    "minNotionalValue": "5"
+  },
+  "JASMY": {
+    "maxOrderQty": "80000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "80000000",
+    "maxMktOrderQty": "16000000",
+    "minNotionalValue": "5"
+  },
+  "JCT": {
+    "maxOrderQty": "4500000",
+    "minOrderQty": "100",
+    "qtyStep": "100",
+    "postOnlyMaxOrderQty": "4500000",
+    "maxMktOrderQty": "2000000",
+    "minNotionalValue": "5"
+  },
+  "JD": {
+    "maxOrderQty": "6833.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "6833.00",
+    "maxMktOrderQty": "1708.00",
+    "minNotionalValue": "5"
+  },
+  "JELLYJELLY": {
+    "maxOrderQty": "500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "500000",
+    "maxMktOrderQty": "100000",
+    "minNotionalValue": "5"
+  },
+  "JNJ": {
+    "maxOrderQty": "776.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "776.00",
+    "maxMktOrderQty": "194.00",
+    "minNotionalValue": "5"
+  },
+  "JPM": {
+    "maxOrderQty": "568.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "568.00",
+    "maxMktOrderQty": "142.00",
+    "minNotionalValue": "5"
+  },
+  "JST": {
+    "maxOrderQty": "1315000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "1315000",
+    "maxMktOrderQty": "263000",
+    "minNotionalValue": "5"
+  },
+  "JTO": {
+    "maxOrderQty": "650000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "650000.0",
+    "maxMktOrderQty": "130000.0",
+    "minNotionalValue": "5"
+  },
+  "JUP": {
+    "maxOrderQty": "790000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "790000",
+    "maxMktOrderQty": "79000",
+    "minNotionalValue": "5"
+  },
+  "KAIA": {
+    "maxOrderQty": "7000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "7000000",
+    "maxMktOrderQty": "1400000",
+    "minNotionalValue": "5"
+  },
+  "KAITO": {
+    "maxOrderQty": "270000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "270000",
+    "maxMktOrderQty": "54000",
+    "minNotionalValue": "5"
+  },
+  "KAS": {
+    "maxOrderQty": "23000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "23000000",
+    "maxMktOrderQty": "4600000",
+    "minNotionalValue": "5"
+  },
+  "KAT": {
+    "maxOrderQty": "12500000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "12500000",
+    "maxMktOrderQty": "2500000",
+    "minNotionalValue": "5"
+  },
+  "KAVA": {
+    "maxOrderQty": "335160.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "335160.0",
+    "maxMktOrderQty": "52130.0",
+    "minNotionalValue": "5"
+  },
+  "KERNEL": {
+    "maxOrderQty": "2420000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2420000",
+    "maxMktOrderQty": "484000",
+    "minNotionalValue": "5"
+  },
+  "KGEN": {
+    "maxOrderQty": "312500",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "312500",
+    "maxMktOrderQty": "62500",
+    "minNotionalValue": "5"
+  },
+  "KII": {
+    "maxOrderQty": "1252000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "1252000",
+    "maxMktOrderQty": "313000",
+    "minNotionalValue": "5"
+  },
+  "KITE": {
+    "maxOrderQty": "400000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "400000",
+    "maxMktOrderQty": "80000",
+    "minNotionalValue": "5"
+  },
+  "KLAC": {
+    "maxOrderQty": "800.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "800.00",
+    "maxMktOrderQty": "200.00",
+    "minNotionalValue": "5"
+  },
+  "KMNO": {
+    "maxOrderQty": "480000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "480000",
+    "maxMktOrderQty": "96000",
+    "minNotionalValue": "5"
+  },
+  "KNC": {
+    "maxOrderQty": "388070.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "388070.0",
+    "maxMktOrderQty": "71730.0",
+    "minNotionalValue": "5"
+  },
+  "KODEX200": {
+    "maxOrderQty": "2568.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2568.00",
+    "maxMktOrderQty": "642.00",
+    "minNotionalValue": "5"
+  },
+  "KORU": {
+    "maxOrderQty": "80000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "80000.00",
+    "maxMktOrderQty": "20000.00",
+    "minNotionalValue": "5"
+  },
+  "KO": {
+    "maxOrderQty": "2240.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2240.00",
+    "maxMktOrderQty": "560.00",
+    "minNotionalValue": "5"
+  },
+  "KSM": {
+    "maxOrderQty": "6040.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "6040.00",
+    "maxMktOrderQty": "1330.00",
+    "minNotionalValue": "5"
+  },
+  "KSTR": {
+    "maxOrderQty": "7028.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "7028.00",
+    "maxMktOrderQty": "1757.00",
+    "minNotionalValue": "5"
+  },
+  "KUAISHOU": {
+    "maxOrderQty": "22124.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "22124.0",
+    "maxMktOrderQty": "4425.0",
+    "minNotionalValue": "5"
+  },
+  "LAB": {
+    "maxOrderQty": "30000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "30000",
+    "maxMktOrderQty": "5000",
+    "minNotionalValue": "5"
+  },
+  "LAOPU": {
+    "maxOrderQty": "4038.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4038.00",
+    "maxMktOrderQty": "1009.00",
+    "minNotionalValue": "5"
+  },
+  "LA": {
+    "maxOrderQty": "500000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "500000.0",
+    "maxMktOrderQty": "100000.0",
+    "minNotionalValue": "5"
+  },
+  "LDO": {
+    "maxOrderQty": "436640.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "436640.0",
+    "maxMktOrderQty": "59020.0",
+    "minNotionalValue": "5"
+  },
+  "LENOVO": {
+    "maxOrderQty": "47960.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "47960.0",
+    "maxMktOrderQty": "11990.0",
+    "minNotionalValue": "5"
+  },
+  "LGELECTRONICS": {
+    "maxOrderQty": "1328.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1328.00",
+    "maxMktOrderQty": "331.00",
+    "minNotionalValue": "5"
+  },
+  "LIGHT": {
+    "maxOrderQty": "577500",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "577500",
+    "maxMktOrderQty": "115500",
+    "minNotionalValue": "5"
+  },
+  "LINEA": {
+    "maxOrderQty": "75000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "75000000",
+    "maxMktOrderQty": "15000000",
+    "minNotionalValue": "5"
+  },
+  "LINK": {
+    "maxOrderQty": "41000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "41000.0",
+    "maxMktOrderQty": "15000.0",
+    "minNotionalValue": "5"
+  },
+  "LITE": {
+    "maxOrderQty": "800.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "800.00",
+    "maxMktOrderQty": "200.00",
+    "minNotionalValue": "5"
+  },
+  "LIT": {
+    "maxOrderQty": "200000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "200000.0",
+    "maxMktOrderQty": "40000.0",
+    "minNotionalValue": "5"
+  },
+  "LLY": {
+    "maxOrderQty": "200.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "200.00",
+    "maxMktOrderQty": "50.00",
+    "minNotionalValue": "5"
+  },
+  "LONGXIA": {
+    "maxOrderQty": "720960",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "720960",
+    "maxMktOrderQty": "180240",
+    "minNotionalValue": "5"
+  },
+  "LPT": {
+    "maxOrderQty": "25000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "25000.0",
+    "maxMktOrderQty": "5000.0",
+    "minNotionalValue": "5"
+  },
+  "LQTY": {
+    "maxOrderQty": "133290.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "133290.0",
+    "maxMktOrderQty": "20140.0",
+    "minNotionalValue": "5"
+  },
+  "LRC": {
+    "maxOrderQty": "680000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "680000.0",
+    "maxMktOrderQty": "140000.0",
+    "minNotionalValue": "5"
+  },
+  "LRCX": {
+    "maxOrderQty": "600.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "600.00",
+    "maxMktOrderQty": "150.00",
+    "minNotionalValue": "5"
+  },
+  "LSK": {
+    "maxOrderQty": "200000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "200000.0",
+    "maxMktOrderQty": "40000.0",
+    "minNotionalValue": "5"
+  },
+  "LTC": {
+    "maxOrderQty": "8800.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "8800.0",
+    "maxMktOrderQty": "3000.0",
+    "minNotionalValue": "5"
+  },
+  "LUMIA": {
+    "maxOrderQty": "1020000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1020000.0",
+    "maxMktOrderQty": "204000.0",
+    "minNotionalValue": "5"
+  },
+  "LUNA2": {
+    "maxOrderQty": "453060.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "453060.0",
+    "maxMktOrderQty": "141870.0",
+    "minNotionalValue": "5"
+  },
+  "LYN": {
+    "maxOrderQty": "2340000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2340000",
+    "maxMktOrderQty": "468000",
+    "minNotionalValue": "5"
+  },
+  "LYTE": {
+    "maxOrderQty": "7407.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "7407.00",
+    "maxMktOrderQty": "1852.00",
+    "minNotionalValue": "5"
+  },
+  "MAGIC": {
+    "maxOrderQty": "469800",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "469800",
+    "maxMktOrderQty": "111600",
+    "minNotionalValue": "5"
+  },
+  "MAGMA": {
+    "maxOrderQty": "275000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "275000",
+    "maxMktOrderQty": "55000",
+    "minNotionalValue": "5"
+  },
+  "MAGS": {
+    "maxOrderQty": "2991.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2991.00",
+    "maxMktOrderQty": "748.00",
+    "minNotionalValue": "5"
+  },
+  "MANA": {
+    "maxOrderQty": "650000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "650000.0",
+    "maxMktOrderQty": "130000.0",
+    "minNotionalValue": "5"
+  },
+  "MANTA": {
+    "maxOrderQty": "1200000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1200000.0",
+    "maxMktOrderQty": "240000.0",
+    "minNotionalValue": "5"
+  },
+  "MARA": {
+    "maxOrderQty": "18032.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "18032.00",
+    "maxMktOrderQty": "4508.00",
+    "minNotionalValue": "5"
+  },
+  "MARSCOIN": {
+    "maxOrderQty": "1348000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "1348000",
+    "maxMktOrderQty": "337000",
+    "minNotionalValue": "5"
+  },
+  "MASK": {
+    "maxOrderQty": "60000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "60000.0",
+    "maxMktOrderQty": "12000.0",
+    "minNotionalValue": "5"
+  },
+  "MA": {
+    "maxOrderQty": "400.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "400.00",
+    "maxMktOrderQty": "100.00",
+    "minNotionalValue": "5"
+  },
+  "MAVIA": {
+    "maxOrderQty": "1350000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1350000.0",
+    "maxMktOrderQty": "270000.0",
+    "minNotionalValue": "5"
+  },
+  "MAV": {
+    "maxOrderQty": "3550000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "3550000",
+    "maxMktOrderQty": "710000",
+    "minNotionalValue": "5"
+  },
+  "MCD": {
+    "maxOrderQty": "750.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "750.00",
+    "maxMktOrderQty": "187.00",
+    "minNotionalValue": "5"
+  },
+  "MDB": {
+    "maxOrderQty": "526.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "526.00",
+    "maxMktOrderQty": "132.00",
+    "minNotionalValue": "5"
+  },
+  "MEGA": {
+    "maxOrderQty": "2600000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2600000",
+    "maxMktOrderQty": "510000",
+    "minNotionalValue": "5"
+  },
+  "MEITUAN": {
+    "maxOrderQty": "10443.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "10443.00",
+    "maxMktOrderQty": "2089.00",
+    "minNotionalValue": "5"
+  },
+  "MEITU": {
+    "maxOrderQty": "370360",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "370360",
+    "maxMktOrderQty": "92590",
+    "minNotionalValue": "5"
+  },
+  "MELANIA": {
+    "maxOrderQty": "850000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "850000.0",
+    "maxMktOrderQty": "170000.0",
+    "minNotionalValue": "5"
+  },
+  "MEME": {
+    "maxOrderQty": "50000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "50000000",
+    "maxMktOrderQty": "10000000",
+    "minNotionalValue": "5"
+  },
+  "MERL": {
+    "maxOrderQty": "1950000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1950000.0",
+    "maxMktOrderQty": "390000.0",
+    "minNotionalValue": "5"
+  },
+  "META": {
+    "maxOrderQty": "2000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2000.00",
+    "maxMktOrderQty": "500.00",
+    "minNotionalValue": "5"
+  },
+  "METIS": {
+    "maxOrderQty": "18500.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "18500.00",
+    "maxMktOrderQty": "3700.00",
+    "minNotionalValue": "5"
+  },
+  "MET": {
+    "maxOrderQty": "1000000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1000000.0",
+    "maxMktOrderQty": "200000.0",
+    "minNotionalValue": "5"
+  },
+  "ME": {
+    "maxOrderQty": "1200000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1200000",
+    "maxMktOrderQty": "240000",
+    "minNotionalValue": "5"
+  },
+  "MEW": {
+    "maxOrderQty": "475000000",
+    "minOrderQty": "100",
+    "qtyStep": "100",
+    "postOnlyMaxOrderQty": "475000000",
+    "maxMktOrderQty": "95000000",
+    "minNotionalValue": "5"
+  },
+  "MINA": {
+    "maxOrderQty": "677640.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "677640.0",
+    "maxMktOrderQty": "150000.0",
+    "minNotionalValue": "5"
+  },
+  "MINIMAX": {
+    "maxOrderQty": "7784.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "7784.00",
+    "maxMktOrderQty": "1946.00",
+    "minNotionalValue": "5"
+  },
+  "MIRA": {
+    "maxOrderQty": "1450000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1450000.0",
+    "maxMktOrderQty": "290000.0",
+    "minNotionalValue": "5"
+  },
+  "MITO": {
+    "maxOrderQty": "500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "500000",
+    "maxMktOrderQty": "100000",
+    "minNotionalValue": "5"
+  },
+  "MMT": {
+    "maxOrderQty": "300000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "300000",
+    "maxMktOrderQty": "60000",
+    "minNotionalValue": "5"
+  },
+  "MNST": {
+    "maxOrderQty": "4379.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4379.00",
+    "maxMktOrderQty": "1095.00",
+    "minNotionalValue": "5"
+  },
+  "MNT": {
+    "maxOrderQty": "250000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "250000.0",
+    "maxMktOrderQty": "50000.0",
+    "minNotionalValue": "5"
+  },
+  "MOCA": {
+    "maxOrderQty": "10500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "10500000",
+    "maxMktOrderQty": "2100000",
+    "minNotionalValue": "5"
+  },
+  "MON": {
+    "maxOrderQty": "20000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "20000000",
+    "maxMktOrderQty": "4000000",
+    "minNotionalValue": "5"
+  },
+  "MOODENG": {
+    "maxOrderQty": "1500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1500000",
+    "maxMktOrderQty": "370000",
+    "minNotionalValue": "5"
+  },
+  "MORPHO": {
+    "maxOrderQty": "36000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "36000",
+    "maxMktOrderQty": "7100",
+    "minNotionalValue": "5"
+  },
+  "MO": {
+    "maxOrderQty": "1475.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1475.00",
+    "maxMktOrderQty": "738.00",
+    "minNotionalValue": "5"
+  },
+  "MOVE": {
+    "maxOrderQty": "2475000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2475000",
+    "maxMktOrderQty": "495000",
+    "minNotionalValue": "5"
+  },
+  "MOVR": {
+    "maxOrderQty": "60000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "60000.0",
+    "maxMktOrderQty": "12000.0",
+    "minNotionalValue": "5"
+  },
+  "MRK": {
+    "maxOrderQty": "1324.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1324.00",
+    "maxMktOrderQty": "331.00",
+    "minNotionalValue": "5"
+  },
+  "MRNA": {
+    "maxOrderQty": "1202.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1202.00",
+    "maxMktOrderQty": "301.00",
+    "minNotionalValue": "5"
+  },
+  "MRVL": {
+    "maxOrderQty": "4800.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4800.00",
+    "maxMktOrderQty": "1200.00",
+    "minNotionalValue": "5"
+  },
+  "MSFT": {
+    "maxOrderQty": "2800.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2800.00",
+    "maxMktOrderQty": "700.00",
+    "minNotionalValue": "5"
+  },
+  "MSFU": {
+    "maxOrderQty": "5343.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "5343.00",
+    "maxMktOrderQty": "1336.00",
+    "minNotionalValue": "5"
+  },
+  "MSTR": {
+    "maxOrderQty": "5000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "5000.00",
+    "maxMktOrderQty": "3000.00",
+    "minNotionalValue": "5"
+  },
+  "MSTU": {
+    "maxOrderQty": "6741.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "6741.00",
+    "maxMktOrderQty": "1685.00",
+    "minNotionalValue": "5"
+  },
+  "MTL": {
+    "maxOrderQty": "335000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "335000.0",
+    "maxMktOrderQty": "67000.0",
+    "minNotionalValue": "5"
+  },
+  "MUBARAK": {
+    "maxOrderQty": "2300000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2300000",
+    "maxMktOrderQty": "460000",
+    "minNotionalValue": "5"
+  },
+  "M": {
+    "maxOrderQty": "112000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "112000",
+    "maxMktOrderQty": "56000",
+    "minNotionalValue": "5"
+  },
+  "MU": {
+    "maxOrderQty": "4000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4000.00",
+    "maxMktOrderQty": "1000.00",
+    "minNotionalValue": "5"
+  },
+  "MUU": {
+    "maxOrderQty": "8000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "8000.00",
+    "maxMktOrderQty": "2000.00",
+    "minNotionalValue": "5"
+  },
+  "MVLL": {
+    "maxOrderQty": "11000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "11000.00",
+    "maxMktOrderQty": "3000.00",
+    "minNotionalValue": "5"
+  },
+  "MYX": {
+    "maxOrderQty": "170000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "170000",
+    "maxMktOrderQty": "85000",
+    "minNotionalValue": "5"
+  },
+  "NAORIS": {
+    "maxOrderQty": "500000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "500000",
+    "maxMktOrderQty": "100000",
+    "minNotionalValue": "5"
+  },
+  "NAVER": {
+    "maxOrderQty": "1239.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1239.00",
+    "maxMktOrderQty": "309.00",
+    "minNotionalValue": "5"
+  },
+  "NBIS": {
+    "maxOrderQty": "3000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "3000.00",
+    "maxMktOrderQty": "750.00",
+    "minNotionalValue": "5"
+  },
+  "NCLD": {
+    "maxOrderQty": "7505.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "7505.00",
+    "maxMktOrderQty": "1876.00",
+    "minNotionalValue": "5"
+  },
+  "NEAR": {
+    "maxOrderQty": "469060.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "469060.0",
+    "maxMktOrderQty": "66470.0",
+    "minNotionalValue": "5"
+  },
+  "NEO": {
+    "maxOrderQty": "17000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "17000.00",
+    "maxMktOrderQty": "4400.00",
+    "minNotionalValue": "5"
+  },
+  "NESA": {
+    "maxOrderQty": "499480",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "499480",
+    "maxMktOrderQty": "124870",
+    "minNotionalValue": "5"
+  },
+  "NET": {
+    "maxOrderQty": "684.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "684.00",
+    "maxMktOrderQty": "171.00",
+    "minNotionalValue": "5"
+  },
+  "NEWT": {
+    "maxOrderQty": "200000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "200000",
+    "maxMktOrderQty": "40000",
+    "minNotionalValue": "5"
+  },
+  "NFLX": {
+    "maxOrderQty": "2568.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2568.00",
+    "maxMktOrderQty": "642.00",
+    "minNotionalValue": "5"
+  },
+  "NIGHT": {
+    "maxOrderQty": "1600000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "1600000",
+    "maxMktOrderQty": "800000",
+    "minNotionalValue": "5"
+  },
+  "NIL": {
+    "maxOrderQty": "1550000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1550000",
+    "maxMktOrderQty": "310000",
+    "minNotionalValue": "5"
+  },
+  "NIULAI": {
+    "maxOrderQty": "3265000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "3265000",
+    "maxMktOrderQty": "653000",
+    "minNotionalValue": "5"
+  },
+  "NMR": {
+    "maxOrderQty": "4200.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "4200.0",
+    "maxMktOrderQty": "840.0",
+    "minNotionalValue": "5"
+  },
+  "NOKIA": {
+    "maxOrderQty": "40000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "40000.0",
+    "maxMktOrderQty": "10000.0",
+    "minNotionalValue": "5"
+  },
+  "NOM": {
+    "maxOrderQty": "15000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "15000000",
+    "maxMktOrderQty": "3000000",
+    "minNotionalValue": "5"
+  },
+  "NOT": {
+    "maxOrderQty": "445000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "445000000",
+    "maxMktOrderQty": "89000000",
+    "minNotionalValue": "5"
+  },
+  "NOW": {
+    "maxOrderQty": "2000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2000.00",
+    "maxMktOrderQty": "500.00",
+    "minNotionalValue": "5"
+  },
+  "NVDA": {
+    "maxOrderQty": "8000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "8000.00",
+    "maxMktOrderQty": "2000.00",
+    "minNotionalValue": "5"
+  },
+  "NVDL": {
+    "maxOrderQty": "6528.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "6528.00",
+    "maxMktOrderQty": "1632.00",
+    "minNotionalValue": "5"
+  },
+  "NVO": {
+    "maxOrderQty": "4392.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4392.00",
+    "maxMktOrderQty": "1098.00",
+    "minNotionalValue": "5"
+  },
+  "NXPC": {
+    "maxOrderQty": "250000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "250000.0",
+    "maxMktOrderQty": "50000.0",
+    "minNotionalValue": "5"
+  },
+  "OGN": {
+    "maxOrderQty": "2700000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2700000",
+    "maxMktOrderQty": "540000",
+    "minNotionalValue": "5"
+  },
+  "OG": {
+    "maxOrderQty": "24500.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "24500.0",
+    "maxMktOrderQty": "4900.0",
+    "minNotionalValue": "5"
+  },
+  "OKB": {
+    "maxOrderQty": "2000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2000.00",
+    "maxMktOrderQty": "400.00",
+    "minNotionalValue": "5"
+  },
+  "OKLO": {
+    "maxOrderQty": "4918.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4918.00",
+    "maxMktOrderQty": "1229.00",
+    "minNotionalValue": "5"
+  },
+  "OKTA": {
+    "maxOrderQty": "1208.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1208.00",
+    "maxMktOrderQty": "302.00",
+    "minNotionalValue": "5"
+  },
+  "ONDO": {
+    "maxOrderQty": "4500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "4500000",
+    "maxMktOrderQty": "900000",
+    "minNotionalValue": "5"
+  },
+  "ONDS": {
+    "maxOrderQty": "9632.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "9632.0",
+    "maxMktOrderQty": "2408.0",
+    "minNotionalValue": "5"
+  },
+  "ONG": {
+    "maxOrderQty": "192100",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "192100",
+    "maxMktOrderQty": "44300",
+    "minNotionalValue": "5"
+  },
+  "ONT": {
+    "maxOrderQty": "370000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "370000",
+    "maxMktOrderQty": "74000",
+    "minNotionalValue": "5"
+  },
+  "ON": {
+    "maxOrderQty": "2304.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2304.00",
+    "maxMktOrderQty": "576.00",
+    "minNotionalValue": "5"
+  },
+  "OPEN": {
+    "maxOrderQty": "250000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "250000",
+    "maxMktOrderQty": "50000",
+    "minNotionalValue": "5"
+  },
+  "OPG": {
+    "maxOrderQty": "380000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "380000",
+    "maxMktOrderQty": "190000",
+    "minNotionalValue": "5"
+  },
+  "OPN": {
+    "maxOrderQty": "500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "500000",
+    "maxMktOrderQty": "250000",
+    "minNotionalValue": "5"
+  },
+  "OP": {
+    "maxOrderQty": "1080000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1080000.0",
+    "maxMktOrderQty": "540000.0",
+    "minNotionalValue": "5"
+  },
+  "ORCA": {
+    "maxOrderQty": "140000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "140000.0",
+    "maxMktOrderQty": "27000.0",
+    "minNotionalValue": "5"
+  },
+  "ORCL": {
+    "maxOrderQty": "4800.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4800.00",
+    "maxMktOrderQty": "1200.00",
+    "minNotionalValue": "5"
+  },
+  "ORDER": {
+    "maxOrderQty": "400000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "400000",
+    "maxMktOrderQty": "80000",
+    "minNotionalValue": "5"
+  },
+  "ORDI": {
+    "maxOrderQty": "75000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "75000.00",
+    "maxMktOrderQty": "15000.00",
+    "minNotionalValue": "5"
+  },
+  "O": {
+    "maxOrderQty": "82540",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "82540",
+    "maxMktOrderQty": "41270",
+    "minNotionalValue": "5"
+  },
+  "OUST": {
+    "maxOrderQty": "5733.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "5733.00",
+    "maxMktOrderQty": "1147.00",
+    "minNotionalValue": "5"
+  },
+  "PANW": {
+    "maxOrderQty": "576.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "576.00",
+    "maxMktOrderQty": "144.00",
+    "minNotionalValue": "5"
+  },
+  "PARTI": {
+    "maxOrderQty": "314000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "314000",
+    "maxMktOrderQty": "62800",
+    "minNotionalValue": "5"
+  },
+  "PATH": {
+    "maxOrderQty": "14859.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "14859.00",
+    "maxMktOrderQty": "3715.00",
+    "minNotionalValue": "5"
+  },
+  "PAXG": {
+    "maxOrderQty": "140.000",
+    "minOrderQty": "0.001",
+    "qtyStep": "0.001",
+    "postOnlyMaxOrderQty": "140.000",
+    "maxMktOrderQty": "17.000",
+    "minNotionalValue": "5"
+  },
+  "PDD": {
+    "maxOrderQty": "2241.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2241.00",
+    "maxMktOrderQty": "560.00",
+    "minNotionalValue": "5"
+  },
+  "PEAQ": {
+    "maxOrderQty": "1600000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1600000",
+    "maxMktOrderQty": "320000",
+    "minNotionalValue": "5"
+  },
+  "PENDLE": {
+    "maxOrderQty": "130000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "130000",
+    "maxMktOrderQty": "26000",
+    "minNotionalValue": "5"
+  },
+  "PENGSTOCK": {
+    "maxOrderQty": "3516.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "3516.00",
+    "maxMktOrderQty": "879.00",
+    "minNotionalValue": "5"
+  },
+  "PENGU": {
+    "maxOrderQty": "60000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "60000000",
+    "maxMktOrderQty": "12000000",
+    "minNotionalValue": "5"
+  },
+  "PEOPLE": {
+    "maxOrderQty": "14455800",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "14455800",
+    "maxMktOrderQty": "1485500",
+    "minNotionalValue": "5"
+  },
+  "PEP": {
+    "maxOrderQty": "1388.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1388.00",
+    "maxMktOrderQty": "347.00",
+    "minNotionalValue": "5"
+  },
+  "PHAROS": {
+    "maxOrderQty": "166500",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "166500",
+    "maxMktOrderQty": "33300",
+    "minNotionalValue": "5"
+  },
+  "PHA": {
+    "maxOrderQty": "500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "500000",
+    "maxMktOrderQty": "100000",
+    "minNotionalValue": "5"
+  },
+  "PIEVERSE": {
+    "maxOrderQty": "170000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "170000",
+    "maxMktOrderQty": "34000",
+    "minNotionalValue": "5"
+  },
+  "PIPPIN": {
+    "maxOrderQty": "3050000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "3050000",
+    "maxMktOrderQty": "610000",
+    "minNotionalValue": "5"
+  },
+  "PIXEL": {
+    "maxOrderQty": "3000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "3000000",
+    "maxMktOrderQty": "1500000",
+    "minNotionalValue": "5"
+  },
+  "PLAYSOUT": {
+    "maxOrderQty": "625000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "625000",
+    "maxMktOrderQty": "125000",
+    "minNotionalValue": "5"
+  },
+  "PLTR": {
+    "maxOrderQty": "1800.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1800.00",
+    "maxMktOrderQty": "450.00",
+    "minNotionalValue": "5"
+  },
+  "PLUME": {
+    "maxOrderQty": "18000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "18000000",
+    "maxMktOrderQty": "3600000",
+    "minNotionalValue": "5"
+  },
+  "PNUT": {
+    "maxOrderQty": "3400000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "3400000",
+    "maxMktOrderQty": "690000",
+    "minNotionalValue": "5"
+  },
+  "POET": {
+    "maxOrderQty": "24240.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "24240.0",
+    "maxMktOrderQty": "6060.0",
+    "minNotionalValue": "5"
+  },
+  "POL": {
+    "maxOrderQty": "2500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2500000",
+    "maxMktOrderQty": "500000",
+    "minNotionalValue": "5"
+  },
+  "POLYX": {
+    "maxOrderQty": "1400000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1400000",
+    "maxMktOrderQty": "280000",
+    "minNotionalValue": "5"
+  },
+  "PONS": {
+    "maxOrderQty": "305680",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "305680",
+    "maxMktOrderQty": "76420",
+    "minNotionalValue": "5"
+  },
+  "POPCAT": {
+    "maxOrderQty": "4000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "4000000",
+    "maxMktOrderQty": "800000",
+    "minNotionalValue": "5"
+  },
+  "POPMART": {
+    "maxOrderQty": "9688.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "9688.00",
+    "maxMktOrderQty": "2422.00",
+    "minNotionalValue": "5"
+  },
+  "PORTAL": {
+    "maxOrderQty": "6000000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "6000000.0",
+    "maxMktOrderQty": "1200000.0",
+    "minNotionalValue": "5"
+  },
+  "POWER": {
+    "maxOrderQty": "415000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "415000",
+    "maxMktOrderQty": "83000",
+    "minNotionalValue": "5"
+  },
+  "POWR": {
+    "maxOrderQty": "850000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "850000",
+    "maxMktOrderQty": "170000",
+    "minNotionalValue": "5"
+  },
+  "PRL": {
+    "maxOrderQty": "726000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "726000",
+    "maxMktOrderQty": "145200",
+    "minNotionalValue": "5"
+  },
+  "PROMPT": {
+    "maxOrderQty": "450000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "450000",
+    "maxMktOrderQty": "90000",
+    "minNotionalValue": "5"
+  },
+  "PROVE": {
+    "maxOrderQty": "125000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "125000",
+    "maxMktOrderQty": "25000",
+    "minNotionalValue": "5"
+  },
+  "PTB": {
+    "maxOrderQty": "11250000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "11250000",
+    "maxMktOrderQty": "2250000",
+    "minNotionalValue": "5"
+  },
+  "PUFFER": {
+    "maxOrderQty": "3750000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "3750000",
+    "maxMktOrderQty": "750000",
+    "minNotionalValue": "5"
+  },
+  "PUMPFUN": {
+    "maxOrderQty": "135000000",
+    "minOrderQty": "100",
+    "qtyStep": "100",
+    "postOnlyMaxOrderQty": "135000000",
+    "maxMktOrderQty": "27000000",
+    "minNotionalValue": "5"
+  },
+  "PUNDIX": {
+    "maxOrderQty": "650000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "650000",
+    "maxMktOrderQty": "130000",
+    "minNotionalValue": "5"
+  },
+  "PURR": {
+    "maxOrderQty": "26212.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "26212.0",
+    "maxMktOrderQty": "6553.0",
+    "minNotionalValue": "5"
+  },
+  "PYPL": {
+    "maxOrderQty": "3428.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "3428.00",
+    "maxMktOrderQty": "857.00",
+    "minNotionalValue": "5"
+  },
+  "PYTH": {
+    "maxOrderQty": "1227500",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1227500",
+    "maxMktOrderQty": "177000",
+    "minNotionalValue": "5"
+  },
+  "QCOM": {
+    "maxOrderQty": "1840.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1840.00",
+    "maxMktOrderQty": "460.00",
+    "minNotionalValue": "5"
+  },
+  "QNT": {
+    "maxOrderQty": "2600.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2600.00",
+    "maxMktOrderQty": "520.00",
+    "minNotionalValue": "5"
+  },
+  "QNTX": {
+    "maxOrderQty": "4000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "4000.0",
+    "maxMktOrderQty": "1000.0",
+    "minNotionalValue": "5"
+  },
+  "QQQ": {
+    "maxOrderQty": "4000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4000.00",
+    "maxMktOrderQty": "1000.00",
+    "minNotionalValue": "5"
+  },
+  "QTUM": {
+    "maxOrderQty": "26000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "26000.0",
+    "maxMktOrderQty": "5100.0",
+    "minNotionalValue": "5"
+  },
+  "Q": {
+    "maxOrderQty": "700000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "700000",
+    "maxMktOrderQty": "350000",
+    "minNotionalValue": "5"
+  },
+  "RAM": {
+    "maxOrderQty": "16393.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "16393.00",
+    "maxMktOrderQty": "4098.00",
+    "minNotionalValue": "5"
+  },
+  "RARE": {
+    "maxOrderQty": "3700000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "3700000",
+    "maxMktOrderQty": "740000",
+    "minNotionalValue": "5"
+  },
+  "RAVE": {
+    "maxOrderQty": "270000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "270000",
+    "maxMktOrderQty": "54000",
+    "minNotionalValue": "5"
+  },
+  "RAYDIUM": {
+    "maxOrderQty": "24000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "24000.0",
+    "maxMktOrderQty": "12000.0",
+    "minNotionalValue": "5"
+  },
+  "RDDT": {
+    "maxOrderQty": "1284.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1284.00",
+    "maxMktOrderQty": "321.00",
+    "minNotionalValue": "5"
+  },
+  "RDW": {
+    "maxOrderQty": "21320.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "21320.0",
+    "maxMktOrderQty": "5330.0",
+    "minNotionalValue": "5"
+  },
+  "RECALL": {
+    "maxOrderQty": "250000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "250000",
+    "maxMktOrderQty": "50000",
+    "minNotionalValue": "5"
+  },
+  "RED": {
+    "maxOrderQty": "260000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "260000",
+    "maxMktOrderQty": "130000",
+    "minNotionalValue": "5"
+  },
+  "REGN": {
+    "maxOrderQty": "272.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "272.00",
+    "maxMktOrderQty": "68.00",
+    "minNotionalValue": "5"
+  },
+  "RENDER": {
+    "maxOrderQty": "500000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "500000.0",
+    "maxMktOrderQty": "100000.0",
+    "minNotionalValue": "5"
+  },
+  "RESOLV": {
+    "maxOrderQty": "3800000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "3800000",
+    "maxMktOrderQty": "760000",
+    "minNotionalValue": "5"
+  },
+  "RE": {
+    "maxOrderQty": "118680",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "118680",
+    "maxMktOrderQty": "59340",
+    "minNotionalValue": "5"
+  },
+  "REZ": {
+    "maxOrderQty": "9000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "9000000",
+    "maxMktOrderQty": "1800000",
+    "minNotionalValue": "5"
+  },
+  "RIOT": {
+    "maxOrderQty": "12291.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "12291.00",
+    "maxMktOrderQty": "2458.00",
+    "minNotionalValue": "5"
+  },
+  "RIVER": {
+    "maxOrderQty": "27500.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "27500.0",
+    "maxMktOrderQty": "5500.0",
+    "minNotionalValue": "5"
+  },
+  "RIVN": {
+    "maxOrderQty": "11524.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "11524.00",
+    "maxMktOrderQty": "2881.00",
+    "minNotionalValue": "5"
+  },
+  "RKLB": {
+    "maxOrderQty": "12000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "12000.00",
+    "maxMktOrderQty": "3000.00",
+    "minNotionalValue": "5"
+  },
+  "RLC": {
+    "maxOrderQty": "86380.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "86380.0",
+    "maxMktOrderQty": "8640.0",
+    "minNotionalValue": "5"
+  },
+  "RLUSD": {
+    "maxOrderQty": "125000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "125000",
+    "maxMktOrderQty": "25000",
+    "minNotionalValue": "5"
+  },
+  "ROBO": {
+    "maxOrderQty": "3125000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "3125000",
+    "maxMktOrderQty": "625000",
+    "minNotionalValue": "5"
+  },
+  "RONIN": {
+    "maxOrderQty": "325000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "325000.0",
+    "maxMktOrderQty": "65000.0",
+    "minNotionalValue": "5"
+  },
+  "ROSE": {
+    "maxOrderQty": "12000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "12000000",
+    "maxMktOrderQty": "2500000",
+    "minNotionalValue": "5"
+  },
+  "RPL": {
+    "maxOrderQty": "33000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "33000.00",
+    "maxMktOrderQty": "6600.00",
+    "minNotionalValue": "5"
+  },
+  "RSR": {
+    "maxOrderQty": "39000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "39000000",
+    "maxMktOrderQty": "7800000",
+    "minNotionalValue": "5"
+  },
+  "RUM": {
+    "maxOrderQty": "25140.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "25140.0",
+    "maxMktOrderQty": "6285.0",
+    "minNotionalValue": "5"
+  },
+  "RUNE": {
+    "maxOrderQty": "183030.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "183030.0",
+    "maxMktOrderQty": "44260.0",
+    "minNotionalValue": "5"
+  },
+  "RVN": {
+    "maxOrderQty": "7014500",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "7014500",
+    "maxMktOrderQty": "1582300",
+    "minNotionalValue": "5"
+  },
+  "SAFE": {
+    "maxOrderQty": "750000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "750000.0",
+    "maxMktOrderQty": "150000.0",
+    "minNotionalValue": "5"
+  },
+  "SAGA": {
+    "maxOrderQty": "1250000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1250000.0",
+    "maxMktOrderQty": "250000.0",
+    "minNotionalValue": "5"
+  },
+  "SAHARA": {
+    "maxOrderQty": "5500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "5500000",
+    "maxMktOrderQty": "1100000",
+    "minNotionalValue": "5"
+  },
+  "SAMSUNGEM": {
+    "maxOrderQty": "182.000",
+    "minOrderQty": "0.001",
+    "qtyStep": "0.001",
+    "postOnlyMaxOrderQty": "182.000",
+    "maxMktOrderQty": "45.000",
+    "minNotionalValue": "5"
+  },
+  "SAMSUNG": {
+    "maxOrderQty": "8000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "8000.00",
+    "maxMktOrderQty": "2000.00",
+    "minNotionalValue": "5"
+  },
+  "SAND": {
+    "maxOrderQty": "2086500",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2086500",
+    "maxMktOrderQty": "253900",
+    "minNotionalValue": "5"
+  },
+  "SAPIEN": {
+    "maxOrderQty": "740000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "740000",
+    "maxMktOrderQty": "148000",
+    "minNotionalValue": "5"
+  },
+  "SDGR": {
+    "maxOrderQty": "6585.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "6585.00",
+    "maxMktOrderQty": "1646.00",
+    "minNotionalValue": "5"
+  },
+  "SECZ": {
+    "maxOrderQty": "20660.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "20660.0",
+    "maxMktOrderQty": "5165.0",
+    "minNotionalValue": "5"
+  },
+  "SEI": {
+    "maxOrderQty": "5000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "5000000",
+    "maxMktOrderQty": "1000000",
+    "minNotionalValue": "5"
+  },
+  "SENSETIME": {
+    "maxOrderQty": "1196880",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1196880",
+    "maxMktOrderQty": "299220",
+    "minNotionalValue": "5"
+  },
+  "SENT": {
+    "maxOrderQty": "9000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "9000000",
+    "maxMktOrderQty": "1800000",
+    "minNotionalValue": "5"
+  },
+  "SHAZ": {
+    "maxOrderQty": "2848.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2848.00",
+    "maxMktOrderQty": "712.00",
+    "minNotionalValue": "5"
+  },
+  "SHEIN": {
+    "maxOrderQty": "32240.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "32240.0",
+    "maxMktOrderQty": "8060.0",
+    "minNotionalValue": "5"
+  },
+  "SHELL": {
+    "maxOrderQty": "592000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "592000",
+    "maxMktOrderQty": "118400",
+    "minNotionalValue": "5"
+  },
+  "SHIB1000": {
+    "maxOrderQty": "134076000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "134076000",
+    "maxMktOrderQty": "15555000",
+    "minNotionalValue": "5"
+  },
+  "SHOP": {
+    "maxOrderQty": "1612.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1612.00",
+    "maxMktOrderQty": "403.00",
+    "minNotionalValue": "5"
+  },
+  "SIGN": {
+    "maxOrderQty": "5000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "5000000",
+    "maxMktOrderQty": "1000000",
+    "minNotionalValue": "5"
+  },
+  "SIREN": {
+    "maxOrderQty": "540000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "540000",
+    "maxMktOrderQty": "270000",
+    "minNotionalValue": "5"
+  },
+  "SKDD": {
+    "maxOrderQty": "16181.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "16181.00",
+    "maxMktOrderQty": "3236.00",
+    "minNotionalValue": "5"
+  },
+  "SKHYNIX": {
+    "maxOrderQty": "2400.000",
+    "minOrderQty": "0.001",
+    "qtyStep": "0.001",
+    "postOnlyMaxOrderQty": "2400.000",
+    "maxMktOrderQty": "600.000",
+    "minNotionalValue": "5"
+  },
+  "SKHY": {
+    "maxOrderQty": "9200.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "9200.00",
+    "maxMktOrderQty": "2300.00",
+    "minNotionalValue": "5"
+  },
+  "SKL": {
+    "maxOrderQty": "2291900",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2291900",
+    "maxMktOrderQty": "348100",
+    "minNotionalValue": "5"
+  },
+  "SKR": {
+    "maxOrderQty": "15600000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "15600000",
+    "maxMktOrderQty": "3120000",
+    "minNotionalValue": "5"
+  },
+  "SKUU": {
+    "maxOrderQty": "14577.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "14577.00",
+    "maxMktOrderQty": "2915.00",
+    "minNotionalValue": "5"
+  },
+  "SKYAI1": {
+    "maxOrderQty": "1000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1000000",
+    "maxMktOrderQty": "200000",
+    "minNotionalValue": "5"
+  },
+  "SKY": {
+    "maxOrderQty": "3400000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "3400000",
+    "maxMktOrderQty": "680000",
+    "minNotionalValue": "5"
+  },
+  "SLP": {
+    "maxOrderQty": "80000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "80000000",
+    "maxMktOrderQty": "16000000",
+    "minNotionalValue": "5"
+  },
+  "SLX": {
+    "maxOrderQty": "287450",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "287450",
+    "maxMktOrderQty": "57490",
+    "minNotionalValue": "5"
+  },
+  "SMCI": {
+    "maxOrderQty": "8000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "8000.00",
+    "maxMktOrderQty": "2000.00",
+    "minNotionalValue": "5"
+  },
+  "SMH": {
+    "maxOrderQty": "324.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "324.00",
+    "maxMktOrderQty": "81.00",
+    "minNotionalValue": "5"
+  },
+  "SMIC": {
+    "maxOrderQty": "14518.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "14518.0",
+    "maxMktOrderQty": "2904.0",
+    "minNotionalValue": "5"
+  },
+  "SNDK": {
+    "maxOrderQty": "1600.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1600.00",
+    "maxMktOrderQty": "400.00",
+    "minNotionalValue": "5"
+  },
+  "SNOW": {
+    "maxOrderQty": "748.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "748.00",
+    "maxMktOrderQty": "187.00",
+    "minNotionalValue": "5"
+  },
+  "SNT": {
+    "maxOrderQty": "2670000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "2670000",
+    "maxMktOrderQty": "267000",
+    "minNotionalValue": "5"
+  },
+  "SNX": {
+    "maxOrderQty": "175120.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "175120.0",
+    "maxMktOrderQty": "35660.0",
+    "minNotionalValue": "5"
+  },
+  "SNXX": {
+    "maxOrderQty": "20000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "20000.00",
+    "maxMktOrderQty": "7000.00",
+    "minNotionalValue": "5"
+  },
+  "SOFI": {
+    "maxOrderQty": "11328.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "11328.00",
+    "maxMktOrderQty": "2832.00",
+    "minNotionalValue": "5"
+  },
+  "SOLAYER": {
+    "maxOrderQty": "1600000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1600000",
+    "maxMktOrderQty": "320000",
+    "minNotionalValue": "5"
+  },
+  "SOL": {
+    "maxOrderQty": "96000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "96000.0",
+    "maxMktOrderQty": "12000.0",
+    "minNotionalValue": "5"
+  },
+  "SOMI": {
+    "maxOrderQty": "1200000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1200000.0",
+    "maxMktOrderQty": "240000.0",
+    "minNotionalValue": "5"
+  },
+  "SONIC": {
+    "maxOrderQty": "1200000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1200000",
+    "maxMktOrderQty": "240000",
+    "minNotionalValue": "5"
+  },
+  "SONY": {
+    "maxOrderQty": "9316.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "9316.00",
+    "maxMktOrderQty": "2329.00",
+    "minNotionalValue": "5"
+  },
+  "SOON": {
+    "maxOrderQty": "600000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "600000",
+    "maxMktOrderQty": "120000",
+    "minNotionalValue": "5"
+  },
+  "SOPH": {
+    "maxOrderQty": "16500000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "16500000",
+    "maxMktOrderQty": "3300000",
+    "minNotionalValue": "5"
+  },
+  "SOSO": {
+    "maxOrderQty": "105000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "105000",
+    "maxMktOrderQty": "21000",
+    "minNotionalValue": "5"
+  },
+  "SOXL": {
+    "maxOrderQty": "20000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "20000.00",
+    "maxMktOrderQty": "5000.00",
+    "minNotionalValue": "5"
+  },
+  "SOXS": {
+    "maxOrderQty": "7700.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "7700.00",
+    "maxMktOrderQty": "2500.00",
+    "minNotionalValue": "5"
+  },
+  "SOXX": {
+    "maxOrderQty": "380.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "380.00",
+    "maxMktOrderQty": "95.00",
+    "minNotionalValue": "5"
+  },
+  "SPACE": {
+    "maxOrderQty": "6250000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "6250000",
+    "maxMktOrderQty": "1250000",
+    "minNotionalValue": "5"
+  },
+  "SPCH": {
+    "maxOrderQty": "22380.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "22380.0",
+    "maxMktOrderQty": "5595.0",
+    "minNotionalValue": "5"
+  },
+  "SPCX": {
+    "maxOrderQty": "24000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "24000.00",
+    "maxMktOrderQty": "6000.00",
+    "minNotionalValue": "5"
+  },
+  "SPK": {
+    "maxOrderQty": "6000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "6000000",
+    "maxMktOrderQty": "1200000",
+    "minNotionalValue": "5"
+  },
+  "SPORTFUN": {
+    "maxOrderQty": "1560000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "1560000",
+    "maxMktOrderQty": "312000",
+    "minNotionalValue": "5"
+  },
+  "SPOT": {
+    "maxOrderQty": "960.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "960.00",
+    "maxMktOrderQty": "100.00",
+    "minNotionalValue": "5"
+  },
+  "SPXL": {
+    "maxOrderQty": "700.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "700.00",
+    "maxMktOrderQty": "175.00",
+    "minNotionalValue": "5"
+  },
+  "SPX": {
+    "maxOrderQty": "350000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "350000",
+    "maxMktOrderQty": "70000",
+    "minNotionalValue": "5"
+  },
+  "SPY": {
+    "maxOrderQty": "5200.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "5200.00",
+    "maxMktOrderQty": "1300.00",
+    "minNotionalValue": "5"
+  },
+  "SQD": {
+    "maxOrderQty": "1080000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1080000",
+    "maxMktOrderQty": "540000",
+    "minNotionalValue": "5"
+  },
+  "SQQQ": {
+    "maxOrderQty": "5240.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "5240.00",
+    "maxMktOrderQty": "1310.00",
+    "minNotionalValue": "5"
+  },
+  "SSPC": {
+    "maxOrderQty": "9896.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "9896.00",
+    "maxMktOrderQty": "2474.00",
+    "minNotionalValue": "5"
+  },
+  "SSV": {
+    "maxOrderQty": "5030.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "5030.00",
+    "maxMktOrderQty": "1797.00",
+    "minNotionalValue": "5"
+  },
+  "STABLE": {
+    "maxOrderQty": "3100000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "3100000",
+    "maxMktOrderQty": "620000",
+    "minNotionalValue": "5"
+  },
+  "STBL": {
+    "maxOrderQty": "700000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "700000",
+    "maxMktOrderQty": "140000",
+    "minNotionalValue": "5"
+  },
+  "STEEM": {
+    "maxOrderQty": "1500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1500000",
+    "maxMktOrderQty": "300000",
+    "minNotionalValue": "5"
+  },
+  "STG": {
+    "maxOrderQty": "250560.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "250560.0",
+    "maxMktOrderQty": "50420.0",
+    "minNotionalValue": "5"
+  },
+  "STONK": {
+    "maxOrderQty": "411000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "411000",
+    "maxMktOrderQty": "102750",
+    "minNotionalValue": "5"
+  },
+  "STORJ": {
+    "maxOrderQty": "1200000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1200000.0",
+    "maxMktOrderQty": "240000.0",
+    "minNotionalValue": "5"
+  },
+  "STO": {
+    "maxOrderQty": "950000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "950000",
+    "maxMktOrderQty": "190000",
+    "minNotionalValue": "5"
+  },
+  "STRK": {
+    "maxOrderQty": "6000000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "6000000.0",
+    "maxMktOrderQty": "1200000.0",
+    "minNotionalValue": "5"
+  },
+  "STX": {
+    "maxOrderQty": "589260.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "589260.0",
+    "maxMktOrderQty": "102840.0",
+    "minNotionalValue": "5"
+  },
+  "STXX": {
+    "maxOrderQty": "200.000",
+    "minOrderQty": "0.001",
+    "qtyStep": "0.001",
+    "postOnlyMaxOrderQty": "200.000",
+    "maxMktOrderQty": "100.000",
+    "minNotionalValue": "5"
+  },
+  "SUI": {
+    "maxOrderQty": "330000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "330000",
+    "maxMktOrderQty": "66000",
+    "minNotionalValue": "5"
+  },
+  "SUN": {
+    "maxOrderQty": "1550000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "1550000",
+    "maxMktOrderQty": "310000",
+    "minNotionalValue": "5"
+  },
+  "SUPER": {
+    "maxOrderQty": "211000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "211000",
+    "maxMktOrderQty": "21100",
+    "minNotionalValue": "5"
+  },
+  "S": {
+    "maxOrderQty": "1950000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1950000",
+    "maxMktOrderQty": "390000",
+    "minNotionalValue": "5"
+  },
+  "SUSHI": {
+    "maxOrderQty": "420000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "420000.0",
+    "maxMktOrderQty": "83000.0",
+    "minNotionalValue": "5"
+  },
+  "SXT": {
+    "maxOrderQty": "4000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "4000000",
+    "maxMktOrderQty": "800000",
+    "minNotionalValue": "5"
+  },
+  "SYRUP": {
+    "maxOrderQty": "700000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "700000",
+    "maxMktOrderQty": "140000",
+    "minNotionalValue": "5"
+  },
+  "TAC": {
+    "maxOrderQty": "6250000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "6250000",
+    "maxMktOrderQty": "1250000",
+    "minNotionalValue": "5"
+  },
+  "TAIKO": {
+    "maxOrderQty": "550000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "550000.0",
+    "maxMktOrderQty": "110000.0",
+    "minNotionalValue": "5"
+  },
+  "TAO": {
+    "maxOrderQty": "4900.000",
+    "minOrderQty": "0.001",
+    "qtyStep": "0.001",
+    "postOnlyMaxOrderQty": "4900.000",
+    "maxMktOrderQty": "980.000",
+    "minNotionalValue": "5"
+  },
+  "TA": {
+    "maxOrderQty": "750000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "750000",
+    "maxMktOrderQty": "150000",
+    "minNotionalValue": "5"
+  },
+  "TBT": {
+    "maxOrderQty": "5464.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "5464.00",
+    "maxMktOrderQty": "1366.00",
+    "minNotionalValue": "5"
+  },
+  "TEAM": {
+    "maxOrderQty": "1061.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1061.00",
+    "maxMktOrderQty": "265.00",
+    "minNotionalValue": "5"
+  },
+  "TEM": {
+    "maxOrderQty": "3159.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "3159.00",
+    "maxMktOrderQty": "790.00",
+    "minNotionalValue": "5"
+  },
+  "TENCENT": {
+    "maxOrderQty": "3492.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "3492.00",
+    "maxMktOrderQty": "873.00",
+    "minNotionalValue": "5"
+  },
+  "TER": {
+    "maxOrderQty": "472.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "472.00",
+    "maxMktOrderQty": "118.00",
+    "minNotionalValue": "5"
+  },
+  "THETA": {
+    "maxOrderQty": "438370.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "438370.0",
+    "maxMktOrderQty": "52860.0",
+    "minNotionalValue": "5"
+  },
+  "THE": {
+    "maxOrderQty": "110000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "110000",
+    "maxMktOrderQty": "22000",
+    "minNotionalValue": "5"
+  },
+  "TIA": {
+    "maxOrderQty": "1000000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1000000.0",
+    "maxMktOrderQty": "200000.0",
+    "minNotionalValue": "5"
+  },
+  "TLM": {
+    "maxOrderQty": "46000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "46000000",
+    "maxMktOrderQty": "9200000",
+    "minNotionalValue": "5"
+  },
+  "TLT": {
+    "maxOrderQty": "2445.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2445.00",
+    "maxMktOrderQty": "611.00",
+    "minNotionalValue": "5"
+  },
+  "TMF": {
+    "maxOrderQty": "6096.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "6096.00",
+    "maxMktOrderQty": "1524.00",
+    "minNotionalValue": "5"
+  },
+  "TMX": {
+    "maxOrderQty": "611240",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "611240",
+    "maxMktOrderQty": "152810",
+    "minNotionalValue": "5"
+  },
+  "TNSR": {
+    "maxOrderQty": "500000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "500000.0",
+    "maxMktOrderQty": "100000.0",
+    "minNotionalValue": "5"
+  },
+  "TOWNS": {
+    "maxOrderQty": "5250000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "5250000",
+    "maxMktOrderQty": "1050000",
+    "minNotionalValue": "5"
+  },
+  "TQQQ": {
+    "maxOrderQty": "4000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4000.00",
+    "maxMktOrderQty": "1000.00",
+    "minNotionalValue": "5"
+  },
+  "TRB": {
+    "maxOrderQty": "2200.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2200.00",
+    "maxMktOrderQty": "690.00",
+    "minNotionalValue": "5"
+  },
+  "TREE": {
+    "maxOrderQty": "1550000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1550000.0",
+    "maxMktOrderQty": "310000.0",
+    "minNotionalValue": "5"
+  },
+  "TRIA": {
+    "maxOrderQty": "6250000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "6250000",
+    "maxMktOrderQty": "1250000",
+    "minNotionalValue": "5"
+  },
+  "TRUMP": {
+    "maxOrderQty": "40000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "40000.0",
+    "maxMktOrderQty": "8000.0",
+    "minNotionalValue": "5"
+  },
+  "TRUST": {
+    "maxOrderQty": "850000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "850000",
+    "maxMktOrderQty": "170000",
+    "minNotionalValue": "5"
+  },
+  "TRUTH": {
+    "maxOrderQty": "6600000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "6600000",
+    "maxMktOrderQty": "1320000",
+    "minNotionalValue": "5"
+  },
+  "TRX": {
+    "maxOrderQty": "1500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1500000",
+    "maxMktOrderQty": "460000",
+    "minNotionalValue": "5"
+  },
+  "TSEM": {
+    "maxOrderQty": "408.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "408.00",
+    "maxMktOrderQty": "203.00",
+    "minNotionalValue": "5"
+  },
+  "TSLA": {
+    "maxOrderQty": "8000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "8000.00",
+    "maxMktOrderQty": "2000.00",
+    "minNotionalValue": "5"
+  },
+  "TSLL": {
+    "maxOrderQty": "17664.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "17664.00",
+    "maxMktOrderQty": "4416.00",
+    "minNotionalValue": "5"
+  },
+  "TSM": {
+    "maxOrderQty": "1200.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1200.00",
+    "maxMktOrderQty": "300.00",
+    "minNotionalValue": "5"
+  },
+  "TTWO": {
+    "maxOrderQty": "784.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "784.00",
+    "maxMktOrderQty": "196.00",
+    "minNotionalValue": "5"
+  },
+  "TURTLE": {
+    "maxOrderQty": "250000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "250000",
+    "maxMktOrderQty": "50000",
+    "minNotionalValue": "5"
+  },
+  "T": {
+    "maxOrderQty": "4224000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "4224000",
+    "maxMktOrderQty": "886000",
+    "minNotionalValue": "5"
+  },
+  "TUT": {
+    "maxOrderQty": "2250000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2250000",
+    "maxMktOrderQty": "450000",
+    "minNotionalValue": "5"
+  },
+  "TWST": {
+    "maxOrderQty": "1106.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1106.00",
+    "maxMktOrderQty": "276.00",
+    "minNotionalValue": "5"
+  },
+  "TWT": {
+    "maxOrderQty": "53000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "53000.0",
+    "maxMktOrderQty": "14000.0",
+    "minNotionalValue": "5"
+  },
+  "TXN": {
+    "maxOrderQty": "664.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "664.00",
+    "maxMktOrderQty": "166.00",
+    "minNotionalValue": "5"
+  },
+  "TZA": {
+    "maxOrderQty": "4968.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4968.00",
+    "maxMktOrderQty": "1242.00",
+    "minNotionalValue": "5"
+  },
+  "UAI": {
+    "maxOrderQty": "475000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "475000",
+    "maxMktOrderQty": "95000",
+    "minNotionalValue": "5"
+  },
+  "UBER": {
+    "maxOrderQty": "2920.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2920.00",
+    "maxMktOrderQty": "730.00",
+    "minNotionalValue": "5"
+  },
+  "UB": {
+    "maxOrderQty": "600000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "600000",
+    "maxMktOrderQty": "300000",
+    "minNotionalValue": "5"
+  },
+  "UMA": {
+    "maxOrderQty": "160000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "160000.0",
+    "maxMktOrderQty": "32000.0",
+    "minNotionalValue": "5"
+  },
+  "UNH": {
+    "maxOrderQty": "476.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "476.00",
+    "maxMktOrderQty": "119.00",
+    "minNotionalValue": "5"
+  },
+  "UNITREE": {
+    "maxOrderQty": "2000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2000.00",
+    "maxMktOrderQty": "500.00",
+    "minNotionalValue": "5"
+  },
+  "UNI": {
+    "maxOrderQty": "32000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "32000.0",
+    "maxMktOrderQty": "11000.0",
+    "minNotionalValue": "5"
+  },
+  "URNM": {
+    "maxOrderQty": "3848.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "3848.00",
+    "maxMktOrderQty": "962.00",
+    "minNotionalValue": "5"
+  },
+  "USAR": {
+    "maxOrderQty": "12000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "12000.0",
+    "maxMktOrderQty": "3000.0",
+    "minNotionalValue": "5"
+  },
+  "USD1": {
+    "maxOrderQty": "125000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "125000",
+    "maxMktOrderQty": "25000",
+    "minNotionalValue": "5"
+  },
+  "USDC": {
+    "maxOrderQty": "2500000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "2500000.0",
+    "maxMktOrderQty": "100000.0",
+    "minNotionalValue": "5"
+  },
+  "USDE": {
+    "maxOrderQty": "600000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "600000",
+    "maxMktOrderQty": "120000",
+    "minNotionalValue": "5"
+  },
+  "USDJPY": {
+    "maxOrderQty": "2480.000",
+    "minOrderQty": "0.001",
+    "qtyStep": "0.001",
+    "postOnlyMaxOrderQty": "2480.000",
+    "maxMktOrderQty": "620.000",
+    "minNotionalValue": "5"
+  },
+  "USELESS": {
+    "maxOrderQty": "2500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2500000",
+    "maxMktOrderQty": "500000",
+    "minNotionalValue": "5"
+  },
+  "USTC": {
+    "maxOrderQty": "18500000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "18500000",
+    "maxMktOrderQty": "3700000",
+    "minNotionalValue": "5"
+  },
+  "USUAL": {
+    "maxOrderQty": "1000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1000000",
+    "maxMktOrderQty": "200000",
+    "minNotionalValue": "5"
+  },
+  "US": {
+    "maxOrderQty": "5000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "5000000",
+    "maxMktOrderQty": "1000000",
+    "minNotionalValue": "5"
+  },
+  "UVXY": {
+    "maxOrderQty": "8000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "8000.00",
+    "maxMktOrderQty": "2000.00",
+    "minNotionalValue": "5"
+  },
+  "VANA": {
+    "maxOrderQty": "20000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "20000.00",
+    "maxMktOrderQty": "4000.00",
+    "minNotionalValue": "5"
+  },
+  "VELODROME": {
+    "maxOrderQty": "3050000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "3050000",
+    "maxMktOrderQty": "610000",
+    "minNotionalValue": "5"
+  },
+  "VELO": {
+    "maxOrderQty": "10500000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "10500000",
+    "maxMktOrderQty": "2100000",
+    "minNotionalValue": "5"
+  },
+  "VELVET": {
+    "maxOrderQty": "44000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "44000",
+    "maxMktOrderQty": "21000",
+    "minNotionalValue": "5"
+  },
+  "VET": {
+    "maxOrderQty": "26000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "26000000",
+    "maxMktOrderQty": "5200000",
+    "minNotionalValue": "5"
+  },
+  "VIRTUAL": {
+    "maxOrderQty": "1000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1000000",
+    "maxMktOrderQty": "200000",
+    "minNotionalValue": "5"
+  },
+  "VRT": {
+    "maxOrderQty": "620.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "620.00",
+    "maxMktOrderQty": "155.00",
+    "minNotionalValue": "5"
+  },
+  "VRTXSTOCK": {
+    "maxOrderQty": "412.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "412.00",
+    "maxMktOrderQty": "103.00",
+    "minNotionalValue": "5"
+  },
+  "VST": {
+    "maxOrderQty": "1360.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1360.00",
+    "maxMktOrderQty": "340.00",
+    "minNotionalValue": "5"
+  },
+  "V": {
+    "maxOrderQty": "560.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "560.00",
+    "maxMktOrderQty": "140.00",
+    "minNotionalValue": "5"
+  },
+  "VVV": {
+    "maxOrderQty": "50000.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "50000.00",
+    "maxMktOrderQty": "10000.00",
+    "minNotionalValue": "5"
+  },
+  "WAL": {
+    "maxOrderQty": "1080000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1080000",
+    "maxMktOrderQty": "216000",
+    "minNotionalValue": "5"
+  },
+  "WAVES": {
+    "maxOrderQty": "200000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "200000.0",
+    "maxMktOrderQty": "40000.0",
+    "minNotionalValue": "5"
+  },
+  "WAXP": {
+    "maxOrderQty": "2702000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "2702000",
+    "maxMktOrderQty": "499000",
+    "minNotionalValue": "5"
+  },
+  "WCT": {
+    "maxOrderQty": "1000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1000000",
+    "maxMktOrderQty": "200000",
+    "minNotionalValue": "5"
+  },
+  "WDC": {
+    "maxOrderQty": "400.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "400.00",
+    "maxMktOrderQty": "150.00",
+    "minNotionalValue": "5"
+  },
+  "WENSTOCK": {
+    "maxOrderQty": "25772.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "25772.0",
+    "maxMktOrderQty": "6443.0",
+    "minNotionalValue": "5"
+  },
+  "WET": {
+    "maxOrderQty": "160000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "160000",
+    "maxMktOrderQty": "80000",
+    "minNotionalValue": "5"
+  },
+  "WIF": {
+    "maxOrderQty": "1500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1500000",
+    "maxMktOrderQty": "300000",
+    "minNotionalValue": "5"
+  },
+  "WLD": {
+    "maxOrderQty": "1850000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1850000.0",
+    "maxMktOrderQty": "370000.0",
+    "minNotionalValue": "5"
+  },
+  "WLFI": {
+    "maxOrderQty": "12000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "12000000",
+    "maxMktOrderQty": "2400000",
+    "minNotionalValue": "5"
+  },
+  "WMT": {
+    "maxOrderQty": "1748.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1748.00",
+    "maxMktOrderQty": "437.00",
+    "minNotionalValue": "5"
+  },
+  "WOO": {
+    "maxOrderQty": "5500000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "5500000.0",
+    "maxMktOrderQty": "1100000.0",
+    "minNotionalValue": "5"
+  },
+  "W": {
+    "maxOrderQty": "7500000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "7500000.0",
+    "maxMktOrderQty": "1500000.0",
+    "minNotionalValue": "5"
+  },
+  "XAG": {
+    "maxOrderQty": "62000.000",
+    "minOrderQty": "0.001",
+    "qtyStep": "0.001",
+    "postOnlyMaxOrderQty": "62000.000",
+    "maxMktOrderQty": "16000.000",
+    "minNotionalValue": "5"
+  },
+  "XAI": {
+    "maxOrderQty": "6500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "6500000",
+    "maxMktOrderQty": "1300000",
+    "minNotionalValue": "5"
+  },
+  "XAN": {
+    "maxOrderQty": "9500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "9500000",
+    "maxMktOrderQty": "1900000",
+    "minNotionalValue": "5"
+  },
+  "XAUT": {
+    "maxOrderQty": "525.000",
+    "minOrderQty": "0.001",
+    "qtyStep": "0.001",
+    "postOnlyMaxOrderQty": "525.000",
+    "maxMktOrderQty": "105.000",
+    "minNotionalValue": "5"
+  },
+  "XAU": {
+    "maxOrderQty": "500.000",
+    "minOrderQty": "0.001",
+    "qtyStep": "0.001",
+    "postOnlyMaxOrderQty": "500.000",
+    "maxMktOrderQty": "250.000",
+    "minNotionalValue": "5"
+  },
+  "XBI": {
+    "maxOrderQty": "1276.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1276.00",
+    "maxMktOrderQty": "319.00",
+    "minNotionalValue": "5"
+  },
+  "XCN": {
+    "maxOrderQty": "5500000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "5500000",
+    "maxMktOrderQty": "1100000",
+    "minNotionalValue": "5"
+  },
+  "XDC": {
+    "maxOrderQty": "4500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "4500000",
+    "maxMktOrderQty": "900000",
+    "minNotionalValue": "5"
+  },
+  "XDP": {
+    "maxOrderQty": "4256000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "4256000",
+    "maxMktOrderQty": "1064000",
+    "minNotionalValue": "5"
+  },
+  "XIAOMI": {
+    "maxOrderQty": "36975.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "36975.0",
+    "maxMktOrderQty": "7395.0",
+    "minNotionalValue": "5"
+  },
+  "XLE": {
+    "maxOrderQty": "3516.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "3516.00",
+    "maxMktOrderQty": "879.00",
+    "minNotionalValue": "5"
+  },
+  "XLF": {
+    "maxOrderQty": "3568.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "3568.00",
+    "maxMktOrderQty": "892.00",
+    "minNotionalValue": "5"
+  },
+  "XLK": {
+    "maxOrderQty": "1128.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1128.00",
+    "maxMktOrderQty": "282.00",
+    "minNotionalValue": "5"
+  },
+  "XLM": {
+    "maxOrderQty": "730000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "730000",
+    "maxMktOrderQty": "260000",
+    "minNotionalValue": "5"
+  },
+  "XLP": {
+    "maxOrderQty": "2321.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "2321.00",
+    "maxMktOrderQty": "580.00",
+    "minNotionalValue": "5"
+  },
+  "XLU": {
+    "maxOrderQty": "4598.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "4598.00",
+    "maxMktOrderQty": "1149.00",
+    "minNotionalValue": "5"
+  },
+  "XLV": {
+    "maxOrderQty": "1248.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1248.00",
+    "maxMktOrderQty": "312.00",
+    "minNotionalValue": "5"
+  },
+  "XMR": {
+    "maxOrderQty": "1920.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1920.00",
+    "maxMktOrderQty": "205.00",
+    "minNotionalValue": "5"
+  },
+  "XNY": {
+    "maxOrderQty": "4500000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "4500000",
+    "maxMktOrderQty": "900000",
+    "minNotionalValue": "5"
+  },
+  "XOM": {
+    "maxOrderQty": "1272.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1272.00",
+    "maxMktOrderQty": "318.00",
+    "minNotionalValue": "5"
+  },
+  "XPIN": {
+    "maxOrderQty": "4400000",
+    "minOrderQty": "100",
+    "qtyStep": "100",
+    "postOnlyMaxOrderQty": "4400000",
+    "maxMktOrderQty": "2600000",
+    "minNotionalValue": "5"
+  },
+  "XPL": {
+    "maxOrderQty": "3500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "3500000",
+    "maxMktOrderQty": "700000",
+    "minNotionalValue": "5"
+  },
+  "XRP": {
+    "maxOrderQty": "7500000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "7500000.0",
+    "maxMktOrderQty": "1500000.0",
+    "minNotionalValue": "5"
+  },
+  "XTZ": {
+    "maxOrderQty": "339920.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "339920.0",
+    "maxMktOrderQty": "62530.0",
+    "minNotionalValue": "5"
+  },
+  "XVG": {
+    "maxOrderQty": "25200000",
+    "minOrderQty": "100",
+    "qtyStep": "100",
+    "postOnlyMaxOrderQty": "25200000",
+    "maxMktOrderQty": "5040000",
+    "minNotionalValue": "5"
+  },
+  "XVS": {
+    "maxOrderQty": "10780.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "10780.0",
+    "maxMktOrderQty": "1080.0",
+    "minNotionalValue": "5"
+  },
+  "YB": {
+    "maxOrderQty": "27000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "27000.0",
+    "maxMktOrderQty": "15000.0",
+    "minNotionalValue": "5"
+  },
+  "YFI": {
+    "maxOrderQty": "20.0000",
+    "minOrderQty": "0.0001",
+    "qtyStep": "0.0001",
+    "postOnlyMaxOrderQty": "20.0000",
+    "maxMktOrderQty": "4.0000",
+    "minNotionalValue": "5"
+  },
+  "YGG": {
+    "maxOrderQty": "672410.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "672410.0",
+    "maxMktOrderQty": "134390.0",
+    "minNotionalValue": "5"
+  },
+  "YOFC": {
+    "maxOrderQty": "9200.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "9200.00",
+    "maxMktOrderQty": "2300.00",
+    "minNotionalValue": "5"
+  },
+  "ZAMA": {
+    "maxOrderQty": "2840000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "2840000",
+    "maxMktOrderQty": "568000",
+    "minNotionalValue": "5"
+  },
+  "ZBCN": {
+    "maxOrderQty": "14500000",
+    "minOrderQty": "100",
+    "qtyStep": "100",
+    "postOnlyMaxOrderQty": "14500000",
+    "maxMktOrderQty": "2900000",
+    "minNotionalValue": "5"
+  },
+  "ZBT": {
+    "maxOrderQty": "460000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "460000.0",
+    "maxMktOrderQty": "150000.0",
+    "minNotionalValue": "5"
+  },
+  "ZEC": {
+    "maxOrderQty": "5500.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "5500.00",
+    "maxMktOrderQty": "1100.00",
+    "minNotionalValue": "5"
+  },
+  "ZEN": {
+    "maxOrderQty": "29930.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "29930.0",
+    "maxMktOrderQty": "3220.0",
+    "minNotionalValue": "5"
+  },
+  "ZEREBRO": {
+    "maxOrderQty": "6500000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "6500000",
+    "maxMktOrderQty": "1300000",
+    "minNotionalValue": "5"
+  },
+  "ZEST": {
+    "maxOrderQty": "462750",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "462750",
+    "maxMktOrderQty": "92550",
+    "minNotionalValue": "5"
+  },
+  "ZETA": {
+    "maxOrderQty": "4000000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "4000000",
+    "maxMktOrderQty": "800000",
+    "minNotionalValue": "5"
+  },
+  "ZHIPU": {
+    "maxOrderQty": "1524.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1524.00",
+    "maxMktOrderQty": "381.00",
+    "minNotionalValue": "5"
+  },
+  "ZHONGJI": {
+    "maxOrderQty": "1333.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1333.00",
+    "maxMktOrderQty": "333.00",
+    "minNotionalValue": "5"
+  },
+  "ZIL": {
+    "maxOrderQty": "33000000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "33000000",
+    "maxMktOrderQty": "6600000",
+    "minNotionalValue": "5"
+  },
+  "ZKC": {
+    "maxOrderQty": "1245000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "1245000.0",
+    "maxMktOrderQty": "249000.0",
+    "minNotionalValue": "5"
+  },
+  "ZKP": {
+    "maxOrderQty": "1460000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1460000",
+    "maxMktOrderQty": "292000",
+    "minNotionalValue": "5"
+  },
+  "ZK": {
+    "maxOrderQty": "11000000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "11000000.0",
+    "maxMktOrderQty": "2200000.0",
+    "minNotionalValue": "5"
+  },
+  "ZM": {
+    "maxOrderQty": "1090.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1090.00",
+    "maxMktOrderQty": "545.00",
+    "minNotionalValue": "5"
+  },
+  "ZORA": {
+    "maxOrderQty": "1200000",
+    "minOrderQty": "10",
+    "qtyStep": "10",
+    "postOnlyMaxOrderQty": "1200000",
+    "maxMktOrderQty": "310000",
+    "minNotionalValue": "5"
+  },
+  "ZRO": {
+    "maxOrderQty": "210000.0",
+    "minOrderQty": "0.1",
+    "qtyStep": "0.1",
+    "postOnlyMaxOrderQty": "210000.0",
+    "maxMktOrderQty": "42000.0",
+    "minNotionalValue": "5"
+  },
+  "ZRX": {
+    "maxOrderQty": "1600000",
+    "minOrderQty": "1",
+    "qtyStep": "1",
+    "postOnlyMaxOrderQty": "1600000",
+    "maxMktOrderQty": "320000",
+    "minNotionalValue": "5"
+  },
+  "ZS": {
+    "maxOrderQty": "1015.00",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01",
+    "postOnlyMaxOrderQty": "1015.00",
+    "maxMktOrderQty": "254.00",
+    "minNotionalValue": "5"
+  }
+}

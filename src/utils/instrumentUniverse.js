@@ -49,4 +49,18 @@ function isOandaPair(pair) {
   return cls === 'forex' || cls === 'commodities' || cls === 'indices';
 }
 
-module.exports = { loadUniverse, classifyPair, getOandaPairs, isOandaPair };
+// 2026-09-27 (Alan's explicit instruction): multi-market expansion — wire
+// Alpaca (US stocks) into the same classify-and-route pattern used for
+// OANDA above, so consensus.js/riskGate.js/orchestrator/index.js don't need
+// to know anything venue-specific beyond "which executor do I call".
+/** Pairs routed to Alpaca (US stocks). */
+function getAlpacaPairs() {
+  const universe = loadUniverse();
+  return universe.classes?.us_stocks?.symbols || [];
+}
+
+function isAlpacaPair(pair) {
+  return classifyPair(pair) === 'us_stocks';
+}
+
+module.exports = { loadUniverse, classifyPair, getOandaPairs, isOandaPair, getAlpacaPairs, isAlpacaPair };

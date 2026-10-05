@@ -22,7 +22,6 @@ const logger = require('../utils/logger');
 const claudeAgent = require('../agents/claudeAgent');
 const gpt4oAgent = require('../agents/gpt4oAgent');
 const deepseekAgent = require('../agents/deepseekAgent');
-const geminiAgent = require('../agents/geminiAgent');
 const grokAgent = require('../agents/grokAgent');
 const openrouterFreeAgent = require('../agents/openrouterFreeAgent');
 const perplexityAgent = require('../agents/perplexityAgent');
@@ -31,33 +30,77 @@ const sentimentAgent = require('../agents/youtubeSentimentAgent');
 const defiAgent = require('../agents/defiAgent');
 const intelligentSignalsAgent = require('../agents/intelligentSignalsAgent');
 const smcAgent = require('../agents/smcAgent');
-const strategyLearningAgent = require('../agents/strategyLearningAgent');
-const bullAgent = require('../agents/bullAgent');
-const bearAgent = require('../agents/bearAgent');
 const providerRotator = require('../agents/providerRotator');
 const volatilityRegimeAgent = require('../agents/volatilityRegimeAgent');
-const technicalLabAgent = require('../agents/technicalLabAgent');
-const technicalDailyAgent = require('../agents/technicalDailyAgent');
-const technicalMtfAgent = require('../agents/technicalMtfAgent');
-const traderDevAgent = require('../agents/traderDevAgent');
-const evidenceCandidatesAgent = require('../agents/evidenceCandidatesAgent');
+// 2026-09-27 (Alan's explicit instruction): technical_lab, technical_daily,
+// technical_mtf, evidence_candidates, strategy_learner and traderdev_strategy
+// no longer vote — they moved into edgeAggregator.js, which folds all six
+// into one non-voting "edge" reading for the Final Judge to weigh. bull_agent
+// and bear_agent (deterministic EMA/SMC pattern-hunters) are retired outright
+// — bullDebateAgent/bearDebateAgent (already required below) now own the
+// "bull/bear" seat in the pipeline. geminiAgent moved out of this file's
+// requires too: it's no longer an early cross-validator here, it's called
+// once, at the very end, from inside metaEvaluatorAgent.js as the single
+// Final Judge — see that file's header.
+const edgeAggregator = require('../agents/edgeAggregator');
 const healthMonitor = require('../health/agentHealthMonitor');
 const { isExcluded } = require('../health/selfHealer');
 const { evaluateNegativePatterns } = require('../learning/lossLearner');
+const jedaiAdvisor = require('../learning/jedaiAdvisor');
 const { loadStrategyMemory } = require('../strategy/strategyMemoryLoader');
 const { classifyRegime, REGIMES } = require('../risk/regimeClassifier');
+// 2026-09-27 (Alan's approved Phase 2 plan, item 1): the real Bull/Bear/
+// Risk-Manager/Meta-Evaluator debate structure — see each file's own
+// header and claude/session-2026-09-27-strategyresearcher-live-and-merge-plan.md.
+const bullDebateAgent = require('../agents/bullDebateAgent');
+const bearDebateAgent = require('../agents/bearDebateAgent');
+const riskManagerDebateAgent = require('../agents/riskManagerDebateAgent');
+const metaEvaluatorAgent = require('../agents/metaEvaluatorAgent');
 
 // Credibility weights
+// 2026-09-27 (Alan's explicit instruction): only three agents cast a real
+// vote now that determines candidate direction — claude, openrouter_free
+// and oanda_sentiment. bull_agent/bear_agent are retired (their seat is now
+// bullDebateAgent/bearDebateAgent, in the debate stage below, which never
+// counted toward this vote anyway). gemini no longer votes here at all — it
+// runs once at the end as the single Final Judge (metaEvaluatorAgent.js).
+// technical_lab/technical_daily/technical_mtf/evidence_candidates/
+// strategy_learner/traderdev_strategy don't vote either — see
+// edgeAggregator.js, which keeps their old relative weights for its own
+// internal "edge" reading. telegram_channel is a data source now, not a
+// vote — its raw signal is passed to the Final Judge as context instead.
 const AGENT_WEIGHTS = {
+  claude: 0.20,
+  openrouter_free: 0.10,
+  oanda_sentiment: 0.05, // 2026-09-27: OANDA retail Position Book skew (contrarian read on crowded long/short) — OANDA pairs only (never stocks — isOandaPair() already excludes them), small weight, HOLD unless skew is extreme.
+  bigdata_sentiment: 0.15, // 2026-09-28 (Alan's explicit instruction): Bigdata.com news/macro sentiment — see src/agents/bigdataAgent.js. Real measured data only, abstains (HOLD, conf 0) on no key/stale cache/too few chunks. Weight matches bigdata_feed.py's own BIGDATA_WEIGHT default.
+};
+
+// Confirmed dead/retired as of 2026-09-27 — no processResult(name, ...)
+// call exists for any of these, so they never vote and never affect a
+// trade today. Kept here (not deleted) purely as a record of what was
+// configured but isn't wired into the vote, in case Alan wants one
+// deliberately reactivated later. bull_agent/bear_agent/technical_lab/
+// technical_daily/technical_mtf/evidence_candidates/strategy_learner/
+// traderdev_strategy/telegram_channel/gemini moved here 2026-09-27 when
+// the vote was narrowed to claude/openrouter_free/oanda_sentiment — the
+// strategy six live on in edgeAggregator.js's own EDGE_WEIGHTS, and gemini
+// lives on as the Final Judge in metaEvaluatorAgent.js; they're "dead" only
+// as far as THIS file's vote is concerned, not actually unused.
+const DEAD_AGENT_WEIGHTS = {
   bull_agent: 0.15,
   bear_agent: 0.15,
-  deepseek: 0.20,
-  claude: 0.20,
-  smc_agent: 0.20,
-  strategy_learner: 0.15,
-  gpt4o: 0.15,
   gemini: 0.20,
-  openrouter_free: 0.10,
+  technical_lab: 0.20,
+  technical_daily: 0.12,
+  technical_mtf: 0.09,
+  telegram_channel: 0.12,
+  traderdev_strategy: 0.15,
+  evidence_candidates: 0.15,
+  strategy_learner: 0.15,
+  deepseek: 0.20,
+  smc_agent: 0.20,
+  gpt4o: 0.15,
   grok: 0.10,
   defi: 0.15,
   intelligent_signals: 0.15,
@@ -66,13 +109,8 @@ const AGENT_WEIGHTS = {
   sentiment: 0.05,
   provider_rotator: 0.15,
   volatility_regime: 0.08,
-  technical_lab: 0.20,  // 2026-09-14 merge: walk-forward-validated EMA50/100+VWAP strategy (ETH only) from F:\aitradingagent2 — see claude/session-2026-09-14-merge-report.md
-  technical_daily: 0.12,  // 2026-09-14: own-OHLCV (ccxt, no Alpha Vantage quota) 3-cycle-robust daily EMA/RSI/MACD/ATR strategy, BTC/ETH/SOL/AVAX/ARB (OP/CRO disabled, no real edge/insufficient sample) — lower weight than technical_lab because 3-cycle robustness is a real but slightly weaker validation than genuine out-of-sample walk-forward. See src/agents/technicalConsensusAgent.js.
-  technical_mtf: 0.09,  // 2026-09-23: 15m/1h/4h multi-timeframe research across a top-50-derived 25-token universe (backtest_mtf.py, ~9,000 backtests, 3-cycle-robust + 20%-drawdown-cap). BTC/ETH/ZEC/ADA/NEAR/AVAX/SUI/HBAR/TAO/ENA. Lowest of the three technical agents' weights because a search this wide (40 combos x 3 strategies x 25 tokens x 3 timeframes) carries real multiple-comparisons risk even after the robustness filters — treat as a real but less battle-tested signal until watched live. See src/agents/technicalMtfAgent.js and claude/session-2026-09-23-mtf-top50-research.md.
-  tradingkit: 0.18,   // TradingKit strategy signals — real market data
-  telegram_channel: 0.12, // Live indicator channel signals
-  traderdev_strategy: 0.15, // TraderDev leaderboard crowd-consensus (240K+ backtested strategies)
-  evidence_candidates: 0.15, // 2026-09-24: 6 lab-passing strategy cells run as forward paper tests; weight is scaled x0.5..x1.5 by measured evidence (src/risk/strategyEvidence.js). See research/multi_tf_lab_2026-09-24.
+  tradingkit: 0.18,
+  tradingview_channel: 0.10,
 };
 
 const SIGNAL_VALUES = {
@@ -102,6 +140,15 @@ function withTimeout(promise, ms, name) {
 }
 
 async function runConsensus(pair, marketData) {
+  // 2026-10-03: defence in depth for the data-quality gate (the orchestrator already skips such pairs;
+  // this also covers dashboard/manual callers). Never let agents vote on bad data.
+  if (marketData && marketData.quality && marketData.quality.ok === false) {
+    const why = marketData.quality.reasons.join('; ');
+    return {
+      pair, signal: 'HOLD', confidence: 0, approved_for_execution: false, agentsAgreeing: 0, breakdown: [],
+      reasoning: `Data-quality gate: ${why}`, dataQuality: marketData.quality,
+    };
+  }
   const symbol = pair.split('/')[0];
   const currentRegime = classifyRegime(marketData);
   logger.info(`[${pair}] Initiating multi-agent parallel consensus pipeline (with DeepSeek R1 & OpenRouter Free Tier)... [Regime: ${currentRegime}]`);
@@ -137,20 +184,6 @@ async function runConsensus(pair, marketData) {
     };
   }
 
-  // TradingKit signal wrapper — real market data signals
-  async function runTradingKitAsAgent() {
-    const { fetchSignal } = require('../data/tradingKitFeed');
-    const tk = await fetchSignal(pair);
-    if (!tk) return { signal: 'HOLD', confidence: 0.5, reason: 'TradingKit unavailable' };
-    return {
-      signal:     normalizeSignal(tk.direction || tk.signal || 'HOLD'),
-      confidence: parseFloat(tk.confidence || 0.70),
-      reason:     tk.reasoning || tk.reason || `TradingKit ${tk.strategy || 'smart_money'} signal`,
-      model_used: 'tradingkit-api',
-      provider:   'tradingkit',
-    };
-  }
-
   // Telegram channel signals wrapper
   function runTelegramSignalAsAgent() {
     const tgSig = marketData.telegramSignal;
@@ -164,48 +197,62 @@ async function runConsensus(pair, marketData) {
     };
   }
 
-  const [
-    bullAgentRes,
-    bearAgentRes,
-    claudeRes,
-    openrouterFreeRes,
-    strategyLearnerRes,
-    tradingKitRes,
-    telegramRes,
-    technicalLabRes,
-    technicalDailyRes,
-    technicalMtfRes,
-    traderDevRes,
-    evidenceCandidatesRes,
-  ] = await Promise.allSettled([
-    timedAgent('bull_agent',          withTimeout(bullAgent.getSignal(symbol, marketData),            5000,  'BullAgent')),
-    timedAgent('bear_agent',          withTimeout(bearAgent.getSignal(symbol, marketData),            5000,  'BearAgent')),
-    timedAgent('claude',              withTimeout(claudeAgent.getSignal(symbol, marketData),              18000, 'Claude')),
-    timedAgent('openrouter_free',     withTimeout(openrouterFreeAgent.getSignal(symbol, marketData),      15000, 'OpenRouterFree')),
-    timedAgent('strategy_learner',    withTimeout(strategyLearningAgent.getSignal(symbol, marketData),     5000, 'StrategyLearner')),
-    timedAgent('tradingkit',          withTimeout(runTradingKitAsAgent(),                                  8000, 'TradingKit')),
-    timedAgent('telegram_channel',    Promise.resolve(runTelegramSignalAsAgent())),
-    timedAgent('technical_lab',       withTimeout(technicalLabAgent.getSignal(symbol, marketData),         8000, 'TechnicalLab')),
-    timedAgent('technical_daily',     withTimeout(technicalDailyAgent.getSignal(symbol, marketData),       8000, 'TechnicalDaily')),
-    timedAgent('technical_mtf',       withTimeout(technicalMtfAgent.getSignal(symbol, marketData),         8000, 'TechnicalMtf')),
-    timedAgent('traderdev_strategy',  withTimeout(traderDevAgent.getSignal(symbol, marketData),            6000, 'TraderDev')),
-    timedAgent('evidence_candidates', withTimeout(evidenceCandidatesAgent.getSignal(symbol, marketData),   15000, 'EvidenceCandidates')),
+  // OANDA retail Position Book sentiment wrapper (2026-09-27) — contrarian
+  // read on crowded retail positioning. OANDA-covered pairs only; returns an
+  // honest HOLD for crypto pairs and whenever positioning isn't extreme.
+  async function runOandaSentimentAsAgent() {
+    try {
+      const oandaSentimentAgent = require('../agents/oandaSentimentAgent');
+      return await oandaSentimentAgent.getSignal(symbol, marketData, pair);
+    } catch (err) {
+      return { signal: 'HOLD', confidence: 0.5, reason: `OANDA sentiment unavailable: ${err.message}` };
+    }
+  }
+
+  // Bigdata.com news/macro sentiment wrapper (2026-09-28, Alan's explicit
+  // instruction) — reads the cache that scripts/bigdata_analyst.py keeps
+  // refreshed every 30 min; never calls the API itself, so it can't add
+  // latency or spend quota on the fast consensus loop. Abstains cleanly
+  // (HOLD, conf 0) with no key / stale cache / too few chunks.
+  async function runBigdataSentimentAsAgent() {
+    try {
+      const bigdataAgent = require('../agents/bigdataAgent');
+      return await bigdataAgent.getSignal(symbol, marketData, pair);
+    } catch (err) {
+      return { signal: 'HOLD', confidence: 0.0, reason: `Bigdata.com unavailable: ${err.message}` };
+    }
+  }
+
+  // 2026-09-28 (Alan's explicit instruction): the vote is now these four —
+  // claude, openrouter_free, oanda_sentiment, bigdata_sentiment
+  // (oanda_sentiment only ever applies to OANDA forex/commodities/indices
+  // pairs, never stocks — isOandaPair() inside oandaSentimentAgent.js
+  // already excludes them, so no extra check is needed here; bigdata_sentiment
+  // abstains on its own whenever it lacks real data — see bigdataAgent.js).
+  // Telegram is fetched below as CONTEXT for the Final Judge, not a vote.
+  // The six strategy agents run in parallel via edgeAggregator.getEdge() —
+  // also not a vote, see that module. Bull/Bear/Gemini all still take part
+  // in this trade's decision, just later in the pipeline (the debate stage
+  // and the Final Judge below).
+  const [claudeRes, openrouterFreeRes, oandaSentimentRes, bigdataSentimentRes, edgeResult] = await Promise.allSettled([
+    timedAgent('claude',              withTimeout(claudeAgent.getSignal(symbol, marketData),          18000, 'Claude')),
+    timedAgent('openrouter_free',     withTimeout(openrouterFreeAgent.getSignal(symbol, marketData),   15000, 'OpenRouterFree')),
+    timedAgent('oanda_sentiment',     withTimeout(runOandaSentimentAsAgent(),                           6000, 'OandaSentiment')),
+    timedAgent('bigdata_sentiment',   withTimeout(runBigdataSentimentAsAgent(),                         5000, 'BigdataSentiment')),
+    withTimeout(edgeAggregator.getEdge(symbol, marketData),                                            16000, 'EdgeAggregator'),
   ]);
+  const telegramContext = (() => {
+    const t = runTelegramSignalAsAgent();
+    return t.signal !== 'HOLD' ? `${t.reason || ''}`.trim() : null;
+  })();
+  const edge = edgeResult.status === 'fulfilled' ? edgeResult.value : { edgeSignal: 'HOLD', edgeScore: 0, contributingCount: 0, summary: 'Edge aggregator unavailable this cycle.' };
 
   // Record health outcomes for every agent
   const agentResults = {
-    bull_agent: bullAgentRes,
-    bear_agent: bearAgentRes,
     claude: claudeRes,
     openrouter_free: openrouterFreeRes,
-    strategy_learner: strategyLearnerRes,
-    tradingkit: tradingKitRes,
-    telegram_channel: telegramRes,
-    technical_lab: technicalLabRes,
-    technical_daily: technicalDailyRes,
-    technical_mtf: technicalMtfRes,
-    traderdev_strategy: traderDevRes,
-    evidence_candidates: evidenceCandidatesRes,
+    oanda_sentiment: oandaSentimentRes,
+    bigdata_sentiment: bigdataSentimentRes,
   };
   for (const [name, res] of Object.entries(agentResults)) {
     const latency = agentLatencies[name] || 0;
@@ -244,6 +291,17 @@ async function runConsensus(pair, marketData) {
         effectiveWeight = parseFloat((effectiveWeight * Math.max(0.5, Math.min(1.5, vm))).toFixed(3));
       }
 
+      // 2026-09-27 (Alan's explicit instruction): claudeAgent.js has no real
+      // API key configured (Alan uses Claude via Pro/Max, not the API) and
+      // silently falls back to a rule-based heuristic simulator every cycle.
+      // It was weighted the same as a genuine Claude opinion (0.20 in
+      // AGENT_WEIGHTS) and shown in vote breakdowns as if it were one.
+      // Discount it here so it's honestly weighted as a heuristic agent
+      // rather than silently counted as real AI reasoning.
+      if (name === 'claude' && res.value.usingHeuristicFallback) {
+        effectiveWeight = parseFloat((effectiveWeight * 0.5).toFixed(3));
+      }
+
       // Regime-Aware Dynamic Arbitration:
       // In strong directional trends, boost the aligned specialist and discount counter-trend specialist
       if (currentRegime === REGIMES.STRONG_BULL_TREND) {
@@ -274,68 +332,17 @@ async function runConsensus(pair, marketData) {
     }
   }
 
-  processResult('bull_agent', bullAgentRes);
-  processResult('bear_agent', bearAgentRes);
   processResult('claude', claudeRes);
   processResult('openrouter_free', openrouterFreeRes);
-  processResult('strategy_learner', strategyLearnerRes);
-  processResult('tradingkit', tradingKitRes);
-  processResult('telegram_channel', telegramRes);
-  processResult('technical_lab', technicalLabRes);
-  processResult('technical_daily', technicalDailyRes);
-  processResult('technical_mtf', technicalMtfRes);
-  processResult('traderdev_strategy', traderDevRes);
+  processResult('oanda_sentiment', oandaSentimentRes);
+  processResult('bigdata_sentiment', bigdataSentimentRes);
 
-  // ── Fast-track: skip Gemini if consensus is already crystal clear ──────────
-  // If 6+ agents agree with avg confidence ≥ 0.80 we don't need cross-validation.
-  // This saves up to 10s per cycle when the market signal is unambiguous.
-  const preFastTrack = agentOutputs.filter(a => a.signal !== 'HOLD');
-  const dominantSignal = preFastTrack.length >= 6
-    ? (preFastTrack.filter(a => a.signal === 'BUY').length > preFastTrack.filter(a => a.signal === 'SELL').length ? 'BUY' : 'SELL')
-    : null;
-  const dominantAgree  = dominantSignal ? preFastTrack.filter(a => a.signal === dominantSignal) : [];
-  const avgFastConf    = dominantAgree.length ? dominantAgree.reduce((s, a) => s + a.confidence, 0) / dominantAgree.length : 0;
-  const fastTrack      = dominantAgree.length >= 6 && avgFastConf >= 0.80;
-
-  let geminiOutput = null;
-  if (fastTrack) {
-    logger.info(`  [${'gemini'.padEnd(16)}] -> ⚡ FAST-TRACK (${dominantAgree.length}/${preFastTrack.length} directional agents @ ${(avgFastConf*100).toFixed(0)}% avg — Gemini skipped)`);
-  } else {
-    // Step 2: Gemini Cross-Validator receives all peer signals
-    try {
-      const geminiRaw = await withTimeout(
-        geminiAgent.getSignal(symbol, marketData, agentOutputs),
-        30000,  // Ollama local ~18s inference on this hardware
-        'Gemini'
-      );
-      const geminiNorm = normalizeSignal(geminiRaw.signal);
-      const geminiConf = Math.max(0, Math.min(1, parseFloat(geminiRaw.confidence) || 0.80));
-      const health = healthMonitor.getAgent('gemini');
-
-      let geminiWeight = AGENT_WEIGHTS.gemini;
-      const geminiAcc = agentAccuracy.gemini;
-      if (geminiAcc && geminiAcc.total >= 3) {
-        const mult = Math.max(0.50, Math.min(1.60, geminiAcc.accuracy / 0.70));
-        geminiWeight = parseFloat((geminiWeight * mult).toFixed(3));
-      }
-
-      geminiOutput = {
-        agent: 'gemini',
-        signal: geminiNorm,
-        confidence: geminiConf,
-        reason: geminiRaw.reason || 'Cross-validation checks completed',
-        weight: geminiWeight,
-        validation_result: geminiRaw.validation_result || 'PASS',
-        agent_conflicts_detected: geminiRaw.agent_conflicts_detected || [],
-        details: geminiRaw,
-        health: { status: health.status, latencyMs: health.latencyMs },
-      };
-      agentOutputs.push(geminiOutput);
-      logger.info(`  [${'gemini'.padEnd(16)}] -> ${geminiNorm.padEnd(4)} @ ${(geminiConf * 100).toFixed(0)}% (wt: ${geminiWeight}) [Cross-Validator: ${geminiOutput.validation_result}]`);
-    } catch (err) {
-      logger.warn(`  [${'gemini'.padEnd(16)}] -> Cross-validation failed: ${err.message}`);
-    }
-  }
+  // 2026-09-27 (Alan's explicit instruction): Gemini no longer runs here as
+  // an early cross-validator inside the vote — it's called exactly once,
+  // later, as the single Final Judge (metaEvaluatorAgent.js), after it can
+  // also see the Bull/Bear debate and the strategy edge reading. Removing
+  // this early call also means Gemini's daily free-tier quota is only spent
+  // once per candidate trade instead of twice.
 
   // Step 3: Check Hard Vetoes
   const vetoFlags = agentOutputs.filter(a => a.veto_flag);
@@ -389,6 +396,72 @@ async function runConsensus(pair, marketData) {
     parseFloat((rawConfidence * 0.6 + agreementRatio * 0.4).toFixed(3))
   );
 
+  // ─────────────────────────────────────────────────────────────────────
+  // BULL/BEAR/RISK-MANAGER DEBATE + META-EVALUATOR (2026-09-27, Alan's
+  // approved Phase 2 plan, item 1: "1 bull/bear build configure impliment"
+  // — see claude/session-2026-09-27-strategyresearcher-live-and-merge-plan.md
+  // and the CGX formula in claude/strategy-research-findings.md). This is
+  // ADDITIVE, not a replacement of the 12-agent weighted vote above:
+  // bull_agent/bear_agent keep voting as independent technical
+  // pattern-hunters exactly as before. This new stage only runs once that
+  // vote has already produced a BUY/SELL candidate, and specifically
+  // argues FOR/AGAINST taking THAT trade — a real debate, not another raw
+  // vote — using OpenRouter's free-model pool (Bull) and local
+  // Ollama/Hermes (Bear), plus a deterministic Risk Manager veto reading
+  // the SAME portfolio-exposure cap riskGate.js already enforces. It can
+  // only ever make a trade MORE conservative: a hard veto forces HOLD, and
+  // its confidence adjustment is capped at ±12% either way — it can never
+  // bypass MIN_CONFIDENCE or the majority-agreement floor further below.
+  let debateVeto = false;
+  let debateVetoReason = null;
+  let debateSummary = null; // 2026-10-03: handed to the predictor agent (runs after the debate, before the risk gate)
+  if (finalSignal !== 'HOLD') {
+    try {
+      const candidate = {
+        direction: finalSignal,
+        rawConfidence: consensusConfidence,
+        reason: generateConsensusReasoning(finalSignal, consensusConfidence, agentsAgreeing, totalAgents, agentOutputs),
+      };
+      const [bullDebate, bearDebate] = await Promise.all([
+        bullDebateAgent.debate(symbol, marketData, candidate),
+        bearDebateAgent.debate(symbol, marketData, candidate),
+      ]);
+      const riskManagerDebate = riskManagerDebateAgent.run(symbol);
+      debateSummary = {
+        bullConfidence: Number(bullDebate?.confidence), bearConfidence: Number(bearDebate?.confidence),
+        bearVeto: !!bearDebate?.veto, riskVeto: !!riskManagerDebate?.veto,
+        bullReason: String(bullDebate?.reason || '').slice(0, 160), bearReason: String(bearDebate?.reason || '').slice(0, 160),
+      };
+      const panel = {
+        claude: agentOutputs.find(a => a.agent === 'claude'),
+        openrouter_free: agentOutputs.find(a => a.agent === 'openrouter_free'),
+        oanda_sentiment: agentOutputs.find(a => a.agent === 'oanda_sentiment'),
+      };
+      const metaResult = await metaEvaluatorAgent.evaluate(symbol, marketData, candidate, {
+        bull: bullDebate,
+        bear: bearDebate,
+        riskManager: riskManagerDebate,
+        panel,
+        edge,
+        telegramContext,
+      });
+
+      if (metaResult.vetoed) {
+        debateVeto = true;
+        debateVetoReason = `Debate veto: ${metaResult.reason}`;
+        logger.warn(`[${pair}] 🐂🐻 ${debateVetoReason}`);
+      } else {
+        const before = consensusConfidence;
+        consensusConfidence = Math.max(0.30, Math.min(0.98, parseFloat((consensusConfidence + metaResult.confidenceDelta).toFixed(3))));
+        logger.info(`[${pair}] 🐂🐻 Debate: ${(before * 100).toFixed(0)}% -> ${(consensusConfidence * 100).toFixed(0)}% (${metaResult.reason})`);
+      }
+    } catch (err) {
+      // A debate-stage failure must never silently block or corrupt a
+      // trade decision — log and continue with the raw vote unchanged.
+      logger.warn(`[${pair}] Bull/Bear debate stage error (non-fatal, raw vote unchanged): ${err.message}`);
+    }
+  }
+
   // Check Self-Learning Negative Pattern Memory (learned from lost trades)
   let patternVeto = false;
   let patternVetoReason = null;
@@ -408,10 +481,36 @@ async function runConsensus(pair, marketData) {
     } catch (_) {}
   }
 
-  // Require minimum agent agreement (default aligned with MIN_AGENTS in .env)
-  const MIN_AGENTS_AGREEING = parseInt(process.env.CONSENSUS_MIN_AGENTS_AGREEING || process.env.MIN_AGENTS || '2', 10);
+  // JedAI Advisor (2026-09-27, Alan's request): automatic real-time similarity
+  // match against past win/loss trade memory, using JedAI's own validated
+  // trigram-Jaccard technique (see tools/jedai-match's TradeMatcher.java and
+  // src/learning/jedaiAdvisor.js). Purely advisory -- nudges confidence the
+  // same way the negative-pattern penalty above does, never bypasses
+  // MIN_CONFIDENCE or the majority gate in riskGate.js. Runs automatically
+  // every cycle; no manual script run required.
+  if (!patternVeto && finalSignal !== 'HOLD') {
+    try {
+      const jedai = jedaiAdvisor.evaluateSimilarity(symbol, finalSignal, marketData, marketData?.btcBenchmark);
+      if (jedai.match && jedai.confidenceDelta !== 0) {
+        consensusConfidence = Math.max(0.30, Math.min(0.98, parseFloat((consensusConfidence + jedai.confidenceDelta).toFixed(3))));
+        const dirWord = jedai.confidenceDelta < 0 ? '-' : '+';
+        logger.info(
+          `[${pair}] 🔎 JedAI Advisor: ${dirWord}${Math.abs(jedai.confidenceDelta * 100).toFixed(1)}% -> ${(consensusConfidence * 100).toFixed(0)}% `
+          + `(${(jedai.match.similarity * 100).toFixed(0)}% similar to past ${jedai.match.outcome}: ${jedai.match.diagnostic})`
+        );
+      }
+    } catch (_) {}
+  }
+
+  // 2026-09-27 (Alan's explicit instruction): the majority-agent-agreement
+  // requirement is removed here and in riskGate.js's own majority check —
+  // with only 3 voting agents left (claude, openrouter_free, oanda_sentiment)
+  // plus the Gemini Final Judge and Bull/Bear debate deciding the real
+  // gate, a headcount-based majority no longer means what it used to.
+  // agentsAgreeing/totalAgents are still computed and reported for the
+  // dashboard, just no longer gate execution here.
   const MIN_CONSENSUS_CONFIDENCE = parseFloat(process.env.CONSENSUS_MIN_CONFIDENCE || '0.45');
-  const consensusReached = !patternVeto && agentsAgreeing >= MIN_AGENTS_AGREEING && consensusConfidence >= MIN_CONSENSUS_CONFIDENCE;
+  const consensusReached = !patternVeto && !debateVeto && consensusConfidence >= MIN_CONSENSUS_CONFIDENCE;
   const approvedForExecution = consensusReached && finalSignal !== 'HOLD';
 
   const synthesis = {
@@ -424,14 +523,17 @@ async function runConsensus(pair, marketData) {
     weightedScore: parseFloat(avgScore.toFixed(3)),
     consensus_reached: consensusReached,
     approved_for_execution: approvedForExecution,
-    veto_triggered: patternVeto,
-    veto_reason: patternVetoReason,
+    veto_triggered: patternVeto || debateVeto,
+    veto_reason: patternVetoReason || debateVetoReason,
     agentsAgreeing,
     totalAgents,
     breakdown: agentOutputs,
+    debate: debateSummary,
     reasoning: patternVeto
       ? patternVetoReason
-      : generateConsensusReasoning(finalSignal, consensusConfidence, agentsAgreeing, totalAgents, agentOutputs),
+      : debateVeto
+        ? debateVetoReason
+        : generateConsensusReasoning(finalSignal, consensusConfidence, agentsAgreeing, totalAgents, agentOutputs),
   };
 
   logger.info(

@@ -74,13 +74,34 @@ def _env_float(name: str, default: float) -> float:
         return default
 
 
+def _load_realism_bar() -> Dict[str, Any]:
+    """Promotion bar from config/realism.json (same file the Node side reads). Falls back to the same values."""
+    fallback = {"min_oos_trades": 60, "min_profit_factor": 1.3, "min_oos_profit_factor": 1.3,
+                "max_drawdown_pct": 20, "require_fees_included": True}
+    try:
+        import json as _json
+        from pathlib import Path as _Path
+        p = _Path(__file__).resolve().parents[1] / "config" / "realism.json"
+        return {**fallback, **_json.loads(p.read_text(encoding="utf-8")).get("promotion", {})}
+    except Exception:
+        return fallback
+
+
+_REALISM_BAR = _load_realism_bar()
+
+
 @dataclass
 class GateConfig:
+    # 2026-10-03 promotion bar (config/realism.json via core.realism): >= 60 out-of-sample trades,
+    # profit factor above 1.3, drawdown under 20%, fees/slippage included. Was PF 1.20 / OOS PF 1.10 / DD 25.
+    # The EVIDENCE_* environment variables still override.
     min_trades: int = field(default_factory=lambda: int(_env_float("EVIDENCE_MIN_TRADES", 100)))
-    min_profit_factor: float = field(default_factory=lambda: _env_float("EVIDENCE_MIN_PF", 1.20))
-    min_oos_profit_factor: float = field(default_factory=lambda: _env_float("EVIDENCE_MIN_OOS_PF", 1.10))
-    max_drawdown_pct: float = field(default_factory=lambda: _env_float("EVIDENCE_MAX_DD_PCT", 25.0))
+    min_oos_trades: int = field(default_factory=lambda: int(_env_float("EVIDENCE_MIN_OOS_TRADES", _REALISM_BAR["min_oos_trades"])))
+    min_profit_factor: float = field(default_factory=lambda: _env_float("EVIDENCE_MIN_PF", _REALISM_BAR["min_profit_factor"]))
+    min_oos_profit_factor: float = field(default_factory=lambda: _env_float("EVIDENCE_MIN_OOS_PF", _REALISM_BAR["min_oos_profit_factor"]))
+    max_drawdown_pct: float = field(default_factory=lambda: _env_float("EVIDENCE_MAX_DD_PCT", _REALISM_BAR["max_drawdown_pct"]))
     require_oos: bool = field(default_factory=lambda: _env_float("EVIDENCE_REQUIRE_OOS", 1) >= 1)
+    require_fees: bool = field(default_factory=lambda: bool(_REALISM_BAR["require_fees_included"]))
 
 
 # ── Evidence record ──────────────────────────────────────────────────────────
@@ -295,19 +316,22 @@ def evaluate_gate(ev: Optional[Evidence], cfg: Optional[GateConfig] = None) -> D
     reasons: List[str] = []
     if ev.trades < cfg.min_trades:
         reasons.append(f"Only {ev.trades} trades (need {cfg.min_trades}).")
-    if ev.profit_factor is None or ev.profit_factor < cfg.min_profit_factor:
-        reasons.append(f"Profit factor {ev.profit_factor} below {cfg.min_profit_factor}.")
+    if ev.profit_factor is None or not ev.profit_factor > cfg.min_profit_factor:
+        reasons.append(f"Profit factor {ev.profit_factor} not above {cfg.min_profit_factor}.")
     if ev.expectancy_pct is not None and ev.expectancy_pct <= 0:
         reasons.append(f"Expectancy {ev.expectancy_pct}% per trade is not positive.")
-    if ev.max_drawdown_pct is not None and ev.max_drawdown_pct > cfg.max_drawdown_pct:
-        reasons.append(f"Max drawdown {ev.max_drawdown_pct}% above {cfg.max_drawdown_pct}%.")
+    # 2026-10-03: drawdown must be KNOWN and under the bar (unknown used to pass silently).
+    if ev.max_drawdown_pct is None or not ev.max_drawdown_pct < cfg.max_drawdown_pct:
+        reasons.append(f"Max drawdown {ev.max_drawdown_pct}% not under {cfg.max_drawdown_pct}%.")
     if cfg.require_oos:
         if ev.oos_profit_factor is None:
             reasons.append("No out-of-sample (walk-forward) result recorded.")
-        elif ev.oos_profit_factor < cfg.min_oos_profit_factor:
-            reasons.append(f"Out-of-sample profit factor {ev.oos_profit_factor} below {cfg.min_oos_profit_factor}.")
-    if not ev.fees_included:
-        reasons.append("Warning: fees/slippage not confirmed as included.")  # warning only
+        elif not ev.oos_profit_factor > cfg.min_oos_profit_factor:
+            reasons.append(f"Out-of-sample profit factor {ev.oos_profit_factor} not above {cfg.min_oos_profit_factor}.")
+        if ev.oos_trades is None or ev.oos_trades < cfg.min_oos_trades:
+            reasons.append(f"Only {ev.oos_trades} out-of-sample trades (need {cfg.min_oos_trades}).")
+    if cfg.require_fees and not ev.fees_included:
+        reasons.append("Fees/slippage not confirmed as included.")  # blocking since 2026-10-03
     blocking = [r for r in reasons if not r.startswith("Warning:")]
     passed = not blocking
     return {"passed": passed, "status": STATUS_PAPER if passed else STATUS_FAILED,

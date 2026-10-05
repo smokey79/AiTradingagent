@@ -39,7 +39,9 @@ const path = require('path');
 const LOG_PATH = process.env.ALLOCATION_LOG_PATH || path.resolve(__dirname, '../../data/allocation_log.jsonl');
 const cfg = () => ({
   leverageCap: Number(process.env.LEVERAGE_CAP || 5),
-  minOrderUsd: Number(process.env.MIN_ORDER_USD || 10),
+  // 2026-10-03: no hand-set minimum. The real minimum comes from the exchange's own market info
+  // (src/utils/realism.js -> data/exchange_limits.json). MIN_ORDER_USD is now only an optional extra FLOOR (default 0).
+  minOrderFloorUsd: Number(process.env.MIN_ORDER_USD || 0),
   paper: process.env.PAPER_TRADING !== 'false',
   validatedAgents: (process.env.VALIDATED_AGENTS || 'technical_lab').split(',').map((s) => s.trim()).filter(Boolean),
   kellyFraction: Number(process.env.KELLY_FRACTION || 0.25),
@@ -49,9 +51,9 @@ const TIER_SIZE = { CONFIRMED: 1.0, PAPER_CANDIDATE: 0.8, VALIDATED: 0.8, UNVERI
 
 function realTrades() {
   try {
-    const { loadLedger } = require('../risk/tradeLedger');
-    return loadLedger().filter((t) => ['WIN', 'LOSS', 'BREAKEVEN'].includes(t.outcome)
-      && t.simulated !== true && t.excludeFromLearning !== true && t.side !== 'FLASHLOAN');
+    // 2026-10-03: learning reads only real, fee-inclusive closed trades (see tradeLedger.loadRealTrades).
+    const { loadRealTrades } = require('../risk/tradeLedger');
+    return loadRealTrades();
   } catch { return []; }
 }
 
@@ -149,7 +151,13 @@ function allocate({ pair, consensus = {}, riskDecision, trades = null }) {
   if (!blocked) {
     size = Math.min(rgSize, kellyCapUsd, headroomUsd) * ev.factor * ddFactor * streakFactor;
     size = Math.min(size, rgSize); // hard guarantee: never above the risk gate
-    if (size < c.minOrderUsd) blocked = `allocated $${size.toFixed(2)} is below the $${c.minOrderUsd} minimum order`;
+    const mo = require('../utils/realism').minOrderUsd(pair, riskDecision.entryPrice || riskDecision.price);
+    const minUsd = Math.max(mo.minUsd || 0, c.minOrderFloorUsd);
+    if (mo.minUsd == null && /\/(USDT|USDC)$/i.test(String(pair || ''))) {
+      blocked = `exchange minimum order unknown (${mo.source}) - run node scripts/refresh_exchange_limits.js`;
+    } else if (size < minUsd) {
+      blocked = `allocated $${size.toFixed(2)} is below the exchange minimum order $${minUsd} (${mo.source})`;
+    }
   }
 
   const report = {

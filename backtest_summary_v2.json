@@ -1,0 +1,12 @@
+{
+  "backtest_date": "2026-10-01T03:58:14.966522",
+  "symbol": "BTC/USDT",
+  "timeframe": "15m",
+  "strategy": "VWAP Mean-Reversion + JEDAI Advisor",
+  "initial_balance": 1000.0,
+  "final_balance": 998.0166032593349,
+  "return_pct": -0.1983396740665057,
+  "total_trades": 19,
+  "win_rate": 21.052631578947366,
+  "max_drawdown_pct": 0.225529384571621
+}

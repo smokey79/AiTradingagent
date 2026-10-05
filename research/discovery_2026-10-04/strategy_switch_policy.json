@@ -1,0 +1,45 @@
+{
+  "status": "research_only_disabled",
+  "live_execution_authorised": false,
+  "current_bots_must_remain_stopped": true,
+  "candidate_source": "funding_audited_rankings.json",
+  "activation_requires": {
+    "positive_net_profit": true,
+    "minimum_completed_trades": 250,
+    "profit_factor_strictly_greater_than": 1.12,
+    "maximum_drawdown_fraction": 0.2,
+    "historical_funding_coverage_complete": true,
+    "separate_forward_paper_review": true
+  },
+  "regime_rules": {
+    "trend": "Completed higher-timeframe EMA21/55 direction and confirmation close/EMA21 agree; higher ADX >20.",
+    "range": "Completed higher-timeframe ADX <20 and entry-frame20-bar efficiency <0.3.",
+    "uncertain": "Abstain when regimes conflict, data are stale or no candidate qualifies."
+  },
+  "review_triggers": {
+    "rolling_closed_trades": 60,
+    "rolling_net_expectancy_nonpositive": true,
+    "rolling_profit_factor_at_or_below": 1.12,
+    "drawdown_pause_fraction": 0.1,
+    "individual_losing_trade_forces_switch": false,
+    "replacement_selected_from_same_losing_window": false
+  },
+  "risk_limits": {
+    "risk_per_trade_fraction": 0.005,
+    "maximum_concurrent_positions": 3,
+    "maximum_notional_per_market_fraction": 0.25,
+    "maximum_aggregate_notional_fraction": 0.6,
+    "leverage": 1,
+    "maximum_holding_hours_before_allocation_recovery": 120,
+    "longer_than_few_days_requires_original_allocation_recovered_and_reserved": true
+  },
+  "orderbook_adviser": {
+    "use": "Public depth and executed flow can inform a separately tested execution model.",
+    "resting_depth_equals_executed_volume": false,
+    "historical_candles_reconstruct_depth": false,
+    "heatmap_alone_forces_close_and_reopen": false,
+    "close_and_reopen_requires_accounting_for_both_round_trip_costs": true,
+    "stale_after_seconds": 5
+  },
+  "deployment_note": "This policy is a review artifact. It is not wired to a trading worker or any exchange/wallet action. Operational thresholds require a fresh forward review."
+}

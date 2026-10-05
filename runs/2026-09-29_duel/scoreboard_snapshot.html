@@ -1,0 +1,30 @@
+﻿<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="refresh" content="30"><title>Bot Duel</title><style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#16181d;--muted:#667085;--line:#e4e7ec;--up:#067647;--down:#b42318;--warn:#b54708}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1115;--card:#181b21;--ink:#e8eaee;--muted:#98a2b3;--line:#2a2f38;--up:#47cd89;--down:#f97066;--warn:#fdb022}}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,Segoe UI,sans-serif}
+main{max-width:1200px;margin:0 auto;padding:16px}h1{font-size:20px;margin:0 0 4px}.muted,small{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;margin-top:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;overflow-x:auto}
+h2{font-size:16px;margin:0 0 8px}h3{font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:16px 0 6px}
+.big{font-size:32px;font-weight:650;font-variant-numeric:tabular-nums}.big span{font-size:16px;margin-left:6px}
+.stats{display:flex;flex-wrap:wrap;gap:14px;color:var(--muted);font-size:13px}.stats b{color:var(--ink)}
+table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}td{padding:6px 4px;border-top:1px solid var(--line);vertical-align:top}
+.up{color:var(--up)}.down{color:var(--down)}.warn{color:var(--warn)}ul{padding-left:18px;margin:0}li{margin:0 0 8px}
+</style></head><body><main>
+<h1>Bot duel — multi-agent vs Claude only</h1>
+<div class="muted">Paper trading · both start at $250 · max 5x leverage · each stops at $30 · started 23:02 · ends 30/09/2026, 23:02:09 · Claude spend $0.017 · page refreshes every 30s</div>
+<div class="grid"><section class="card"><h2>Bot A — your multi-agent bot</h2>
+  <div class="big">$250.00 <span class="">+0.00%</span></div>
+  <div class="stats"><span>Trades <b>0</b></span><span>Closed <b>0</b></span><span>Win rate <b>—</b></span><span>Open <b>0</b></span><span>Realised <b>+$0.00</b></span></div>
+  
+  
+  <h3>Recent trades</h3><p class="muted">No trades yet.</p></section><section class="card"><h2>Bot B — Claude only</h2>
+  <div class="big">$250.00 <span class="">+0.00%</span></div>
+  <div class="stats"><span>Trades <b>0</b></span><span>Closed <b>0</b></span><span>Win rate <b>—</b></span><span>Open <b>0</b></span><span>Realised <b>+$0.00</b></span></div>
+  
+  
+  <h3>Recent trades</h3><p class="muted">No trades yet.</p></section></div>
+<section class="card" style="margin-top:16px"><h2>Claude's latest thinking (every 15 min)</h2><ul><li><b>23:04</b> · equity $250.00 — Market is mostly flat, with RSI near 50 and prices sitting at their EMAs, so there is no clear edge and I'm holding cash.</li><li><b>23:02</b> · equity $250.00 — Majors are flat near their EMAs with neutral RSI and no clear edge, so I'm staying in cash and preserving capital at the start of the contest.</li></ul></section>
+<p class="muted">Bot A's own dashboard is still at <a href="http://localhost:3001">localhost:3001</a>. Alpaca stocks are excluded for both bots (keys rejected, 401). Flash-loan arb is observation-only for both (no on-chain executor).</p>
+</main></body></html>

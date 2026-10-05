@@ -16,11 +16,17 @@
  */
 'use strict';
 
+// 2026-10-03 promotion bar (config/realism.json, src/utils/realism.js): at least 60 out-of-sample trades,
+// profit factor above 1.3, drawdown under 20%, fee/slippage-inclusive. Was PF 1.2 / OOS PF 1.1 / DD 25%.
+// Unknown values fail (fail closed). The EVIDENCE_* environment variables still override.
+const BAR = require('../utils/realism').promotionBar();
 const GATE = {
   minTrades: Number(process.env.EVIDENCE_MIN_TRADES || 100),
-  minPF: Number(process.env.EVIDENCE_MIN_PF || 1.2),
-  minOosPF: Number(process.env.EVIDENCE_MIN_OOS_PF || 1.1),
-  maxDD: Number(process.env.EVIDENCE_MAX_DD_PCT || 25),
+  minOosTrades: Number(process.env.EVIDENCE_MIN_OOS_TRADES || BAR.minOosTrades),
+  minPF: Number(process.env.EVIDENCE_MIN_PF || BAR.minProfitFactor),
+  minOosPF: Number(process.env.EVIDENCE_MIN_OOS_PF || BAR.minOosProfitFactor),
+  maxDD: Number(process.env.EVIDENCE_MAX_DD_PCT || BAR.maxDrawdownPct),
+  requireFees: BAR.requireFeesIncluded,
   paperMinTrades: Number(process.env.EVIDENCE_PAPER_MIN_TRADES || 20),
 };
 
@@ -36,9 +42,11 @@ function backtestPasses(bt) {
   if (!bt) return { passed: false, reasons: ['no backtest evidence'] };
   const r = [];
   if (!(bt.trades >= GATE.minTrades)) r.push(`trades ${bt.trades} < ${GATE.minTrades}`);
-  if (!(bt.pf >= GATE.minPF)) r.push(`PF ${bt.pf} < ${GATE.minPF}`);
-  if (!(bt.oosPf >= GATE.minOosPF)) r.push(`OOS PF ${bt.oosPf} < ${GATE.minOosPF}`);
-  if (bt.dd15Pct != null && bt.dd15Pct > GATE.maxDD) r.push(`drawdown ${bt.dd15Pct}% > ${GATE.maxDD}%`);
+  if (!(bt.oosTrades >= GATE.minOosTrades)) r.push(`out-of-sample trades ${bt.oosTrades ?? 'not recorded'} < ${GATE.minOosTrades}`);
+  if (!(bt.pf > GATE.minPF)) r.push(`PF ${bt.pf} not above ${GATE.minPF}`);
+  if (!(bt.oosPf > GATE.minOosPF)) r.push(`OOS PF ${bt.oosPf} not above ${GATE.minOosPF}`);
+  if (!(bt.dd15Pct != null && bt.dd15Pct < GATE.maxDD)) r.push(`drawdown ${bt.dd15Pct ?? 'not recorded'}% not under ${GATE.maxDD}%`);
+  if (GATE.requireFees && bt.feesIncluded !== true) r.push('fees/slippage not confirmed as included');
   return { passed: r.length === 0, reasons: r };
 }
 

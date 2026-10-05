@@ -1,0 +1,10 @@
+{
+  "initialAllocationUsd": 250,
+  "executionEngine": "freqtrade",
+  "longHoldStartsHours": 168,
+  "preferredHoldHours": [24, 120],
+  "requiredNetProfitMultiple": 1,
+  "reserveDestination": "NEXO_BTC_ADDRESS",
+  "automaticTransfers": false,
+  "costReviewDays": 90
+}

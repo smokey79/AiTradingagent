@@ -1,0 +1,101 @@
+# Dependencies & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Development & IDE
+.venv
+.env
+.env.local
+.env.*.local
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+*.log
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Node (for dashboard if using npm)
+node_modules/
+dist/
+npm-debug.log
+
+# Git & Version Control
+.git/
+.gitignore
+.github/
+
+# Docker
+.dockerignore
+Dockerfile*
+docker-compose*.yml
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.circleci/
+
+# Build artifacts
+*.o
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+
+# Cache & temp files
+*.cache
+.cache/
+tmp/
+temp/
+
+# Archives
+*.zip
+*.tar.gz
+*.7z
+*.rar
+
+# Documentation (optional - keep if needed)
+docs/
+*.md
+
+# Backups
+backups/
+*.bak
+*.backup
+
+# Large data files (often regenerated)
+*.csv
+*.json
+data/*.tar.xz
+allDatasets.tar.xz

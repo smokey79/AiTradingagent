@@ -1,0 +1,10 @@
+{
+  "status": "exploratory",
+  "multiple_hypotheses": 2268,
+  "notes": [
+    "Patterns repeat, but repetition alone does not show an exploitable edge.",
+    "Events overlap; Wilson intervals assume independence and are optimistic.",
+    "Final exploratory patterns do not change the frozen strategy rules.",
+    "Different market regimes and horizons may reverse the apparent association."
+  ]
+}

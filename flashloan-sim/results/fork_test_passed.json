@@ -1,0 +1,11 @@
+{
+  "passed": false,
+  "at": "2026-10-03T20:19:24.770Z",
+  "source": "forkTest_510161214.json",
+  "checks": 12,
+  "profitableRoutes": 0,
+  "totalRoutes": 12,
+  "reasons": [
+    "edge scan: 0 of 12 routes profitable after gas (need at least 1)"
+  ]
+}

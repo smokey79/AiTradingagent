@@ -114,9 +114,8 @@ class Settings(BaseSettings):
 
     # OpenRouter
     openrouter_api_key   : Optional[SecretStr] = None
-    openrouter_free_model: str = "inclusionai/ling-3.0-flash-fin:free"
+    openrouter_free_model: str = "inclusionai/ling-3.0-flash-sante:free"
     openrouter_free_models: list = [
-        "inclusionai/ling-3.0-flash-fin:free",
         "nvidia/nemotron-3-super-120b-a12b:free",
         "nex-agi/nex-n2.5-pro:free",
         "google/gemma-4-31b-it:free",
@@ -304,4 +303,6 @@ def get_settings() -> Settings:
     In tests, call get_settings.cache_clear() then monkeypatch env vars
     before the first call to get a fresh Settings instance.
     """
+    from core.private_env import load_api_defaults
+    load_api_defaults()
     return Settings()

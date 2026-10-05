@@ -1,1 +1,199 @@
-[]
+[
+  {
+    "id": "WIN-1790542988503",
+    "timestamp": "2026-09-27T21:03:08.503Z",
+    "symbol": "METAB",
+    "side": "BUY",
+    "exitPrice": 668.072765,
+    "pnlUsd": 0.11,
+    "pnlPct": 0.43,
+    "trapType": "GOLDEN_EMA_HEALTHY_MOMENTUM",
+    "diagnostic": "Long aligned with 20/50 Golden Cross trend, entered at healthy (non-overbought) RSI 50.0.",
+    "outcome": "WIN",
+    "reason": "Position timed out after 5min — closed at market (0.43% real move)",
+    "marketSnapshot": {
+      "rsi": 50,
+      "distEma50Pct": 0,
+      "emaGolden": true,
+      "volRatio": 1,
+      "btcChange24h": 0
+    },
+    "activeWeight": 1
+  },
+  {
+    "id": "WIN-1791159882635",
+    "timestamp": "2026-10-05T00:24:42.635Z",
+    "symbol": "ARB",
+    "side": "BUY",
+    "entryPrice": 0.1379,
+    "exitPrice": 0.1884,
+    "pnlUsd": 36.38396029,
+    "pnlPct": 36.34777115360491,
+    "trapType": "GOLDEN_EMA_HEALTHY_MOMENTUM",
+    "diagnostic": "Long aligned with 20/50 Golden Cross trend, entered at healthy (non-overbought) RSI 50.0.",
+    "outcome": "WIN",
+    "reason": "Reviewed by batch learning agent (WIN)",
+    "marketSnapshot": {
+      "rsi": 50,
+      "distEma50Pct": 0,
+      "emaGolden": true,
+      "volRatio": 1,
+      "btcChange24h": 0
+    },
+    "activeWeight": 1
+  },
+  {
+    "id": "WIN-1791159882657",
+    "timestamp": "2026-10-05T00:24:42.657Z",
+    "symbol": "NEAR",
+    "side": "BUY",
+    "entryPrice": 2.406,
+    "exitPrice": 3.82,
+    "pnlUsd": 58.50708744,
+    "pnlPct": 58.45252004853002,
+    "trapType": "GOLDEN_EMA_HEALTHY_MOMENTUM",
+    "diagnostic": "Long aligned with 20/50 Golden Cross trend, entered at healthy (non-overbought) RSI 50.0.",
+    "outcome": "WIN",
+    "reason": "Reviewed by batch learning agent (WIN)",
+    "marketSnapshot": {
+      "rsi": 50,
+      "distEma50Pct": 0,
+      "emaGolden": true,
+      "volRatio": 1,
+      "btcChange24h": 0
+    },
+    "activeWeight": 1
+  },
+  {
+    "id": "WIN-1791159882680",
+    "timestamp": "2026-10-05T00:24:42.680Z",
+    "symbol": "BNB",
+    "side": "BUY",
+    "entryPrice": 763.55,
+    "exitPrice": 767.52,
+    "pnlUsd": 0.11883887,
+    "pnlPct": 0.11866254648614137,
+    "trapType": "GOLDEN_EMA_HEALTHY_MOMENTUM",
+    "diagnostic": "Long aligned with 20/50 Golden Cross trend, entered at healthy (non-overbought) RSI 50.0.",
+    "outcome": "WIN",
+    "reason": "Reviewed by batch learning agent (WIN)",
+    "marketSnapshot": {
+      "rsi": 50,
+      "distEma50Pct": 0,
+      "emaGolden": true,
+      "volRatio": 1,
+      "btcChange24h": 0
+    },
+    "activeWeight": 1
+  },
+  {
+    "id": "WIN-1791159882707",
+    "timestamp": "2026-10-05T00:24:42.707Z",
+    "symbol": "SUI",
+    "side": "BUY",
+    "entryPrice": 0.959,
+    "exitPrice": 0.9611,
+    "pnlUsd": 0.01875817,
+    "pnlPct": 0.018740380706732403,
+    "trapType": "GOLDEN_EMA_HEALTHY_MOMENTUM",
+    "diagnostic": "Long aligned with 20/50 Golden Cross trend, entered at healthy (non-overbought) RSI 50.0.",
+    "outcome": "WIN",
+    "reason": "Reviewed by batch learning agent (WIN)",
+    "marketSnapshot": {
+      "rsi": 50,
+      "distEma50Pct": 0,
+      "emaGolden": true,
+      "volRatio": 1,
+      "btcChange24h": 0
+    },
+    "activeWeight": 1
+  },
+  {
+    "id": "WIN-1791159882740",
+    "timestamp": "2026-10-05T00:24:42.740Z",
+    "symbol": "LINK",
+    "side": "BUY",
+    "entryPrice": 12.855,
+    "exitPrice": 14.319,
+    "pnlUsd": 10.96568291,
+    "pnlPct": 10.943899833604688,
+    "trapType": "GOLDEN_EMA_HEALTHY_MOMENTUM",
+    "diagnostic": "Long aligned with 20/50 Golden Cross trend, entered at healthy (non-overbought) RSI 50.0.",
+    "outcome": "WIN",
+    "reason": "Reviewed by batch learning agent (WIN)",
+    "marketSnapshot": {
+      "rsi": 50,
+      "distEma50Pct": 0,
+      "emaGolden": true,
+      "volRatio": 1,
+      "btcChange24h": 0
+    },
+    "activeWeight": 1
+  },
+  {
+    "id": "WIN-1791159882767",
+    "timestamp": "2026-10-05T00:24:42.767Z",
+    "symbol": "NEAR",
+    "side": "BUY",
+    "entryPrice": 4.359,
+    "exitPrice": 4.818,
+    "pnlUsd": 10.31893962,
+    "pnlPct": 10.309099022106594,
+    "trapType": "GOLDEN_EMA_HEALTHY_MOMENTUM",
+    "diagnostic": "Long aligned with 20/50 Golden Cross trend, entered at healthy (non-overbought) RSI 50.0.",
+    "outcome": "WIN",
+    "reason": "Reviewed by batch learning agent (WIN)",
+    "marketSnapshot": {
+      "rsi": 50,
+      "distEma50Pct": 0,
+      "emaGolden": true,
+      "volRatio": 1,
+      "btcChange24h": 0
+    },
+    "activeWeight": 1
+  },
+  {
+    "id": "WIN-1791159882795",
+    "timestamp": "2026-10-05T00:24:42.795Z",
+    "symbol": "AAVE",
+    "side": "BUY",
+    "entryPrice": 144.75,
+    "exitPrice": 152.29,
+    "pnlUsd": 4.79824154,
+    "pnlPct": 4.788985073576776,
+    "trapType": "GOLDEN_EMA_HEALTHY_MOMENTUM",
+    "diagnostic": "Long aligned with 20/50 Golden Cross trend, entered at healthy (non-overbought) RSI 50.0.",
+    "outcome": "WIN",
+    "reason": "Reviewed by batch learning agent (WIN)",
+    "marketSnapshot": {
+      "rsi": 50,
+      "distEma50Pct": 0,
+      "emaGolden": true,
+      "volRatio": 1,
+      "btcChange24h": 0
+    },
+    "activeWeight": 1
+  },
+  {
+    "id": "WIN-1791159882827",
+    "timestamp": "2026-10-05T00:24:42.827Z",
+    "symbol": "SOL",
+    "side": "BUY",
+    "entryPrice": 116.93,
+    "exitPrice": 120.78,
+    "pnlUsd": 2.88594082,
+    "pnlPct": 2.8802226255410743,
+    "trapType": "GOLDEN_EMA_HEALTHY_MOMENTUM",
+    "diagnostic": "Long aligned with 20/50 Golden Cross trend, entered at healthy (non-overbought) RSI 50.0.",
+    "outcome": "WIN",
+    "reason": "Reviewed by batch learning agent (WIN)",
+    "marketSnapshot": {
+      "rsi": 50,
+      "distEma50Pct": 0,
+      "emaGolden": true,
+      "volRatio": 1,
+      "btcChange24h": 0
+    },
+    "activeWeight": 1
+  }
+]

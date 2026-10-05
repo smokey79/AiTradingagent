@@ -48,12 +48,17 @@ const ok = (cond, msg) => { assert.ok(cond, msg); checks++; };
   ok(trades.some((t) => t.side === 'long'), 'long opened on EMA cross and closed');
   const stopped = trades.find((t) => t.exitReason === 'STOP');
   ok(stopped && stopped.pnlPct < 100, 'stop-out recorded with fees');
-  ok(engine.pnlPct('long', 100, 110) === 9.9, 'pnl includes 0.05% fee per side');
+  // 2026-10-03: costs per side are the shared 0.06% fee + 0.02% slippage (config/realism.json): 10% gross -> 9.84% net.
+ok(engine.pnlPct('long', 100, 110) === 9.84, 'pnl includes 0.06% fee + 0.02% slippage per side');
 }
 
 // ── evidence tiers ──────────────────────────────────────────────────────────
 {
-  const bt = CANDIDATES[0];
+  // 2026-10-03 promotion bar: >= 60 out-of-sample trades, PF > 1.3, drawdown < 20%, fees included. The recorded
+  // candidates do not carry an OOS trade count or a fee confirmation, so they no longer pass; the tier mechanics are
+  // tested with a fixture that does meet the bar.
+  ok(tierFor(CANDIDATES[0], []).tier === 'FAILED', 'recorded candidate without OOS trade count / fee confirmation fails the 2026-10-03 bar');
+  const bt = { ...CANDIDATES[0], trades: 244, pf: 1.5, oosPf: 1.4, dd15Pct: 12, oosTrades: 80, feesIncluded: true };
   ok(tierFor(bt, []).tier === 'PAPER_CANDIDATE', 'lab pass + no paper = PAPER_CANDIDATE');
   const good = Array.from({ length: 20 }, (_, i) => ({ pnlPct: i % 4 === 0 ? 6 : -1 }));
   ok(tierFor(bt, good).tier === 'CONFIRMED', 'profitable paper record = CONFIRMED');
@@ -72,6 +77,11 @@ const ok = (cond, msg) => { assert.ok(cond, msg); checks++; };
     { agent: 'claude', signal: 'BUY', details: {} }] });
 
   process.env.PAPER_TRADING = 'true';
+  // 2026-10-03: the minimum order comes from the exchange's own market info; give the test its own fixture.
+  const tmpLim = require('path').join(require('os').tmpdir(), `limits-alloc-${process.pid}.json`);
+  require('fs').writeFileSync(tmpLim, JSON.stringify({ exchange: 'bitget', fetchedAt: new Date().toISOString(),
+    markets: { 'ETH/USDT': { minCostUsd: 1, minAmount: 0.0005, lastPrice: 3000 } } }));
+  process.env.EXCHANGE_LIMITS_PATH = tmpLim;
   const rej = { approved: false, reason: 'x' };
   ok(allocate({ pair: 'ETH/USDT', consensus: consensus('CONFIRMED'), riskDecision: rej, trades: [] }) === rej, 'never overrides a rejection');
 
@@ -95,6 +105,16 @@ const ok = (cond, msg) => { assert.ok(cond, msg); checks++; };
   const liveNone = allocate({ pair: 'ETH/USDT', consensus: { signal: 'BUY', breakdown: [] }, riskDecision: rg, trades: [] });
   ok(!liveNone.approved && /no measured edge/.test(liveNone.reason), 'live blocked with no measured edge');
   process.env.PAPER_TRADING = 'true';
+
+  // 2026-10-03: minimum order is the exchange's, not a fixed $10
+  const tiny = allocate({ pair: 'ETH/USDT', consensus: consensus('CONFIRMED'), riskDecision: { ...rg, positionSizeUsd: 1.2 }, trades: [] });
+  ok(!tiny.approved && /exchange minimum order/.test(tiny.reason), 'size below the exchange minimum is blocked');
+  const small = allocate({ pair: 'ETH/USDT', consensus: consensus('CONFIRMED'), riskDecision: { ...rg, positionSizeUsd: 20 }, trades: [] });
+  ok(small.approved, 'a $20 exploration-size order is fine: the real minimum for ETH/USDT is about $1.6, not $10');
+  const unknown = allocate({ pair: 'ZZZ/USDT', consensus: consensus('CONFIRMED'), riskDecision: rg, trades: [] });
+  ok(!unknown.approved && /minimum order unknown/.test(unknown.reason), 'unknown exchange minimum on a crypto pair is blocked (never guessed)');
+  delete process.env.EXCHANGE_LIMITS_PATH;
+  try { require('fs').unlinkSync(tmpLim); } catch (_) { /* temp file */ }
 }
 
 console.log(`allocation + candidates tests passed (${checks} checks)`);

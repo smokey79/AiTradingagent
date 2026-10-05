@@ -1,0 +1,100 @@
+{
+  "nominal_candidate_runs": 18755,
+  "distinct_effective_settings": 13032,
+  "repeated_effective_settings_runs": 5723,
+  "by_family": {
+    "mtf_pullback": {
+      "candidate_runs": 793,
+      "distinct_effective_settings": 695
+    },
+    "compression_breakout": {
+      "candidate_runs": 796,
+      "distinct_effective_settings": 564
+    },
+    "range_reclaim": {
+      "candidate_runs": 791,
+      "distinct_effective_settings": 422
+    },
+    "anchored_vwap": {
+      "candidate_runs": 795,
+      "distinct_effective_settings": 421
+    },
+    "exhaustion_reversal": {
+      "candidate_runs": 791,
+      "distinct_effective_settings": 445
+    },
+    "inside_bar": {
+      "candidate_runs": 794,
+      "distinct_effective_settings": 411
+    },
+    "engulfing_pullback": {
+      "candidate_runs": 790,
+      "distinct_effective_settings": 543
+    },
+    "three_bar_reversal": {
+      "candidate_runs": 792,
+      "distinct_effective_settings": 405
+    },
+    "obv_divergence": {
+      "candidate_runs": 783,
+      "distinct_effective_settings": 421
+    },
+    "channel_retest": {
+      "candidate_runs": 796,
+      "distinct_effective_settings": 412
+    },
+    "trendline_break": {
+      "candidate_runs": 792,
+      "distinct_effective_settings": 405
+    },
+    "relative_strength": {
+      "candidate_runs": 790,
+      "distinct_effective_settings": 605
+    },
+    "btc_lead_lag": {
+      "candidate_runs": 790,
+      "distinct_effective_settings": 466
+    },
+    "rsi2_trend": {
+      "candidate_runs": 789,
+      "distinct_effective_settings": 597
+    },
+    "efficiency_momentum": {
+      "candidate_runs": 791,
+      "distinct_effective_settings": 601
+    },
+    "volatility_drift": {
+      "candidate_runs": 796,
+      "distinct_effective_settings": 621
+    },
+    "session_breakout": {
+      "candidate_runs": 790,
+      "distinct_effective_settings": 403
+    },
+    "range_zscore": {
+      "candidate_runs": 790,
+      "distinct_effective_settings": 620
+    },
+    "volume_climax": {
+      "candidate_runs": 793,
+      "distinct_effective_settings": 385
+    },
+    "prior_ema_baseline": {
+      "candidate_runs": 793,
+      "distinct_effective_settings": 670
+    },
+    "funding_crowd_fade": {
+      "candidate_runs": 891,
+      "distinct_effective_settings": 891
+    },
+    "funding_settlement_breakout": {
+      "candidate_runs": 1009,
+      "distinct_effective_settings": 1009
+    },
+    "sign_reversal_costfilter": {
+      "candidate_runs": 1020,
+      "distinct_effective_settings": 1020
+    }
+  },
+  "caution": "Distinct settings are still correlated trials, not statistically independent experiments. Duplicate parameter outcomes are not new strategy families."
+}

@@ -1,0 +1,7 @@
+{
+  "source": "CoinMarketCap dated weekly historical snapshots",
+  "created_utc": "2026-10-04T13:48:13.089520+00:00",
+  "snapshot_count": 146,
+  "valid_count": 145,
+  "policy": "Use latest snapshot only after a2-day publication delay; exclude entry when snapshot age exceeds10days; current14-market basket remains a selected subset, not a survivorship-free whole-market panel."
+}

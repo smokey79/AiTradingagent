@@ -1,0 +1,11 @@
+{
+    "mode":  "paper",
+    "botB":  "claude-solo (anthropic/claude-sonnet-5.5 via OpenRouter)",
+    "startUtc":  "2026-09-29T22:02:04.2243543Z",
+    "hours":  24,
+    "floorUsd":  30,
+    "startUsd":  250,
+    "botA":  "trading-orchestrator (multi-agent)",
+    "maxLeverage":  5,
+    "alpaca":  "excluded for both: keys return 401"
+}

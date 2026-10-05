@@ -6,6 +6,13 @@ const fs = require('fs');
 const path = require('path');
 const logger = require('../utils/logger');
 
+// 2026-10-03 calibration: shared realism settings + SQLite mirror. Both are optional at load time
+// (a missing module must never stop trade recording); the live gate below falls back to the built-in bar.
+let realism = null;
+try { realism = require('../utils/realism'); } catch (_) { /* built-in bar used */ }
+let ledgerDb = null;
+try { ledgerDb = require('../utils/ledgerDb'); } catch (_) { /* SQLite mirror is optional */ }
+
 const DATA_DIR = path.resolve(__dirname, '../../data');
 const LEDGER_PATH = path.join(DATA_DIR, 'trade_ledger.json');
 
@@ -44,6 +51,10 @@ function recordTrade(trade) {
     symbol: trade.symbol || trade.pair?.split('/')[0],
     side: trade.side?.toUpperCase() || 'BUY',
     price: trade.price,
+    entryPrice: trade.entryPrice ?? null,
+    exitPrice: trade.exitPrice ?? null,
+    openedAt: trade.openedAt || null,
+    closedAt: trade.closedAt || null,
     amount: trade.amount,
     positionSizeUsd: trade.positionSizeUsd || 0,
     leverage: trade.leverage || 1,
@@ -73,10 +84,21 @@ function recordTrade(trade) {
     btcReturnPct: trade.btcReturnPct !== undefined ? trade.btcReturnPct : null,
     alphaVsBtcPct: trade.alphaVsBtcPct !== undefined ? trade.alphaVsBtcPct : null,
     outperformedBtc: trade.outperformedBtc !== undefined ? trade.outperformedBtc : null,
+    // Added 2026-10-03: provenance flags so learning code reads only real, fee-inclusive rows.
+    //   source        'dry_run' (paper/demo fills) or 'live'
+    //   feesIncluded  true when the executor recorded an execution cost (costUsd) inside pnlUsd
+    //   isSimulated   true for fabricated/simulated records (flash-loan arithmetic etc.)
+    source: trade.source || (trade.paper !== false ? 'dry_run' : 'live'),
+    engine: trade.engine || 'node_paper',
+    feesIncluded: trade.feesIncluded !== undefined ? !!trade.feesIncluded : (trade.costUsd !== undefined && trade.costUsd !== null),
+    isSimulated: trade.isSimulated === true || trade.simulated === true || String(trade.side || '').toUpperCase() === 'FLASHLOAN',
+    simulated: trade.simulated === true,
+    excludeFromLearning: trade.excludeFromLearning === true,
   };
 
   ensureDataDir();
   fs.appendFileSync(LEDGER_PATH, JSON.stringify(entry) + '\n');
+  try { if (ledgerDb) ledgerDb.upsertTrade(entry); } catch (e) { logger.warn(`ledger.db mirror failed: ${e.message}`); }
 
   // Dispatch asynchronous Telegram trade alert
   try {
@@ -85,6 +107,23 @@ function recordTrade(trade) {
   } catch (e) {}
 
   return entry;
+}
+
+/**
+ * A closed trade that learning code may use (2026-10-03): resolved outcome, not simulated, not excluded,
+ * not a flash-loan record, and fee-inclusive (the executor recorded costUsd, so pnlUsd is net of costs).
+ */
+function isRealClosedTrade(t) {
+  return ['WIN', 'LOSS', 'BREAKEVEN'].includes(t.outcome) &&
+    t.simulated !== true && t.isSimulated !== true &&
+    t.excludeFromLearning !== true &&
+    String(t.side || '').toUpperCase() !== 'FLASHLOAN' &&
+    t.costUsd !== null && t.costUsd !== undefined;
+}
+
+/** All real, fee-inclusive closed trades, oldest first. Every learning module should read this. */
+function loadRealTrades() {
+  return loadLedger().filter(isRealClosedTrade);
 }
 
 function getPerformanceStats(lastN = 20) {
@@ -107,6 +146,7 @@ function getPerformanceStats(lastN = 20) {
     t.outcome !== 'PENDING' &&
     t.simulated !== true &&
     t.excludeFromLearning !== true &&
+    t.isSimulated !== true &&
     t.side !== 'FLASHLOAN'
   );
   const recent = resolved.slice(-lastN);
@@ -120,12 +160,33 @@ function getPerformanceStats(lastN = 20) {
   const liveWindow = resolved.slice(-LIVE_N);
   const liveWins = liveWindow.filter(t => t.outcome === 'WIN').length;
   const liveWinRate = liveWindow.length > 0 ? liveWins / liveWindow.length : 0;
+  // 2026-10-03: the win-rate gate alone can be passed by many small wins and a few huge losses, so the
+  // same window must ALSO show profit factor above the bar, drawdown under the bar, and fee-inclusive results.
+  // Bar comes from config/realism.json (src/utils/realism.js); the literals are the same values as a fallback.
+  const bar = realism ? realism.promotionBar() : { minProfitFactor: 1.3, maxDrawdownPct: 20, requireFeesIncluded: true };
+  const startEquity = parseFloat(process.env.INITIAL_DEPOSIT || '250');
+  const windowPnls = liveWindow.map(t => Number(t.pnlUsd) || 0);
+  let gw = 0, gl = 0, eq = startEquity, peak = startEquity, maxDd = 0;
+  for (const p of windowPnls) {
+    if (p > 0) gw += p; else if (p < 0) gl += -p;
+    eq += p; if (eq > peak) peak = eq;
+    const dd = peak > 0 ? ((peak - eq) / peak) * 100 : 0; if (dd > maxDd) maxDd = dd;
+  }
+  const liveProfitFactor = gl === 0 ? (gw > 0 ? 99 : 0) : gw / gl;
+  const liveFeesIncluded = liveWindow.length > 0 && liveWindow.every(t => t.costUsd !== null && t.costUsd !== undefined);
   const liveGate = {
     requiredWinRate: LIVE_WR,
     requiredTrades: LIVE_N,
     trades: liveWindow.length,
     winRate: parseFloat(liveWinRate.toFixed(3)),
-    passed: liveWindow.length >= LIVE_N && liveWinRate >= LIVE_WR,
+    requiredProfitFactor: bar.minProfitFactor,
+    profitFactor: parseFloat(liveProfitFactor.toFixed(3)),
+    maxDrawdownPctAllowed: bar.maxDrawdownPct,
+    maxDrawdownPct: parseFloat(maxDd.toFixed(2)),
+    feesIncluded: liveFeesIncluded,
+    passed: liveWindow.length >= LIVE_N && liveWinRate >= LIVE_WR &&
+      liveProfitFactor > bar.minProfitFactor && maxDd < bar.maxDrawdownPct &&
+      (!bar.requireFeesIncluded || liveFeesIncluded),
   };
 
   if (total === 0) {
@@ -200,6 +261,8 @@ function getPerformanceStats(lastN = 20) {
 
 module.exports = {
   loadLedger,
+  loadRealTrades,
+  isRealClosedTrade,
   recordTrade,
   getPerformanceStats,
 };

@@ -1,4 +1,17 @@
 /**
+ * ============================================================================
+ * RETIRED 2026-10-05 — per Alan's explicit instruction: "remove tradingkit
+ * analyst, use a single agent tradingview strategy advisor/picker...".
+ * No longer run by PM2 (see ecosystem.config.cjs — this app's block is
+ * commented out there). Replaced by scripts/strategy_advisor.js, which
+ * reuses the bot's own real backtest engine (backtestEngine.js) instead of
+ * the paid trader.dev TradingKit API this file called. Left in place,
+ * un-deleted, per this project's "incremental builds" convention for
+ * retired code. Do not re-enable without checking whether tradingKitFeed.js
+ * (also retired) is still present — it currently is, for the same reason.
+ * ============================================================================
+ */
+/**
  * AiTradingAgent — TradingKit Analyst (periodic, isolated job)
  * ================================================================
  * Runs a fixed, mcprule-compliant Pine v6 EMA-cross strategy through

@@ -1,0 +1,1 @@
+{"candidateId":"MTF_EMA_VWAP_ARB_1h","coin":"ARB","timeframe":"1h","strategy":"EMA_VWAP","side":"short","entryPrice":0.2088,"exitPrice":0.2058,"entryTime":"2026-09-28T09:00:00.000Z","exitTime":"2026-10-05T18:00:00.000Z","pnlPct":1.2977,"outcome":"WIN","exitReason":"FLIP","paper":true,"source":"evidence_candidates"}

@@ -33,6 +33,7 @@ function cleanJson(text) {
 }
 
 async function getSignal(symbol, marketData) {
+  if (process.env.AI_ROUTER_ENABLED === 'true') return require('../utils/openrouterGateway').signal('technical_analyst', symbol, marketData);
   const apiKey = (process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY || '').trim();
   const ind = marketData?.indicators || {};
   const price = marketData?.price || {};
@@ -164,11 +165,20 @@ function simulateClaudeAnalysis(symbol, marketData) {
 
   return {
     agent: 'claude',
+    // 2026-09-27 (Alan's explicit instruction): this path only runs when no
+    // real Claude API key is configured (Alan uses Claude via Pro/Max, not
+    // the API — CLAUDE_API_KEY is intentionally empty in .env). It was being
+    // weighted (0.20 in AGENT_WEIGHTS) and shown in vote breakdowns as if it
+    // were genuine Claude reasoning, when it's actually a rule-based RSI/EMA/
+    // MACD heuristic. This flag lets consensus.js discount its vote weight
+    // honestly — see the "claude" check in orchestrator/consensus.js's
+    // processResult(). Never set when a real API response was used above.
+    usingHeuristicFallback: true,
     timestamp: new Date().toISOString(),
     symbol,
     signal,
     confidence,
-    reason,
+    reason: `[Heuristic fallback, no Claude API key configured] ${reason}`,
     performance_audit: {
       sampleSize,
       winRatePct: perf.winRatePct || `${(winRate * 100).toFixed(1)}%`,

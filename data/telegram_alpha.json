@@ -1,5 +1,236 @@
 [
   {
+    "id": "TG_1791163866177",
+    "timestamp": "2026-10-05T01:31:06.177Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 86,786 Indicator: -0.29 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1791163809500",
+    "timestamp": "2026-10-05T01:30:09.500Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈 ₿ 86,944 Indicator: -0.37 ↑   weak sell 1min",
+    "length": 46
+  },
+  {
+    "id": "TG_1791163686154",
+    "timestamp": "2026-10-05T01:28:06.154Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 86,897 Indicator: -0.31 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1791163626619",
+    "timestamp": "2026-10-05T01:27:06.619Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈 ₿ 86,876 Indicator: -0.32 ↑   weak sell 1min",
+    "length": 46
+  },
+  {
+    "id": "TG_1791072559718",
+    "timestamp": "2026-10-04T00:09:19.820Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 84,811 Indicator: +0.32 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1791071947066",
+    "timestamp": "2026-10-03T23:59:07.066Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 84,778 Indicator: +0.35 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1791070751574",
+    "timestamp": "2026-10-03T23:39:11.574Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 84,784 Indicator: +0.31 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1791070124309",
+    "timestamp": "2026-10-03T23:28:44.309Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 84,758 Indicator: +0.32 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1790741422919",
+    "timestamp": "2026-09-30T04:10:22.919Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "^gspc: S&P 500 Index\nIntelligent indicator (lower part) in -1, +1. Positive - price will go up. Negative - price will go down. 3 MA lines and 2 threshold lines for significance interval.",
+    "length": 186
+  },
+  {
+    "id": "TG_1790723766058",
+    "timestamp": "2026-09-29T23:16:06.058Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 83,834 Indicator: -0.31 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1790723586231",
+    "timestamp": "2026-09-29T23:13:06.231Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈 ₿ 83,798 Indicator: -0.32 ↑   weak sell 1min",
+    "length": 46
+  },
+  {
+    "id": "TG_1790565723789",
+    "timestamp": "2026-09-28T03:22:03.789Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 83,440 Indicator: -0.32 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1790565447334",
+    "timestamp": "2026-09-28T03:17:27.334Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈 ₿ 83,466 Indicator: -0.32 ↑   weak sell 1min",
+    "length": 46
+  },
+  {
+    "id": "TG_1790565183894",
+    "timestamp": "2026-09-28T03:13:03.894Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 83,385 Indicator: -0.26 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1790564584012",
+    "timestamp": "2026-09-28T03:03:04.012Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈 ₿ 83,458 Indicator: -0.37 ↑   weak sell 1min",
+    "length": 46
+  },
+  {
+    "id": "TG_1790558404882",
+    "timestamp": "2026-09-28T01:20:04.882Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 83,994 Indicator: +0.28 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1790558284203",
+    "timestamp": "2026-09-28T01:18:04.203Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 83,905 Indicator: +0.33 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1790557623910",
+    "timestamp": "2026-09-28T01:07:03.910Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 84,044 Indicator: +0.32 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1790557563846",
+    "timestamp": "2026-09-28T01:06:03.846Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 84,008 Indicator: +0.43 ↓   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1790557383940",
+    "timestamp": "2026-09-28T01:03:03.940Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉〉 ₿ 84,080 Indicator: +0.51 ↑   BUY 1min",
+    "length": 41
+  },
+  {
+    "id": "TG_1790557144436",
+    "timestamp": "2026-09-28T00:59:04.436Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 84,172 Indicator: +0.34 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1790555828852",
+    "timestamp": "2026-09-28T00:37:08.852Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 84,228 Indicator: +0.16 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1790555647023",
+    "timestamp": "2026-09-28T00:34:07.023Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 84,342 Indicator: +0.40 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1790555104807",
+    "timestamp": "2026-09-28T00:25:04.807Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 84,852 Indicator: -0.31 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1790554985234",
+    "timestamp": "2026-09-28T00:23:05.234Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〈 ₿ 84,900 Indicator: -0.36 ↑   weak sell 1min",
+    "length": 46
+  },
+  {
+    "id": "TG_1790549464381",
+    "timestamp": "2026-09-27T22:51:04.381Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 84,207 Indicator: +0.31 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1790549105834",
+    "timestamp": "2026-09-27T22:45:05.834Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 84,184 Indicator: +0.46 ↓   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1790548624489",
+    "timestamp": "2026-09-27T22:37:04.489Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉〉 ₿ 84,212 Indicator: +0.50 ↑   BUY 1min",
+    "length": 41
+  },
+  {
+    "id": "TG_1790548565599",
+    "timestamp": "2026-09-27T22:36:05.599Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 84,261 Indicator: +0.46 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1790455924288",
+    "timestamp": "2026-09-26T20:52:04.288Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 83,959 Indicator: +0.29 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1790455804723",
+    "timestamp": "2026-09-26T20:50:04.723Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 83,843 Indicator: +0.34 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
+    "id": "TG_1790455624559",
+    "timestamp": "2026-09-26T20:47:04.559Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "₿ 83,955 Indicator: +0.30 ↓   1min",
+    "length": 34
+  },
+  {
+    "id": "TG_1790455325327",
+    "timestamp": "2026-09-26T20:42:05.327Z",
+    "sender": "Intelligent Trading Signals",
+    "text": "〉 ₿ 83,908 Indicator: +0.34 ↑   weak buy 1min",
+    "length": 45
+  },
+  {
     "id": "TG_1790268125203",
     "timestamp": "2026-09-24T16:42:05.204Z",
     "sender": "Intelligent Trading Signals",

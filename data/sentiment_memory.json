@@ -1,15 +1,5 @@
 [
   {
-    "symbol": "BNB",
-    "signal": "HOLD",
-    "score": 0.05,
-    "confidence": 0.6,
-    "mentions": 1,
-    "source": "calibrated_base",
-    "timestamp": 1789131512348,
-    "evaluated": false
-  },
-  {
     "symbol": "AVAX",
     "signal": "HOLD",
     "score": 0.1,

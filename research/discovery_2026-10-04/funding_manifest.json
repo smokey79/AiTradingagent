@@ -1,0 +1,118 @@
+{
+  "created_utc": "2026-10-04T12:59:00.479409+00:00",
+  "source": "Bybit public signed funding settlement history",
+  "markets": [
+    {
+      "coin": "BTC",
+      "settlements": 3023,
+      "first_ms": 1704067200000,
+      "last_ms": 1791100800000,
+      "complete_to_start_or_listing": true,
+      "error": null
+    },
+    {
+      "coin": "ETH",
+      "settlements": 3023,
+      "first_ms": 1704067200000,
+      "last_ms": 1791100800000,
+      "complete_to_start_or_listing": true,
+      "error": null
+    },
+    {
+      "coin": "SOL",
+      "settlements": 3023,
+      "first_ms": 1704067200000,
+      "last_ms": 1791100800000,
+      "complete_to_start_or_listing": true,
+      "error": null
+    },
+    {
+      "coin": "AVAX",
+      "settlements": 3023,
+      "first_ms": 1704067200000,
+      "last_ms": 1791100800000,
+      "complete_to_start_or_listing": true,
+      "error": null
+    },
+    {
+      "coin": "ARB",
+      "settlements": 3023,
+      "first_ms": 1704067200000,
+      "last_ms": 1791100800000,
+      "complete_to_start_or_listing": true,
+      "error": null
+    },
+    {
+      "coin": "CRO",
+      "settlements": 3023,
+      "first_ms": 1704067200000,
+      "last_ms": 1791100800000,
+      "complete_to_start_or_listing": true,
+      "error": null
+    },
+    {
+      "coin": "LTC",
+      "settlements": 3023,
+      "first_ms": 1704067200000,
+      "last_ms": 1791100800000,
+      "complete_to_start_or_listing": true,
+      "error": null
+    },
+    {
+      "coin": "TRX",
+      "settlements": 3023,
+      "first_ms": 1704067200000,
+      "last_ms": 1791100800000,
+      "complete_to_start_or_listing": true,
+      "error": null
+    },
+    {
+      "coin": "ZEC",
+      "settlements": 3023,
+      "first_ms": 1704067200000,
+      "last_ms": 1791100800000,
+      "complete_to_start_or_listing": true,
+      "error": null
+    },
+    {
+      "coin": "SUI",
+      "settlements": 3023,
+      "first_ms": 1704067200000,
+      "last_ms": 1791100800000,
+      "complete_to_start_or_listing": true,
+      "error": null
+    },
+    {
+      "coin": "ICP",
+      "settlements": 3023,
+      "first_ms": 1704067200000,
+      "last_ms": 1791100800000,
+      "complete_to_start_or_listing": true,
+      "error": null
+    },
+    {
+      "coin": "AAVE",
+      "settlements": 3023,
+      "first_ms": 1704067200000,
+      "last_ms": 1791100800000,
+      "complete_to_start_or_listing": true,
+      "error": null
+    },
+    {
+      "coin": "ATOM",
+      "settlements": 3023,
+      "first_ms": 1704067200000,
+      "last_ms": 1791100800000,
+      "complete_to_start_or_listing": true,
+      "error": null
+    },
+    {
+      "coin": "POL",
+      "settlements": 4160,
+      "first_ms": 1725523200000,
+      "last_ms": 1791115200000,
+      "complete_to_start_or_listing": true,
+      "error": null
+    }
+  ]
+}

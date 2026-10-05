@@ -1,7 +1,7 @@
 /**
  * Autonomous Continuous Multi-Platform Max-Profit Trading Engine
  * Executes across:
- *   1. Spot & 5X Futures on Bitget & Crypto.com / Binance (SMC Order Blocks, 72% Gate)
+ *   1. Spot & 5X Futures on Bitget & Crypto.com / Binance (SMC Order Blocks, 68% Gate)
  *   2. Zero-Capital DeFi Flash Loans (Aave v3 & Balancer Vault 0% fee cross-DEX atomic arbitrage)
  *   3. Cross-DEX Spatial Arbitrage across Ethereum, Arbitrum, Base, Cronos, Solana, Polygon
  *   4. DexScreener High-Momentum Meme Coin Breakout Scalper
@@ -10,6 +10,7 @@
 const axios = require('axios');
 const logger = require('../utils/logger');
 const { runTradingCycle } = require('./index');
+const { monitorOpenPositions } = require('./positionMonitor');
 const { detectArbitrageOpportunities } = require('../arbitrage/arbScanner');
 const { executeFlashLoanArbitrage } = require('../flashloan/flashloanExecutor');
 const { scanTrendingMemeCoins } = require('../data/dexScreenerFeed');
@@ -33,6 +34,12 @@ let totalAutoTrades = 0;
 let totalFlashLoanTrades = 0;
 let totalMemeTrades = 0;
 let totalAutoProfitUsd = 0;
+let nextAnalysisAt = 0;
+
+function analysisIntervalMs() {
+  const seconds = Number(intervalSeconds);
+  return (Number.isFinite(seconds) && seconds > 0 ? seconds : 300) * 1000;
+}
 
 /**
  * Start Autonomous Multi-Platform Trading Loop
@@ -49,6 +56,7 @@ function startAutoTrading(seconds = 15, runImmediate = true) {
   }
 
   isAutoTradingActive = true;
+  nextAnalysisAt = Date.now() + (runImmediate ? 0 : analysisIntervalMs());
   lastRunTimestamp = new Date().toISOString();
 
   logger.info(`🟢 [AutoTrader] Multi-Platform Autonomous Trading Engine STARTED — Dynamic Activity Feedback Mode`);
@@ -60,7 +68,7 @@ function startAutoTrading(seconds = 15, runImmediate = true) {
   startContinuousArb();
 
   // Begin recursive timeout chain
-  scheduleNextCycle(runImmediate ? 0 : (seconds || 15) * 1000);
+  scheduleNextCycle(runImmediate ? 0 : analysisIntervalMs());
 
   return getAutoTradingStatus();
 }
@@ -96,7 +104,13 @@ async function scheduleNextCycle(delayMs = 15000) {
   nextRunTimestamp = new Date(Date.now() + delayMs).toISOString();
   autoTradingInterval = setTimeout(async () => {
     try {
-      await executeAutonomousCycle();
+      if (Date.now() >= nextAnalysisAt && !isKillSwitchEngaged()) {
+        await executeAutonomousCycle();
+        nextAnalysisAt = Date.now() + analysisIntervalMs();
+      } else {
+        // Stops and timeouts remain active between reviews and during a halt.
+        await monitorOpenPositions();
+      }
     } catch (err) {
       logger.error(`[AutoTrader] Error during dynamic cycle: ${err.message}`);
     }
@@ -113,8 +127,12 @@ async function scheduleNextCycle(delayMs = 15000) {
       // Now: honour the configured interval for a fresh full cycle, and only
       // check up to 6x more often (min once/min) while a position is open,
       // for exit monitoring -- not to re-run full consensus on a fast timer.
-      const baseIntervalMs = parseInt(process.env.AUTO_TRADE_INTERVAL_SEC || '1800', 10) * 1000;
-      const nextDelayMs = hasOpen ? Math.max(60000, Math.round(baseIntervalMs / 6)) : baseIntervalMs;
+      const baseIntervalMs = analysisIntervalMs();
+      const untilAnalysis = Math.max(1000, nextAnalysisAt - Date.now());
+      const monitorDelay = Math.max(60000, Math.round(baseIntervalMs / 6));
+      const nextDelayMs = isKillSwitchEngaged()
+        ? (hasOpen ? monitorDelay : baseIntervalMs)
+        : (hasOpen ? Math.min(monitorDelay, untilAnalysis) : untilAnalysis);
 
       logger.info(`⏱️ [AutoTrader] Next autonomous cycle scheduled in ${(nextDelayMs / 1000).toFixed(0)}s (base interval ${(baseIntervalMs / 1000).toFixed(0)}s, ${hasOpen ? 'position open - faster check' : 'no open position'})...`);
       scheduleNextCycle(nextDelayMs);

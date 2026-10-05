@@ -1,0 +1,166 @@
+{
+  "created_utc": "2026-10-04T12:39:43.581647+00:00",
+  "market_cap_verified": true,
+  "universe_warning": "Current top-100 selection is survivorship-biased for historical tests; historical market-cap membership is not reconstructed.",
+  "datasets": [
+    {
+      "coin": "BTC",
+      "source": "bybit_linear",
+      "source_file": "F:\\aitradingagent\\data\\ohlcv\\pyb_bybit_BTC_15m.csv",
+      "rows": 96722,
+      "first_ms": 1704067200000,
+      "last_ms": 1791116100000,
+      "gaps": 0,
+      "refresh": "public_refresh_succeeded",
+      "sha256": "a088ae0b4f698a60c3b65e9f76fd46c045448611c82946fc0dc836a76efa76ea"
+    },
+    {
+      "coin": "ETH",
+      "source": "bybit_linear",
+      "source_file": "F:\\aitradingagent\\data\\ohlcv\\pyb_bybit_ETH_15m.csv",
+      "rows": 96722,
+      "first_ms": 1704067200000,
+      "last_ms": 1791116100000,
+      "gaps": 0,
+      "refresh": "public_refresh_succeeded",
+      "sha256": "60f362e5cbdc68903f689d37fde5b40e61437d6a10603a7d2ae49ec17614dcba"
+    },
+    {
+      "coin": "SOL",
+      "source": "bybit_linear",
+      "source_file": "F:\\aitradingagent\\data\\ohlcv\\pyb_bybit_SOL_15m.csv",
+      "rows": 96722,
+      "first_ms": 1704067200000,
+      "last_ms": 1791116100000,
+      "gaps": 0,
+      "refresh": "public_refresh_succeeded",
+      "sha256": "4333dd51a9989d04691f8f892eae276b2da8221abda374afcdc9f9dc8f2ead8f"
+    },
+    {
+      "coin": "AVAX",
+      "source": "bybit_linear",
+      "source_file": "F:\\aitradingagent\\data\\ohlcv\\pyb_bybit_AVAX_15m.csv",
+      "rows": 96722,
+      "first_ms": 1704067200000,
+      "last_ms": 1791116100000,
+      "gaps": 0,
+      "refresh": "public_refresh_succeeded",
+      "sha256": "c6f6c5c5ae55701bab1cc3a756fcc8c3aa029c532e6c2a44be6806dce5ce0bb2"
+    },
+    {
+      "coin": "ARB",
+      "source": "bybit_linear",
+      "source_file": "F:\\aitradingagent\\data\\ohlcv\\pyb_bybit_ARB_15m.csv",
+      "rows": 96722,
+      "first_ms": 1704067200000,
+      "last_ms": 1791116100000,
+      "gaps": 0,
+      "refresh": "public_refresh_succeeded",
+      "sha256": "3406ff4b3c575b2da7581a18c2770a071de18260c870a58f6ba84431d707beb7"
+    },
+    {
+      "coin": "CRO",
+      "source": "bybit_linear",
+      "source_file": "F:\\aitradingagent\\data\\ohlcv\\pyb_bybit_CRO_15m.csv",
+      "rows": 96722,
+      "first_ms": 1704067200000,
+      "last_ms": 1791116100000,
+      "gaps": 0,
+      "refresh": "public_refresh_succeeded",
+      "sha256": "679a8b30383bb40907817cc99f72b49bee185f163e34d5d0195db83643a6c82e"
+    },
+    {
+      "coin": "LTC",
+      "source": "bybit_linear",
+      "source_file": "F:\\aitradingagent\\data\\ohlcv\\pyb_bybit_LTC_15m.csv",
+      "rows": 96722,
+      "first_ms": 1704067200000,
+      "last_ms": 1791116100000,
+      "gaps": 0,
+      "refresh": "public_refresh_succeeded",
+      "sha256": "26931579597ca67aac3313466bad9c8bc73e74dfddb74226413f56cb55ab5869"
+    },
+    {
+      "coin": "TRX",
+      "source": "bybit_linear",
+      "source_file": "F:\\aitradingagent\\data\\ohlcv\\pyb_bybit_TRX_15m.csv",
+      "rows": 96722,
+      "first_ms": 1704067200000,
+      "last_ms": 1791116100000,
+      "gaps": 0,
+      "refresh": "public_refresh_succeeded",
+      "sha256": "759c5bc49d1cd36e9d1cf0229b5577811fa44c2f01c280727a6fe270526d61ed"
+    },
+    {
+      "coin": "ZEC",
+      "source": "bybit_linear",
+      "source_file": "F:\\aitradingagent\\data\\ohlcv\\pyb_bybit_ZEC_15m.csv",
+      "rows": 96722,
+      "first_ms": 1704067200000,
+      "last_ms": 1791116100000,
+      "gaps": 0,
+      "refresh": "public_refresh_succeeded",
+      "sha256": "ffdd064437c4a26db6eceb5c6e62c34ba17793b62b0b8fdfa9b5649b030c80c1"
+    },
+    {
+      "coin": "SUI",
+      "source": "bybit_linear",
+      "source_file": "F:\\aitradingagent\\data\\ohlcv\\pyb_bybit_SUI_15m.csv",
+      "rows": 96722,
+      "first_ms": 1704067200000,
+      "last_ms": 1791116100000,
+      "gaps": 0,
+      "refresh": "public_refresh_succeeded",
+      "sha256": "e55c1c957b909f7819a5a65eccea5941fb40d5f6396a9d779e9315fea2a49c1c"
+    },
+    {
+      "coin": "ICP",
+      "source": "bybit_linear",
+      "source_file": "F:\\aitradingagent\\data\\ohlcv\\pyb_bybit_ICP_15m.csv",
+      "rows": 96722,
+      "first_ms": 1704067200000,
+      "last_ms": 1791116100000,
+      "gaps": 0,
+      "refresh": "public_refresh_succeeded",
+      "sha256": "5d248810720347b9a6045b06be590007967a7fcdfa0d2bfdc2f50502ce63e8f3"
+    },
+    {
+      "coin": "AAVE",
+      "source": "bybit_linear",
+      "source_file": "F:\\aitradingagent\\data\\ohlcv\\pyb_bybit_AAVE_15m.csv",
+      "rows": 96722,
+      "first_ms": 1704067200000,
+      "last_ms": 1791116100000,
+      "gaps": 0,
+      "refresh": "public_refresh_succeeded",
+      "sha256": "b9fb46edc357618bb9be965a6b0fb8c50a4dbe2ae470354dc95e272a231649ec"
+    },
+    {
+      "coin": "ATOM",
+      "source": "bybit_linear",
+      "source_file": "F:\\aitradingagent\\data\\ohlcv\\pyb_bybit_ATOM_15m.csv",
+      "rows": 96722,
+      "first_ms": 1704067200000,
+      "last_ms": 1791116100000,
+      "gaps": 0,
+      "refresh": "public_refresh_succeeded",
+      "sha256": "37e1bed57b17581dbc87ad06300a5e6936bda56af35021444f21a544a0370086"
+    },
+    {
+      "coin": "POL",
+      "source": "bybit_linear",
+      "source_file": "F:\\aitradingagent\\data\\ohlcv\\pyb_bybit_POL_15m.csv",
+      "rows": 72878,
+      "first_ms": 1725526800000,
+      "last_ms": 1791116100000,
+      "gaps": 0,
+      "refresh": "public_refresh_succeeded",
+      "sha256": "364aeee521826f455df91ace74418ef75d818e16413597ece3b42e756cb9c82f"
+    }
+  ],
+  "splits": {
+    "train_end": "2025-07-01",
+    "validation_end": "2026-02-01",
+    "test_start": "2026-02-01"
+  }
+}

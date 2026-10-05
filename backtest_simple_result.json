@@ -1,0 +1,147 @@
+{
+  "summary": {
+    "date": "2026-10-01T03:59:37.700345",
+    "initial": 1000.0,
+    "final": 935.4672933255151,
+    "return_pct": -6.4532706674484865,
+    "trades": 19,
+    "wins": 6,
+    "win_rate": 31.57894736842105,
+    "status": "LOSS"
+  },
+  "trades": [
+    {
+      "entry": 63524.0,
+      "exit": 62734.2,
+      "pnl": -11.68,
+      "pnl_pct": -1.38,
+      "reason": "SL"
+    },
+    {
+      "entry": 63114.5,
+      "exit": 64460.2,
+      "pnl": 17.81,
+      "pnl_pct": 1.86,
+      "reason": "TP"
+    },
+    {
+      "entry": 64100.9,
+      "exit": 63729.7,
+      "pnl": -13.64,
+      "pnl_pct": -0.76,
+      "reason": "SL"
+    },
+    {
+      "entry": 63951.0,
+      "exit": 63380.1,
+      "pnl": -13.59,
+      "pnl_pct": -0.73,
+      "reason": "SL"
+    },
+    {
+      "entry": 64502.3,
+      "exit": 63935.5,
+      "pnl": -12.09,
+      "pnl_pct": -1.04,
+      "reason": "SL"
+    },
+    {
+      "entry": 64975.9,
+      "exit": 64308.8,
+      "pnl": -11.91,
+      "pnl_pct": -1.05,
+      "reason": "SL"
+    },
+    {
+      "entry": 65573.8,
+      "exit": 64847.0,
+      "pnl": -11.33,
+      "pnl_pct": -1.26,
+      "reason": "SL"
+    },
+    {
+      "entry": 64871.2,
+      "exit": 63750.4,
+      "pnl": -11.76,
+      "pnl_pct": -1.0,
+      "reason": "SL"
+    },
+    {
+      "entry": 64252.7,
+      "exit": 63556.1,
+      "pnl": -11.34,
+      "pnl_pct": -1.11,
+      "reason": "SL"
+    },
+    {
+      "entry": 64412.4,
+      "exit": 65267.5,
+      "pnl": 15.24,
+      "pnl_pct": 0.97,
+      "reason": "TP"
+    },
+    {
+      "entry": 64853.9,
+      "exit": 65199.6,
+      "pnl": 9.98,
+      "pnl_pct": 0.23,
+      "reason": "TP"
+    },
+    {
+      "entry": 65172.6,
+      "exit": 64841.7,
+      "pnl": -13.66,
+      "pnl_pct": -0.65,
+      "reason": "SL"
+    },
+    {
+      "entry": 76484.3,
+      "exit": 78416.8,
+      "pnl": 16.8,
+      "pnl_pct": 1.87,
+      "reason": "TP"
+    },
+    {
+      "entry": 78842.6,
+      "exit": 77750.2,
+      "pnl": -10.94,
+      "pnl_pct": -1.48,
+      "reason": "SL"
+    },
+    {
+      "entry": 79532.6,
+      "exit": 78285.0,
+      "pnl": -11.38,
+      "pnl_pct": -1.12,
+      "reason": "SL"
+    },
+    {
+      "entry": 78420.0,
+      "exit": 77555.0,
+      "pnl": -11.36,
+      "pnl_pct": -1.07,
+      "reason": "SL"
+    },
+    {
+      "entry": 79705.2,
+      "exit": 78643.2,
+      "pnl": -10.65,
+      "pnl_pct": -1.4,
+      "reason": "SL"
+    },
+    {
+      "entry": 76554.7,
+      "exit": 77781.1,
+      "pnl": 15.59,
+      "pnl_pct": 1.27,
+      "reason": "TP"
+    },
+    {
+      "entry": 80431.1,
+      "exit": 81569.5,
+      "pnl": 15.38,
+      "pnl_pct": 1.03,
+      "reason": "TP"
+    }
+  ]
+}

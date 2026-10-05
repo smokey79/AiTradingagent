@@ -1,0 +1,29 @@
+{
+  "_note": "Probability engine settings (src/engine). Thresholds marked TESTED are replaced by values measured on out-of-sample data once a model is trained (data/engine/model.json).",
+  "horizonsH": [0.08333333333333333, 0.25, 0.5, 1, 4, 12, 24, 168, 672],
+  "horizonTimeframes": { "0.08333333333333333": "5m", "0.25": "5m", "0.5": "5m", "1": "5m", "4": "1h", "12": "1h", "24": "1h", "168": "1d", "672": "1d" },
+  "gateAgreementHorizons": [0.25, 0.5, 1],
+  "primaryHorizonH": 1,
+  "flatBand": 0.002,
+  "assumedCostRT": 0.0022,
+  "uncertaintyK": 1.0,
+  "minProb": 0.55,
+  "minHorizonAgree": 2,
+  "maxSpreadPct": 0.15,
+  "minDepthMultiple": 5,
+  "notionalUsd": 25,
+  "riskPerTradePct": 1.0,
+  "maxPositionPct": 10,
+  "stopAtrMultiple": 1.5,
+  "equityUsd": 250,
+  "validationBar": { "minOosSignals": 60, "minProfitFactor": 1.3, "minBrierSkill": 0.0, "minMeanNetReturn": 0.0 },
+  "train": {
+    "candles": 2000,
+    "dailyCandles": 1200,
+    "l2": 1.0,
+    "epochs": 400,
+    "lr": 0.3,
+    "split": [0.6, 0.2, 0.2],
+    "pairs": ["BTC/USDT", "ETH/USDT", "SOL/USDT"]
+  }
+}

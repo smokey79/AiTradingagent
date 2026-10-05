@@ -1,0 +1,89 @@
+//@version=5
+strategy("AiTradingAgent — Casper SMC 5-Min ORB Retest (ARB/USDT)", overlay=true, initial_capital=1000, default_qty_type=strategy.percent_of_equity, default_qty_value=20, commission_type=strategy.commission.percent, commission_value=0.05, process_orders_on_close=true)
+
+// ==============================================================================
+// AiTradingAgent v4 — Casper SMC 5-Minute Opening Range Breakout Retest
+// Symbol: ARB/USDT | Timeframe: 5m Recommended
+// Strategy Rules:
+// 1. Establish 5-minute Opening Range High and Low (Default 13:30 UTC / NY Open).
+// 2. Wait for clear expansion break above/below range.
+// 3. Confirm pullback retest of the broken level.
+// 4. Enter on confirmation with 50% range Stop Loss and min 2.0R Take Profit.
+// ==============================================================================
+
+// ─── Inputs ──────────────────────────────────────────────────────────────────
+grp_session = "Session & Range Definition"
+orb_hour     = input.int(13, "Session Open Hour (UTC)", minval=0, maxval=23, group=grp_session)
+orb_minute   = input.int(30, "Session Open Minute (UTC)", minval=0, maxval=59, group=grp_session)
+vol_mult     = input.float(1.4, "Breakout Volume Multiplier", minval=1.0, step=0.05, group=grp_session)
+
+grp_risk    = "Futures Risk Management"
+leverage_val = input.float(5, "Futures Leverage (Isolated)", minval=1.0, maxval=20.0, group=grp_risk)
+tp_pct       = input.float(3.6, "Take-Profit Target %", minval=1.0, step=0.1, group=grp_risk)
+sl_pct       = input.float(1.3, "Stop-Loss Limit %", minval=0.5, step=0.1, group=grp_risk)
+atr_len      = input.int(14, "ATR Period", group=grp_risk)
+atr_mult     = input.float(1.3, "ATR Trailing Multiplier", group=grp_risk)
+
+// ─── ORB Calculations ────────────────────────────────────────────────────────
+is_orb_bar = (hour(time, "UTC") == orb_hour) and (minute(time, "UTC") == orb_minute)
+
+var float orb_high = na
+var float orb_low  = na
+var bool  broken_high = false
+var bool  broken_low  = false
+
+if (is_orb_bar)
+    orb_high := high
+    orb_low  := low
+    broken_high := false
+    broken_low  := false
+
+vol_ma = ta.sma(volume, 20)
+vol_ok = volume > (vol_ma * vol_mult)
+atr_v  = ta.atr(atr_len)
+
+// Breakout & Retest Detection
+break_high = not broken_high and close > orb_high and vol_ok
+break_low  = not broken_low and close < orb_low and vol_ok
+
+if (break_high)
+    broken_high := true
+
+if (break_low)
+    broken_low := true
+
+// Retest confirmation
+retest_long  = broken_high and (low <= orb_high * 1.001) and (close > orb_high)
+retest_short = broken_low and (high >= orb_low * 0.999) and (close < orb_low)
+
+// ─── Execution Logic ─────────────────────────────────────────────────────────
+var float long_sl  = na
+var float long_tp  = na
+var float short_sl = na
+var float short_tp = na
+
+if (retest_long and strategy.position_size == 0)
+    long_sl := close * (1.0 - (sl_pct / 100.0))
+    long_tp := close * (1.0 + (tp_pct / 100.0))
+    alert_msg = '{"action":"BUY","symbol":"' + syminfo.ticker + '","strategy":"casper_orb_retest","price":' + str.tostring(close) + ',"sl":' + str.tostring(long_sl) + ',"tp":' + str.tostring(long_tp) + ',"leverage":' + str.tostring(leverage_val) + '}'
+    strategy.entry("ORB_LONG", strategy.long, alert_message=alert_msg)
+
+if (retest_short and strategy.position_size == 0)
+    short_sl := close * (1.0 + (sl_pct / 100.0))
+    short_tp := close * (1.0 - (tp_pct / 100.0))
+    alert_msg = '{"action":"SELL","symbol":"' + syminfo.ticker + '","strategy":"casper_orb_retest","price":' + str.tostring(close) + ',"sl":' + str.tostring(short_sl) + ',"tp":' + str.tostring(short_tp) + ',"leverage":' + str.tostring(leverage_val) + '}'
+    strategy.entry("ORB_SHORT", strategy.short, alert_message=alert_msg)
+
+if (strategy.position_size > 0)
+    long_sl := math.max(nz(long_sl, close - (atr_v * atr_mult)), close - (atr_v * atr_mult))
+    strategy.exit("EXIT_LONG", "ORB_LONG", stop=long_sl, limit=long_tp)
+
+if (strategy.position_size < 0)
+    short_sl := math.min(nz(short_sl, close + (atr_v * atr_mult)), close + (atr_v * atr_mult))
+    strategy.exit("EXIT_SHORT", "ORB_SHORT", stop=short_sl, limit=short_tp)
+
+// ─── Visual Plots ────────────────────────────────────────────────────────────
+plot(orb_high, "ORB High Level", color=color.new(#10b981, 0), linewidth=2, style=plot.style_circles)
+plot(orb_low, "ORB Low Level", color=color.new(#ef4444, 0), linewidth=2, style=plot.style_circles)
+plotshape(retest_long and strategy.position_size == 0, title="ORB Retest Long", location=location.belowbar, color=color.green, style=shape.labelup, size=size.small, text="ORB BUY")
+plotshape(retest_short and strategy.position_size == 0, title="ORB Retest Short", location=location.abovebar, color=color.red, style=shape.labeldown, size=size.small, text="ORB SELL")

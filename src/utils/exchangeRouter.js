@@ -122,8 +122,10 @@ async function executeTrade(pair, signal, riskCheck, marketData, isPaper = true)
 
   if (isPaper) {
     // Realistic Paper Execution simulation
-    const takerFeePct = 0.0010; // 0.10% typical exchange taker fee
-    const slippagePct = 0.0005; // 0.05% simulated market slippage
+    // 2026-10-03: costs come from config/realism.json (0.06% fee + 0.02% slippage per side, as in backtest.py).
+    const realism = require('./realism');
+    const takerFeePct = realism.feePctPerSide() / 100;
+    const slippagePct = realism.slippagePctPerSide() / 100;
     const totalPenaltyPct = takerFeePct + slippagePct;
     const fillPrice = side === 'BUY' ? price * (1 + totalPenaltyPct) : price * (1 - totalPenaltyPct);
     const effectiveLeverage = rc.leverage || 1.0;

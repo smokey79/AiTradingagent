@@ -129,6 +129,21 @@ def execute_live(opp: dict, profit_usd: float):
       - web3.py + ABI wired to AAVE_POOLS[chain]
     """
     chain = opp.get('chain', 'unknown')
+    # 2026-10-03: observation-only lock. Live execution needs ARB_MODE=live AND a passing flashloan-sim
+    # fork-test marker (config/realism.json -> arbitrage). Until then nothing is ever attempted.
+    try:
+        import sys as _sys
+        _root = str(__import__('pathlib').Path(__file__).resolve().parents[2])
+        if _root not in _sys.path:
+            _sys.path.insert(0, _root)
+        from core.realism import live_arb_allowed
+        allowed = live_arb_allowed()
+    except Exception:
+        allowed = False
+    if not allowed:
+        log.warning(f"[LIVE] REFUSED for {chain}: observation-only until ARB_MODE=live and the fork test has passed.")
+        _log_trade(opp, profit_usd, tx_hash='OBSERVE_ONLY', status='skipped')
+        return
     log.warning(f"[LIVE] Execution not yet implemented for {chain}. "
                 "Deploy FlashLoanReceiver contract first.")
     _log_trade(opp, profit_usd, tx_hash='NOT_IMPLEMENTED', status='skipped')

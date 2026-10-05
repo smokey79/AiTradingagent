@@ -21,7 +21,8 @@
 const fs = require('fs');
 const path = require('path');
 const logger = require('../utils/logger');
-const { loadLedger } = require('../risk/tradeLedger');
+const { readLearningTrades } = require('../learning/learningTrades');
+const improvementLoop = require('../learning/improvementLoop');
 const { recordLossPostMortem } = require('../learning/lossLearner');
 // 2026-09-26: also record wins in the same batch pass (Tauric-Research-style
 // win+loss memory - see src/learning/tradeLearner.js). This only adds a
@@ -43,15 +44,18 @@ function loadLastReviewTimestamp() {
 }
 
 function saveLastReviewTimestamp(ts) {
-  try {
-    fs.mkdirSync(path.dirname(STATE_FILE), { recursive: true });
-    fs.writeFileSync(STATE_FILE, JSON.stringify({ lastReviewTimestamp: ts }, null, 2), 'utf8');
-  } catch (e) {
-    logger.warn(`[Learning Agent] Could not persist review watermark: ${e.message}`);
-  }
+  fs.mkdirSync(path.dirname(STATE_FILE), { recursive: true });
+  const tmp = `${STATE_FILE}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify({ lastReviewTimestamp: ts, reviewedTradeIds: [...reviewedTradeIds] }, null, 2), 'utf8');
+  fs.renameSync(tmp, STATE_FILE);
 }
 
 let lastReviewTimestamp = loadLastReviewTimestamp();
+let reviewedTradeIds = new Set();
+try {
+  const state = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+  reviewedTradeIds = new Set(state.reviewedTradeIds || []);
+} catch (_) { /* first review */ }
 
 /**
  * Reviews the ledger for any new losses and learns from them.
@@ -59,20 +63,14 @@ let lastReviewTimestamp = loadLastReviewTimestamp();
 async function runBatchReview() {
   logger.info('🧠 [Learning Agent] Starting batch review of recent trades...');
   try {
-    const ledger = loadLedger();
-    const newLosses = ledger.filter(trade => {
-      const tradeTime = new Date(trade.timestamp).getTime();
-      return tradeTime > lastReviewTimestamp && (trade.outcome === 'LOSS' || trade.pnlUsd < 0);
-    });
-    // 2026-09-26: symmetric win-side scan, same window/watermark. Trades
-    // already reviewed in real time by strategyLearner.js get skipped here
-    // via tradeLearner's content-based dedupe guard - this batch pass exists
-    // to catch anything closed while the process was down, same as the loss
-    // branch already did.
-    const newWins = ledger.filter(trade => {
-      const tradeTime = new Date(trade.timestamp).getTime();
-      return tradeTime > lastReviewTimestamp && (trade.outcome === 'WIN' || trade.pnlUsd > 0);
-    });
+    // Identity checkpoints also catch old entries that close or arrive after a review.
+    const ledger = readLearningTrades().filter(trade => !reviewedTradeIds.has(trade.id) &&
+      Number.isFinite(trade.entryPrice) && trade.entryPrice > 0 &&
+      Number.isFinite(trade.exitPrice) && trade.exitPrice > 0);
+    improvementLoop.writeReport(improvementLoop.runCycle());
+    const newLosses = ledger.filter(trade => trade.pnlUsd < 0);
+    // Post-mortem memory also deduplicates outcomes reviewed at close time.
+    const newWins = ledger.filter(trade => trade.pnlUsd > 0);
 
     if (newLosses.length === 0 && newWins.length === 0) {
       logger.info('🧠 [Learning Agent] No new closed trades found in this review window.');
@@ -106,6 +104,7 @@ async function runBatchReview() {
         btcBenchmark,
         reason: loss.reason || `Reviewed by batch learning agent (${loss.outcome || 'LOSS'})`,
       });
+      reviewedTradeIds.add(loss.id);
       logger.info(`📚 [Learning Agent] Learned from loss on ${loss.symbol} (${loss.side || loss.signal}). Mapped pattern to memory bank.`);
     }
 
@@ -130,6 +129,7 @@ async function runBatchReview() {
         btcBenchmark,
         reason: win.reason || `Reviewed by batch learning agent (${win.outcome || 'WIN'})`,
       });
+      reviewedTradeIds.add(win.id);
       logger.info(`📚 [Learning Agent] Learned from win on ${win.symbol} (${win.side || win.signal}). Mapped pattern to memory bank.`);
     }
 

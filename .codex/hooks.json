@@ -1,0 +1,110 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__filesystem__list_directory",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "curl -sf -X POST -H \"Content-Type: application/json\" --data @- \"http://127.0.0.1:55767/hook/dir-cache-guard?agent=claude&cwd=${CLAUDE_PROJECT_DIR}\" || true",
+            "timeout": 8
+          }
+        ]
+      },
+      {
+        "matcher": "Skill|Read|read|fs_read|fileread|mcp__filesystem__read_file|mcp__filesystem__search_in_file|mcp__filesystem__search_files",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "curl -sf -X POST -H \"Content-Type: application/json\" --data @- \"http://127.0.0.1:4895/hook/skill-invoke?agent=claude&cwd=${CLAUDE_PROJECT_DIR}\" || true",
+            "timeout": 8
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "mcp__claude-skills-cli__run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "curl -sf -X POST -H \"Content-Type: application/json\" --data @- \"http://127.0.0.1:55767/hook/cli-loop-guard?agent=claude&cwd=${CLAUDE_PROJECT_DIR}\" || true",
+            "timeout": 8
+          }
+        ]
+      },
+      {
+        "matcher": "Skill|Read|read|fs_read|fileread|mcp__filesystem__read_file|mcp__filesystem__search_in_file|mcp__filesystem__search_files",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "curl -sf -X POST -H \"Content-Type: application/json\" --data @- \"http://127.0.0.1:4895/hook/skill-invoke?agent=claude&cwd=${CLAUDE_PROJECT_DIR}\" || true",
+            "timeout": 8
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|PowerShell|run_in_terminal",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"c:/Users/barcl/.antigravity-ide/extensions/serhiivoinolovych.claude-skill-deployer-1.0.148-universal/resources/hooks/terminal-watch.js\" claude",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "curl -sf -X POST -H \"Content-Type: application/json\" --data @- \"http://127.0.0.1:62680/hook/official-skills?agent=claude&cwd=${CLAUDE_PROJECT_DIR}\" || true",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "curl -sf -X POST -H \"Content-Type: application/json\" --data @- \"http://127.0.0.1:4895/hook/prompt-context?agent=claude&cwd=${CLAUDE_PROJECT_DIR}\" || true",
+            "timeout": 8
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "curl -sf -X POST -H \"Content-Type: application/json\" --data @- \"http://127.0.0.1:4895/hook/budget?agent=claude&cwd=${CLAUDE_PROJECT_DIR}\" || true",
+            "timeout": 8
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "curl -sf -X POST -H \"Content-Type: application/json\" --data @- \"http://127.0.0.1:4895/hook/task-drift?agent=claude&cwd=${CLAUDE_PROJECT_DIR}\" || true",
+            "timeout": 8
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "curl -sf -X POST -H \"Content-Type: application/json\" --data @- \"http://127.0.0.1:4895/hook/session-stop?agent=claude&cwd=${CLAUDE_PROJECT_DIR}\" || true",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

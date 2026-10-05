@@ -95,7 +95,10 @@ def _is_permanent_llm_error(exc: Exception) -> bool:
 # with the instant Google's own quota resets, so it's a courtesy pre-check,
 # not a replacement for the per-call 429 handling above.
 
-GEMINI_DAILY_CALL_LIMIT = int(os.environ.get("GEMINI_DAILY_CALL_LIMIT", "18"))
+# CORRECTED 2026-09-27: comment above previously claimed a real 20/day free-tier cap.
+# Verified false (ai.google.dev rate-limits docs + independent sources): Flash-tier
+# free accounts get ~1,500 requests/day. Default bumped 18 -> 300, still conservative.
+GEMINI_DAILY_CALL_LIMIT = int(os.environ.get("GEMINI_DAILY_CALL_LIMIT", "300"))
 _GEMINI_BUDGET_PATH = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     "data", "gemini_call_budget.json",
@@ -426,7 +429,6 @@ class GrokClient(LLMClient):
 
 class OpenRouterClient(LLMClient):
     DEFAULT_MODELS = [
-        "inclusionai/ling-3.0-flash-fin:free",
         "nvidia/nemotron-3-super-120b-a12b:free",
         "nex-agi/nex-n2.5-pro:free",
         "google/gemma-4-31b-it:free",
@@ -635,17 +637,24 @@ class LLMRouter(LLMClient):
                 "GEMINI_API_KEY, ANTHROPIC_API_KEY, XAI_API_KEY, or OPENROUTER_API_KEY."
             )
 
-        # Use active_llm as default if available, else pick the first wired client
+        # Use active_llm as default if available, else pick OpenRouter (most reliable free pool)
         if cfg.active_llm in clients:
             default = cfg.active_llm
+        elif ActiveLLM.OPENROUTER in clients:
+            default = ActiveLLM.OPENROUTER
         else:
             default = next(iter(clients))
             logger.warning(
-                "Configured active_llm=%s is not available. Using %s as default.",
+                "Configured active_llm=%s is not available and OpenRouter is missing. Using %s as default.",
                 cfg.active_llm.value, default.value,
             )
 
-        fallbacks = [k for k in clients if k != default]
+        # Prioritize OpenRouter and Local Ollama in the fallback chain
+        fallbacks = []
+        for provider in [ActiveLLM.OPENROUTER, ActiveLLM.GEMINI, ActiveLLM.ANTHROPIC, ActiveLLM.GROK]:
+            if provider in clients and provider != default:
+                fallbacks.append(provider)
+        
         return cls(default=default, clients=clients, fallbacks=fallbacks)
 
     # ------------------------------------------------------------------

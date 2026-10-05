@@ -35,16 +35,9 @@ const MIN_SAMPLE = parseInt(process.env.LEARN_MIN_SAMPLE || '30', 10);
 /** Minimum trades attributed to one agent before judging that agent. */
 const MIN_AGENT_SAMPLE = parseInt(process.env.LEARN_MIN_AGENT_SAMPLE || '20', 10);
 
-/** Read a JSONL ledger. The file is line-delimited, not one JSON array. */
+/** Read the shared vetted SQLite view, including imported Freqtrade outcomes. */
 function readLedger() {
-  const p = path.join(DATA, 'trade_ledger.json');
-  if (!fs.existsSync(p)) return [];
-  return fs.readFileSync(p, 'utf8')
-    .split('\n')
-    .map(l => l.trim())
-    .filter(Boolean)
-    .map(l => { try { return JSON.parse(l); } catch (_) { return null; } })
-    .filter(Boolean);
+  return require('./learningTrades').readLearningTrades();
 }
 
 function readJson(name, fallback) {
@@ -55,8 +48,10 @@ function readJson(name, fallback) {
 /** Split the ledger into what may be learned from and what may not. */
 function partition(ledger) {
   const resolved = ledger.filter(t => t.outcome && t.outcome !== 'PENDING');
+  // 2026-10-03: learn only from REAL, FEE-INCLUSIVE trades (costUsd recorded, not simulated).
   const learnable = resolved.filter(t =>
-    t.simulated !== true && t.excludeFromLearning !== true && t.side !== 'FLASHLOAN');
+    t.simulated !== true && t.isSimulated !== true && t.excludeFromLearning !== true && t.side !== 'FLASHLOAN' &&
+    t.feesIncluded === true && ['dry_run', 'live'].includes(t.source));
   const excluded = resolved.filter(t => !learnable.includes(t));
   const pending = ledger.filter(t => !t.outcome || t.outcome === 'PENDING');
   return { learnable, excluded, pending, total: ledger.length };
@@ -216,7 +211,7 @@ function runCycle() {
 
   return {
     generatedAt: new Date().toISOString(),
-    mode: process.env.PAPER_TRADING === 'true' ? 'PAPER' : 'LIVE',
+    mode: process.env.PAPER_TRADING !== 'false' ? 'PAPER' : 'LIVE',
     evidence: {
       ledgerRecords: total,
       resolvedLearnable: learnable.length,
@@ -226,6 +221,7 @@ function runCycle() {
       sampleSufficient: learnable.length >= MIN_SAMPLE,
     },
     overall, byRegime, byPair, agents,
+    tradingCosts90Days: require('../risk/capitalPolicy').costReview(learnable),
     proposals,
     autoApplied: [],   // populated only by applyProposals(), tighten-only
   };

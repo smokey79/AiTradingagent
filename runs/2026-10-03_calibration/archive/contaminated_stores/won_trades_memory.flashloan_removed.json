@@ -1,0 +1,107 @@
+[
+  {
+    "id": "WIN-1790529719763",
+    "timestamp": "2026-09-27T17:21:59.763Z",
+    "symbol": "XRP",
+    "side": "FLASHLOAN",
+    "exitPrice": 1.51,
+    "pnlUsd": 38.25,
+    "pnlPct": 0.53,
+    "trapType": "CLEAN_TREND_EXECUTION",
+    "diagnostic": "Trade reached its target with no notable adverse condition.",
+    "outcome": "WIN",
+    "reason": "Zero-Capital Flash Loan: bsc [pancakeswap] \u2192 ethereum [uniswap] (+0.636% net spread)",
+    "marketSnapshot": {
+      "rsi": 50,
+      "distEma50Pct": 0,
+      "emaGolden": true,
+      "volRatio": 1,
+      "btcChange24h": 0
+    },
+    "activeWeight": 1
+  },
+  {
+    "id": "WIN-1790533908756",
+    "timestamp": "2026-09-27T18:31:48.756Z",
+    "symbol": "XRP",
+    "side": "FLASHLOAN",
+    "exitPrice": 1.52,
+    "pnlUsd": 37.94,
+    "pnlPct": 0.52,
+    "trapType": "CLEAN_TREND_EXECUTION",
+    "diagnostic": "Trade reached its target with no notable adverse condition.",
+    "outcome": "WIN",
+    "reason": "Zero-Capital Flash Loan: ethereum [uniswap] \u2192 bsc [pancakeswap] (+0.632% net spread)",
+    "marketSnapshot": {
+      "rsi": 50,
+      "distEma50Pct": 0,
+      "emaGolden": true,
+      "volRatio": 1,
+      "btcChange24h": 0
+    },
+    "activeWeight": 1
+  },
+  {
+    "id": "WIN-1790547478083",
+    "timestamp": "2026-09-27T22:17:58.083Z",
+    "symbol": "XRP",
+    "side": "FLASHLOAN",
+    "exitPrice": 1.5,
+    "pnlUsd": 87.02,
+    "pnlPct": 1.2,
+    "trapType": "CLEAN_TREND_EXECUTION",
+    "diagnostic": "Trade reached its target with no notable adverse condition.",
+    "outcome": "WIN",
+    "reason": "Zero-Capital Flash Loan: bsc [pancakeswap] \u2192 ethereum [uniswap] (+1.307% net spread)",
+    "marketSnapshot": {
+      "rsi": 50,
+      "distEma50Pct": 0,
+      "emaGolden": true,
+      "volRatio": 1,
+      "btcChange24h": 0
+    },
+    "activeWeight": 1
+  },
+  {
+    "id": "WIN-1790570328902",
+    "timestamp": "2026-09-28T04:38:48.902Z",
+    "symbol": "XRP",
+    "side": "FLASHLOAN",
+    "exitPrice": 1.47,
+    "pnlUsd": 87.44,
+    "pnlPct": 1.22,
+    "trapType": "CLEAN_TREND_EXECUTION",
+    "diagnostic": "Trade reached its target with no notable adverse condition.",
+    "outcome": "WIN",
+    "reason": "Zero-Capital Flash Loan: ethereum [uniswap] \u2192 bsc [pancakeswap] (+1.335% net spread)",
+    "marketSnapshot": {
+      "rsi": 50,
+      "distEma50Pct": 0,
+      "emaGolden": true,
+      "volRatio": 1,
+      "btcChange24h": 0
+    },
+    "activeWeight": 1
+  },
+  {
+    "id": "WIN-1790656016575",
+    "timestamp": "2026-09-29T04:26:56.575Z",
+    "symbol": "XRP",
+    "side": "FLASHLOAN",
+    "exitPrice": 1.48,
+    "pnlUsd": 87.74,
+    "pnlPct": 1.22,
+    "trapType": "CLEAN_TREND_EXECUTION",
+    "diagnostic": "Trade reached its target with no notable adverse condition.",
+    "outcome": "WIN",
+    "reason": "Zero-Capital Flash Loan: bsc [pancakeswap] \u2192 ethereum [uniswap] (+1.325% net spread)",
+    "marketSnapshot": {
+      "rsi": 50,
+      "distEma50Pct": 0,
+      "emaGolden": true,
+      "volRatio": 1,
+      "btcChange24h": 0
+    },
+    "activeWeight": 1
+  }
+]

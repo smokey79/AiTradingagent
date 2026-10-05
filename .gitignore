@@ -192,3 +192,21 @@ data/mt5_market_data.json
 # real Gemini call attempt across all processes. Pure runtime state that
 # resets itself every UTC day, never something to commit.
 data/gemini_call_budget.json
+
+# --- CALIBRATION 2026-10-03: runtime files, caches and local backups (never commit) ---
+data/expert/
+data/engine/
+data/ledger.db-wal
+data/ledger.db-shm
+data/exchange_limits.json
+backups/
+logs/*.txt
+freqtrade-stable/*.sqlite-wal
+freqtrade-stable/*.sqlite-shm
+
+# Codex local learning telemetry. Curated markdown files in this folder may be
+# committed intentionally; these generated machine-local files should not be.
+.Codex/learning/runs.jsonl
+.Codex/learning/patterns.md
+.Codex/learning/skill-feedback.jsonl
+.Codex/learning/task-skill-proposals.json

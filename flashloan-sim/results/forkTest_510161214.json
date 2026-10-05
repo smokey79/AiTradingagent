@@ -1,0 +1,161 @@
+{
+  "at": "2026-09-29T22:17:21.652Z",
+  "network": "arbitrum-mainnet-fork (local, nothing broadcast)",
+  "checks": [
+    {
+      "ok": true,
+      "name": "contract exists: vault",
+      "detail": "0xBA12222222228d8Ba445958a75a0704d566BF2C8"
+    },
+    {
+      "ok": true,
+      "name": "contract exists: usdc",
+      "detail": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
+    },
+    {
+      "ok": true,
+      "name": "contract exists: weth",
+      "detail": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1"
+    },
+    {
+      "ok": true,
+      "name": "contract exists: uniRouter",
+      "detail": "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45"
+    },
+    {
+      "ok": true,
+      "name": "contract exists: uniQuoter",
+      "detail": "0x61fFE014bA17989E743c5F6cB21bF9697530B21e"
+    },
+    {
+      "ok": true,
+      "name": "contract exists: sushiRouter",
+      "detail": "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506"
+    },
+    {
+      "ok": true,
+      "name": "FlashArb deployed on the fork",
+      "detail": "0x19b3317E15d2202639510992C13591bAd1E3365F"
+    },
+    {
+      "ok": true,
+      "name": "edge scan finished",
+      "detail": "0 of 12 routes profitable before gas; best UniV3 0.05% -> UniV3 0.3% $-2.2925"
+    },
+    {
+      "ok": true,
+      "name": "SAFETY A: unprofitable trade reverts",
+      "detail": "VM Exception while processing transaction: reverted with reason string 'FlashArb: below minProfit'"
+    },
+    {
+      "ok": true,
+      "name": "PLUMBING B: borrow -> swap -> swap -> repay executed in ONE transaction",
+      "detail": "borrowed $1000, result $-2.3922, gas 301100 units ≈ $0.8162 L2 fee (plus a small L1 data fee the fork cannot measure)"
+    },
+    {
+      "ok": true,
+      "name": "SAFETY C1: stranger cannot call execute",
+      "detail": "VM Exception while processing transaction: reverted with reason string 'FlashArb"
+    },
+    {
+      "ok": true,
+      "name": "SAFETY C2: stranger cannot trigger our callback via the Vault",
+      "detail": "VM Exception while processing transaction: reverted with reason string 'FlashArb"
+    }
+  ],
+  "forkBlock": 510161214,
+  "routes": [
+    {
+      "size": 1000,
+      "leg1": "UniV3 0.05%",
+      "leg2": "UniV3 0.3%",
+      "pnlUsd": -2.2925,
+      "pnlPct": -0.2292
+    },
+    {
+      "size": 1000,
+      "leg1": "UniV3 0.3%",
+      "leg2": "UniV3 0.05%",
+      "pnlUsd": -4.7994,
+      "pnlPct": -0.4799
+    },
+    {
+      "size": 10000,
+      "leg1": "UniV3 0.05%",
+      "leg2": "UniV3 0.3%",
+      "pnlUsd": -27.2686,
+      "pnlPct": -0.2727
+    },
+    {
+      "size": 10000,
+      "leg1": "UniV3 0.3%",
+      "leg2": "UniV3 0.05%",
+      "pnlUsd": -52.3217,
+      "pnlPct": -0.5232
+    },
+    {
+      "size": 1000,
+      "leg1": "UniV3 0.05%",
+      "leg2": "Sushi V2",
+      "pnlUsd": -534.4191,
+      "pnlPct": -53.4419
+    },
+    {
+      "size": 1000,
+      "leg1": "UniV3 0.3%",
+      "leg2": "Sushi V2",
+      "pnlUsd": -535.2448,
+      "pnlPct": -53.5245
+    },
+    {
+      "size": 1000,
+      "leg1": "Sushi V2",
+      "leg2": "UniV3 0.05%",
+      "pnlUsd": -535.3887,
+      "pnlPct": -53.5389
+    },
+    {
+      "size": 1000,
+      "leg1": "Sushi V2",
+      "leg2": "UniV3 0.3%",
+      "pnlUsd": -535.9757,
+      "pnlPct": -53.5976
+    },
+    {
+      "size": 10000,
+      "leg1": "UniV3 0.05%",
+      "leg2": "Sushi V2",
+      "pnlUsd": -9197.3116,
+      "pnlPct": -91.9731
+    },
+    {
+      "size": 10000,
+      "leg1": "UniV3 0.3%",
+      "leg2": "Sushi V2",
+      "pnlUsd": -9197.5796,
+      "pnlPct": -91.9758
+    },
+    {
+      "size": 10000,
+      "leg1": "Sushi V2",
+      "leg2": "UniV3 0.05%",
+      "pnlUsd": -9198.7545,
+      "pnlPct": -91.9875
+    },
+    {
+      "size": 10000,
+      "leg1": "Sushi V2",
+      "leg2": "UniV3 0.3%",
+      "pnlUsd": -9199.777,
+      "pnlPct": -91.9978
+    }
+  ],
+  "fullCycle": {
+    "route": "UniV3 0.05% -> UniV3 0.3%",
+    "borrowedUsd": 1000,
+    "pnlUsd": -2.3922,
+    "gasUsed": 301100,
+    "l2GasCostUsd": 0.8162,
+    "ethUsd": 2679.05
+  }
+}

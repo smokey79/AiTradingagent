@@ -99,6 +99,9 @@ async function fetchCandlesAndOrderBook(pair) {
   let candles = null;
   let ob = null;
   let ticker = null;
+  // 2026-10-03: remember where each piece really came from so the data-quality gate can refuse
+  // synthetic candles and hard-coded seed prices instead of trading on them.
+  const sources = { candles: 'none', ticker: 'none' };
 
   // 1. Primary Attempt: Binance CCXT
   try {
@@ -108,9 +111,9 @@ async function fetchCandlesAndOrderBook(pair) {
       exchange.fetchOrderBook(formattedSymbol, 10).catch(() => null),
       exchange.fetchTicker(formattedSymbol).catch(() => null),
     ]);
-    if (ohlcv && ohlcv.length > 0) candles = ohlcv;
+    if (ohlcv && ohlcv.length > 0) { candles = ohlcv; sources.candles = 'binance'; }
     if (orderBook) ob = orderBook;
-    if (tick) ticker = tick;
+    if (tick) { ticker = tick; sources.ticker = 'exchange'; }
   } catch (_) {}
 
   // 2. Secondary Failover: Bitget CCXT (fully configured & working with live order book & candles)
@@ -122,19 +125,29 @@ async function fetchCandlesAndOrderBook(pair) {
         !ob ? bitget.fetchOrderBook(formattedSymbol, 10).catch(() => null) : null,
         !ticker ? bitget.fetchTicker(formattedSymbol).catch(() => null) : null,
       ]);
-      if (bgOhlcv && bgOhlcv.length > 0) candles = bgOhlcv;
+      if (bgOhlcv && bgOhlcv.length > 0) { candles = bgOhlcv; sources.candles = 'bitget'; }
       if (bgOb) ob = bgOb;
-      if (bgTick) ticker = bgTick;
+      if (bgTick) { ticker = bgTick; sources.ticker = 'exchange'; }
     } catch (_) {}
   }
 
-  // 3. Fallback: If exchange candles are still missing, use synthetic only as last resort
+  // 3. Fallback: synthetic (RANDOM) candles are now OFF by default (2026-10-03). They used to be generated
+  // whenever both exchanges failed, which let agents vote and "learn" on made-up data (every recorded win
+  // carried the same default snapshot: RSI 50, no EMA distance, volume ratio 1). Set ALLOW_SYNTHETIC_CANDLES=true
+  // only for offline demos; the data-quality gate still marks such data as not tradable.
   if (!candles || candles.length === 0) {
-    const basePrice = ticker?.last || SEED_PRICES[symbol] || 100;
-    candles = generateSyntheticCandles(basePrice, 100);
+    if (require('../utils/realism').allowSyntheticCandles()) {
+      const basePrice = ticker?.last || SEED_PRICES[symbol] || 100;
+      candles = generateSyntheticCandles(basePrice, 100);
+      sources.candles = 'synthetic';
+    } else {
+      candles = [];
+      sources.candles = 'none';
+    }
   }
 
   const result = {
+    sources,
     candles,
     orderBook: ob || { bids: [[ticker?.bid || SEED_PRICES[symbol] || 100, 5]], asks: [[ticker?.ask || (SEED_PRICES[symbol] || 100) * 1.001, 5]] },
     ticker: ticker || { last: SEED_PRICES[symbol] || 100, percentage: 1.2, quoteVolume: 50000000 },
@@ -249,7 +262,21 @@ async function fetchMarketData(pair, preFetchedCmcQuotes = null) {
 
   const indicators = calculateAllIndicators(exchangeData.candles, exchangeData.orderBook);
 
+  // 2026-10-03: data-quality gate (src/utils/realism.js). Fail-closed: the orchestrator refuses to run
+  // consensus/trades on a snapshot with synthetic/stale/flat candles, a seed price, or pegged RSI/ATR.
+  const exchangeTickerLast = exchangeData.ticker?.last;
+  const priceSource = cmcData?.price ? 'coinmarketcap' : (exchangeData.sources?.ticker === 'exchange' ? 'exchange' : 'seed');
+  const quality = require('../utils/realism').dataQualityCheck({
+    candles: exchangeData.candles,
+    timeframeMs: 3600000, // candles are fetched as 1h above
+    indicators,
+    price: currentPrice,
+    tickerLast: priceSource === 'exchange' ? exchangeTickerLast : undefined,
+    sources: { candles: exchangeData.sources?.candles || 'none', ticker: priceSource === 'seed' ? 'seed' : 'live' },
+  });
+
   return {
+    quality,
     symbol,
     pair: pair.includes('/') ? pair : `${symbol}/USDT`,
     price: {
@@ -265,6 +292,9 @@ async function fetchMarketData(pair, preFetchedCmcQuotes = null) {
       source: cmcData ? 'coinmarketcap_live' : 'exchange_feed',
     },
     indicators,
+    // 2026-10-03: raw 1h candles + order book, needed by the probability engine (src/engine). Read-only extras.
+    candles: exchangeData.candles,
+    rawOrderBook: exchangeData.orderBook,
     fearGreed,
     dex: dexData,
     cmc: cmcData || null,

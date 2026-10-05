@@ -1,0 +1,167 @@
+{
+  "generatedAt": "2026-10-05T03:13:16.774Z",
+  "mode": "PAPER",
+  "evidence": {
+    "ledgerRecords": 22,
+    "resolvedLearnable": 22,
+    "excludedFromLearning": 0,
+    "stillOpen": 0,
+    "minSampleRequired": 30,
+    "sampleSufficient": false
+  },
+  "overall": {
+    "trades": 22,
+    "wins": 8,
+    "losses": 14,
+    "winRate": 0.36363636363636365,
+    "netPnl": 69.89681395000001,
+    "profitFactor": 2.291977682566865,
+    "avgPnl": 3.1771279068181824
+  },
+  "byRegime": {
+    "CHOPPY_RANGING": {
+      "trades": 2,
+      "wins": 0,
+      "losses": 2,
+      "winRate": 0,
+      "netPnl": -0.16,
+      "profitFactor": 0,
+      "avgPnl": -0.08
+    }
+  },
+  "byPair": {
+    "ARB/USDT": {
+      "trades": 2,
+      "wins": 1,
+      "losses": 1,
+      "winRate": 0.5,
+      "netPnl": 26.790866339999997,
+      "profitFactor": 3.792724274320278,
+      "avgPnl": 13.395433169999999
+    },
+    "AAVE/USDT": {
+      "trades": 3,
+      "wins": 1,
+      "losses": 2,
+      "winRate": 0.3333333333333333,
+      "netPnl": -3.74386188,
+      "profitFactor": 0.5617166292749005,
+      "avgPnl": -1.24795396
+    },
+    "SOL/USDT": {
+      "trades": 3,
+      "wins": 1,
+      "losses": 2,
+      "winRate": 0.3333333333333333,
+      "netPnl": -4.176279709999999,
+      "profitFactor": 0.40864495915139604,
+      "avgPnl": -1.3920932366666665
+    },
+    "BTC/USDT": {
+      "trades": 2,
+      "wins": 0,
+      "losses": 2,
+      "winRate": 0,
+      "netPnl": -6.53732181,
+      "profitFactor": 0,
+      "avgPnl": -3.268660905
+    },
+    "ETH/USDT": {
+      "trades": 1,
+      "wins": 0,
+      "losses": 1,
+      "winRate": 0,
+      "netPnl": -4.89560312,
+      "profitFactor": 0,
+      "avgPnl": -4.89560312
+    },
+    "NEAR/USDT": {
+      "trades": 2,
+      "wins": 2,
+      "losses": 0,
+      "winRate": 1,
+      "netPnl": 68.82602706,
+      "profitFactor": null,
+      "avgPnl": 34.41301353
+    },
+    "BNB/USDT": {
+      "trades": 2,
+      "wins": 1,
+      "losses": 1,
+      "winRate": 0.5,
+      "netPnl": -0.3317698,
+      "profitFactor": 0.2637296570436605,
+      "avgPnl": -0.1658849
+    },
+    "SUI/USDT": {
+      "trades": 1,
+      "wins": 1,
+      "losses": 0,
+      "winRate": 1,
+      "netPnl": 0.01875817,
+      "profitFactor": null,
+      "avgPnl": 0.01875817
+    },
+    "AVAX/USDT": {
+      "trades": 2,
+      "wins": 0,
+      "losses": 2,
+      "winRate": 0,
+      "netPnl": -4.7152589,
+      "profitFactor": 0,
+      "avgPnl": -2.35762945
+    },
+    "LINK/USDT": {
+      "trades": 1,
+      "wins": 1,
+      "losses": 0,
+      "winRate": 1,
+      "netPnl": 10.96568291,
+      "profitFactor": null,
+      "avgPnl": 10.96568291
+    },
+    "OP/USDT": {
+      "trades": 1,
+      "wins": 0,
+      "losses": 1,
+      "winRate": 0,
+      "netPnl": -12.14442531,
+      "profitFactor": 0,
+      "avgPnl": -12.14442531
+    },
+    "FLOKI/USDT": {
+      "trades": 1,
+      "wins": 0,
+      "losses": 1,
+      "winRate": 0,
+      "netPnl": -0.09,
+      "profitFactor": 0,
+      "avgPnl": -0.09
+    },
+    "ADA/USDT": {
+      "trades": 1,
+      "wins": 0,
+      "losses": 1,
+      "winRate": 0,
+      "netPnl": -0.07,
+      "profitFactor": 0,
+      "avgPnl": -0.07
+    }
+  },
+  "agents": {},
+  "tradingCosts90Days": {
+    "days": 90,
+    "trades": 22,
+    "feesAndSlippageUsd": 6.881224378540001,
+    "netPnlUsd": 69.89681395000001,
+    "note": "Recorded costs only; unknown funding, borrowing, withdrawal and network costs are not assumed to be zero."
+  },
+  "proposals": [
+    {
+      "direction": "investigate",
+      "title": "Insufficient evidence — no tuning this cycle",
+      "detail": "22 resolved real trades on record; 30 are required before any parameter is changed. Anything tuned on this sample would be fitting noise."
+    }
+  ],
+  "autoApplied": []
+}

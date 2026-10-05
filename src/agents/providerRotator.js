@@ -28,8 +28,7 @@ function setCooldown(key, ms = 60_000) {
 
 // ─── OpenRouter 7-Model Free Rotation Pool ──────────────────────────────────
 const FREE_MODELS = [
-  'inclusionai/ling-3.0-flash-fin:free',                     // 1. Financial & algorithmic analysis
-  'inclusionai/ling-3.0-flash-vl:free',                      // 2. High-speed visual/token analysis
+  'qwen/qwen3.8-27b:free',                                   // 2026-10-03: Qwen 3.8 27B (verified free, valid JSON)
   'inclusionai/ling-3.0-flash-sante:free',                   // 3. Compact low-latency inference
   'google/gemma-4-31b-it:free',                             // 4. Google Gemma 4 31B Instruct
   'google/gemma-4-26b-a4b-it:free',                         // 5. Google Gemma 4 26B A4B Instruct

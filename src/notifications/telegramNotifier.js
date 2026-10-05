@@ -94,6 +94,21 @@ async function sendMarginAlert(balance, threshold = 30.0) {
   return sendTelegramMessage(message);
 }
 
+async function sendLowBalanceWarning(balance, threshold = 50.0) {
+  const message = `
+⚠️ <b>LOW BALANCE WARNING</b> ⚠️
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+💰 <b>Balance:</b> $${Number(balance).toFixed(2)}
+📉 <b>Warning threshold:</b> $${Number(threshold).toFixed(2)}
+ℹ️ <i>Trading is still active -- this is a heads-up, not a halt. The hard margin floor (trading stops automatically) is lower than this.</i>
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+⏰ ${new Date().toISOString()}
+`.trim();
+
+  logger.warn(`⚠️ Low Balance Warning: Balance $${balance} <= $${threshold}`);
+  return sendTelegramMessage(message);
+}
+
 async function sendProfitHarvestAlert(profitUsd, btcAmount, vaultUsd) {
   const message = `
 💰 <b>PROFIT WATERFALL HARVEST</b>
@@ -162,6 +177,7 @@ module.exports = {
   sendTelegramMessage,
   sendTradeAlert,
   sendMarginAlert,
+  sendLowBalanceWarning,
   sendProfitHarvestAlert,
   sendAgentInteractiveRequest,
   ingestTelegramMessage,

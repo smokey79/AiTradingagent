@@ -286,8 +286,62 @@ class LearningAgent:
         self.db        = db or LearningDB()
         self.analytics = LearningAnalytics(self.db)
 
+    def sync_from_ledger(self) -> int:
+        """
+        2026-10-03: the ONLY way real outcomes reach this agent. Copies real, fee-inclusive, closed trades
+        (SQLite view real_trades in data/ledger.db: not simulated, source dry_run/live, fees included)
+        into this DB. Idempotent (a ledger row is imported once). Returns how many rows were added.
+        """
+        try:
+            import sys
+            from pathlib import Path
+            root = str(Path(__file__).resolve().parents[1])
+            if root not in sys.path:
+                sys.path.insert(0, root)
+            from core import ledger_db
+            rows = ledger_db.real_trades()
+        except Exception as exc:  # ledger not created yet, or unreadable: learn nothing rather than learn wrong
+            logger.debug("ledger sync unavailable: %s", exc)
+            return 0
+
+        added = 0
+        for r in rows:
+            tid = f"ledger-{r['id']}"
+            with self.db._conn() as conn:
+                if conn.execute("SELECT 1 FROM trades WHERE trade_id=?", (tid,)).fetchone():
+                    continue
+            self.db.log_trade(TradeRecord(
+                trade_id=tid,
+                timestamp=r["closed_at"] or r["imported_at"],
+                symbol=str(r["pair"]).replace("/", ""),
+                action="SHORT" if str(r["side"]).upper() in ("SHORT", "SELL") else "LONG",
+                size=float(r["stake_usd"] or 0.0),
+                entry_price=float(r["entry_price"] or 0.0),
+                exit_price=float(r["exit_price"] or 0.0),
+                pnl_usd=float(r["pnl_usd"] or 0.0),
+                pnl_pct=float(r["pnl_pct"] or 0.0),
+                hold_bars=0,
+                pattern_name=None,
+                signal_source=str(r["enter_tag"] or r["engine"] or "consensus"),
+                llm_provider="multi_agent",
+                features=str(r["meta"] or "{}"),
+                decision_reason=str(r["exit_reason"] or ""),
+                was_correct=(r["outcome"] == "WIN"),
+            ))
+            added += 1
+        if added:
+            self.db.log_event("ledger_sync", f"imported {added} real fee-inclusive trades from ledger.db")
+            if self.db.total_trades() >= MIN_TRADES:
+                self._adapt_weights()
+        return added
+
     def after_trade(self, record: TradeRecord) -> None:
         """Record outcome and trigger weight adaptation if enough data exists."""
+        # 2026-10-03: an unresolved DECISION (entry == exit, pnl 0, held 0 bars) is not a closed trade.
+        # Such rows were logged as "correct" trades and corrupted every learned weight. Refuse them.
+        if record.hold_bars == 0 and record.pnl_usd == 0.0 and record.exit_price == record.entry_price:
+            logger.warning("Ignored %s: unresolved decision (entry == exit, pnl 0) is not a closed trade", record.trade_id)
+            return
         self.db.log_trade(record)
 
         total = self.db.total_trades()

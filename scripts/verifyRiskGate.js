@@ -4,7 +4,7 @@
  *
  * Checks Alan's two rules:
  *   1. No trade without MAJORITY consensus.
- *   2. 72% is an absolute floor that regime logic may raise but never lower.
+ *   2. MIN_CONFIDENCE is an absolute floor that regime logic may raise but never lower.
  */
 'use strict';
 process.env.PAPER_TRADING = 'true';

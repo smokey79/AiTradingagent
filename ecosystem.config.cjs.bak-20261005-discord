@@ -1,0 +1,325 @@
+module.exports = {
+  apps: [
+    {
+      name: "risk-gate",
+      cwd: "F:/aitradingagent/mcp-servers/risk-gate-mcp",
+      script: "index.js",
+      interpreter: "node",
+      watch: false
+    },
+    {
+      name: "trading-data",
+      cwd: "F:/aitradingagent/mcp-servers/trading-data-mcp",
+      script: "index.js",
+      interpreter: "node",
+      watch: false
+    },
+    // --- DISABLED 2026-09-03 ---
+    // trading-api (trading_api.py) and autonomous-matrix (the legacy Python
+    // engine) each run their OWN independent trading loop/controller. Running
+    // either alongside trading-orchestrator (below, the real Node consensus
+    // engine) means two uncoordinated systems writing to the same
+    // trade_ledger.json / portfolio_state.json at once — that would corrupt
+    // the win-rate numbers this session just made honest. Left here,
+    // commented out, rather than deleted, so nothing is lost and either can
+    // be re-enabled deliberately if you want to compare them side by side
+    // (with separate ledger files) later.
+    // flask-dashboard (wsgi.py) is a separate "Developments Studio" UI on
+    // port 3002 (TradingView/Terminal/PineScript) — not a trading loop, so
+    // it doesn't conflict, but it's outside tonight's verification scope.
+    // Uncomment any of these individually if you want them running too.
+    //
+    // {
+    //   name: "trading-api",
+    //   cwd: "F:/aitradingagent",
+    //   script: "trading_api.py",
+    //   interpreter: "F:/aitradingagent/venv/Scripts/python.exe",
+    //   watch: false
+    // },
+    // {
+    //   name: "autonomous-matrix",
+    //   cwd: "F:/aitradingagent",
+    //   script: "agents/AI-Trading-Agent/autonomous_engine.py",
+    //   interpreter: "F:/aitradingagent/venv/Scripts/python.exe",
+    //   watch: false
+    // },
+    // {
+    //   name: "flask-dashboard",
+    //   cwd: "F:/aitradingagent",
+    //   script: "wsgi.py",
+    //   interpreter: "F:/aitradingagent/venv/Scripts/python.exe",
+    //   watch: false
+    // },
+    {
+      // Cross-chain flash-loan arbitrage scanner (analysis/paper-log only —
+      // see src/flashloan/flash_loan_executor.py, whose execute_live() is
+      // still an unimplemented stub, so nothing here ever sends a real
+      // on-chain transaction). Re-added 2026-09-13 after fixing a bug where
+      // a near-zero price from a bad feed produced bogus trillion-percent
+      // "opportunities" in vault_summary.json (see cross_chain_arbitrage.py).
+      // Was in the older ecosystem.config.js but never wired into this
+      // (safer, de-conflicted) config until now.
+      name: "arb-scanner",
+      cwd: "F:/aitradingagent",
+      script: "src/flashloan/arbitrage_scanner.py",
+      args: "--continuous",
+      interpreter: "F:/aitradingagent/venv/Scripts/python.exe",
+      watch: false,
+      autorestart: true,
+      restart_delay: 10000,
+      max_restarts: 15,
+      error_file: "logs/arb-scanner-err.log",
+      out_file: "logs/arb-scanner-out.log"
+    },
+    // --- NOT ENABLED YET 2026-09-15 ---
+    // src/flashloan/opportunity_scout.py — the broader "not just arbitrage"
+    // cross-chain scanner (bridge-latency windows, LP fee-turnover leads,
+    // liquidity-bootstrap gaps, gas-optimized near-miss routing). Written
+    // and reviewed but not yet syntax-checked/run on this machine (see
+    // claude/session-2026-09-15-cfd-futures-and-crosschain-scout.md).
+    // Analysis/logging only, same as arb-scanner — no execute path exists.
+    // Uncomment once you've run `python src/flashloan/opportunity_scout.py`
+    // once by hand and are happy with what it logs to
+    // data/opportunity_scout_log.jsonl.
+    //
+    // {
+    //   name: "opportunity-scout",
+    //   cwd: "F:/aitradingagent",
+    //   script: "src/flashloan/opportunity_scout.py",
+    //   interpreter: "F:/aitradingagent/venv/Scripts/python.exe",
+    //   watch: false,
+    //   autorestart: true,
+    //   restart_delay: 30000,
+    //   max_restarts: 15,
+    //   error_file: "logs/opportunity-scout-err.log",
+    //   out_file: "logs/opportunity-scout-out.log"
+    // },
+    {
+      // Multi-LLM Bull/Bear/Neutral debate engine (scripts/debate_runner.py).
+      // Publishes decisions to latest_decision.json alongside the Node
+      // consensus loop. Falls back to a heuristic momentum rule if no LLM
+      // key resolves (see the has_live_keys fix in that file, 2026-09-13).
+      // Re-added for the same reason as arb-scanner above.
+      name: "python-debate",
+      cwd: "F:/aitradingagent",
+      script: "scripts/debate_runner.py",
+      interpreter: "F:/aitradingagent/venv/Scripts/python.exe",
+      watch: false,
+      autorestart: true,
+      restart_delay: 10000,
+      max_restarts: 15,
+      error_file: "logs/debate-err.log",
+      out_file: "logs/debate-out.log"
+    },
+    {
+      // Periodic Hermes3 "deep analysis" commentary — scripts/hermes_analyst.py.
+      // Added 2026-09-13: hermes3 is downloaded and works, but a single
+      // completion measured ~40s on this CPU-only machine and briefly pushed
+      // host RAM to 91.6% used (1.3GB free) while loaded. Wiring it into the
+      // fast debate loop's fallback chain would have risked missing the
+      // 120s debate interval and starving the rest of the stack of RAM. So
+      // it runs here instead: its own long interval (default 30 min, see
+      // HERMES_ANALYSIS_INTERVAL_S in .env), calls Ollama directly (never
+      // through core.llm_router — this process only ever wants Hermes3),
+      // and writes to data/hermes_deep_analysis.json. It does NOT feed into
+      // latest_decision.json or any live trade decision — commentary only.
+      // llama3.2 remains the fast fallback for the actual debate loop.
+      name: "hermes-analyst",
+      cwd: "F:/aitradingagent",
+      script: "scripts/hermes_analyst.py",
+      interpreter: "F:/aitradingagent/venv/Scripts/python.exe",
+      watch: false,
+      autorestart: true,
+      restart_delay: 30000,
+      max_restarts: 15,
+      error_file: "logs/hermes-analyst-err.log",
+      out_file: "logs/hermes-analyst-out.log"
+    },
+    {
+      // Periodic Bigdata.com news/macro sentiment refresher —
+      // scripts/bigdata_analyst.py. Added 2026-09-28 (Alan's explicit
+      // instruction: wire Bigdata.com in as a 4th real voting agent). Calls
+      // data_sources/bigdata_feed.py's refresh() every
+      // BIGDATA_REFRESH_INTERVAL_S seconds (default 1800 = 30 min, matching
+      // bigdata_feed.py's own BIGDATA_CACHE_MINUTES default) and writes
+      // data/external/bigdata_latest.json. Same reasoning as hermes-analyst
+      // above: kept OFF the fast consensus loop so a slow HTTP call never
+      // risks that loop's timing. src/agents/bigdataAgent.js just reads the
+      // cached JSON this process produces — see consensus.js's AGENT_WEIGHTS
+      // (bigdata_sentiment: 0.15). Self-healing: if BIGDATA_API_KEY is blank
+      // or a request fails, it logs a warning and keeps serving the last
+      // good cache (or abstains) rather than crashing.
+      name: "bigdata-analyst",
+      cwd: "F:/aitradingagent",
+      script: "scripts/bigdata_analyst.py",
+      interpreter: "F:/aitradingagent/venv/Scripts/python.exe",
+      watch: false,
+      autorestart: true,
+      restart_delay: 30000,
+      max_restarts: 15,
+      error_file: "logs/bigdata-analyst-err.log",
+      out_file: "logs/bigdata-analyst-out.log"
+    },
+    // RETIRED 2026-10-05 per Alan's explicit instruction ("remove tradingkit
+    // analyst, use a single agent tradingview strategy advisor/picker...").
+    // tradingkit-analyst (scripts/tradingkit_analyst.js, trader.dev paid API)
+    // is replaced by strategy-advisor below. Left here commented-out rather
+    // than deleted, per this project's convention for retired PM2 apps.
+    // {
+    //   name: "tradingkit-analyst",
+    //   cwd: "F:/aitradingagent",
+    //   script: "scripts/tradingkit_analyst.js",
+    //   interpreter: "node",
+    //   watch: false,
+    //   autorestart: true,
+    //   restart_delay: 30000,
+    //   max_restarts: 15,
+    //   error_file: "logs/tradingkit-analyst-err.log",
+    //   out_file: "logs/tradingkit-analyst-out.log"
+    // },
+    {
+      // Strategy Advisor / Picker — scripts/strategy_advisor.js. Added
+      // 2026-10-05, replacing tradingkit-analyst above. Sits between data
+      // ingestion and trade memory: each cycle (default 4h, see
+      // STRATEGY_ADVISOR_INTERVAL_S in .env) it backtests+optimizes all 4
+      // built-in Pine presets (pineScriptGenerator.js) for each of the 7
+      // target tokens using the REAL backtest engine (backtestEngine.js,
+      // real ccxt candles), keeps the best-fitness pick per token, and
+      // roughly once a day also sources fresh candidate strategies from
+      // GitHub/Twitter (strategySourcer.js) to test alongside the built-ins.
+      // Writes data/strategy_advisor_signals.json for
+      // strategyAdvisorFeed.fetchSignal() to read (same cache-read contract
+      // the old tradingKitFeed had) and persists every pick into the trade
+      // memory (learned_strategies.json / strategy/strategy_memory.json) via
+      // strategyLearningAgent.saveLearnedStrategy(). Defaults to a 'hold'
+      // signal on thin samples, a sub-68%-gate edge, or a synthetic-candle
+      // fallback — never asserts a trade on weak/unvalidated evidence.
+      name: "strategy-advisor",
+      cwd: "F:/aitradingagent",
+      script: "scripts/strategy_advisor.js",
+      interpreter: "node",
+      watch: false,
+      autorestart: true,
+      restart_delay: 30000,
+      max_restarts: 15,
+      error_file: "logs/strategy-advisor-err.log",
+      out_file: "logs/strategy-advisor-out.log"
+    },
+    {
+      // MT5 backup market-data feed — scripts/mt5_market_feed.py. Added
+      // 2026-09-26 as a self-healing fallback DATA source for the OANDA
+      // forex/commodity/index pairs, NOT a second trading engine (it
+      // connects to the same OANDA demo account src/brokers/oandaBroker.js
+      // already trades via the v20 REST API, so it never places an order -
+      // see the big comment at the top of mt5_market_feed.py). Polls MT5
+      // every MT5_FEED_INTERVAL_S seconds (default 30) and writes
+      // data/mt5_market_data.json; src/data/oandaMarketData.js reads that
+      // file ONLY when OANDA's own REST API fails to return a price/candles
+      // for a pair that cycle. Requires the MetaTrader5 terminal to be
+      // installed and MT5_LOGIN/MT5_PASSWORD/MT5_SERVER set in .env (see
+      // scripts/mt5_check.py to test the connection by hand first).
+      name: "mt5-feed",
+      cwd: "F:/aitradingagent",
+      script: "scripts/mt5_market_feed.py",
+      interpreter: "F:/aitradingagent/venv/Scripts/python.exe",
+      watch: false,
+      autorestart: true,
+      restart_delay: 15000,
+      max_restarts: 15,
+      error_file: "logs/mt5-feed-err.log",
+      out_file: "logs/mt5-feed-out.log"
+    },
+    {
+      name: "telegram-listener",
+      cwd: "F:/aitradingagent",
+      script: "src/notifications/telegramListener.js",
+      interpreter: "node",
+      watch: false,
+      // Until TELEGRAM_API_ID / TELEGRAM_API_HASH / TELEGRAM_SESSION are set in .env,
+      // the script logs a warning and exits immediately (by design) — these settings
+      // just stop PM2 from restart-looping it while it's unconfigured.
+      autorestart: true,
+      restart_delay: 30000,
+      max_restarts: 30
+    },
+    {
+      // Main 13-agent consensus trading loop — src/orchestrator/index.js + consensus.js
+      // This is the process that produces trade_ledger.json / portfolio_state.json.
+      // Was previously run manually (npm run bot) and not PM2-managed, so it died
+      // whenever the terminal closed. Now supervised: auto-restarts on crash.
+      name: "trading-orchestrator",
+      cwd: "F:/aitradingagent",
+      script: "src/orchestrator/index.js",
+      interpreter: "node",
+      watch: false,
+      autorestart: true,
+      restart_delay: 10000,
+      max_restarts: 50,
+      env: { NODE_ENV: "production" }
+    },
+    {
+      // 2026-09-29 DUEL "Bot B": Claude-only paper trader (src/duel/claudeSoloTrader.js).
+      // Same data modules + universe as trading-orchestrator, its OWN book in
+      // data/duel/ (never touches trade_ledger.json / portfolio_state.json).
+      // PAPER ONLY — no real-order code path. Stops itself after DUEL_HOURS
+      // (default 24h) or at the $30 equity floor. Claude spend capped by
+      // DUEL_CLAUDE_BUDGET_USD (default $2) via OpenRouter.
+      name: "claude-solo",
+      cwd: "F:/aitradingagent",
+      script: "src/duel/claudeSoloTrader.js",
+      interpreter: "node",
+      watch: false,
+      autorestart: true,
+      restart_delay: 15000,
+      max_restarts: 30,
+      out_file: "logs/claude-solo-out.log",
+      error_file: "logs/claude-solo-err.log"
+    },
+    {
+      // Live dashboard UI — npm run dashboard equivalent
+      // PORT set to 3001 (2026-09-16) to match .env PORT=3001, Watchdog.ps1's
+      // health check, RestartBot.ps1's port-based process discovery, the
+      // desktop shortcut, and votes.html/wallets.html — all of which assume
+      // 3001. The earlier 3003 override was to dodge a conflicting process
+      // that is no longer present; verify with `netstat -ano | findstr :3001`
+      // before restarting if that ever changes again.
+      // DASHBOARD_ONLY=true added 2026-09-16: server.js starts its OWN copy of
+      // autoTrader.js when run as main unless this is set (see
+      // scripts/testVotesEndpoint.js for the precedent). Since
+      // trading-orchestrator (src/orchestrator/index.js, below) already runs
+      // the real auto-trading loop as its own PM2 app, leaving this unset
+      // meant TWO independent auto-trading engines were running at once here
+      // -- double LLM/API calls and two processes writing trades to the same
+      // trade_ledger.json concurrently. Dashboard now serves UI/API only.
+      name: "dashboard",
+      cwd: "F:/aitradingagent",
+      script: "src/dashboard/server.js",
+      interpreter: "node",
+      watch: false,
+      autorestart: true,
+      restart_delay: 10000,
+      max_restarts: 30,
+      env: { PORT: "3001", DASHBOARD_ONLY: "true" }
+    },
+    {
+      // Freqtrade execution engine, running in DRY-RUN, acting on signals
+      // written by trading-orchestrator's signalBridge.js (see
+      // src/orchestrator/signalBridge.js + ConsensusBridgeStrategy.py).
+      // This does NOT run its own independent trading logic — it reads
+      // data/freqtrade_signals.json for what to buy/sell and gives that
+      // real exchange-side stop-loss/position-tracking machinery, which the
+      // hand-built Node executor still lacks. dry_run:true is set in
+      // config_bridge_dryrun.json — added 2026-09-03, not yet battle-tested,
+      // watch its logs before ever considering flipping dry_run off.
+      name: "freqtrade-bridge",
+      cwd: "F:/aitradingagent/freqtrade-stable",
+      script: ".venv/Scripts/freqtrade.exe",
+      args: "trade --config user_data/config_bridge_dryrun.json --strategy ConsensusBridgeStrategy",
+      interpreter: "none",
+      watch: false,
+      autorestart: true,
+      restart_delay: 15000,
+      max_restarts: 30
+    }
+  ]
+};

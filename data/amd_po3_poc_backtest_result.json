@@ -1,0 +1,141 @@
+{
+  "timestamp": "2026-09-26T20:20:33.266Z",
+  "symbols": [
+    "BTC/USDT",
+    "ETH/USDT",
+    "SOL/USDT",
+    "AVAX/USDT",
+    "ARB/USDT",
+    "LTC/USDT"
+  ],
+  "timeframe": "5m",
+  "limit": 25920,
+  "perSymbol": {
+    "BTC/USDT": {
+      "poc_filter": {
+        "label": "BTC/USDT poc_filter",
+        "sampleSize": 10,
+        "winRate": 30,
+        "profitFactor": 0.39,
+        "avgPnlPctPerTrade": -0.251,
+        "totalPnlPctSum": -2.51
+      },
+      "poc_target": {
+        "label": "BTC/USDT poc_target",
+        "sampleSize": 17,
+        "winRate": 29.4,
+        "profitFactor": 1.01,
+        "avgPnlPctPerTrade": 0.005,
+        "totalPnlPctSum": 0.09
+      }
+    },
+    "ETH/USDT": {
+      "poc_filter": {
+        "label": "ETH/USDT poc_filter",
+        "sampleSize": 12,
+        "winRate": 33.3,
+        "profitFactor": 0.29,
+        "avgPnlPctPerTrade": -0.477,
+        "totalPnlPctSum": -5.72
+      },
+      "poc_target": {
+        "label": "ETH/USDT poc_target",
+        "sampleSize": 24,
+        "winRate": 41.7,
+        "profitFactor": 0.81,
+        "avgPnlPctPerTrade": -0.093,
+        "totalPnlPctSum": -2.24
+      }
+    },
+    "SOL/USDT": {
+      "poc_filter": {
+        "label": "SOL/USDT poc_filter",
+        "sampleSize": 7,
+        "winRate": 28.6,
+        "profitFactor": 1.3,
+        "avgPnlPctPerTrade": 0.149,
+        "totalPnlPctSum": 1.04
+      },
+      "poc_target": {
+        "label": "SOL/USDT poc_target",
+        "sampleSize": 8,
+        "winRate": 50,
+        "profitFactor": 5.61,
+        "avgPnlPctPerTrade": 1.458,
+        "totalPnlPctSum": 11.66
+      }
+    },
+    "AVAX/USDT": {
+      "poc_filter": {
+        "label": "AVAX/USDT poc_filter",
+        "sampleSize": 3,
+        "winRate": 66.7,
+        "profitFactor": 3.62,
+        "avgPnlPctPerTrade": 1.709,
+        "totalPnlPctSum": 5.13
+      },
+      "poc_target": {
+        "label": "AVAX/USDT poc_target",
+        "sampleSize": 15,
+        "winRate": 26.7,
+        "profitFactor": 0.88,
+        "avgPnlPctPerTrade": -0.074,
+        "totalPnlPctSum": -1.1
+      }
+    },
+    "ARB/USDT": {
+      "poc_filter": {
+        "label": "ARB/USDT poc_filter",
+        "sampleSize": 6,
+        "winRate": 16.7,
+        "profitFactor": 0.4,
+        "avgPnlPctPerTrade": -0.948,
+        "totalPnlPctSum": -5.69
+      },
+      "poc_target": {
+        "label": "ARB/USDT poc_target",
+        "sampleSize": 10,
+        "winRate": 40,
+        "profitFactor": 0.67,
+        "avgPnlPctPerTrade": -0.398,
+        "totalPnlPctSum": -3.98
+      }
+    },
+    "LTC/USDT": {
+      "poc_filter": {
+        "label": "LTC/USDT poc_filter",
+        "sampleSize": 7,
+        "winRate": 14.3,
+        "profitFactor": 0.16,
+        "avgPnlPctPerTrade": -0.467,
+        "totalPnlPctSum": -3.27
+      },
+      "poc_target": {
+        "label": "LTC/USDT poc_target",
+        "sampleSize": 12,
+        "winRate": 16.7,
+        "profitFactor": 0.39,
+        "avgPnlPctPerTrade": -0.331,
+        "totalPnlPctSum": -3.97
+      }
+    }
+  },
+  "overall": {
+    "poc_filter": {
+      "label": "OVERALL poc_filter",
+      "sampleSize": 45,
+      "winRate": 28.9,
+      "profitFactor": 0.65,
+      "avgPnlPctPerTrade": -0.245,
+      "totalPnlPctSum": -11.02
+    },
+    "poc_target": {
+      "label": "OVERALL poc_target",
+      "sampleSize": 86,
+      "winRate": 33.7,
+      "profitFactor": 1.01,
+      "avgPnlPctPerTrade": 0.005,
+      "totalPnlPctSum": 0.47
+    }
+  }
+}

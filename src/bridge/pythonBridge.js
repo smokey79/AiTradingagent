@@ -14,6 +14,7 @@ const express  = require('express');
 const fs       = require('fs');
 const path     = require('path');
 const router   = express.Router();
+const flashloanExecutor = require('../flashloan/flashloanExecutor');
 
 const DATA_DIR = path.join(__dirname, '../../');
 const LATEST_DECISION  = path.join(DATA_DIR, 'latest_decision.json');
@@ -74,7 +75,7 @@ router.post('/python-signal', (req, res) => {
 // POST /api/python-arb
 // Receives arbitrage opportunities from the Python multi-chain scanner
 // ─────────────────────────────────────────────────────────────────────────────
-router.post('/python-arb', (req, res) => {
+router.post('/python-arb', async (req, res) => {
   const { opportunities, ts } = req.body;
 
   if (!Array.isArray(opportunities)) {
@@ -99,6 +100,30 @@ router.post('/python-arb', (req, res) => {
 
   if (global.broadcastToClients) {
     global.broadcastToClients({ type: 'arb_opportunities', payload });
+  }
+
+  // ── TRIGGER ACTUAL EXECUTION ─────────────────────────────────────────────────
+  // If there are actionable opportunities, dispatch the best one to the executor
+  if (opportunities.length > 0) {
+    const bestOpp = opportunities[0];
+    console.log(`[Bridge] Dispatching best arb to executor: ${bestOpp.token} ${bestOpp.buy_chain} -> ${bestOpp.sell_chain}`);
+    
+    try {
+      // Map Python snake_case to JS camelCase for the executor
+      const result = await flashloanExecutor.executeFlashLoanArbitrage({
+        token: bestOpp.token,
+        borrowAmountUsd: 10000, // Default borrow
+        buyChain: bestOpp.buy_chain,
+        sellChain: bestOpp.sell_chain,
+        buyPrice: bestOpp.buy_price,
+        sellPrice: bestOpp.sell_price,
+        gasCostUsd: bestOpp.gas_cost_pct * 10, // Rough heuristic for USD cost
+      }, process.env.PAPER_TRADE_MODE !== 'false');
+
+      console.log(`[Bridge] Executor result: ${result.success ? '✅ SUCCESS' : '❌ FAILED'} - ${result.reason || 'Executed'}`);
+    } catch (e) {
+      console.error(`[Bridge] Execution dispatch error: ${e.message}`);
+    }
   }
 
   res.json({ status: 'ok', count: opportunities.length });

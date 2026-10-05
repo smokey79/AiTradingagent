@@ -1,0 +1,106 @@
+{
+  "_doc": "What the agent may consider, by asset class, and where each class can actually be executed. Any instrument must still pass the risk gate, evidence gate and live gate. 2026-09-24.",
+  "classes": {
+    "crypto": {
+      "venue": "existing crypto exchanges (Crypto.com / Bitget, paper by default)",
+      "symbols": [
+        "BTC/USDT",
+        "ETH/USDT",
+        "SOL/USDT",
+        "AVAX/USDT",
+        "ARB/USDT",
+        "OP/USDT",
+        "CRO/USDT",
+        "LTC/USDT",
+        "TRX/USDT",
+        "ZEC/USDT",
+        "SUI/USDT",
+        "OKB/USDT",
+        "ICP/USDT",
+        "AAVE/USDT",
+        "POL/USDT",
+        "ATOM/USDT",
+        "FLR/USDT"
+      ],
+      "execution": "enabled"
+    },
+    "crypto_equities": {
+      "venue": "trading212 (Invest account via API; shares, no leverage. T212 CFDs are NOT available through the API)",
+      "symbols": [
+        "MSTR",
+        "COIN",
+        "MARA",
+        "RIOT",
+        "CLSK",
+        "HUT",
+        "HOOD"
+      ],
+      "notes": "Crypto-linked US stocks. Availability on your T212 account is confirmed by scripts/t212_check.js; unavailable tickers are skipped.",
+      "execution": "demo_only_until_live_gate"
+    },
+    "forex": {
+      "venue": "oanda (src/brokers/oandaBroker.js, v20 API, CFDs; practice account by default)",
+      "symbols": [
+        "EUR/USD",
+        "GBP/USD",
+        "USD/JPY",
+        "AUD/USD",
+        "USD/CHF",
+        "EUR/GBP",
+        "EUR/JPY",
+        "GBP/JPY",
+        "USD/CAD",
+        "NZD/USD",
+        "AUD/JPY",
+        "EUR/CHF"
+      ],
+      "execution": "practice_only_until_live_gate",
+      "notes": "Every order needs a stop loss; total position value capped at 5x NAV. Availability: node scripts/oanda_check.js 2026-09-29: universe widened for the bot duel (\"any market allowed\"); every added symbol was price-checked first (runs/2026-09-29_duel/universe_probe.json)."
+    },
+    "commodities": {
+      "venue": "oanda (XAU_USD, XAG_USD, WTICO_USD, BCO_USD, NATGAS_USD)",
+      "symbols": [
+        "XAU/USD",
+        "XAG/USD",
+        "WTI",
+        "BRENT",
+        "NATGAS",
+        "XCU/USD",
+        "XPT/USD",
+        "CORN_USD",
+        "WHEAT_USD",
+        "SUGAR_USD",
+        "SOYBN_USD",
+        "USB10Y_USD"
+      ],
+      "execution": "practice_only_until_live_gate"
+    },
+    "indices": {
+      "venue": "oanda (SPX500_USD, NAS100_USD, UK100_GBP, DE30_EUR)",
+      "symbols": [
+        "US500",
+        "US100",
+        "UK100",
+        "GER40",
+        "HK33_HKD",
+        "JP225_USD",
+        "AU200_AUD",
+        "US30_USD",
+        "FR40_EUR"
+      ],
+      "execution": "practice_only_until_live_gate"
+    },
+    "us_stocks": {
+      "venue": "alpaca (src/brokers/alpacaBroker.js, paper account by default)",
+      "symbols": [
+        "SPY",
+        "QQQ",
+        "AAPL",
+        "MSFT",
+        "NVDA"
+      ],
+      "execution": "paper_only_until_live_gate",
+      "notes": "2026-09-27 (Alan's explicit instruction): default starter list of large, liquid US names/ETFs - deliberately NOT overlapping crypto_equities' MSTR/COIN/MARA/RIOT/CLSK/HUT/HOOD (those stay on Trading212) so the same ticker is never tradeable on two venues at once. To add/remove tickers, just edit this array - no code change needed, only a bot restart to pick it up. Alpaca's own paper keys must be valid in .env (APCA_API_KEY_ID/APCA_API_SECRET_KEY) and ALPACA_TRADING_ENABLED=true in .env to activate."
+    }
+  }
+}

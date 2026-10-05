@@ -1,0 +1,15 @@
+[mcp_servers.portfolio]
+command = "node"
+args = ["mcp-servers/portfolio-mcp/index.js"]
+
+[mcp_servers.risk-gate]
+command = "node"
+args = ["mcp-servers/risk-gate-mcp/index.js"]
+
+[mcp_servers.signal-engine]
+command = "node"
+args = ["mcp-servers/signal-engine-mcp/index.js"]
+
+[mcp_servers.trading-data]
+command = "node"
+args = ["mcp-servers/trading-data-mcp/index.js"]

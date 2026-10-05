@@ -1,0 +1,263 @@
+[
+  {
+    "horizon_candles": 1,
+    "model": {
+      "mean": [
+        4.595046906021193e-05,
+        0.000267419923986512,
+        0.0010850732032814667,
+        50.06616648131795,
+        0.013411884006844864,
+        26.72999004407836,
+        0.22599585689558352,
+        1.0670782243376231,
+        0.4494027675147,
+        0.281430366306464,
+        0.269166866178823,
+        0.5369161071853114
+      ],
+      "scale": [
+        0.010004922926529691,
+        0.02395165001873031,
+        0.04753025822963877,
+        11.746605802980383,
+        0.0068265345026673994,
+        11.427189155472977,
+        0.1630749545310928,
+        1.427732626455726,
+        0.25630054361418314,
+        0.2117605943666055,
+        0.20708058244377697,
+        0.28789016393703737
+      ],
+      "coef": [
+        4.579555405124061e-05,
+        -0.00015667174371086282,
+        -0.00012372448888934394,
+        -0.0005031916480589141,
+        0.0004445693866383761,
+        0.000327055066885691,
+        8.099339005680981e-06,
+        1.543160501159242e-05,
+        6.24297037384426e-05,
+        1.2478345776200929e-05,
+        -0.00012800463905042383,
+        0.00011545327600979534,
+        8.124131814064202e-05
+      ],
+      "alpha": 0.01,
+      "feature_names": [
+        "return1",
+        "return6",
+        "return24",
+        "rsi14",
+        "atr_pct",
+        "adx",
+        "efficiency",
+        "vol_ratio",
+        "body_ratio",
+        "lower_wick",
+        "upper_wick",
+        "strength_rank"
+      ]
+    },
+    "threshold": 0.003,
+    "validation": {
+      "observations": 72226,
+      "direction_accuracy_pct": 50.12045523772603,
+      "always_up_accuracy_pct": 49.73416775122532,
+      "mean_absolute_error": 0.0059670578194907405,
+      "filtered_observations": 375,
+      "filtered_accuracy_pct": 55.46666666666666,
+      "filtered_mean_net_return_bps": 12.102481830030438,
+      "overlapping_opportunity_profit_factor": 1.11498970302297,
+      "status": "forecast diagnostic only; overlapping events cannot satisfy 250 independent trades or portfolio drawdown"
+    },
+    "selection_score": 12.102481830030438,
+    "test": {
+      "observations": 82488,
+      "direction_accuracy_pct": 49.17078847832412,
+      "always_up_accuracy_pct": 49.27140917466783,
+      "mean_absolute_error": 0.005021451874376992,
+      "filtered_observations": 62,
+      "filtered_accuracy_pct": 53.2258064516129,
+      "filtered_mean_net_return_bps": 24.125920692661413,
+      "overlapping_opportunity_profit_factor": 1.1472502732754186,
+      "status": "forecast diagnostic only; overlapping events cannot satisfy 250 independent trades or portfolio drawdown"
+    }
+  },
+  {
+    "horizon_candles": 2,
+    "model": {
+      "mean": [
+        4.636921042567956e-05,
+        0.000267338777169236,
+        0.001085202358584209,
+        50.06606365003292,
+        0.013412084106372745,
+        26.730263875129815,
+        0.22599681498668597,
+        1.067070711898781,
+        0.449395004519768,
+        0.28143453779568717,
+        0.26917045768453174,
+        0.536916202016934
+      ],
+      "scale": [
+        0.010005041365831848,
+        0.02395241290745293,
+        0.04753155902307215,
+        11.746804222938867,
+        0.006826592482653706,
+        11.427480243343968,
+        0.16307822954813866,
+        1.4277686012719712,
+        0.25630316244809737,
+        0.21176743517867314,
+        0.20708204117253423,
+        0.287890159981426
+      ],
+      "coef": [
+        9.044407433355819e-05,
+        -0.00030605208955648345,
+        -0.00010173407182203866,
+        -0.0007170747922305267,
+        0.0005948725004631699,
+        0.0005746928970921021,
+        3.196009835769243e-05,
+        5.019996711958486e-06,
+        0.00011548740935785305,
+        4.067902651234696e-05,
+        -0.0001262066104242491,
+        7.871415096846519e-05,
+        0.00011555020467453073
+      ],
+      "alpha": 0.1,
+      "feature_names": [
+        "return1",
+        "return6",
+        "return24",
+        "rsi14",
+        "atr_pct",
+        "adx",
+        "efficiency",
+        "vol_ratio",
+        "body_ratio",
+        "lower_wick",
+        "upper_wick",
+        "strength_rank"
+      ]
+    },
+    "threshold": 0.005,
+    "validation": {
+      "observations": 72212,
+      "direction_accuracy_pct": 50.39467124577632,
+      "always_up_accuracy_pct": 50.02908103916247,
+      "mean_absolute_error": 0.008464249948287527,
+      "filtered_observations": 345,
+      "filtered_accuracy_pct": 55.362318840579704,
+      "filtered_mean_net_return_bps": 72.47590516622255,
+      "overlapping_opportunity_profit_factor": 1.6863762589507532,
+      "status": "forecast diagnostic only; overlapping events cannot satisfy 250 independent trades or portfolio drawdown"
+    },
+    "selection_score": 72.47590516622255,
+    "test": {
+      "observations": 82474,
+      "direction_accuracy_pct": 49.56592380629047,
+      "always_up_accuracy_pct": 49.4871110895555,
+      "mean_absolute_error": 0.007100045940952021,
+      "filtered_observations": 52,
+      "filtered_accuracy_pct": 59.61538461538461,
+      "filtered_mean_net_return_bps": -9.140496728405292,
+      "overlapping_opportunity_profit_factor": 0.9645158317883886,
+      "status": "forecast diagnostic only; overlapping events cannot satisfy 250 independent trades or portfolio drawdown"
+    }
+  },
+  {
+    "horizon_candles": 3,
+    "model": {
+      "mean": [
+        4.6831136126617864e-05,
+        0.0002661296006353348,
+        0.0010842024184989157,
+        50.06568384412861,
+        0.013412297696980286,
+        26.730527500946444,
+        0.22599661048391415,
+        1.0670891626775603,
+        0.4493787070781033,
+        0.2814465044310745,
+        0.2691747884908092,
+        0.5369162968635232
+      ],
+      "scale": [
+        0.010005257563672236,
+        0.023952520770172788,
+        0.04753294732616236,
+        11.746911802161796,
+        0.006826637691484288,
+        11.42778103891881,
+        0.16308206955265295,
+        1.4278180994374903,
+        0.25629823678387875,
+        0.21176930234511313,
+        0.20708065832000472,
+        0.28789015602572776
+      ],
+      "coef": [
+        0.00013355226115066598,
+        -0.0004413192641410375,
+        -0.00017558851856050076,
+        -0.0013489151308405656,
+        0.0012576908925094918,
+        0.0009213003127084287,
+        4.73906295392114e-05,
+        -9.344029946212945e-06,
+        0.00022874745289362816,
+        3.003648067369042e-05,
+        -0.00012698789354540998,
+        9.268775144065554e-05,
+        0.00017432570751219496
+      ],
+      "alpha": 0.01,
+      "feature_names": [
+        "return1",
+        "return6",
+        "return24",
+        "rsi14",
+        "atr_pct",
+        "adx",
+        "efficiency",
+        "vol_ratio",
+        "body_ratio",
+        "lower_wick",
+        "upper_wick",
+        "strength_rank"
+      ]
+    },
+    "threshold": 0.008,
+    "validation": {
+      "observations": 72198,
+      "direction_accuracy_pct": 50.06925399595556,
+      "always_up_accuracy_pct": 49.811629131000856,
+      "mean_absolute_error": 0.010375546063003959,
+      "filtered_observations": 371,
+      "filtered_accuracy_pct": 54.17789757412399,
+      "filtered_mean_net_return_bps": 72.20238049283708,
+      "overlapping_opportunity_profit_factor": 1.5238747850234995,
+      "status": "forecast diagnostic only; overlapping events cannot satisfy 250 independent trades or portfolio drawdown"
+    },
+    "selection_score": 72.20238049283708,
+    "test": {
+      "observations": 82460,
+      "direction_accuracy_pct": 49.227504244482176,
+      "always_up_accuracy_pct": 49.30875576036866,
+      "mean_absolute_error": 0.00876224071923404,
+      "filtered_observations": 54,
+      "filtered_accuracy_pct": 48.148148148148145,
+      "filtered_mean_net_return_bps": -46.70246955607382,
+      "overlapping_opportunity_profit_factor": 0.856621742219461,
+      "status": "forecast diagnostic only; overlapping events cannot satisfy 250 independent trades or portfolio drawdown"
+    }
+  }
+]

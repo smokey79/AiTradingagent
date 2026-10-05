@@ -1,0 +1,16 @@
+{
+  "started_utc": "2026-10-04T12:48:56.065710+00:00",
+  "requested_minutes": 90.0,
+  "selection_policy": "All iterative selection is on train/validation. Final test opens only after candidate rules are frozen.",
+  "status": "complete",
+  "seed": 20261004,
+  "checkpoint_resumes": 1,
+  "resume_utc": "2026-10-04T12:57:37.855478+00:00",
+  "resume_reason": "Windows reader temporarily blocked atomic checkpoint replacement; other research refinement and public depth recording continued.",
+  "finished_utc": "2026-10-04T14:18:56.113832+00:00",
+  "actual_elapsed_minutes": 90.00080830666654,
+  "variants_tested": 11870,
+  "families_tested": 20,
+  "robustness_audits": 9206,
+  "final_test_opened_once": true
+}

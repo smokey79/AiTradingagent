@@ -1,0 +1,42 @@
+{
+  "sample_rows": 13659,
+  "markets": [
+    {
+      "symbol": "BTCUSDT",
+      "samples": 4553,
+      "nonoverlapping_test_predictions": 268,
+      "horizon_seconds_approx": 5,
+      "direction_accuracy_pct": 17.91044776119403,
+      "mean_gross_signed_bps": 0.06753833082923016,
+      "mean_after_assumed_roundtrip_cost_bps": -15.932461669170772,
+      "cost_bps": 16.0,
+      "qualifies": false,
+      "reason": "Short observational sample, no execution/queue model, no stop/portfolio backtest; research adviser only"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "samples": 4553,
+      "nonoverlapping_test_predictions": 268,
+      "horizon_seconds_approx": 5,
+      "direction_accuracy_pct": 25.74626865671642,
+      "mean_gross_signed_bps": 0.05628375846282845,
+      "mean_after_assumed_roundtrip_cost_bps": -15.943716241537173,
+      "cost_bps": 16.0,
+      "qualifies": false,
+      "reason": "Short observational sample, no execution/queue model, no stop/portfolio backtest; research adviser only"
+    },
+    {
+      "symbol": "SOLUSDT",
+      "samples": 4553,
+      "nonoverlapping_test_predictions": 268,
+      "horizon_seconds_approx": 5,
+      "direction_accuracy_pct": 27.611940298507463,
+      "mean_gross_signed_bps": 0.10120179497064258,
+      "mean_after_assumed_roundtrip_cost_bps": -19.898798205029358,
+      "cost_bps": 20.0,
+      "qualifies": false,
+      "reason": "Short observational sample, no execution/queue model, no stop/portfolio backtest; research adviser only"
+    }
+  ],
+  "status": "observational_pilot"
+}

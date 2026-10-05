@@ -136,26 +136,74 @@ module.exports = {
       out_file: "logs/hermes-analyst-out.log"
     },
     {
-      // Periodic TradingKit (trader.dev) backtest-derived signal —
-      // scripts/tradingkit_analyst.js. Added 2026-09-13. Runs a fixed,
-      // mcprule-compliant EMA20/50 crossover strategy through TradingKit's
-      // quick_backtest for each of the 7 target tokens on a slow schedule
-      // (default 4h, see TRADINGKIT_ANALYST_INTERVAL_S in .env) and writes
-      // data/tradingkit_signals.json for tradingKitFeed.fetchSignal() to
-      // read. NOT in the fast debate loop, same reasoning as hermes-analyst
-      // above: each backtest costs 1 TradingKit credit (free tier: 1000/wk)
-      // and takes 1-3s. Defaults to a 'hold' signal on thin samples or a
-      // negative edge — never asserts a trade on weak evidence.
-      name: "tradingkit-analyst",
+      // Periodic Bigdata.com news/macro sentiment refresher —
+      // scripts/bigdata_analyst.py. Added 2026-09-28 (Alan's explicit
+      // instruction: wire Bigdata.com in as a 4th real voting agent). Calls
+      // data_sources/bigdata_feed.py's refresh() every
+      // BIGDATA_REFRESH_INTERVAL_S seconds (default 1800 = 30 min, matching
+      // bigdata_feed.py's own BIGDATA_CACHE_MINUTES default) and writes
+      // data/external/bigdata_latest.json. Same reasoning as hermes-analyst
+      // above: kept OFF the fast consensus loop so a slow HTTP call never
+      // risks that loop's timing. src/agents/bigdataAgent.js just reads the
+      // cached JSON this process produces — see consensus.js's AGENT_WEIGHTS
+      // (bigdata_sentiment: 0.15). Self-healing: if BIGDATA_API_KEY is blank
+      // or a request fails, it logs a warning and keeps serving the last
+      // good cache (or abstains) rather than crashing.
+      name: "bigdata-analyst",
       cwd: "F:/aitradingagent",
-      script: "scripts/tradingkit_analyst.js",
+      script: "scripts/bigdata_analyst.py",
+      interpreter: "F:/aitradingagent/venv/Scripts/python.exe",
+      watch: false,
+      autorestart: true,
+      restart_delay: 30000,
+      max_restarts: 15,
+      error_file: "logs/bigdata-analyst-err.log",
+      out_file: "logs/bigdata-analyst-out.log"
+    },
+    // RETIRED 2026-10-05 per Alan's explicit instruction ("remove tradingkit
+    // analyst, use a single agent tradingview strategy advisor/picker...").
+    // tradingkit-analyst (scripts/tradingkit_analyst.js, trader.dev paid API)
+    // is replaced by strategy-advisor below. Left here commented-out rather
+    // than deleted, per this project's convention for retired PM2 apps.
+    // {
+    //   name: "tradingkit-analyst",
+    //   cwd: "F:/aitradingagent",
+    //   script: "scripts/tradingkit_analyst.js",
+    //   interpreter: "node",
+    //   watch: false,
+    //   autorestart: true,
+    //   restart_delay: 30000,
+    //   max_restarts: 15,
+    //   error_file: "logs/tradingkit-analyst-err.log",
+    //   out_file: "logs/tradingkit-analyst-out.log"
+    // },
+    {
+      // Strategy Advisor / Picker — scripts/strategy_advisor.js. Added
+      // 2026-10-05, replacing tradingkit-analyst above. Sits between data
+      // ingestion and trade memory: each cycle (default 4h, see
+      // STRATEGY_ADVISOR_INTERVAL_S in .env) it backtests+optimizes all 4
+      // built-in Pine presets (pineScriptGenerator.js) for each of the 7
+      // target tokens using the REAL backtest engine (backtestEngine.js,
+      // real ccxt candles), keeps the best-fitness pick per token, and
+      // roughly once a day also sources fresh candidate strategies from
+      // GitHub/Twitter (strategySourcer.js) to test alongside the built-ins.
+      // Writes data/strategy_advisor_signals.json for
+      // strategyAdvisorFeed.fetchSignal() to read (same cache-read contract
+      // the old tradingKitFeed had) and persists every pick into the trade
+      // memory (learned_strategies.json / strategy/strategy_memory.json) via
+      // strategyLearningAgent.saveLearnedStrategy(). Defaults to a 'hold'
+      // signal on thin samples, a sub-68%-gate edge, or a synthetic-candle
+      // fallback — never asserts a trade on weak/unvalidated evidence.
+      name: "strategy-advisor",
+      cwd: "F:/aitradingagent",
+      script: "scripts/strategy_advisor.js",
       interpreter: "node",
       watch: false,
       autorestart: true,
       restart_delay: 30000,
       max_restarts: 15,
-      error_file: "logs/tradingkit-analyst-err.log",
-      out_file: "logs/tradingkit-analyst-out.log"
+      error_file: "logs/strategy-advisor-err.log",
+      out_file: "logs/strategy-advisor-out.log"
     },
     {
       // MT5 backup market-data feed — scripts/mt5_market_feed.py. Added
@@ -180,6 +228,27 @@ module.exports = {
       max_restarts: 15,
       error_file: "logs/mt5-feed-err.log",
       out_file: "logs/mt5-feed-out.log"
+    },
+    {
+      // Discord feed — scripts/discord_watcher.py. Added 2026-10-05 (Alan:
+      // "create a discord feed" → "automate"). READ-ONLY watcher: tails
+      // data/trade_ledger.json, latest_decision.json, portfolio_state.json and
+      // `pm2 jlist`, and posts closed trades, signal changes, PM2 crash/stop
+      // alerts, a stale-bot alert, an hourly heartbeat and a daily summary
+      // (with 68%/250 live-gate progress) to Discord via modules/discord_feed.py.
+      // Never places orders or writes to any ledger. Webhook comes from .env
+      // (DISCORD_WEBHOOK_URL, set with SET-DISCORD-WEBHOOK.ps1); until it is
+      // set the watcher idles and re-checks .env every 5 min — no restart loop.
+      name: "discord-feed",
+      cwd: "F:/aitradingagent",
+      script: "scripts/discord_watcher.py",
+      interpreter: "F:/aitradingagent/venv/Scripts/python.exe",
+      watch: false,
+      autorestart: true,
+      restart_delay: 30000,
+      max_restarts: 15,
+      error_file: "logs/discord-feed-err.log",
+      out_file: "logs/discord-feed-out.log"
     },
     {
       name: "telegram-listener",
@@ -208,6 +277,24 @@ module.exports = {
       restart_delay: 10000,
       max_restarts: 50,
       env: { NODE_ENV: "production" }
+    },
+    {
+      // 2026-09-29 DUEL "Bot B": Claude-only paper trader (src/duel/claudeSoloTrader.js).
+      // Same data modules + universe as trading-orchestrator, its OWN book in
+      // data/duel/ (never touches trade_ledger.json / portfolio_state.json).
+      // PAPER ONLY — no real-order code path. Stops itself after DUEL_HOURS
+      // (default 24h) or at the $30 equity floor. Claude spend capped by
+      // DUEL_CLAUDE_BUDGET_USD (default $2) via OpenRouter.
+      name: "claude-solo",
+      cwd: "F:/aitradingagent",
+      script: "src/duel/claudeSoloTrader.js",
+      interpreter: "node",
+      watch: false,
+      autorestart: true,
+      restart_delay: 15000,
+      max_restarts: 30,
+      out_file: "logs/claude-solo-out.log",
+      error_file: "logs/claude-solo-err.log"
     },
     {
       // Live dashboard UI — npm run dashboard equivalent

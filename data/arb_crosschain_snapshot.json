@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-05T19:45:16.867Z",
+  "gaps": [
+    {
+      "token": "ETH",
+      "buyChain": "bsc",
+      "sellChain": "ethereum",
+      "grossPct": 0.097,
+      "note": "NOT flash-loanable: needs own capital + bridge (fees, 2-20 min delay). Informational only."
+    }
+  ]
+}

@@ -118,8 +118,15 @@ async function optimizeStrategy({
   strategyType = 'smc_luxalgo_5x',
   iterations = 15,
   leverage = 5.0,
+  // 2026-10-05: additive, optional parameter sets sourced from outside the
+  // hardcoded grid (see src/learning/strategySourcer.js) — e.g. a GitHub-
+  // found Pine strategy an LLM mapped onto this strategyType's param shape.
+  // Never replaces the base grid, only extends it, and every entry here
+  // still runs through the exact same real backtest below — nothing from
+  // an external source is ever trusted without being backtested first.
+  extraCandidates = [],
 }) {
-  logger.info(`[StrategyLearningAgent] Starting optimization for ${symbol} (${timeframe}) [${iterations} candidate iterations]...`);
+  logger.info(`[StrategyLearningAgent] Starting optimization for ${symbol} (${timeframe}) [${iterations} candidate iterations${extraCandidates.length ? ` + ${extraCandidates.length} sourced candidate(s)` : ''}]...`);
   const candles = await fetchHistoricalCandles(symbol, timeframe, 300);
 
   const parameterGrid = [
@@ -133,11 +140,18 @@ async function optimizeStrategy({
     { obLookback: 6, rsiLongMin: 44, rsiLongMax: 66, volMultiplier: 1.40, takeProfitPct: 3.6, stopLossPct: 1.3, atrMultiplier: 1.3 },
   ];
 
+  // Append sourced candidates rather than letting them compete for the same
+  // `iterations` slots as the base grid — otherwise a sourced candidate at
+  // the end of the combined list would never actually get tested whenever
+  // iterations <= parameterGrid.length (the common case, default 8 vs 15).
+  const combinedGrid = [...parameterGrid, ...extraCandidates];
+  const testCount = Math.min(iterations + extraCandidates.length, combinedGrid.length);
+
   let bestResult = null;
   let bestScore = -1;
 
-  for (let i = 0; i < Math.min(iterations, parameterGrid.length); i++) {
-    const candidateParams = parameterGrid[i];
+  for (let i = 0; i < testCount; i++) {
+    const candidateParams = combinedGrid[i];
     try {
       const bt = runBacktestSimulation({
         candles,

@@ -1,0 +1,606 @@
+{
+  "retrieved_utc": "2026-10-04T12:39:29.032847+00:00",
+  "source": "CoinGecko public coins/markets",
+  "coins": [
+    {
+      "symbol": "BTC",
+      "name": "Bitcoin",
+      "rank": 1,
+      "id": "bitcoin"
+    },
+    {
+      "symbol": "ETH",
+      "name": "Ethereum",
+      "rank": 2,
+      "id": "ethereum"
+    },
+    {
+      "symbol": "USDT",
+      "name": "Tether",
+      "rank": 3,
+      "id": "tether"
+    },
+    {
+      "symbol": "BNB",
+      "name": "BNB",
+      "rank": 4,
+      "id": "binancecoin"
+    },
+    {
+      "symbol": "XRP",
+      "name": "XRP",
+      "rank": 5,
+      "id": "ripple"
+    },
+    {
+      "symbol": "USDC",
+      "name": "USDC",
+      "rank": 6,
+      "id": "usd-coin"
+    },
+    {
+      "symbol": "SOL",
+      "name": "Solana",
+      "rank": 7,
+      "id": "solana"
+    },
+    {
+      "symbol": "TRX",
+      "name": "TRON",
+      "rank": 8,
+      "id": "tron"
+    },
+    {
+      "symbol": "FIGR_HELOC",
+      "name": "Figure Heloc",
+      "rank": 9,
+      "id": "figure-heloc"
+    },
+    {
+      "symbol": "ZEC",
+      "name": "Zcash",
+      "rank": 10,
+      "id": "zcash"
+    },
+    {
+      "symbol": "HYPE",
+      "name": "Hyperliquid",
+      "rank": 11,
+      "id": "hyperliquid"
+    },
+    {
+      "symbol": "DOGE",
+      "name": "Dogecoin",
+      "rank": 12,
+      "id": "dogecoin"
+    },
+    {
+      "symbol": "LINK",
+      "name": "Chainlink",
+      "rank": 13,
+      "id": "chainlink"
+    },
+    {
+      "symbol": "XMR",
+      "name": "Monero",
+      "rank": 14,
+      "id": "monero"
+    },
+    {
+      "symbol": "WBT",
+      "name": "WhiteBIT Coin",
+      "rank": 15,
+      "id": "whitebit"
+    },
+    {
+      "symbol": "USDS",
+      "name": "USDS",
+      "rank": 16,
+      "id": "usds"
+    },
+    {
+      "symbol": "ADA",
+      "name": "Cardano",
+      "rank": 17,
+      "id": "cardano"
+    },
+    {
+      "symbol": "LEO",
+      "name": "LEO Token",
+      "rank": 18,
+      "id": "leo-token"
+    },
+    {
+      "symbol": "RAIN",
+      "name": "Rain",
+      "rank": 19,
+      "id": "rain"
+    },
+    {
+      "symbol": "XLM",
+      "name": "Stellar",
+      "rank": 20,
+      "id": "stellar"
+    },
+    {
+      "symbol": "BCH",
+      "name": "Bitcoin Cash",
+      "rank": 21,
+      "id": "bitcoin-cash"
+    },
+    {
+      "symbol": "NEAR",
+      "name": "NEAR Protocol",
+      "rank": 22,
+      "id": "near"
+    },
+    {
+      "symbol": "UNI",
+      "name": "Uniswap",
+      "rank": 23,
+      "id": "uniswap"
+    },
+    {
+      "symbol": "LTC",
+      "name": "Litecoin",
+      "rank": 24,
+      "id": "litecoin"
+    },
+    {
+      "symbol": "CC",
+      "name": "Canton",
+      "rank": 25,
+      "id": "canton-network"
+    },
+    {
+      "symbol": "USDE",
+      "name": "Ethena USDe",
+      "rank": 26,
+      "id": "ethena-usde"
+    },
+    {
+      "symbol": "SUI",
+      "name": "Sui",
+      "rank": 27,
+      "id": "sui"
+    },
+    {
+      "symbol": "AVAX",
+      "name": "Avalanche",
+      "rank": 28,
+      "id": "avalanche-2"
+    },
+    {
+      "symbol": "DAI",
+      "name": "Dai",
+      "rank": 29,
+      "id": "dai"
+    },
+    {
+      "symbol": "HBAR",
+      "name": "Hedera",
+      "rank": 30,
+      "id": "hedera-hashgraph"
+    },
+    {
+      "symbol": "USD1",
+      "name": "USD1",
+      "rank": 31,
+      "id": "usd1-wlfi"
+    },
+    {
+      "symbol": "GRAM",
+      "name": "Gram (prev. Toncoin)",
+      "rank": 32,
+      "id": "the-open-network"
+    },
+    {
+      "symbol": "QNT",
+      "name": "Quant",
+      "rank": 33,
+      "id": "quant-network"
+    },
+    {
+      "symbol": "TAO",
+      "name": "Bittensor",
+      "rank": 34,
+      "id": "bittensor"
+    },
+    {
+      "symbol": "CRO",
+      "name": "Cronos",
+      "rank": 35,
+      "id": "crypto-com-chain"
+    },
+    {
+      "symbol": "SHIB",
+      "name": "Shiba Inu",
+      "rank": 36,
+      "id": "shiba-inu"
+    },
+    {
+      "symbol": "XAUT",
+      "name": "Tether Gold",
+      "rank": 37,
+      "id": "tether-gold"
+    },
+    {
+      "symbol": "BTW",
+      "name": "Bitway",
+      "rank": 38,
+      "id": "bitway"
+    },
+    {
+      "symbol": "USDG",
+      "name": "Global Dollar",
+      "rank": 39,
+      "id": "global-dollar"
+    },
+    {
+      "symbol": "PUMP",
+      "name": "Pump.fun",
+      "rank": 40,
+      "id": "pump-fun"
+    },
+    {
+      "symbol": "PYUSD",
+      "name": "PayPal USD",
+      "rank": 41,
+      "id": "paypal-usd"
+    },
+    {
+      "symbol": "AAVE",
+      "name": "Aave",
+      "rank": 42,
+      "id": "aave"
+    },
+    {
+      "symbol": "OKB",
+      "name": "OKB",
+      "rank": 43,
+      "id": "okb"
+    },
+    {
+      "symbol": "RLUSD",
+      "name": "Ripple USD",
+      "rank": 44,
+      "id": "ripple-usd"
+    },
+    {
+      "symbol": "USYC",
+      "name": "Circle USYC",
+      "rank": 45,
+      "id": "hashnote-usyc"
+    },
+    {
+      "symbol": "ENA",
+      "name": "Ethena",
+      "rank": 46,
+      "id": "ethena"
+    },
+    {
+      "symbol": "ONDO",
+      "name": "Ondo",
+      "rank": 47,
+      "id": "ondo-finance"
+    },
+    {
+      "symbol": "M",
+      "name": "MemeCore",
+      "rank": 48,
+      "id": "memecore"
+    },
+    {
+      "symbol": "USDY",
+      "name": "Ondo US Dollar Yield",
+      "rank": 49,
+      "id": "ondo-us-dollar-yield"
+    },
+    {
+      "symbol": "BUIDL",
+      "name": "BlackRock USD Institutional Digital Liquidity Fund",
+      "rank": 50,
+      "id": "blackrock-usd-institutional-digital-liquidity-fund"
+    },
+    {
+      "symbol": "WLD",
+      "name": "Worldcoin",
+      "rank": 51,
+      "id": "worldcoin-wld"
+    },
+    {
+      "symbol": "SKY",
+      "name": "Sky",
+      "rank": 52,
+      "id": "sky"
+    },
+    {
+      "symbol": "MNT",
+      "name": "Mantle",
+      "rank": 53,
+      "id": "mantle"
+    },
+    {
+      "symbol": "DOT",
+      "name": "Polkadot",
+      "rank": 54,
+      "id": "polkadot"
+    },
+    {
+      "symbol": "ASTER",
+      "name": "Aster",
+      "rank": 55,
+      "id": "aster-2"
+    },
+    {
+      "symbol": "MORPHO",
+      "name": "Morpho",
+      "rank": 56,
+      "id": "morpho"
+    },
+    {
+      "symbol": "ICP",
+      "name": "Internet Computer",
+      "rank": 57,
+      "id": "internet-computer"
+    },
+    {
+      "symbol": "USDF",
+      "name": "Falcon USD",
+      "rank": 58,
+      "id": "falcon-finance"
+    },
+    {
+      "symbol": "PAXG",
+      "name": "PAX Gold",
+      "rank": 59,
+      "id": "pax-gold"
+    },
+    {
+      "symbol": "PEPE",
+      "name": "Pepe",
+      "rank": 60,
+      "id": "pepe"
+    },
+    {
+      "symbol": "WLFI",
+      "name": "World Liberty Financial",
+      "rank": 61,
+      "id": "world-liberty-financial"
+    },
+    {
+      "symbol": "U",
+      "name": "United Stables",
+      "rank": 62,
+      "id": "united-stables"
+    },
+    {
+      "symbol": "HTX",
+      "name": "HTX DAO",
+      "rank": 63,
+      "id": "htx-dao"
+    },
+    {
+      "symbol": "EURSAFO",
+      "name": "Spiko Amundi Overnight Swap Fund (EUR)",
+      "rank": 64,
+      "id": "spiko-amundi-overnight-swap-fund-eur"
+    },
+    {
+      "symbol": "USDD",
+      "name": "USDD",
+      "rank": 65,
+      "id": "usdd"
+    },
+    {
+      "symbol": "BGB",
+      "name": "Bitget Token",
+      "rank": 66,
+      "id": "bitget-token"
+    },
+    {
+      "symbol": "ETC",
+      "name": "Ethereum Classic",
+      "rank": 67,
+      "id": "ethereum-classic"
+    },
+    {
+      "symbol": "ARB",
+      "name": "Arbitrum",
+      "rank": 68,
+      "id": "arbitrum"
+    },
+    {
+      "symbol": "VVV",
+      "name": "Venice Token",
+      "rank": 69,
+      "id": "venice-token"
+    },
+    {
+      "symbol": "BFUSD",
+      "name": "BFUSD",
+      "rank": 70,
+      "id": "bfusd"
+    },
+    {
+      "symbol": "USDGO",
+      "name": "USDGO",
+      "rank": 71,
+      "id": "usdgo"
+    },
+    {
+      "symbol": "ALGO",
+      "name": "Algorand",
+      "rank": 72,
+      "id": "algorand"
+    },
+    {
+      "symbol": "GT",
+      "name": "Gate",
+      "rank": 73,
+      "id": "gatechain-token"
+    },
+    {
+      "symbol": "KAS",
+      "name": "Kaspa",
+      "rank": 74,
+      "id": "kaspa"
+    },
+    {
+      "symbol": "POL",
+      "name": "POL (ex-MATIC)",
+      "rank": 75,
+      "id": "polygon-ecosystem-token"
+    },
+    {
+      "symbol": "JST",
+      "name": "JUST",
+      "rank": 76,
+      "id": "just"
+    },
+    {
+      "symbol": "JUP",
+      "name": "Jupiter",
+      "rank": 77,
+      "id": "jupiter-exchange-solana"
+    },
+    {
+      "symbol": "KCS",
+      "name": "KuCoin",
+      "rank": 78,
+      "id": "kucoin-shares"
+    },
+    {
+      "symbol": "RENDER",
+      "name": "Render",
+      "rank": 79,
+      "id": "render-token"
+    },
+    {
+      "symbol": "BCAP",
+      "name": "Blockchain Capital",
+      "rank": 80,
+      "id": "blockchain-capital"
+    },
+    {
+      "symbol": "PI",
+      "name": "Pi Network",
+      "rank": 81,
+      "id": "pi-network"
+    },
+    {
+      "symbol": "ATOM",
+      "name": "Cosmos Hub",
+      "rank": 82,
+      "id": "cosmos"
+    },
+    {
+      "symbol": "LIT",
+      "name": "Lighter",
+      "rank": 83,
+      "id": "lighter"
+    },
+    {
+      "symbol": "FIL",
+      "name": "Filecoin",
+      "rank": 84,
+      "id": "filecoin"
+    },
+    {
+      "symbol": "AERO",
+      "name": "Aerodrome Finance",
+      "rank": 85,
+      "id": "aerodrome-finance"
+    },
+    {
+      "symbol": "NEXO",
+      "name": "NEXO",
+      "rank": 86,
+      "id": "nexo"
+    },
+    {
+      "symbol": "CAKE",
+      "name": "PancakeSwap",
+      "rank": 87,
+      "id": "pancakeswap-token"
+    },
+    {
+      "symbol": "NIGHT",
+      "name": "Midnight",
+      "rank": 88,
+      "id": "midnight-3"
+    },
+    {
+      "symbol": "AKE",
+      "name": "Akedo",
+      "rank": 89,
+      "id": "akedo"
+    },
+    {
+      "symbol": "DASH",
+      "name": "Dash",
+      "rank": 90,
+      "id": "dash"
+    },
+    {
+      "symbol": "INJ",
+      "name": "Injective",
+      "rank": 91,
+      "id": "injective-protocol"
+    },
+    {
+      "symbol": "USTB",
+      "name": "Invesco Short Duration US Government Securities Fund",
+      "rank": 92,
+      "id": "superstate-short-duration-us-government-securities-fund-ustb"
+    },
+    {
+      "symbol": "VET",
+      "name": "VeChain",
+      "rank": 93,
+      "id": "vechain"
+    },
+    {
+      "symbol": "STABLE",
+      "name": "\u200b\u200bStable",
+      "rank": 94,
+      "id": "stable-2"
+    },
+    {
+      "symbol": "ETHFI",
+      "name": "Ether.fi",
+      "rank": 95,
+      "id": "ether-fi"
+    },
+    {
+      "symbol": "ZRO",
+      "name": "LayerZero",
+      "rank": 96,
+      "id": "layerzero"
+    },
+    {
+      "symbol": "STX",
+      "name": "Stacks",
+      "rank": 97,
+      "id": "blockstack"
+    },
+    {
+      "symbol": "GHO",
+      "name": "GHO",
+      "rank": 98,
+      "id": "gho"
+    },
+    {
+      "symbol": "APT",
+      "name": "Aptos",
+      "rank": 99,
+      "id": "aptos"
+    },
+    {
+      "symbol": "OUSD",
+      "name": "Open USD",
+      "rank": 100,
+      "id": "open-usd"
+    }
+  ]
+}

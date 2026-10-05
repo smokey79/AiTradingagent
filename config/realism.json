@@ -1,0 +1,40 @@
+{
+  "_comment": "Single source of truth for trading-realism settings (2026-10-03 calibration). Read by src/utils/realism.js (Node) and core/realism.py (Python). Environment variables override: REALISM_FEE_PCT, REALISM_SLIPPAGE_PCT, REALISM_MIN_OOS_TRADES, REALISM_MIN_PF, REALISM_MAX_DD_PCT.",
+  "version": "2026-10-03",
+  "costs": {
+    "fee_pct_per_side": 0.06,
+    "slippage_pct_per_side": 0.02,
+    "note": "Same assumptions as backtest.py (fee 0.06%, slippage 0.02%). Percent per side, applied on entry and on exit."
+  },
+  "min_order": {
+    "exchange": "bitget",
+    "cache_file": "data/exchange_limits.json",
+    "max_age_hours": 24,
+    "safety_buffer_pct": 5,
+    "note": "Minimum order size comes from the exchange's own market info (ccxt limits.cost.min and limits.amount.min), cached by scripts/refresh_exchange_limits.js. No hand-set USD minimum."
+  },
+  "data_quality": {
+    "min_candles": 50,
+    "max_candle_age_multiple": 2.5,
+    "rsi_pegged_low": 1,
+    "rsi_pegged_high": 99,
+    "atr_min_pct_of_price": 0.0001,
+    "min_distinct_closes_last20": 3,
+    "max_ticker_vs_candle_deviation_pct": 5,
+    "allow_synthetic_candles": false
+  },
+  "promotion": {
+    "min_oos_trades": 60,
+    "min_profit_factor": 1.3,
+    "min_oos_profit_factor": 1.3,
+    "max_drawdown_pct": 20,
+    "live_gate_win_rate": 0.68,
+    "live_gate_min_trades": 250,
+    "require_fees_included": true
+  },
+  "arbitrage": {
+    "mode": "observe",
+    "fork_test_marker": "flashloan-sim/results/fork_test_passed.json",
+    "note": "Flash-loan arbitrage stays observation-only until flashloan-sim writes a passing fork-test marker."
+  }
+}
